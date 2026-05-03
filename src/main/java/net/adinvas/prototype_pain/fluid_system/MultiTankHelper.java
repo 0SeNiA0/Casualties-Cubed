@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MultiTankHelper {
+
     public static float getCapacity(ItemStack stack) {
         MultiFluidTankHandler handler = getHandler(stack);
         if (handler == null) return 0;

@@ -1,45 +1,32 @@
 package net.adinvas.prototype_pain.datagen;
 
-import net.adinvas.prototype_pain.ModMedicalFluids;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.item.ModItems;
-import net.adinvas.prototype_pain.recipe.MedicalMixerRecipe;
 import net.adinvas.prototype_pain.recipe.MedicalMixerRecipeBuilder;
+import net.adinvas.prototype_pain.registry.ModItems;
+import net.adinvas.prototype_pain.registry.ModMedicalFluids;
 import net.adinvas.prototype_pain.tags.ModItemTags;
 import net.adinvas.prototype_pain.tags.ModMedicalFluidTags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.StonecutterRecipe;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
-import sereneseasons.init.ModTags;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
+    
     public ModRecipeProvider(PackOutput pOutput) {
         super(pOutput);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        ItemStack waterBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
-        Ingredient waterBottleIngredient = Ingredient.of(waterBottle);
-
+    protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModItems.RippedDressing.get())
                 .requires(Items.STRING)
@@ -193,48 +180,48 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(Fluids.WATER,10)
                 .input(new ItemStack(ModItems.GLOW_FRUIT.get(),1))
                 .output(ModMedicalFluids.REACTION_LIQUID.get(),10)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"reaction_liquid"));
+                .save(consumer,PrototypePain.resourceLoc("reaction_liquid"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Fluids.WATER,25)
                 .input(new ItemStack(Items.POPPY,1))
                 .input(new ItemStack(Items.SUGAR,2))
                 .output(ModMedicalFluids.OPIUM.get(),25)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"opium"));
+                .save(consumer,PrototypePain.resourceLoc("opium"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.MILK_BUCKET,1)
                 .input(Items.COCOA_BEANS,8)
                 .output(ModMedicalFluids.CHOCO_MILK.get(),1000)
                 .output(Items.BUCKET,1)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"chocolate_milk"));
+                .save(consumer,PrototypePain.resourceLoc("chocolate_milk"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ModItemTags.ALCOHOL_CREATABLE,4)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),10)
                 .input(Fluids.WATER,100)
                 .output(ModMedicalFluids.ALCOHOL.get(),100)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"alcohol"));
+                .save(consumer,PrototypePain.resourceLoc("alcohol"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ModItemTags.ALCOHOL_CREATABLE,4)
                 .input(Fluids.WATER,100)
                 .processingTime(6000)
                 .output(ModMedicalFluids.ALCOHOL.get(),100)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"alcohol_slow"));
+                .save(consumer,PrototypePain.resourceLoc("alcohol_slow"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputM(ModMedicalFluidTags.DISINFECTING,100)
                 .input(ModItemTags.DRESSINGS,1)
                 .processingTime(200)
                 .output(ModItems.SterilizedDressing.get(),1)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"sterilized_dressing"));
+                .save(consumer,PrototypePain.resourceLoc("sterilized_dressing"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ModMedicalFluids.OPIUM.get(),100)
                 .input(Items.FERMENTED_SPIDER_EYE,1)
                 .output(ModMedicalFluids.MORPHINE.get(),50)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"morphine"));
+                .save(consumer,PrototypePain.resourceLoc("morphine"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.FERMENTED_SPIDER_EYE,1)
@@ -242,7 +229,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(Fluids.WATER,100)
                 .output(ModMedicalFluids.HEROIN.get(),100)
                 .processingTime(1200)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"heroin"));
+                .save(consumer,PrototypePain.resourceLoc("heroin"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.GLISTERING_MELON_SLICE,4)
@@ -250,13 +237,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(ModMedicalFluids.MORPHINE.get(),40)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),10)
                 .output(ModMedicalFluids.FENTANYL.get(),5)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"fentanyl"));
+                .save(consumer,PrototypePain.resourceLoc("fentanyl"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.SUGAR,2)
                 .inputM(ModMedicalFluidTags.OPIOIDS,25)
                 .output(ModMedicalFluids.PAINKILLERS.get(), 50)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"painkillers"));
+                .save(consumer,PrototypePain.resourceLoc("painkillers"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ItemTags.FISHES,8)
@@ -264,34 +251,34 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(Fluids.WATER,20)
                 .input(Items.GOLD_INGOT,1)
                 .output(ModMedicalFluids.BRAINGROW.get(),20)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"brain_grow"));
+                .save(consumer,PrototypePain.resourceLoc("brain_grow"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ModMedicalFluids.ALCOHOL.get(),100)
                 .input(Items.GUNPOWDER,1)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),10)
                 .output(ModMedicalFluids.ANTISEPTIC.get(),50)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"antiseptic"));
+                .save(consumer,PrototypePain.resourceLoc("antiseptic"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputM(ModMedicalFluidTags.OPIOIDS,10)
                 .input(Items.SLIME_BALL,1)
                 .input(Fluids.WATER,100)
                 .output(ModMedicalFluids.RELIEF_CREAM.get(), 100)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"relief_cream"));
+                .save(consumer,PrototypePain.resourceLoc("relief_cream"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Fluids.WATER,250)
                 .input(Items.SUGAR,1)
                 .output(ModMedicalFluids.SALINE.get(), 250)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"saline"));
+                .save(consumer,PrototypePain.resourceLoc("saline"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.BROWN_MUSHROOM,1)
                 .input(Items.SUGAR,1)
                 .input(Items.FERMENTED_SPIDER_EYE,1)
                 .output(ModMedicalFluids.ANTIBIOTICS.get(), 10)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"antibiotics"));
+                .save(consumer,PrototypePain.resourceLoc("antibiotics"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ModMedicalFluids.ANTIBIOTICS.get(),50)
@@ -299,14 +286,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(Items.FERMENTED_SPIDER_EYE,1)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),10)
                 .output(ModMedicalFluids.ANTISERUM.get(), 25)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"antiserum"));
+                .save(consumer,PrototypePain.resourceLoc("antiserum"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ModMedicalFluids.ANTISERUM.get(),10)
                 .input(Fluids.WATER,10)
                 .output(ModMedicalFluids.ANTISERUM.get(), 20)
                 .processingTime(3000)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"antiserum_grow"));
+                .save(consumer,PrototypePain.resourceLoc("antiserum_grow"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .processingTime(200)
@@ -314,14 +301,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),50)
                 .input(Items.GUNPOWDER,1)
                 .output(ModMedicalFluids.CEFTRIAXONE.get(), 20)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"ceftriaxone"));
+                .save(consumer,PrototypePain.resourceLoc("ceftriaxone"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.SPIDER_EYE,2)
                 .input(Items.SUGAR,1)
                 .input(Fluids.WATER,20)
                 .output(ModMedicalFluids.PROCOAGULANT.get(),20)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"procoagulant"));
+                .save(consumer,PrototypePain.resourceLoc("procoagulant"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.SUGAR,1)
@@ -329,13 +316,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(Items.GLOWSTONE_DUST,1)
                 .input(Fluids.WATER,20)
                 .output(ModMedicalFluids.STREPTOKINASE.get(), 20)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"streptokinase"));
+                .save(consumer,PrototypePain.resourceLoc("streptokinase"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputM(ModMedicalFluidTags.OPIOIDS,50)
                 .input(Items.GLISTERING_MELON_SLICE,2)
                 .output(ModMedicalFluids.NALOXONE.get(),25)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"naloxone"));
+                .save(consumer,PrototypePain.resourceLoc("naloxone"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputM(ModMedicalFluidTags.OPIOIDS,25)
@@ -343,27 +330,27 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(ModItemTags.DRESSINGS,1)
                 .input(Items.STRING,1)
                 .output(ModItems.BruiseKit.get(), 1)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"bruise_kit"));
+                .save(consumer,PrototypePain.resourceLoc("bruise_kit"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputM(ModMedicalFluidTags.OPIOIDS,50)
                 .input(ItemTags.WOOL,1)
                 .input(Items.STRING,2)
                 .output(ModItems.MedicalGauze.get(), 1)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"medical_gauze"));
+                .save(consumer,PrototypePain.resourceLoc("medical_gauze"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ItemTags.WOOL,2)
                 .inputM(ModMedicalFluidTags.DISINFECTING,20)
                 .output(ModItems.AlganateDressing.get(), 1)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"alganate_dressing"));
+                .save(consumer,PrototypePain.resourceLoc("alganate_dressing"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputM(ModMedicalFluidTags.DISINFECTING,25)
                 .inputM(ModMedicalFluidTags.OPIOIDS,25)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),25)
                 .output(ModMedicalFluids.LRD_SERUM.get(), 25)
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"lrd_serum"));
+                .save(consumer,PrototypePain.resourceLoc("lrd_serum"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MakeshiftLRD.get())
                 .pattern(" I ")
@@ -373,7 +360,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('R',Items.REDSTONE)
                 .define('G',Items.GOLD_INGOT)
                 .unlockedBy("has_poppy", has(Items.AIR))
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"m_lrd"));
+                .save(consumer,PrototypePain.resourceLoc("m_lrd"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.LRD.get())
                 .pattern(" I ")
@@ -384,7 +371,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('C',Items.COPPER_INGOT)
                 .define('D',Items.DIAMOND)
                 .unlockedBy("has_poppy", has(Items.AIR))
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"lrd"));
+                .save(consumer,PrototypePain.resourceLoc("lrd"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MedicalMixer.get())
                 .pattern("MMM")
@@ -395,14 +382,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('P',ItemTags.PLANKS)
                 .define('G',Items.GOLD_INGOT)
                 .unlockedBy("has_poppy", has(Items.AIR))
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"med_mixer"));
+                .save(consumer,PrototypePain.resourceLoc("med_mixer"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,Items.GLASS_BOTTLE)
                 .requires(ModItemTags.VIAL_ITEMS)
                 .unlockedBy("has_poppy", has(Items.AIR))
-                .save(consumer,new ResourceLocation(PrototypePain.MOD_ID,"all_to_bottle"));
-
-
+                .save(consumer,PrototypePain.resourceLoc("all_to_bottle"));
 
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.MedicineVial.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.Bottle.get(),Items.GLASS_BOTTLE);
@@ -417,17 +402,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.MorphineVial.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.FentanylVial.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC, ModItems.CeftriaxoneVial.get(),Items.GLASS_BOTTLE);
-
-
-
     }
 
-    protected static void stonecutterResultFromBase(Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial) {
+    protected static void stonecutterResultFromBase(@NotNull Consumer<FinishedRecipe> pFinishedRecipeConsumer, @NotNull RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial) {
         stonecutterResultFromBase(pFinishedRecipeConsumer, pCategory, pResult, pMaterial, 1);
     }
 
-    protected static void stonecutterResultFromBase(Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial, int pResultCount) {
-        SingleItemRecipeBuilder var10000 = SingleItemRecipeBuilder.stonecutting(Ingredient.of(new ItemLike[]{pMaterial}), pCategory, pResult, pResultCount).unlockedBy(getHasName(pMaterial), has(pMaterial));
+    protected static void stonecutterResultFromBase(@NotNull Consumer<FinishedRecipe> pFinishedRecipeConsumer, @NotNull RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial, int pResultCount) {
+        SingleItemRecipeBuilder var10000 = SingleItemRecipeBuilder.stonecutting(Ingredient.of(pMaterial), pCategory, pResult, pResultCount).unlockedBy(getHasName(pMaterial), has(pMaterial));
         String var10002 = getConversionRecipeName(pResult, pMaterial);
         var10000.save(pFinishedRecipeConsumer, var10002 + "_stonecutting");
     }

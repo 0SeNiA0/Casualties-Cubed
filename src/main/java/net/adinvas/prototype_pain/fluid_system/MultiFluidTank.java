@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiFluidTank {
+
     private final List<FluidStack> fluids = new ArrayList<>();
     private final int capacity;
 

@@ -1,16 +1,15 @@
 package net.adinvas.prototype_pain.blocks.medical_mixer;
 
-import cpw.mods.util.Lazy;
-import net.adinvas.prototype_pain.ModMedicalFluids;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.blocks.ModBlockEntities;
+import net.adinvas.prototype_pain.registry.ModBlockEntities;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
-import net.adinvas.prototype_pain.item.INbtDrivenDurability;
-import net.adinvas.prototype_pain.network.FluidSyncS2CPacket;
+import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
+import net.adinvas.prototype_pain.menu.MedicalMixerMenu;
+import net.adinvas.prototype_pain.network.packet.FluidSyncS2CPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.recipe.MedicalMixerRecipe;
-import net.adinvas.prototype_pain.recipe.ModRecipes;
+import net.adinvas.prototype_pain.registry.ModRecipes;
 import net.adinvas.prototype_pain.recipe.ingridients.FluidIngredient;
 import net.adinvas.prototype_pain.recipe.ingridients.ItemIngredient;
 import net.minecraft.core.BlockPos;
@@ -29,13 +28,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -53,6 +48,7 @@ import java.util.List;
 
 
 public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider {
+
     private final ItemStackHandler itemHandler = new ItemStackHandler(19);
     private final IFluidHandler fluidHandler = new IFluidHandler() {
         @Override
@@ -257,8 +253,6 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
 
     }
 
-
-
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER){
@@ -302,7 +296,6 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
         return new MedicalMixerMenu(i,inventory,this,this.data);
     }
 
-
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         pTag.put("Inventory",itemHandler.serializeNBT());
@@ -329,7 +322,6 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
             Tanks[i].readFromNBT(tankTag);
         }
     }
-
 
     public void tick(Level pLevel, BlockPos pBlockPos, BlockState pState) {
         handleFluidItems();
@@ -413,6 +405,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
             stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(itemTank -> {
                 FluidStack fluidToFill = internalTank.getFluid().copy();
                 if (fluidToFill.isEmpty()) return;
+
                 fluidToFill.setAmount(Math.min(100, fluidToFill.getAmount()));
                 int filled = itemTank.fill(fluidToFill, IFluidHandler.FluidAction.SIMULATE);
                 if (filled > 0) {
@@ -425,23 +418,25 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
     }
 
     private void resetProgress() {
-        progress=0;
+        progress = 0;
     }
 
     private boolean hasProgressFinished() {
-        return progress >=maxProgress;
+        return progress >= maxProgress;
     }
 
     private void increseCraftingProgress() {
         progress++;
     }
+
     private MedicalMixerRecipe cashedRecipe;
+
     private boolean hasRecipe() {
         List<MedicalMixerRecipe> recipes = this.level.getRecipeManager().getAllRecipesFor(ModRecipes.MEDICAL_MIXER_RECIPE.get());
 
-        for (MedicalMixerRecipe recipe:recipes){
+        for (MedicalMixerRecipe recipe : recipes){
 
-            if(recipe.matches(itemHandler,getFluidsinTanks())){
+            if (recipe.matches(itemHandler,getFluidsinTanks())){
 
                 if (canInsertInOutputSlot(recipe.getItemOutputs().toArray(new ItemStack[0])) &&
                         canInsertInOutputTank(recipe.getFluidOutputs().toArray(new FluidStack[0]))){
@@ -456,43 +451,46 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
 
     private List<FluidStack> getFluidsinTanks() {
         List<FluidStack> stacks = new ArrayList<>();
-        for (FluidTank tank: Tanks){
+        for (FluidTank tank : Tanks){
             stacks.add(tank.getFluid());
         }
         return stacks;
     }
 
     private void craftItem() {
-        if (cashedRecipe!=null){
+        if (cashedRecipe != null){
             List<ItemIngredient> inputitems = cashedRecipe.getItemInputs();
-            for (ItemIngredient ingredient:inputitems){
+            for (ItemIngredient ingredient : inputitems){
                 ingredient.consume(itemHandler,0,4);
             }
+
             List<FluidIngredient> inputfluids = cashedRecipe.getFluidInputs();
-            for (FluidIngredient ingredient: inputfluids){
+            for (FluidIngredient ingredient : inputfluids){
                 extractFluidFromInputTanks(ingredient.getAsFluidStack());
             }
+
             List<ItemStack> stacks = cashedRecipe.getItemOutputs();
             addItemsToOutputSlot(stacks.toArray(new ItemStack[0]));
             List<FluidStack> fluidOutputs = cashedRecipe.getFluidOutputs();
             addFluidsToOutputTanks(fluidOutputs.toArray(new FluidStack[0]));
             setChanged();
-
         }
     }
 
     private void addFluidsToOutputTanks(FluidStack[] fluidResult) {
         for (FluidStack fs : fluidResult){
-            PrototypePain.LOGGER.info(" t {}",fs.getOrCreateTag().getString("MedicalId"));
-            for (int i=0;i<Tanks.length;i++){
-                if (i<=2)continue;
+            PrototypePain.LOGGER.info(" t {}", fs.getOrCreateTag().getString("MedicalId"));
+            for (int i = 0; i < Tanks.length; i++) {
+                if (i <= 2) continue;
+
                 FluidTank tank = Tanks[i];
-                if (tank.isEmpty()){
+                if (tank.isEmpty()) {
                     tank.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     break;
                 }
+
                 FluidStack fluidStack = tank.getFluid();
-                if (isSameFluidAndOrSameTag(fs,fluidStack)){
+                if (isSameFluidAndOrSameTag(fs,fluidStack)) {
                     tank.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     break;
                 }
@@ -549,10 +547,10 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
     private boolean canInsertInOutputTank(FluidStack[] fluidResult) {
         for (FluidStack fs : fluidResult){
             boolean filled = false;
-            for (int i=0; i<Tanks.length;i++){
-                if (i<=2)continue;
+            for (int i = 0; i < Tanks.length; i++){
+                if (i <= 2)continue;
                 FluidTank tank = Tanks[i];
-                if (tank.fill(fs, IFluidHandler.FluidAction.SIMULATE)>=fs.getAmount()){
+                if (tank.fill(fs, IFluidHandler.FluidAction.SIMULATE) >= fs.getAmount()){
                     filled = true;
                     break;
                 }
@@ -581,11 +579,9 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
             }
             if (!filled) return false;
         }
+
         return true;
     }
-
-
-
 
     public boolean isSameFluidAndOrSameTag(FluidStack innerStack,FluidStack fluidStack){
         if (innerStack.isFluidEqual(fluidStack))return true;
@@ -624,7 +620,6 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
 
         return false;
     }
-
 
     public void sendUpdates(Level pLevel, Player pPlayer) {
         if (pLevel.isClientSide())return;

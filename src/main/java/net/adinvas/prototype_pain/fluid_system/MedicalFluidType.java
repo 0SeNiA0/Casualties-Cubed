@@ -3,7 +3,6 @@ package net.adinvas.prototype_pain.fluid_system;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
@@ -11,6 +10,7 @@ import net.minecraftforge.fluids.FluidType;
 import java.util.function.Consumer;
 
 public class MedicalFluidType extends FluidType {
+
     public MedicalFluidType(Properties props) {
         super(props);
     }
@@ -43,14 +43,13 @@ public class MedicalFluidType extends FluidType {
 
             @Override
             public ResourceLocation getStillTexture() {
-               return new ResourceLocation("block/water_still");
+               return ResourceLocation.withDefaultNamespace("block/water_still");
             }
 
             @Override
             public ResourceLocation getFlowingTexture() {
-                return new ResourceLocation("block/water_flow");
+                return ResourceLocation.withDefaultNamespace("block/water_flow");
             }
-
         });
     }
 }

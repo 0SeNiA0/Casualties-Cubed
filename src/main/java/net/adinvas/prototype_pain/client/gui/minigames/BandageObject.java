@@ -1,13 +1,13 @@
 package net.adinvas.prototype_pain.client.gui.minigames;
 
 import com.mojang.math.Axis;
-import net.adinvas.prototype_pain.ModSounds;
-import net.adinvas.prototype_pain.item.INbtDrivenDurability;
+import net.adinvas.prototype_pain.registry.ModSounds;
+import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.item.bandages.PlasticDressingItem;
 import net.adinvas.prototype_pain.item.bandages.SterilizedDressingItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.UseBandagePacket;
+import net.adinvas.prototype_pain.network.packet.UseBandagePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

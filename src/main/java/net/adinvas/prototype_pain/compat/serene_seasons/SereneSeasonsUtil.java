@@ -1,6 +1,5 @@
 package net.adinvas.prototype_pain.compat.serene_seasons;
 
-import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.compat.TempCompat;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -8,7 +7,6 @@ import net.minecraftforge.fml.ModList;
 import sereneseasons.api.season.ISeasonState;
 import sereneseasons.api.season.Season;
 import sereneseasons.api.season.SeasonHelper;
-import sereneseasons.core.SereneSeasons;
 
 public class SereneSeasonsUtil {
 
@@ -17,7 +15,8 @@ public class SereneSeasonsUtil {
     }
 
     public static float getSeasonScale(Level level, TempCompat.BiomeTemperatureEntry entry){
-        if (!isLoaded())return entry.temperature;
+        if (!isLoaded()) return entry.temperature;
+
         ISeasonState seasonState = SeasonHelper.getSeasonState(level);
         Season.SubSeason sub = seasonState.getSubSeason();
 
@@ -31,33 +30,19 @@ public class SereneSeasonsUtil {
         Season nextSeason = seasons[(seasonIndex+1)%4];
 
         float startTemp = switch (currentSeason){
-            case WINTER -> {
-                yield entry.winter;
-            }
-            case SUMMER -> {
-                yield entry.summer;
-            }
-            case AUTUMN -> {
-                yield entry.fall;
-            }
-            case SPRING -> {
-                yield entry.spring;
-            }
+            case WINTER -> entry.winter;
+            case SUMMER -> entry.summer;
+            case AUTUMN -> entry.fall;
+            case SPRING -> entry.spring;
         };
+
         float targetTemp =switch (nextSeason){
-            case WINTER -> {
-                yield entry.winter;
-            }
-            case SUMMER -> {
-                yield entry.summer;
-            }
-            case AUTUMN -> {
-                yield entry.fall;
-            }
-            case SPRING -> {
-                yield entry.spring;
-            }
+            case WINTER -> entry.winter;
+            case SUMMER -> entry.summer;
+            case AUTUMN -> entry.fall;
+            case SPRING -> entry.spring;
         };
+
         return Mth.lerp(blend,startTemp,targetTemp);
     }
 }

@@ -1,26 +1,27 @@
 package net.adinvas.prototype_pain;
 
 import com.mojang.logging.LogUtils;
-import net.adinvas.prototype_pain.blocks.ModBlockEntities;
-import net.adinvas.prototype_pain.blocks.ModBlocks;
-import net.adinvas.prototype_pain.blocks.medical_mixer.MedicalMixerScreen;
+import net.adinvas.prototype_pain.registry.ModBlockEntities;
+import net.adinvas.prototype_pain.registry.ModBlocks;
+import net.adinvas.prototype_pain.client.gui.MedicalMixerScreen;
+import net.adinvas.prototype_pain.client.Keybinds;
+import net.adinvas.prototype_pain.client.gui.LootPlayerScreen;
 import net.adinvas.prototype_pain.compat.prototype_physics.PhysicsEvents;
 import net.adinvas.prototype_pain.config.ClientConfig;
 import net.adinvas.prototype_pain.config.ServerConfig;
-import net.adinvas.prototype_pain.events.ModEvents;
+import net.adinvas.prototype_pain.event.ModEvents;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
-import net.adinvas.prototype_pain.item.ModCreativeTab;
-import net.adinvas.prototype_pain.item.ModItems;
 import net.adinvas.prototype_pain.item.special.bags.large.LargeMedibagScreen;
 import net.adinvas.prototype_pain.item.special.bags.medium.MediumMedibagScreen;
 import net.adinvas.prototype_pain.item.special.bags.small.SmallMedibagScreen;
 import net.adinvas.prototype_pain.item.usable.ThermometerItem;
 import net.adinvas.prototype_pain.loot.ModLootModifier;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.recipe.ModRecipes;
+import net.adinvas.prototype_pain.registry.*;
 import net.adinvas.prototype_pain.visual.particles.BloodParticle;
 import net.adinvas.prototype_pain.visual.particles.ModParticles;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -30,7 +31,6 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -48,8 +48,12 @@ public class PrototypePain {
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public PrototypePain() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static ResourceLocation resourceLoc(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    public PrototypePain(FMLJavaModLoadingContext context) {
+        IEventBus modEventBus = context.getModEventBus();
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -66,8 +70,8 @@ public class PrototypePain {
         ModRecipes.register(modEventBus);
         ModLootModifier.register(modEventBus);
         ModCreativeTab.CREATIVE_TABS.register(modEventBus);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        context.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);
         modEventBus.addListener(ModGamerules::onCommonSetup);
@@ -96,7 +100,7 @@ public class PrototypePain {
             MenuScreens.register(ModMenus.SMALL_MEDIBAG.get(), SmallMedibagScreen::new);
             MenuScreens.register(ModMenus.MEDIUM_MEDIBAG.get(), MediumMedibagScreen::new);
             MenuScreens.register(ModMenus.LARGE_MEDIBAG.get(), LargeMedibagScreen::new);
-            MenuScreens.register(ModMenus.LOOT_PLAYER.get(),LootPlayerScreen::new);
+            MenuScreens.register(ModMenus.LOOT_PLAYER.get(), LootPlayerScreen::new);
             MenuScreens.register(ModMenus.MEDICAL_MIXER.get(), MedicalMixerScreen::new);
         }
 

@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.item.multi_tank;
 import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;

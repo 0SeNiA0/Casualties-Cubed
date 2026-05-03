@@ -2,12 +2,11 @@ package net.adinvas.prototype_pain.item.usable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.Util;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
@@ -22,7 +21,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ThermometerItem extends Item {
 

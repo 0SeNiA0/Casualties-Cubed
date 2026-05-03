@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.blocks.medical_mixer;
 
-import net.adinvas.prototype_pain.blocks.ModBlockEntities;
+import net.adinvas.prototype_pain.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -22,10 +22,12 @@ import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class MedicalMixerBlock extends BaseEntityBlock {
+
+    public static final VoxelShape SHAPE = Block.box(0,0,0,16,7,16);
+
     public MedicalMixerBlock(Properties pProperties) {
         super(pProperties);
     }
-    public static final VoxelShape SHAPE = Block.box(0,0,0,16,7,16);
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -37,8 +39,6 @@ public class MedicalMixerBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
-
-
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() !=pNewState.getBlock()){
@@ -47,6 +47,7 @@ public class MedicalMixerBlock extends BaseEntityBlock {
                 ((MedicalMixerBlockEntity)blockEntity).drops();
             }
         }
+
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
@@ -77,7 +78,6 @@ public class MedicalMixerBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-
         return new MedicalMixerBlockEntity(blockPos,blockState);
     }
 }

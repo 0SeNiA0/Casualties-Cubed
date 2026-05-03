@@ -9,7 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public enum Limb { HEAD, CHEST, LEFT_ARM, RIGHT_ARM,RIGHT_HAND,LEFT_HAND, LEFT_LEG, RIGHT_LEG, LEFT_FOOT, RIGHT_FOOT;
+public enum Limb {
+    HEAD,
+    CHEST,
+    LEFT_ARM,
+    RIGHT_ARM,
+    RIGHT_HAND,
+    LEFT_HAND,
+    LEFT_LEG,
+    RIGHT_LEG,
+    LEFT_FOOT,
+    RIGHT_FOOT;
 
     public Limb randomFromConectedLimb(){
         List<Limb> temp_Limb_list= this.getConnectedLimbs();

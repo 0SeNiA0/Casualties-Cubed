@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.item.misc;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.blocks.ModBlocks;
+import net.adinvas.prototype_pain.registry.ModBlocks;
 
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
@@ -10,13 +10,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class BrownCapItem extends Item {

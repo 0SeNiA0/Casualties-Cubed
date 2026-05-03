@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.datagen;
 
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.tags.ModItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.item.special.bags;
 
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;

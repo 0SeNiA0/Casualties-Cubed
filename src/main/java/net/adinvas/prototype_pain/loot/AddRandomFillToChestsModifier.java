@@ -5,20 +5,16 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import net.adinvas.prototype_pain.ModMedicalRegistry;
+import net.adinvas.prototype_pain.registry.ModMedicalRegistry;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -28,9 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import java.util.function.Supplier;
 
 public class AddRandomFillToChestsModifier extends LootModifier {

@@ -4,7 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.adinvas.prototype_pain.item.INbtDrivenDurability;
+import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

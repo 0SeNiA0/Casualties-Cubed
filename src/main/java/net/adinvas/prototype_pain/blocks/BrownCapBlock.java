@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.blocks;
 
-import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.registry.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +15,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BrownCapBlock extends BushBlock {
+
     protected static final VoxelShape SHAPE = Block.box(5.0, 0.0, 5.0, 11.0, 6.0, 11.0);
 
     public BrownCapBlock(BlockBehaviour.Properties pProperties) {
@@ -35,7 +36,7 @@ public class BrownCapBlock extends BushBlock {
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         int artificialLight = pLevel.getBrightness(LightLayer.BLOCK,pPos);
 
-        if (artificialLight>10&&pRandom.nextInt(4)==0){
+        if (artificialLight > 10 && pRandom.nextInt(4) == 0){
             Direction dir = Direction.Plane.HORIZONTAL.getRandomDirection(pRandom);
             BlockPos targetPos = pPos.relative(dir);
             BlockState targetState = pLevel.getBlockState(targetPos);

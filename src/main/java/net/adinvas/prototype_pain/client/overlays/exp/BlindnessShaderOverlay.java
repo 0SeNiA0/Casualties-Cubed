@@ -4,11 +4,10 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.events.ClientShaderEvents;
+import net.adinvas.prototype_pain.event.ClientShaderEvents;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.visual.ClientGamerules;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 

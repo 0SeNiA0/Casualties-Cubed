@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.item.special.bags.medium;
 
-import net.adinvas.prototype_pain.ModMenus;
+import net.adinvas.prototype_pain.registry.ModMenus;
 import net.adinvas.prototype_pain.item.special.bags.MedicalSlot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

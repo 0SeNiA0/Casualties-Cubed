@@ -1,15 +1,12 @@
 package net.adinvas.prototype_pain.client.gui.minigames;
 
-import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.ShrapnelFailPacket;
+import net.adinvas.prototype_pain.network.packet.ShrapnelFailPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-
-import java.util.Random;
 
 public class ShrapnelObject extends GrabObject{
     int dx= 0;

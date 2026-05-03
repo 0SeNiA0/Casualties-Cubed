@@ -1,10 +1,10 @@
 package net.adinvas.prototype_pain.item.multi_tank;
 
-import net.adinvas.prototype_pain.ModMedicalFluids;
+import net.adinvas.prototype_pain.registry.ModMedicalFluids;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;

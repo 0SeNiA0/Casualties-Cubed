@@ -1,16 +1,19 @@
 package net.adinvas.prototype_pain.client.gui;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.client.gui.widget.*;
 import net.adinvas.prototype_pain.client.moodles.AbstractMoodleVisual;
 import net.adinvas.prototype_pain.client.moodles.MoodleController;
 import net.adinvas.prototype_pain.client.ticksounds.HeartBeatSound;
-import net.adinvas.prototype_pain.item.IBag;
-import net.adinvas.prototype_pain.item.IMedicalMinigameUsable;
-import net.adinvas.prototype_pain.client.gui.minigames.InjectMingameScreen;
+import net.adinvas.prototype_pain.item.api.IBag;
+import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.*;
+import net.adinvas.prototype_pain.network.packet.CauterizeActionPacket;
+import net.adinvas.prototype_pain.network.packet.GuiSyncTogglePacket;
+import net.adinvas.prototype_pain.network.packet.UseBagMedItemPacket;
+import net.adinvas.prototype_pain.network.packet.UseMedItemPacket;
 import net.adinvas.prototype_pain.tags.ModItemTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,12 +1,15 @@
 package net.adinvas.prototype_pain.mixin;
 
+import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,6 +21,7 @@ import java.util.List;
 @Mixin(SplashManager.class)
 public class MixinSplashManager {
 
+    @Final
     @Shadow
     private List<String> splashes;
 
@@ -40,9 +44,10 @@ public class MixinSplashManager {
     /**
      * Load your mod’s splashes from: resources/texts/prototype_splashes.txt
      */
+    @Unique
     private List<String> loadCustomSplashes() {
         try {
-            ResourceLocation loc = new ResourceLocation("prototype_pain", "texts/splashes.txt");
+            ResourceLocation loc = PrototypePain.resourceLoc("texts/splashes.txt");
             BufferedReader br = Minecraft.getInstance().getResourceManager().openAsReader(loc);
 
             return br.lines()

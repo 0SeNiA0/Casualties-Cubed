@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.client;
 
-import net.adinvas.prototype_pain.ModSounds;
+import net.adinvas.prototype_pain.registry.ModSounds;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.client.ticksounds.PainDrone;
 import net.adinvas.prototype_pain.client.ticksounds.TinnitusSound;

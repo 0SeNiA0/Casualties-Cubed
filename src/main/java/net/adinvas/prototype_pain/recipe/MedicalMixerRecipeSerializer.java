@@ -1,16 +1,12 @@
 package net.adinvas.prototype_pain.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.adinvas.prototype_pain.ModMedicalRegistry;
-import net.adinvas.prototype_pain.Util;
+import net.adinvas.prototype_pain.registry.ModMedicalRegistry;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.recipe.ingridients.FluidIngredient;
 import net.adinvas.prototype_pain.recipe.ingridients.ItemIngredient;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +14,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalMixerRecipeSerializer implements RecipeSerializer<MedicalMixerRecipe> {
+
     @Override
     public MedicalMixerRecipe fromJson(ResourceLocation resourceLocation, JsonObject json) {
         int time = GsonHelper.getAsInt(json, "processingTime", 100);
@@ -46,7 +42,7 @@ public class MedicalMixerRecipeSerializer implements RecipeSerializer<MedicalMix
         if (json.has("fluid_outputs")) {
             for (var el : GsonHelper.getAsJsonArray(json, "fluid_outputs")) {
                 JsonObject obj = el.getAsJsonObject();
-                Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(obj, "fluid")));
+                Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(GsonHelper.getAsString(obj, "fluid")));
                 int amount = GsonHelper.getAsInt(obj, "amount");
                 FluidStack stack = new FluidStack(fluid, amount);
 
@@ -70,7 +66,7 @@ public class MedicalMixerRecipeSerializer implements RecipeSerializer<MedicalMix
         if (json.has("item_outputs")) {
             for (var el : GsonHelper.getAsJsonArray(json, "item_outputs")) {
                 JsonObject obj = el.getAsJsonObject();
-                Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(GsonHelper.getAsString(obj, "item")));
+                Item item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(GsonHelper.getAsString(obj, "item")));
                 int count = GsonHelper.getAsInt(obj, "count", 1);
                 itemOutputs.add(new ItemStack(item, count));
             }

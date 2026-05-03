@@ -2,7 +2,7 @@ package net.adinvas.prototype_pain.recipe.ingridients;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.adinvas.prototype_pain.ModMedicalRegistry;
+import net.adinvas.prototype_pain.registry.ModMedicalRegistry;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
 import net.minecraft.core.registries.Registries;
@@ -11,8 +11,6 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
@@ -193,7 +191,7 @@ public class FluidIngredient {
         int amount = GsonHelper.getAsInt(obj, "amount");
 
         if (obj.has("fluid")) {
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(GsonHelper.getAsString(obj, "fluid")));
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(GsonHelper.getAsString(obj, "fluid")));
             CompoundTag nbt = null;
             if (obj.has("nbt")) {
                 try {
@@ -204,10 +202,10 @@ public class FluidIngredient {
             }
             return new FluidIngredient(fluid, amount, nbt);
         } else if (obj.has("tag")) {
-            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, new ResourceLocation(GsonHelper.getAsString(obj, "tag")));
+            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(GsonHelper.getAsString(obj, "tag")));
             return new FluidIngredient(tag, amount, null);
         } else if (obj.has("medical_tag")) {
-            TagKey<MedicalFluid> tag = TagKey.create(ModMedicalRegistry.MEDICAL_FLUIDS_KEY, new ResourceLocation(GsonHelper.getAsString(obj, "medical_tag")));
+            TagKey<MedicalFluid> tag = TagKey.create(ModMedicalRegistry.MEDICAL_FLUIDS_KEY, ResourceLocation.parse(GsonHelper.getAsString(obj, "medical_tag")));
             return new FluidIngredient(tag, amount);
         }
 

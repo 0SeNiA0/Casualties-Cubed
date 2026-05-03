@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.item.multi_tank;
 
-import net.adinvas.prototype_pain.ModSounds;
+import net.adinvas.prototype_pain.registry.ModSounds;
 import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;

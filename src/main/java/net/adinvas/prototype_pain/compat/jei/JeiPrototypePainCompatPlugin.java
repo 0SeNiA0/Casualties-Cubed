@@ -2,16 +2,15 @@ package net.adinvas.prototype_pain.compat.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.blocks.medical_mixer.MedicalMixerScreen;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.client.gui.MedicalMixerScreen;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.recipe.MedicalMixerRecipe;
-import net.adinvas.prototype_pain.recipe.ModRecipes;
+import net.adinvas.prototype_pain.registry.ModRecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +20,8 @@ import java.util.List;
 
 @JeiPlugin
 public class JeiPrototypePainCompatPlugin implements IModPlugin {
-    private static final ResourceLocation ID = new ResourceLocation(PrototypePain.MOD_ID, "jei_recipe");
+
+    private static final ResourceLocation ID = PrototypePain.resourceLoc( "jei_recipe");
 
     @Override
     public ResourceLocation getPluginUid() {

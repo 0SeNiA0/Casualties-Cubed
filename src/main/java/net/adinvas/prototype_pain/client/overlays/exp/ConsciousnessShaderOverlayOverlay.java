@@ -4,10 +4,9 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.events.ClientShaderEvents;
+import net.adinvas.prototype_pain.event.ClientShaderEvents;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -15,6 +14,7 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import javax.annotation.Nullable;
 
 public class ConsciousnessShaderOverlayOverlay implements IShaderOverlay {
+
     public float lastValue=0;
     @Override
     public boolean shouldRender() {

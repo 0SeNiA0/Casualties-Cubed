@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TempCompat {
+
     public static class BiomeTemperatureEntry{
         public float temperature;
         public float nightChange;
@@ -19,17 +20,16 @@ public class TempCompat {
         public float winter;
     }
 
-
     private static final Map<ResourceLocation, BiomeTemperatureEntry> BIOME_TEMPERATURE_BY_ID = new HashMap<>();
-    private static final Map<Block,Float> BLOCK_TEMPERATURE_DATA = new HashMap<>();
+    private static final Map<Block, Float> BLOCK_TEMPERATURE_DATA = new HashMap<>();
 
     public static void clearBlock() {
         BLOCK_TEMPERATURE_DATA.clear();
     }
+
     public static void clearBiome() {
         BIOME_TEMPERATURE_BY_ID.clear();
     }
-
 
     public static void addEntryBlock(ResourceLocation id, Float value){
         Block block = ForgeRegistries.BLOCKS.getValue(id);
@@ -49,5 +49,4 @@ public class TempCompat {
                 .map(key -> BIOME_TEMPERATURE_BY_ID.get(key.location()))
                 .orElse(null);
     }
-
 }

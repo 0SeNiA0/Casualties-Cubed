@@ -8,7 +8,7 @@ import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.registration.IExtraIngredientRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
-import net.adinvas.prototype_pain.ModMedicalFluids;
+import net.adinvas.prototype_pain.registry.ModMedicalFluids;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
@@ -22,7 +22,8 @@ import java.util.Collection;
 
 @JeiPlugin
 public class JEIFluidPlugin implements IModPlugin {
-    private static final ResourceLocation ID = new ResourceLocation(PrototypePain.MOD_ID, "jei_fluid");
+    
+    private static final ResourceLocation ID = PrototypePain.resourceLoc( "jei_fluid");
 
     @Override
     public ResourceLocation getPluginUid() {

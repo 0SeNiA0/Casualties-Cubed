@@ -1,16 +1,15 @@
 package net.adinvas.prototype_pain.network;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.network.packet.SyncHealthPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.network.PacketDistributor;
 import java.util.*;
 
 
 public class SyncTracker {
+
     private static final Map<UUID, UUID> syncing = new HashMap<>();
 
     public static void add(UUID viewer, UUID targetId) {

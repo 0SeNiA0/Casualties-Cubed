@@ -2,34 +2,27 @@ package net.adinvas.prototype_pain.hitbox;
 
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.tags.ModDamageTypeTags;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -43,6 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber
 public class HitboxEvents {
+
     private static final Map<UUID, DamageContext> contextMap = new ConcurrentHashMap<>();
 
     private static class DamageContext {
@@ -70,8 +64,7 @@ public class HitboxEvents {
         Entity direct = ctx.directEntity;
         if (direct instanceof Projectile proj) {
             // Use your sweep logic to compute hit position against this player
-            Vec3 hit = sweepProjectileStep(proj, player);
-            ctx.projectileHitPos = hit;
+            ctx.projectileHitPos = sweepProjectileStep(proj, player);
         }
 
         // You can do other detection here if needed (e.g. store attacker pos)
@@ -388,13 +381,13 @@ public class HitboxEvents {
         return false;
     }
 
-    static ResourceKey<DamageType> CBCproj = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","cannon_projectile"));
-    static ResourceKey<DamageType> CBCprojbig = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","big_cannon_projectile"));
-    static ResourceKey<DamageType> CBCmg = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","machine_gun_fire"));
-    static ResourceKey<DamageType> CBCmgwat = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","machine_gun_fire_in_water"));
-    static ResourceKey<DamageType> CBCtraff = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","traffic_cone"));
-    static ResourceKey<DamageType> CBCshrap = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","shrapnel"));
-    static ResourceKey<DamageType> CBCgrape = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("createbigcannons","grapeshot"));
+    static final ResourceKey<DamageType> CBCproj = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","cannon_projectile"));
+    static final ResourceKey<DamageType> CBCprojbig = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","big_cannon_projectile"));
+    static final ResourceKey<DamageType> CBCmg = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","machine_gun_fire"));
+    static final ResourceKey<DamageType> CBCmgwat = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","machine_gun_fire_in_water"));
+    static final ResourceKey<DamageType> CBCtraff = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","traffic_cone"));
+    static final ResourceKey<DamageType> CBCshrap = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","shrapnel"));
+    static final ResourceKey<DamageType> CBCgrape = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","grapeshot"));
 
 
 
@@ -418,7 +411,7 @@ public class HitboxEvents {
         BlockHitResult blockHit = world.clip(blockContext);
 
         Vec3 finalEnd = end;
-        if (blockHit != null && blockHit.getType() == HitResult.Type.BLOCK) {
+        if (blockHit.getType() == HitResult.Type.BLOCK) {
             finalEnd = blockHit.getLocation();
         }
 

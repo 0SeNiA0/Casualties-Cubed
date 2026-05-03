@@ -1,27 +1,25 @@
 package net.adinvas.prototype_pain.datagen;
 
-import net.adinvas.prototype_pain.ModMedicalFluids;
-import net.adinvas.prototype_pain.ModMedicalRegistry;
+import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.registry.ModMedicalFluids;
+import net.adinvas.prototype_pain.registry.ModMedicalRegistry;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.tags.ModMedicalFluidTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
 public class ModMedicalFluidTagProvider extends TagsProvider<MedicalFluid> {
-    public ModMedicalFluidTagProvider(
-            PackOutput output,
-            CompletableFuture<HolderLookup.Provider> lookupProvider,
-            CompletableFuture<TagLookup<MedicalFluid>> parentProvider
-    ) {
-        super(output, ModMedicalRegistry.MEDICAL_FLUIDS_KEY, lookupProvider, parentProvider);
+
+    public ModMedicalFluidTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, CompletableFuture<TagLookup<MedicalFluid>> parentProvider) {
+        super(output, ModMedicalRegistry.MEDICAL_FLUIDS_KEY, lookupProvider, parentProvider, PrototypePain.MOD_ID, null);
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
+    protected void addTags(HolderLookup.@NotNull Provider provider) {
 
         tag(ModMedicalFluidTags.OPIOIDS)
                 .add(ModMedicalFluids.OPIUM.getKey())

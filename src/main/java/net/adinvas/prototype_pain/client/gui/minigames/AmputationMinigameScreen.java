@@ -2,21 +2,15 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.AdjustShrapnelPacket;
-import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class AmputationMinigameScreen extends Screen {

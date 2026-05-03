@@ -1,8 +1,8 @@
 package net.adinvas.prototype_pain.item.misc;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

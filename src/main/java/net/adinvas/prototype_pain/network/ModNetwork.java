@@ -1,8 +1,7 @@
 package net.adinvas.prototype_pain.network;
 
 import net.adinvas.prototype_pain.PrototypePain;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
+import net.adinvas.prototype_pain.network.packet.*;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -10,9 +9,10 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import java.util.Optional;
 
 public class ModNetwork {
+    
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(PrototypePain.MOD_ID, "prototype_pain_main"), // channel name (unique per mod)
+            PrototypePain.resourceLoc("prototype_pain_main"), // channel name (unique per mod)
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -34,7 +34,7 @@ public class ModNetwork {
         CHANNEL.registerMessage(id++, ExchangeItemInHandPacket.class,ExchangeItemInHandPacket::write,ExchangeItemInHandPacket::new,ExchangeItemInHandPacket::handle);
         CHANNEL.registerMessage(id++, UseBandagePacket.class,UseBandagePacket::write,UseBandagePacket::new,UseBandagePacket::handle);
         CHANNEL.registerMessage(id++,DislocationTryPacket.class,DislocationTryPacket::write,DislocationTryPacket::new,DislocationTryPacket::handle);
-        CHANNEL.registerMessage(id++,ShrapnelFailPacket.class,ShrapnelFailPacket::write,ShrapnelFailPacket::new,ShrapnelFailPacket::handle);
+        CHANNEL.registerMessage(id++, ShrapnelFailPacket.class,ShrapnelFailPacket::write,ShrapnelFailPacket::new,ShrapnelFailPacket::handle);
         CHANNEL.registerMessage(id++, AdjustShrapnelPacket.class,AdjustShrapnelPacket::write,AdjustShrapnelPacket::new,AdjustShrapnelPacket::handle);
         CHANNEL.registerMessage(id++, UseBagMedItemPacket.class,UseBagMedItemPacket::write,UseBagMedItemPacket::new,UseBagMedItemPacket::handle);
         CHANNEL.registerMessage(id++, ExchangeItemInBagPacket.class,ExchangeItemInBagPacket::write,ExchangeItemInBagPacket::new,ExchangeItemInBagPacket::handle);
@@ -43,7 +43,7 @@ public class ModNetwork {
         CHANNEL.registerMessage(id++, CPRPacket.class,CPRPacket::write,CPRPacket::new,CPRPacket::handle);
         CHANNEL.registerMessage(id++, TriggerLastStandPacket.class,TriggerLastStandPacket::write,TriggerLastStandPacket::new,TriggerLastStandPacket::handle);
         CHANNEL.registerMessage(id++, BlindnessViewSyncPacket.class,BlindnessViewSyncPacket::encode,BlindnessViewSyncPacket::decode,BlindnessViewSyncPacket::handle);
-        CHANNEL.registerMessage(id++,FluidSyncS2CPacket.class,FluidSyncS2CPacket::write,FluidSyncS2CPacket::new,FluidSyncS2CPacket::handle,Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        CHANNEL.registerMessage(id++, FluidSyncS2CPacket.class,FluidSyncS2CPacket::write,FluidSyncS2CPacket::new,FluidSyncS2CPacket::handle,Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         CHANNEL.registerMessage(id++, AmputateRescrictionSyncPacket.class,AmputateRescrictionSyncPacket::encode,AmputateRescrictionSyncPacket::decode,AmputateRescrictionSyncPacket::handle,Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }

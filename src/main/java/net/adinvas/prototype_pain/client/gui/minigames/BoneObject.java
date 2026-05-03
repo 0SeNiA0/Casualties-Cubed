@@ -2,16 +2,14 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
-import net.adinvas.prototype_pain.network.DislocationTryPacket;
+import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec2;
 import org.joml.Vector2d;
-import org.joml.Vector2f;
 
 public class BoneObject extends GrabObject{
 

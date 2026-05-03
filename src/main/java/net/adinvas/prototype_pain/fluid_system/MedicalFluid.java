@@ -1,24 +1,18 @@
 package net.adinvas.prototype_pain.fluid_system;
 
 
-import net.adinvas.prototype_pain.ModMedicalFluids;
-import net.adinvas.prototype_pain.ModMedicalRegistry;
+import net.adinvas.prototype_pain.registry.ModMedicalRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.tags.TagLoader;
-import net.minecraft.tags.TagNetworkSerialization;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class MedicalFluid {
+
     private final MedicalEffect medicalEffect;
     private final int color;
-
 
     public MedicalFluid(MedicalEffect medicalEffect, int color) {
         this.medicalEffect = medicalEffect;
@@ -55,7 +49,7 @@ public class MedicalFluid {
     public static MedicalFluid getFromId(String fullId) {
         if (fullId == null) return null;
 
-        ResourceLocation id = new ResourceLocation(fullId);
+        ResourceLocation id = ResourceLocation.parse(fullId);
 
         IForgeRegistry<MedicalFluid> reg = ModMedicalRegistry.REGISTRY.get();
         return reg.getValue(id);

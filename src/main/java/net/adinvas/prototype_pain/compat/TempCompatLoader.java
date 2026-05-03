@@ -15,6 +15,7 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TempCompatLoader extends SimpleJsonResourceReloadListener {
+
     public static final TempCompatLoader INSTANCE = new TempCompatLoader();
 
     public TempCompatLoader() {
@@ -32,7 +33,7 @@ public class TempCompatLoader extends SimpleJsonResourceReloadListener {
                 JsonObject json = jsonElement.getAsJsonObject();
                 for (String key : json.keySet()) {
                     try {
-                        ResourceLocation blockId = new ResourceLocation(key);
+                        ResourceLocation blockId = ResourceLocation.parse(key);
                         JsonObject obj = json.getAsJsonObject(key);
                         float value = obj.has("temperature") ? obj.get("temperature").getAsFloat() : 36.6f;
 
@@ -45,7 +46,7 @@ public class TempCompatLoader extends SimpleJsonResourceReloadListener {
                 JsonObject json = jsonElement.getAsJsonObject();
                 for (String key : json.keySet()) {
                     try {
-                        ResourceLocation blockId = new ResourceLocation(key);
+                        ResourceLocation blockId = ResourceLocation.parse(key);
                         JsonObject obj = json.getAsJsonObject(key);
                         float day = obj.has("temperature") ? obj.get("temperature").getAsFloat() : null;
                         float night = obj.has("nightChange") ? obj.get("nightChange").getAsFloat() : 0;

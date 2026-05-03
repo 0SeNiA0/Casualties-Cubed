@@ -1,22 +1,18 @@
 package net.adinvas.prototype_pain.client.gui.minigames;
 
-import com.mojang.math.Axis;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.DislocationTryPacket;
-import net.adinvas.prototype_pain.network.ExchangeItemInHandPacket;
+import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.joml.Vector2d;
 
 import java.util.Optional;

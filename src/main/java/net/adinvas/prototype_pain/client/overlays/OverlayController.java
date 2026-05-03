@@ -13,12 +13,10 @@ import net.adinvas.prototype_pain.client.overlays.ovr.ReducedContiousnessOverlay
 import net.adinvas.prototype_pain.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,6 +24,7 @@ import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID, value = Dist.CLIENT)
 public class OverlayController {
     private static final List<IOverlay> overlays = new ArrayList<>();

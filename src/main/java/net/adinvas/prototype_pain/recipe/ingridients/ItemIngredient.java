@@ -134,10 +134,10 @@ public class ItemIngredient {
         int count = GsonHelper.getAsInt(obj, "count", 1);
 
         if (obj.has("item")) {
-            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(GsonHelper.getAsString(obj, "item")));
+            Item item = ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(GsonHelper.getAsString(obj, "item")));
             return new ItemIngredient(new ItemStack(item), count);
         } else if (obj.has("tag")) {
-            TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(GsonHelper.getAsString(obj, "tag")));
+            TagKey<Item> tag = TagKey.create(Registries.ITEM, ResourceLocation.parse(GsonHelper.getAsString(obj, "tag")));
             return new ItemIngredient(tag, count);
         }
 

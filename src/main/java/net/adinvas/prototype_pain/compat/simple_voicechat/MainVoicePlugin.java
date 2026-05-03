@@ -10,18 +10,18 @@ import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.TalkPacket;
+import net.adinvas.prototype_pain.network.packet.TalkPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Random;
 
 @ForgeVoicechatPlugin
 public class MainVoicePlugin implements VoicechatPlugin {
+
     @Override
     public String getPluginId() {
-        return "prototype_pain:main";
+        return PrototypePain.MOD_ID + "main";
     }
 
     @Override
@@ -64,6 +64,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
     private float getCons(Player player){
         return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getContiousness).orElse(100f);
     }
+
     private short[] applyAllInMods(short[] in){
         short[] out;
         Player player = Minecraft.getInstance().player;
@@ -157,5 +158,4 @@ public class MainVoicePlugin implements VoicechatPlugin {
         }
         return samples;
     }
-
 }

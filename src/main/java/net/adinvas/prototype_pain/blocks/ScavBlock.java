@@ -16,6 +16,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ScavBlock extends Block {
+
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
     private static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 10, 12);
     // adjust these numbers for your model size
@@ -45,7 +46,6 @@ public class ScavBlock extends Block {
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
-
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {

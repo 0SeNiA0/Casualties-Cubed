@@ -1,9 +1,9 @@
 package net.adinvas.prototype_pain.item.multi_tank;
 
-import net.adinvas.prototype_pain.ModMedicalFluids;
+import net.adinvas.prototype_pain.registry.ModMedicalFluids;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 

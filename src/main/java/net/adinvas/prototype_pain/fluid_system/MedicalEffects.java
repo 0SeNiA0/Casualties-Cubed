@@ -1,6 +1,5 @@
 package net.adinvas.prototype_pain.fluid_system;
 
-
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
@@ -287,5 +286,4 @@ public class MedicalEffects {
             });
         }
     };
-
 }

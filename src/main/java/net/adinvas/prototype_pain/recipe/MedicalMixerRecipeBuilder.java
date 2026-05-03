@@ -6,6 +6,7 @@ import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
 import net.adinvas.prototype_pain.recipe.ingridients.FluidIngredient;
 import net.adinvas.prototype_pain.recipe.ingridients.ItemIngredient;
+import net.adinvas.prototype_pain.registry.ModRecipes;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

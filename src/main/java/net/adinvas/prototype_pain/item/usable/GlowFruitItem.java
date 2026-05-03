@@ -1,14 +1,13 @@
 package net.adinvas.prototype_pain.item.usable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.blocks.ModBlocks;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.registry.ModBlocks;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

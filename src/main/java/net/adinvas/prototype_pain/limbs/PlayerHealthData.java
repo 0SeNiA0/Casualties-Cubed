@@ -1,19 +1,19 @@
 package net.adinvas.prototype_pain.limbs;
 
 import net.adinvas.prototype_pain.ModDamageTypes;
-import net.adinvas.prototype_pain.ModGamerules;
-import net.adinvas.prototype_pain.ModSounds;
+import net.adinvas.prototype_pain.registry.ModGamerules;
+import net.adinvas.prototype_pain.registry.ModSounds;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.compat.TempCompat;
 import net.adinvas.prototype_pain.compat.prototype_physics.PhysicsUtil;
 import net.adinvas.prototype_pain.compat.serene_seasons.SereneSeasonsUtil;
 import net.adinvas.prototype_pain.config.ServerConfig;
 import net.adinvas.prototype_pain.hitbox.HitSector;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.network.MedicalAction;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.TriggerLastStandPacket;
+import net.adinvas.prototype_pain.network.packet.TriggerLastStandPacket;
 import net.adinvas.prototype_pain.tags.ModItemTags;
 import net.adinvas.prototype_physics.RagdollPart;
 import net.minecraft.core.BlockPos;

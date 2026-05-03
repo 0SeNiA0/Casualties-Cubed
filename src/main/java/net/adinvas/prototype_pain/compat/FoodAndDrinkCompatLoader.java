@@ -13,6 +13,7 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class FoodAndDrinkCompatLoader extends SimpleJsonResourceReloadListener {
+
     public static final FoodAndDrinkCompatLoader INSTANCE = new FoodAndDrinkCompatLoader();
 
     public FoodAndDrinkCompatLoader() {
@@ -28,7 +29,7 @@ public class FoodAndDrinkCompatLoader extends SimpleJsonResourceReloadListener {
             JsonObject json = jsonElement.getAsJsonObject();
             for (String key : json.keySet()) {
                 try {
-                    ResourceLocation itemId = new ResourceLocation(key);
+                    ResourceLocation itemId = ResourceLocation.parse(key);
                     JsonObject obj = json.getAsJsonObject(key);
 
                     FoodAndDrinkCompat.FoodEntry entry = new FoodAndDrinkCompat.FoodEntry();

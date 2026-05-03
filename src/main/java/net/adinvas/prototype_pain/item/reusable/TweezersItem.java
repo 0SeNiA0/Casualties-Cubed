@@ -2,13 +2,11 @@ package net.adinvas.prototype_pain.item.reusable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.client.MinigameOpener;
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
-import net.adinvas.prototype_pain.item.IMedicalMinigameUsable;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -20,7 +18,6 @@ import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TweezersItem extends Item implements IMedicalMinigameUsable, IAllowInMedicbags {
     public TweezersItem() {

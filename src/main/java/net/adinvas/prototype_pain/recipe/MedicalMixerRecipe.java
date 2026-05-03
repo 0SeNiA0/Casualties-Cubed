@@ -1,8 +1,8 @@
 package net.adinvas.prototype_pain.recipe;
 
-import net.adinvas.prototype_pain.blocks.medical_mixer.MedicalMixerBlockEntity;
 import net.adinvas.prototype_pain.recipe.ingridients.FluidIngredient;
 import net.adinvas.prototype_pain.recipe.ingridients.ItemIngredient;
+import net.adinvas.prototype_pain.registry.ModRecipes;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
@@ -17,6 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.List;
 
 public class MedicalMixerRecipe implements Recipe<SimpleContainer> {
+
     private final ResourceLocation id;
 
     private final List<ItemIngredient> itemInputs;

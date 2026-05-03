@@ -2,6 +2,7 @@ package net.adinvas.prototype_pain.datagen;
 
 
 import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.datagen.worldgen.ModWorldGenProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -15,7 +16,6 @@ import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID,bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenretors {
-
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event){
@@ -42,8 +42,6 @@ public class DataGenretors {
                     )
             );
         }
-
-
 
         generator.addProvider(event.includeServer(),new ModRecipeProvider(output));
     }

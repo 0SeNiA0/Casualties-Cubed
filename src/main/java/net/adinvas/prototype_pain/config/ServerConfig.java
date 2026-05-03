@@ -3,9 +3,8 @@ package net.adinvas.prototype_pain.config;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ServerConfig {
-    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec SPEC;
 
+    public static final ForgeConfigSpec SPEC;
 
     public static final ForgeConfigSpec.DoubleValue DISINFECTION_SCALE;
     public static final ForgeConfigSpec.DoubleValue WUND_ANTIBLEED_RATE;
@@ -63,6 +62,8 @@ public class ServerConfig {
 
 
     static {
+        ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+
         BUILDER.push("Prototype Pain Server Config");
 
         DISINFECTION_SCALE = BUILDER

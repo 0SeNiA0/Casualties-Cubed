@@ -11,11 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FoodAndDrinkCompat {
+
     public static class FoodEntry{
         public float sickness;
         public float thirst;
         public float temperature;
     }
+
     private static final Map<Item, FoodEntry> FOOD_DATA = new HashMap<>();
 
     public static void clear() {
@@ -30,13 +32,12 @@ public class FoodAndDrinkCompat {
     public static FoodEntry get(Item item) {
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(item);
         if (FOOD_DATA.get(item)==null){
-            return getFallback(id,new ItemStack(item));
+            return getFallback(id, new ItemStack(item));
         }
         return FOOD_DATA.get(item);
     }
 
     public static FoodEntry getFallback(ResourceLocation id, ItemStack stack) {
-        Item item = stack.getItem();
         String path = id.getPath().toLowerCase(); // registry name, e.g. "apple_pie" or "energy_drink"
         String displayName = stack.getHoverName().getString().toLowerCase(); // actual visible name
 

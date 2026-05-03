@@ -2,13 +2,12 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 
 import com.mojang.math.Axis;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.network.CPRPacket;
+import net.adinvas.prototype_pain.network.packet.CPRPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 

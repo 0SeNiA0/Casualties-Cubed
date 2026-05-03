@@ -1,8 +1,8 @@
 package net.adinvas.prototype_pain.item.multi_tank;
 
 import net.adinvas.prototype_pain.client.MinigameOpener;
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
-import net.adinvas.prototype_pain.item.IMedicalMinigameUsable;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;

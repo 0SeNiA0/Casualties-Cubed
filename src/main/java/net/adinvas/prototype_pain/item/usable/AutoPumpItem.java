@@ -2,9 +2,9 @@ package net.adinvas.prototype_pain.item.usable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.Util;
-import net.adinvas.prototype_pain.item.IAllowInMedicbags;
-import net.adinvas.prototype_pain.item.INbtDrivenDurability;
-import net.adinvas.prototype_pain.item.ISimpleMedicalUsable;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowInMedicbags, INbtDrivenDurability {
     public AutoPumpItem() {

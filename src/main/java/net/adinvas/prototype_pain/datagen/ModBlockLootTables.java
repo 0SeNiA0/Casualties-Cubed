@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.datagen;
 
-import net.adinvas.prototype_pain.blocks.ModBlocks;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.registry.ModBlocks;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Set;
 
 public class ModBlockLootTables extends BlockLootSubProvider {
+
     protected ModBlockLootTables() {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags());
     }

@@ -1,17 +1,16 @@
 package net.adinvas.prototype_pain.client.gui.minigames;
 
 import com.mojang.math.Axis;
-import net.adinvas.prototype_pain.ModSounds;
+import net.adinvas.prototype_pain.registry.ModSounds;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.client.ticksounds.SyringeTickSound;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
-import net.adinvas.prototype_pain.fluid_system.MultiFluidTankHandler;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.UseSyringePacket;
+import net.adinvas.prototype_pain.network.packet.UseSyringePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

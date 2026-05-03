@@ -1,13 +1,8 @@
 package net.adinvas.prototype_pain.client.ticksounds;
 
-import net.adinvas.prototype_pain.ModSounds;
-import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.registry.ModSounds;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 

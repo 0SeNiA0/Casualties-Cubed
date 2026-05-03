@@ -10,12 +10,12 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.adinvas.prototype_pain.ModMedicalRegistry;
+import net.adinvas.prototype_pain.registry.ModMedicalRegistry;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.recipe.MedicalMixerRecipe;
 import net.adinvas.prototype_pain.recipe.ingridients.FluidIngredient;
 import net.adinvas.prototype_pain.recipe.ingridients.ItemIngredient;
@@ -28,20 +28,18 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe> {
-    public static final ResourceLocation UID = new ResourceLocation(PrototypePain.MOD_ID,"medical_mixer_recipe");
+    
+    public static final ResourceLocation UID = PrototypePain.resourceLoc("medical_mixer_recipe");
     private static final ResourceLocation TEX =
-            new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/medical_mixer_gui.png");
-
+            PrototypePain.resourceLoc("textures/gui/medical_mixer_gui.png");
 
     public static final RecipeType<MedicalMixerRecipe> MEDICAL_MIXER_RECIPE_TYPE =
             new RecipeType<>(UID,MedicalMixerRecipe.class);
@@ -55,9 +53,6 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(ModItems.MedicalMixer.get()));
         PrototypePain.LOGGER.info("MADE RECIPE TYPE");
     }
-
-
-
 
     @Override
     public RecipeType<MedicalMixerRecipe> getRecipeType() {
@@ -88,8 +83,6 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
         int width = 16;
         int height = 38;
         int capacity = 1000;
-
-
 
         for (int i = 0; i < medicalMixerRecipe.getFluidInputs().size(); i++) {
             FluidIngredient ingredient = medicalMixerRecipe.getFluidInputs().get(i);
@@ -172,6 +165,4 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
 
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
     }
-
-
 }

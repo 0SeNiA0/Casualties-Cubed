@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.datagen;
 
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.item.ModItems;
+import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.loot.AddFilledToChestsModifier;
 import net.adinvas.prototype_pain.loot.AddRandomFillToChestsModifier;
 import net.minecraft.data.PackOutput;
@@ -10,6 +10,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCon
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 
 public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
+
     public ModGlobaLootModifiersProvider(PackOutput output) {
         super(output, PrototypePain.MOD_ID);
     }

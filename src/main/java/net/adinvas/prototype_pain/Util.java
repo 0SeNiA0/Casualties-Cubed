@@ -1,15 +1,10 @@
 package net.adinvas.prototype_pain;
 
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
-import net.minecraft.core.Registry;
+import net.adinvas.prototype_pain.registry.ModMedicalFluids;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Map;

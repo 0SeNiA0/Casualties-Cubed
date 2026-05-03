@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.item.special.bags.medium;
 
-import net.adinvas.prototype_pain.item.IBag;
+import net.adinvas.prototype_pain.item.api.IBag;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

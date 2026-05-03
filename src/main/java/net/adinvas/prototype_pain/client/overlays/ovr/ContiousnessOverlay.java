@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 public class ContiousnessOverlay implements IOverlay {
+
     private float intensity= 1;
     private float brain = 100;
     private boolean dying = false;
@@ -25,7 +26,7 @@ public class ContiousnessOverlay implements IOverlay {
         int height = mc.getWindow().getGuiScaledHeight();
         intensity = (float) Mth.lerp(0.25,lastInt,intensity);
         lastInt = intensity;
-        if (intensity<1){
+        if (intensity < 1){
 
             RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
@@ -35,22 +36,24 @@ public class ContiousnessOverlay implements IOverlay {
             float intensity2 = (float) Math.pow(intensity,2);
             ms.setColor(intensity2, intensity2, intensity2, 1f);
             ms.blit(
-                    new ResourceLocation("minecraft", "textures/misc/vignette.png"),
+                    ResourceLocation.withDefaultNamespace("textures/misc/vignette.png"),
                     0, 0,
                     0, 0,
                     width, height,
                     width, height
             );
         }
+
         ms.setColor(1F, 1F, 1F, (float) Math.pow(intensity-0.1f,8));
         ms.fill(0,0,width,height,0xFF000000);
         ms.setColor(1F, 1F, 1F, 1);
-        if (intensity>0.95){
+        if (intensity > 0.95){
             Component text = Component.translatable("prototype_pain.gui.give_up",Component.keybind("key.protoype_pain.give_up"));
             ms.drawCenteredString(mc.font,text,width/2,height/2,0xFFFFFF);
         }
+
         if (dying){
-            ms.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/brain.png"),width/2-16,height/4-40,0,0,32,32,32,32);
+            ms.blit(PrototypePain.resourceLoc("textures/gui/icons/brain.png"),width/2-16,height/4-40,0,0,32,32,32,32);
             ms.fill(width/2-50,height/4, (int) (width/2-50+brain),height/4+10,0xFFFF4444);
         }
     }
