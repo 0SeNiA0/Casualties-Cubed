@@ -9,7 +9,7 @@ import net.adinvas.prototype_pain.client.gui.LootPlayerScreen;
 import net.adinvas.prototype_pain.compat.prototype_physics.PhysicsEvents;
 import net.adinvas.prototype_pain.config.ClientConfig;
 import net.adinvas.prototype_pain.config.ServerConfig;
-import net.adinvas.prototype_pain.event.ModEvents;
+import net.adinvas.prototype_pain.event.CommonEvent;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
 import net.adinvas.prototype_pain.item.special.bags.large.LargeMedibagScreen;
 import net.adinvas.prototype_pain.item.special.bags.medium.MediumMedibagScreen;
@@ -60,7 +60,7 @@ public class PrototypePain {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ModEvents());
+        MinecraftForge.EVENT_BUS.register(new CommonEvent());
         ModFluids.register(modEventBus);
         ModMedicalFluids.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);

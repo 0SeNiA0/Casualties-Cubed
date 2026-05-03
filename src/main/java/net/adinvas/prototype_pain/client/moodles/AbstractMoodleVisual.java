@@ -11,14 +11,17 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractMoodleVisual implements Cloneable{
+public abstract class AbstractMoodleVisual implements Cloneable {
+
+    private static final ResourceLocation RING_TEX = PrototypePain.resourceLoc("textures/gui/moodles/moodle_ring.png");
+
     private MoodleStatus moodleStatus;
     private MoodleStatus lastStatus;
     private int sinceChange = 0;
 
     private long lastJumpTime = -1;
-    private final long animationDuration = 300; // ms
-    private final float jumpHeight = -7;        // pixels up
+    private static final long animationDuration = 300; // ms
+    private static final float jumpHeight = -7;        // pixels up
 
     public void triggerJump() {
         lastJumpTime = System.currentTimeMillis();
@@ -33,15 +36,16 @@ public abstract class AbstractMoodleVisual implements Cloneable{
                 mouseY >= y && mouseY < y + 16;
     }
 
-    public void render(Player target,GuiGraphics ms, float partialTicks,int x, int y) {
+    public void render(Player target,GuiGraphics ms, float partialTicks, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level==null)return;
-        double time = (mc.level.getGameTime() + partialTicks) / 20.0;
+        if (mc.level == null) return;
+
+        float time = (mc.level.getGameTime() + partialTicks) / 20f;
 
         setMoodleStatus(calculateStatus(target));
 
-        if (lastStatus!=getMoodleStatus()){
-            if (sinceChange++>5){
+        if (lastStatus != getMoodleStatus()){
+            if (sinceChange++ > 5){
                 sinceChange=0;
                 lastStatus = getMoodleStatus();
                 triggerJump();
@@ -61,20 +65,20 @@ public abstract class AbstractMoodleVisual implements Cloneable{
 
         int finaly = y + (int) animatedOffset;
 
-
-        if (moodleStatus==MoodleStatus.CRITICAL){
+        if (moodleStatus == MoodleStatus.CRITICAL){
             int color = getCriticalColor();
             int endcolor = getCrilticalEndColor();
-            float pulse = (float) Math.sin(time*Math.PI);
+            float pulse = Mth.sin(time * Mth.PI);
 
             ms.fillGradient(x+1, (int) (finaly-20+(10*pulse)),x+15, finaly+3,endcolor,color);
         }
+
         renderBackground(ms,partialTicks,x,finaly);
         renderIcon(ms,partialTicks,x,finaly);
     }
 
     public boolean shouldRender() {
-        return moodleStatus!=MoodleStatus.NONE;
+        return moodleStatus != MoodleStatus.NONE;
     }
 
     public int getCriticalColor(){
@@ -91,22 +95,19 @@ public abstract class AbstractMoodleVisual implements Cloneable{
     }
 
     public void setMoodleStatus(MoodleStatus moodleStatus) {
-        if (this.moodleStatus != moodleStatus&&moodleStatus!=null) {
+        if (this.moodleStatus != moodleStatus && moodleStatus != null) {
             this.moodleStatus = moodleStatus;
         }
     }
 
-    public void renderBackground(GuiGraphics guiGraphics,float partialTicks,int x,int y){
-        if (moodleStatus==null)return;
-        guiGraphics.blit(moodleStatus.getTex(),x,y,0,0,16,16,16,16);
-        guiGraphics.blit(getRingTex(),x,y,0,0,16,16,16,16);
+    public void renderBackground(GuiGraphics guiGraphics, float partialTicks, int x, int y){
+        if (moodleStatus == null) return;
+
+        guiGraphics.blit(moodleStatus.tex,x,y,0,0,16,16,16,16);
+        guiGraphics.blit(RING_TEX,x,y,0,0,16,16,16,16);
     }
 
-    private ResourceLocation getRingTex(){
-        return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/moodle_ring.png");
-    }
-
-    abstract public ResourceLocation renderIcon(GuiGraphics ms, float partialTicks,int x, int y);
+    abstract public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y);
 
     @Override
     public AbstractMoodleVisual clone() {

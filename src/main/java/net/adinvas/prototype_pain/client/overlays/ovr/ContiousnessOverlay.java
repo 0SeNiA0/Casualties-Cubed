@@ -13,11 +13,13 @@ import net.minecraft.world.entity.player.Player;
 
 public class ContiousnessOverlay implements IOverlay {
 
-    private float intensity= 1;
+    private static final ResourceLocation VIGNETTE_LOCATION = ResourceLocation.withDefaultNamespace("textures/misc/vignette.png");
+
+    private float intensity = 1;
     private float brain = 100;
     private boolean dying = false;
 
-    private float lastInt=0;
+    private float lastInt = 0;
 
     @Override
     public void render(GuiGraphics ms, float partialTicks) {
@@ -32,11 +34,11 @@ public class ContiousnessOverlay implements IOverlay {
             RenderSystem.enableBlend();
 
             // Use multiplicative blending so white is transparent, black darkens screen
-                RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR);
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR);
             float intensity2 = (float) Math.pow(intensity,2);
             ms.setColor(intensity2, intensity2, intensity2, 1f);
             ms.blit(
-                    ResourceLocation.withDefaultNamespace("textures/misc/vignette.png"),
+                    VIGNETTE_LOCATION,
                     0, 0,
                     0, 0,
                     width, height,
@@ -60,9 +62,8 @@ public class ContiousnessOverlay implements IOverlay {
 
     @Override
     public boolean shouldRender() {
-        return intensity>0;
+        return intensity > 0;
     }
-
 
     public void calculate(Player player) {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{

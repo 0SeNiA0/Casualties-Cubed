@@ -1,10 +1,12 @@
-package net.adinvas.prototype_pain.event;
+package net.adinvas.prototype_pain.client.event;
 
 import net.adinvas.prototype_pain.client.Keybinds;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.SoundMenager;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
+import net.adinvas.prototype_pain.client.overlays.OverlayController;
+import net.adinvas.prototype_pain.event.CommonEvent;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.client.gui.FluidExchangeScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
@@ -36,9 +38,16 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID, value = Dist.CLIENT)
-public class ClientEvents {
+public class ClientEvent {
+
     static int GiveUpTime = 40;
     static int WaitTimer = 0;
+
+    @SubscribeEvent
+    public static void onRenderLevel(RenderLevelStageEvent event) {
+        OverlayController.renderShaderOverlay(event);
+    }
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.ClientTickEvent event){
         Minecraft mc = Minecraft.getInstance();
@@ -49,8 +58,9 @@ public class ClientEvents {
             WaitTimer--;
         }
         profiler.push("prototype_pain:client_misc");
-        if (player==null)return;
-        if (event.side== LogicalSide.CLIENT) {
+        if (player == null)return;
+
+        if (event.side == LogicalSide.CLIENT) {
             AtomicBoolean uncontious = new AtomicBoolean(false);
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 if (h.getContiousness()<=10){
@@ -60,7 +70,7 @@ public class ClientEvents {
             if (Keybinds.OPEN_PAIN_GUI.isDown()&&!uncontious.get()) {
                 Keybinds.OPEN_PAIN_GUI.consumeClick();
                 if (WaitTimer<=0) {
-                    Player target = ModEvents.getLookedAtPlayer(player, 2);
+                    Player target = CommonEvent.getLookedAtPlayer(player, 2);
                     boolean self = target == null || player.isShiftKeyDown();
 
 
@@ -155,7 +165,7 @@ public class ClientEvents {
             });
         }
     }
-    private static final ResourceLocation pain_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/pain.png");
+    private static final ResourceLocation pain_tex = PrototypePain.resourceLoc("textures/gui/icons/pain.png");
 
     @SubscribeEvent
     public static void onOpenInventory(ScreenEvent.Opening event) {
@@ -244,11 +254,8 @@ public class ClientEvents {
         Minecraft mc =  Minecraft.getInstance();
         mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
             HumanoidArm arm = mc.player.getMainArm();
-            Limb limb = switch (arm){
-                case LEFT -> Limb.LEFT_ARM;
-                case RIGHT -> Limb.RIGHT_ARM;
-                default -> Limb.RIGHT_ARM;
-            };
+            Limb limb = arm == HumanoidArm.LEFT ? Limb.LEFT_ARM : Limb.RIGHT_ARM;
+
             if (h.isAmputated(limb))event.setCanceled(true);
         });
 

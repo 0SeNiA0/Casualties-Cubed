@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Random;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber
 public class BrainDamageServerController {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

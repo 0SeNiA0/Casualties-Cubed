@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID)
-public class ModEvents {
+public class CommonEvent {
 
     @SubscribeEvent
     public void onAttachCap(AttachCapabilitiesEvent<Entity> event) {

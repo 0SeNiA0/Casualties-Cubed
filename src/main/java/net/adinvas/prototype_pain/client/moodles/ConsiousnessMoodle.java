@@ -2,7 +2,6 @@ package net.adinvas.prototype_pain.client.moodles;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,7 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ConsiousnessMoodle extends AbstractMoodleVisual{
+public class ConsiousnessMoodle extends AbstractMoodleVisual {
+
+    private static final ResourceLocation TEX = PrototypePain.resourceLoc("textures/gui/moodles/consious_moodle.png");
+    private static final ResourceLocation UNC_TEX = PrototypePain.resourceLoc("textures/gui/moodles/unconsious_moodle.png");
+
     public boolean fullyUNC = false;
 
     @Override
@@ -43,13 +46,9 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual{
     }
 
     @Override
-    public ResourceLocation renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/consious_moodle.png");
-        if (fullyUNC){
-            tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/unconsious_moodle.png");
-        }
+    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+        ResourceLocation tex = fullyUNC ? UNC_TEX : TEX;
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
-        return tex;
     }
 
     @Override

@@ -2,7 +2,6 @@ package net.adinvas.prototype_pain.client.moodles;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -33,10 +32,9 @@ public class InfectionMoodle extends AbstractMoodleVisual{
     }
 
     @Override
-    public ResourceLocation renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/infection_moodle.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
-        return tex;
     }
 
     @Override

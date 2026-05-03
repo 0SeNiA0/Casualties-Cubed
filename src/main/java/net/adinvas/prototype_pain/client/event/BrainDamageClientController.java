@@ -1,4 +1,4 @@
-package net.adinvas.prototype_pain.event;
+package net.adinvas.prototype_pain.client.event;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;

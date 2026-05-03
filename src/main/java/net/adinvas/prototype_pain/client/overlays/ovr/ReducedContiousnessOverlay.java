@@ -1,7 +1,5 @@
 package net.adinvas.prototype_pain.client.overlays.ovr;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.client.Minecraft;
@@ -12,6 +10,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 public class ReducedContiousnessOverlay implements IOverlay {
+
+    private static final ResourceLocation TEX = PrototypePain.resourceLoc("textures/gui/icons/brain.png");
+    
     private float intensity= 1;
     private float brain = 100;
     private boolean dying = false;
@@ -30,7 +31,7 @@ public class ReducedContiousnessOverlay implements IOverlay {
             ms.drawCenteredString(mc.font,text,width/2,height/2,0xFFFFFF);
         }
         if (dying){
-            ms.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/brain.png"),width/2-16,height/4-40,0,0,32,32,32,32);
+            ms.blit(TEX,width/2-16,height/4-40,0,0,32,32,32,32);
             ms.fill(width/2-50,height/4, (int) (width/2-50+brain),height/4+10,0xFFFF4444);
         }
     }
@@ -42,9 +43,9 @@ public class ReducedContiousnessOverlay implements IOverlay {
 
 
     public void calculate(Player player) {
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            intensity = (100-h.getContiousness())/100;
-            dying = h.getOxygen()<4;
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            intensity = (100 - h.getContiousness()) / 100;
+            dying = h.getOxygen() < 4;
             brain = h.getBrainHealth();
         });
     }

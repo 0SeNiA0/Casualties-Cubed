@@ -10,16 +10,16 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID)
-public class ExplosionEvents {
+public class ExplosionEvent {
 
     private static final double HEARING_DISTANCE = 20.0;
+
     @SubscribeEvent
-    public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
+    public static void onExplosionDetonate(net.minecraftforge.event.level.ExplosionEvent.Detonate event) {
         Level level = event.getLevel();
         Vec3 explosionPos = event.getExplosion().getPosition();
         // 1. This logic must run on the server
@@ -39,18 +39,19 @@ public class ExplosionEvents {
             if (distance > HEARING_DISTANCE) {
                 continue; // Player was in the corner of the AABB but > 32 blocks away
             }
-            float distanceScale = (float) Math.pow(1-distance/HEARING_DISTANCE,2f);
+
+            float distanceScale = (float) Math.pow(1 - distance / HEARING_DISTANCE, 2f);
             if (!hasLineOfSight(level, player, explosionPos)){
 
-                distanceScale/=2;
+                distanceScale /= 2;
             }
-            float finalDistanceScale = distanceScale+0.1f;
+            float finalDistanceScale = distanceScale + 0.1f;
 
-            if (distanceScale>0.1)
+            if (distanceScale > 0.1)//TODO rebalance explosions
                 player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                    h.setContiousness(h.getContiousness()-(100* finalDistanceScale));
-                    h.setHearingLoss((float) (h.getHearingLoss()+Math.max(0.05, finalDistanceScale /2f)));
-                    h.setFlashHearingLoss(h.getFlashHearingLoss()+Math.min(0.25f, finalDistanceScale *4));
+                    h.setContiousness(h.getContiousness() - (100 * finalDistanceScale));
+                    h.setHearingLoss((float) (h.getHearingLoss() + Math.max(0.05, finalDistanceScale / 2f)));
+                    h.setFlashHearingLoss(h.getFlashHearingLoss() + Math.min(0.25f, finalDistanceScale * 4));
                 });
         }
     }
@@ -80,7 +81,4 @@ public class ExplosionEvents {
         // Therefore, the player has a clear line of sight.
         return hitResult.getType() == HitResult.Type.MISS;
     }
-
-
-
 }

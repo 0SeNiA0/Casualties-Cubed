@@ -4,7 +4,6 @@ package net.adinvas.prototype_pain.client.overlays;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.overlays.exp.*;
 import net.adinvas.prototype_pain.client.overlays.ovr.ContiousnessOverlay;
 import net.adinvas.prototype_pain.client.overlays.ovr.IOverlay;
@@ -14,19 +13,16 @@ import net.adinvas.prototype_pain.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID, value = Dist.CLIENT)
 public class OverlayController {
+
     private static final List<IOverlay> overlays = new ArrayList<>();
     private static final List<IOverlay> EXoverlays = new ArrayList<>();
     private static final List<IShaderOverlay> shaderOverlays = new ArrayList<>();
@@ -82,37 +78,26 @@ public class OverlayController {
         registerEXOverlay(new ReducedContiousnessOverlay());
     }
 
-   @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void onRenderOverlay(RenderGuiOverlayEvent.Post event) {
-       GuiGraphics ms = event.getGuiGraphics();
-       Minecraft mc = Minecraft.getInstance();
-       ProfilerFiller profiler = mc.getProfiler();
+//TODO make sure that overlays look correctly
+    public static void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
+        Minecraft minecraft = Minecraft.getInstance();
+        ProfilerFiller profiler = minecraft.getProfiler();
 
-       profiler.push("prototype_pain:overlay");
-        float pt = event.getPartialTick();
+        profiler.push("prototype_pain:overlay");
         // Render all registered overlays that should draw
-       if (isExperiment()){
-           for (IOverlay overlay : EXoverlays) {
-               overlay.calculate(mc.player);
-               if (overlay.shouldRender()) {
-                   overlay.render(ms, pt);
-               }
-           }
-       }else{
-           for (IOverlay overlay : overlays) {
-               overlay.calculate(mc.player);
-               if (overlay.shouldRender()) {
-                   overlay.render(ms, pt);
-               }
-           }
-       }
-       profiler.pop();
+        List<IOverlay> overlays_ = isExperiment() ? EXoverlays : overlays;
+        Player player = minecraft.player;
+        for (IOverlay overlay : overlays_) {
+            overlay.calculate(player);
+            if (overlay.shouldRender()) {
+                overlay.render(graphics, partialTick);
+            }
+        }
+
+        profiler.pop();
     }
 
-
-
-    @SubscribeEvent
-    public static void onRenderExperimental(RenderLevelStageEvent event) {
+    public static void renderShaderOverlay(RenderLevelStageEvent event) {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
 
         Minecraft mc = Minecraft.getInstance();
@@ -145,8 +130,6 @@ public class OverlayController {
         // 3️⃣ Copy final result → main screen
         blit(renderTargets.get(i), mc.getMainRenderTarget());
         mc.getMainRenderTarget().bindWrite(false);
-
-
     }
 
     private static List<RenderTarget> renderTargets = new ArrayList<>();

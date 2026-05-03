@@ -1,21 +1,16 @@
 package net.adinvas.prototype_pain.client.moodles;
 
-import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = PrototypePain.MOD_ID, value = Dist.CLIENT)
 public class MoodleController {
+
     private static final List<AbstractMoodleVisual> Moodles = new ArrayList<>();
     private static final int MOODLE_SIZE = 16;
     private static final int PADDING = 4;
@@ -58,6 +53,34 @@ public class MoodleController {
         registerMoodle(new HearingLossMoodle());
     }
 
+    /** Render moodles as overlay (left-bottom, respecting hotbar) */
+    public static void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
+        Minecraft minecraft = gui.getMinecraft();
+        if (minecraft.player == null) return;
+
+        ProfilerFiller profiler = minecraft.getProfiler();
+        profiler.push("prototype_pain:moodles");
+
+        int hotbarLeft = (width / 2) - 91;
+        int y = height - MOODLE_SIZE - 4;
+
+        Player player = minecraft.player;
+        List<AbstractMoodleVisual> visible = getVisibleMoodles(player);
+        int x = 4;
+
+        for (int i = 0; i < visible.size(); i++) {
+            if (x + MOODLE_SIZE + 16 > hotbarLeft) {
+                overflowMoodle.setLeftover(visible.size() - i);
+                overflowMoodle.render(player, graphics, partialTick, x, y);
+                break;
+            }
+            visible.get(i).render(player, graphics, partialTick, x, y);
+            x += MOODLE_SIZE + PADDING;
+        }
+
+        profiler.pop();
+    }
+
     /** Collects all visible moodles for given player */
     public static int UPDATE_THROTLE = 0;
     public static List<AbstractMoodleVisual> getVisibleMoodles(Player player) {
@@ -86,37 +109,5 @@ public class MoodleController {
         }
 
         return visible;
-    }
-
-    /** Render moodles as HUD overlay (left-bottom, respecting hotbar) */
-    public static void renderOnHud(GuiGraphics gfx, float partialTick, Player player, int screenWidth, int screenHeight) {
-        int hotbarLeft = (screenWidth / 2) - 91;
-        int y = screenHeight - MOODLE_SIZE - 4;
-
-        List<AbstractMoodleVisual> visible = getVisibleMoodles(player);
-        int x = 4;
-
-        for (int i = 0; i < visible.size(); i++) {
-            if (x + MOODLE_SIZE + 16 > hotbarLeft) {
-                overflowMoodle.setLeftover(visible.size() - i);
-                overflowMoodle.render(player, gfx, partialTick, x, y);
-                break;
-            }
-            visible.get(i).render(player, gfx, partialTick, x, y);
-            x += MOODLE_SIZE + PADDING;
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onRenderOverlay(RenderGuiOverlayEvent.Post event) {
-        Minecraft mc = Minecraft.getInstance();
-        ProfilerFiller profiler = mc.getProfiler();
-
-        profiler.push("prototype_pain:moodles");
-        if (mc.player == null) return;
-        renderOnHud(event.getGuiGraphics(), event.getPartialTick(), mc.player,
-                mc.getWindow().getGuiScaledWidth(),
-                mc.getWindow().getGuiScaledHeight());
-        profiler.pop();
     }
 }

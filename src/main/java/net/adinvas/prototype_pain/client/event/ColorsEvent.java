@@ -1,4 +1,4 @@
-package net.adinvas.prototype_pain.event;
+package net.adinvas.prototype_pain.client.event;
 
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.Util;

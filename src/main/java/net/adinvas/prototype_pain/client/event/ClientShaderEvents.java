@@ -1,4 +1,4 @@
-package net.adinvas.prototype_pain.event;
+package net.adinvas.prototype_pain.client.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.adinvas.prototype_pain.PrototypePain;

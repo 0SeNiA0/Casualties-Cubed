@@ -36,14 +36,13 @@ public class TemperatureMoodle extends AbstractMoodleVisual{
     }
 
     @Override
-    public ResourceLocation renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/temphigh.png");
         if (low){
             tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/templow.png");
         }
 
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
-        return tex;
     }
 
     @Override
