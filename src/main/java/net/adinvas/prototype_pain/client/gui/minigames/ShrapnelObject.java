@@ -5,10 +5,10 @@ import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.network.packet.ShrapnelFailPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
-public class ShrapnelObject extends GrabObject{
+public class ShrapnelObject extends GrabObject {
+    
     int dx= 0;
     private final int minstickY;
     private final int maxY;
@@ -17,7 +17,7 @@ public class ShrapnelObject extends GrabObject{
 
     public ShrapnelObject(int x, int y, int minstickY, int maxY, Player target, Limb limb) {
         super(x, y, 7, 5, 19, 129,
-                new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/shrapnel.png")
+                PrototypePain.resourceLoc("textures/gui/limbs/shrapnel.png")
                 , 32, 160, 1);
         dx= x;
         this.minstickY = minstickY;

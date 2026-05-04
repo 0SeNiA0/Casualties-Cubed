@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class HighBloodMoodle extends AbstractMoodleVisual{
+public class HighBloodMoodle extends AbstractMoodleVisual {
+    
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Float> blood = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBloodVolume);
@@ -33,7 +34,7 @@ public class HighBloodMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/highblood_moodle.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/highblood_moodle.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

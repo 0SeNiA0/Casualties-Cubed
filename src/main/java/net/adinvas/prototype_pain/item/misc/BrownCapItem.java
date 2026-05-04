@@ -1,44 +1,38 @@
 package net.adinvas.prototype_pain.item.misc;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.registry.ModBlocks;
-
+import net.adinvas.prototype_pain.blocks.BrownCapBlock;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BrownCapItem extends Item {
-    public BrownCapItem() {
-        super(new Properties()
+public class BrownCapItem extends BlockItem {
+
+    public BrownCapItem(BrownCapBlock block) {
+        super(block, new Properties()
                 .food(new FoodProperties.Builder()
                         .nutrition(1)
                         .saturationMod(1)
                         .alwaysEat()
                         .build()));
     }
-
 
     @Override
     public SoundEvent getEatingSound() {
@@ -138,8 +132,6 @@ public class BrownCapItem extends Item {
                     h.setTemperature(h.getTemperature()+4.5f);
                 });
             }
-
-
         }
         return super.finishUsingItem(pStack,pLevel,pLivingEntity);
     }
@@ -152,28 +144,6 @@ public class BrownCapItem extends Item {
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.EAT;
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
-        BlockState state = world.getBlockState(context.getClickedPos());
-
-        boolean block_test = state.is(Blocks.DIRT) || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.STONE)||state.is(Blocks.DEEPSLATE)
-                ||state.is(Blocks.ANDESITE)
-                ||state.is(Blocks.DIORITE)
-                ||state.is(Blocks.TUFF)
-                ||state.is(Blocks.GRANITE)
-                ||state.is(Blocks.COBBLESTONE)
-                ||state.is(Blocks.COBBLED_DEEPSLATE);
-
-        if (world.getBlockState(pos).isAir()&& block_test) {
-            world.setBlock(pos, ModBlocks.BROWN_CAP.get().defaultBlockState(), 3);
-            context.getItemInHand().shrink(1);
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.PASS;
     }
 
     @Override

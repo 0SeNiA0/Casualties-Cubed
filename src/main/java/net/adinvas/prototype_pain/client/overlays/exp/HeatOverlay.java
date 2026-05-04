@@ -12,8 +12,8 @@ import net.minecraft.util.Mth;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 
 public class HeatOverlay implements IShaderOverlay {
-    public static float prevTemp = 0f;
 
+    public static float prevTemp = 0f;
 
     @Override
     public boolean shouldRender() {

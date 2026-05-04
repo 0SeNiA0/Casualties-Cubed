@@ -16,12 +16,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public class CustomButton extends AbstractWidget {
+    
     private StatusSprites status;
     private Limb limb;
     private Player target;
-    private final ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/button.png");
+    private final ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/button.png");
     public CustomButton(int pX, int pY, StatusSprites status, Limb limb, Player target) {
-        super(pX, pY, 128, 16, status.getTextComponents());
+        super(pX, pY, 128, 16, status.comp);
         this.status = status;
         this.limb = limb;
         this.target = target;

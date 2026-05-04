@@ -6,14 +6,13 @@ import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.client.gui.StatusSprites;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
+import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.network.packet.ExchangeItemInBagPacket;
 import net.adinvas.prototype_pain.network.packet.ExchangeItemInHandPacket;
-import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Optional;
 
 public class BandageMinigameScreen extends Screen {
+    
     private final Screen parent;
     private final Player target;
     private final ItemStack bandageStack;
@@ -103,7 +103,7 @@ public class BandageMinigameScreen extends Screen {
         bandageObject =new BandageObject(
                 0, 0,
                 0, 0, 64, 64,
-                new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/bandage.png"),
+                PrototypePain.resourceLoc("textures/gui/bandage.png"),
                 64, 64,
                 1f,
                 this.width/2,
@@ -192,7 +192,7 @@ public class BandageMinigameScreen extends Screen {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.fill(0,0,width,height,0x88000000);
         Minecraft mc = Minecraft.getInstance();
-        guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/bandage_center.png"),this.width/2-40,this.height/2-40,0,0,80,80,80,80,80);
+        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/bandage_center.png"),this.width/2-40,this.height/2-40,0,0,80,80,80,80,80);
 
 
         guiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.bandage_instruction1"),this.width/2,10,0xFFFFFF);
@@ -203,7 +203,7 @@ public class BandageMinigameScreen extends Screen {
         if(bleedRate>0){
             float bleedscale = 0.5f+ 1.4f*(bleedRate/maxBleed);
             float sizePx = 20 * bleedscale;
-            guiGraphics.blit(StatusSprites.BLEED.getResourceLocation(), (int) (width/2-sizePx/2), (int) (height/2-sizePx/2+10),0,0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
+            guiGraphics.blit(StatusSprites.BLEED.tex, (int) (width/2-sizePx/2), (int) (height/2-sizePx/2+10),0,0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
         }
         guiGraphics.renderItem(bandageStack,this.width/10-10,this.height/10+5);
         guiGraphics.drawString(mc.font,Component.empty().append(bandageStack.getHoverName()),this.width/10+16,this.height/10+5,0xFFFFFF);

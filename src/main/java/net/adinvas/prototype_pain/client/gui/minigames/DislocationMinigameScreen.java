@@ -5,19 +5,19 @@ import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
+import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2d;
 
 import java.util.Optional;
 
 public class DislocationMinigameScreen extends Screen {
+    
     private final Screen parent;
     private final Player target;
     private final Limb limb;
@@ -47,9 +47,9 @@ public class DislocationMinigameScreen extends Screen {
         guiGraphics.drawCenteredString(mc.font,(int)boneObject.getFakeDislocation()+"%",this.width/2,this.height / 6+175,0xCC0000);
         guiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.minigame_exit"),this.width/2,this.height / 6+190,0xFFFFFF);
 
-        guiGraphics.blit( new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/bone2.png"),this.width/2-160,this.height/2-40,0,0,160,80,160,80);
+        guiGraphics.blit( PrototypePain.resourceLoc("textures/gui/limbs/bone2.png"),this.width/2-160,this.height/2-40,0,0,160,80,160,80);
         guiGraphics.setColor(0.5f,0.5f,0.5f,0.1f);
-        guiGraphics.blit( new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/bone.png"),this.width/2,this.height/2-40,0,0,160,80,160,80);
+        guiGraphics.blit( PrototypePain.resourceLoc("textures/gui/limbs/bone.png"),this.width/2,this.height/2-40,0,0,160,80,160,80);
         guiGraphics.setColor(1,1,1,1f);
         boneObject.render(guiGraphics);
 

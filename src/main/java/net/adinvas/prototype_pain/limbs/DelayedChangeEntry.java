@@ -3,6 +3,7 @@ package net.adinvas.prototype_pain.limbs;
 import net.minecraft.nbt.CompoundTag;
 
 public class DelayedChangeEntry {
+
     private Limb limb;
     private float amount_per_tick;
     private int ticks;

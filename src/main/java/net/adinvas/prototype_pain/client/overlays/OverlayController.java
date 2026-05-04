@@ -4,8 +4,9 @@ package net.adinvas.prototype_pain.client.overlays;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.adinvas.prototype_pain.client.overlays.exp.*;
-import net.adinvas.prototype_pain.client.overlays.ovr.ContiousnessOverlay;
+import net.adinvas.prototype_pain.client.overlays.ovr.ConsciousnessOverlay;
 import net.adinvas.prototype_pain.client.overlays.ovr.IOverlay;
 import net.adinvas.prototype_pain.client.overlays.ovr.PainOverlay;
 import net.adinvas.prototype_pain.client.overlays.ovr.ReducedContiousnessOverlay;
@@ -28,26 +29,17 @@ public class OverlayController {
     private static final List<IShaderOverlay> shaderOverlays = new ArrayList<>();
     private static final List<IShaderOverlay> EXshaderOverlays = new ArrayList<>();
 
-    public static void registerOverlay(IOverlay overlay) {
+    private static void registerOverlay(IOverlay overlay) {
         overlays.add(overlay);
     }
-    public static void registerEXOverlay(IOverlay overlay) {
+    private static void registerEXOverlay(IOverlay overlay) {
         EXoverlays.add(overlay);
     }
-    public static void registerOverlay(IShaderOverlay overlay) {
+    private static void registerOverlay(IShaderOverlay overlay) {
         shaderOverlays.add(overlay);
     }
-    public static void registerEXOverlay(IShaderOverlay overlay) {
+    private static void registerEXOverlay(IShaderOverlay overlay) {
         EXshaderOverlays.add(overlay);
-    }
-
-    public static <T extends IOverlay> T getOverlay(Class<T> clazz) {
-        for (IOverlay overlay : overlays) {
-            if (clazz.isInstance(overlay)) {
-                return clazz.cast(overlay);
-            }
-        }
-        return null;
     }
 
     public static boolean isExperiment(){
@@ -72,7 +64,7 @@ public class OverlayController {
     static {
         //normal GUI
         registerOverlay(new PainOverlay());
-        registerOverlay(new ContiousnessOverlay());
+        registerOverlay(new ConsciousnessOverlay());
 
         //Experimental GUI
         registerEXOverlay(new ReducedContiousnessOverlay());
@@ -84,6 +76,11 @@ public class OverlayController {
         ProfilerFiller profiler = minecraft.getProfiler();
 
         profiler.push("prototype_pain:overlay");
+
+        PoseStack stack = graphics.pose();
+        stack.pushPose();
+        stack.translate(0, 0, 100);
+
         // Render all registered overlays that should draw
         List<IOverlay> overlays_ = isExperiment() ? EXoverlays : overlays;
         Player player = minecraft.player;
@@ -94,6 +91,7 @@ public class OverlayController {
             }
         }
 
+        stack.popPose();
         profiler.pop();
     }
 

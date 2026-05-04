@@ -7,7 +7,8 @@ import net.adinvas.prototype_pain.client.ticksounds.TinnitusSound;
 import net.adinvas.prototype_pain.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 
-public class SoundMenager {
+public class SoundManager {
+
     public static PainDrone painDrone;
     public static TinnitusSound tinnitusSound;
 

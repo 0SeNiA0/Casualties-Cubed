@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.item.reusable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
@@ -16,7 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TourniquetItem extends Item implements ISimpleMedicalUsable, IAllowInMedicbags {
+public class TourniquetItem extends Item implements ISimpleMedicalUsable, IAllowInMedicBags {
+
     public TourniquetItem() {
         super(new Item.Properties().stacksTo(1));
     }
@@ -37,6 +38,7 @@ public class TourniquetItem extends Item implements ISimpleMedicalUsable, IAllow
         }
         return stack;
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);

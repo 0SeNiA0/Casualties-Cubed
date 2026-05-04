@@ -30,6 +30,7 @@ import java.util.List;
 // Includes major rewrites and methods from:
 // https://github.com/mezz/JustEnoughItems/blob/1.19/Forge/src/main/java/mezz/jei/forge/platform/FluidHelper.java
 public class FluidTankRenderer {
+
     private static final Logger LOGGER = LogManager.getLogger();
 
     private static final NumberFormat nf = NumberFormat.getIntegerInstance();

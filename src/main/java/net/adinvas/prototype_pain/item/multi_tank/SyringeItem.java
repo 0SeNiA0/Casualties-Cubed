@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.item.multi_tank;
 
 import net.adinvas.prototype_pain.client.MinigameOpener;
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.world.InteractionHand;
@@ -11,8 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import org.jetbrains.annotations.Nullable;
 
-public class SyringeItem extends MultiTankFluidItem implements IMedicalMinigameUsable, IAllowInMedicbags {
-
+public class SyringeItem extends MultiTankFluidItem implements IMedicalMinigameUsable, IAllowInMedicBags {
 
     @Override
     public int getCapacity() {
@@ -37,5 +36,4 @@ public class SyringeItem extends MultiTankFluidItem implements IMedicalMinigameU
     public void useMinigameAction(float durability, Player target, @Nullable Limb limb) {
 
     }
-
 }

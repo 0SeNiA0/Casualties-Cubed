@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.Nullable;
 
 public class MuffledSound implements SoundInstance {
+
     private final SoundInstance original;
     private final float volume;
     private final float pitch;

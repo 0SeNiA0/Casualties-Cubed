@@ -6,7 +6,8 @@ import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class MorphineVialItem extends MedicineVialItem{
+public class MorphineVialItem extends MedicineVialItem {
+
     @Override
     public void setupDefault(ItemStack pStack) {
         MultiTankHelper.addMedicalFluid(pStack,

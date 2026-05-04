@@ -1,7 +1,6 @@
 package net.adinvas.prototype_pain.client.gui.minigames;
 
 import com.mojang.math.Axis;
-import net.adinvas.prototype_pain.registry.ModSounds;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.client.ticksounds.SyringeTickSound;
@@ -11,9 +10,9 @@ import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.network.packet.UseSyringePacket;
+import net.adinvas.prototype_pain.registry.ModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SyringeObject extends GrabObject{
+
     private float fullness = 1f;
     private int color = 0xFF000000;
 
@@ -45,7 +45,7 @@ public class SyringeObject extends GrabObject{
 
     public SyringeObject(int x, int y, float scale, int minstickY) {
         super(x,y,4,21,24,79,
-                new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/syringe.png"),32,160, scale);
+                PrototypePain.resourceLoc("textures/gui/limbs/syringe.png"),32,160, scale);
         this.minstickY = minstickY;
         originalHitX = this.hitX;
         originalHW = this.hitWidth;

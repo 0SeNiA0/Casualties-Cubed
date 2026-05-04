@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class FluidExchangeScreen extends Screen {
+
     private final Screen parent;
     private final ItemStack toItem;
     private final ItemStack fromItem;

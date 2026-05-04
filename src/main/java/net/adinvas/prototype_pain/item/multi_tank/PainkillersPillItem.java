@@ -6,7 +6,8 @@ import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class PainkillersPillItem extends PillContainerItem{
+public class PainkillersPillItem extends PillContainerItem {
+
     @Override
     public void setupDefault(ItemStack pStack) {
         MultiTankHelper.addMedicalFluid(pStack,

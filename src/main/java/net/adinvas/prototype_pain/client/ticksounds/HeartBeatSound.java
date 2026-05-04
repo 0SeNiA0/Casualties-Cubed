@@ -7,6 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 public class HeartBeatSound {
+
     private final Player player;
     private double tickDelay;
     private float bpm;

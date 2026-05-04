@@ -12,9 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.List;
 
 public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedicalUsable {
+
     public int getOnSkinAmount(){
-        return 100;
-    }
+        return 20;
+    }//TODO test, mb lower to 10
 
     @Override
     public int getCapacity() {

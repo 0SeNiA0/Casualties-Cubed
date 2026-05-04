@@ -12,7 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShockMoodle extends AbstractMoodleVisual{
+public class ShockMoodle extends AbstractMoodleVisual {
+    
     @Override
     public MoodleStatus calculateStatus(Player player) {
         float Shock = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getShock).orElse(0f);
@@ -25,7 +26,7 @@ public class ShockMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/shock.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/shock.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

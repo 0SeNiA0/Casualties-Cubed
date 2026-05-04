@@ -12,7 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisfiguredMoodle extends AbstractMoodleVisual{
+public class DisfiguredMoodle extends AbstractMoodleVisual {
+    
     @Override
     public MoodleStatus calculateStatus(Player player) {
         boolean r = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isMouthRemoved).orElse(false);
@@ -25,7 +26,7 @@ public class DisfiguredMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/mouth_gone_moodle.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/mouth_gone_moodle.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

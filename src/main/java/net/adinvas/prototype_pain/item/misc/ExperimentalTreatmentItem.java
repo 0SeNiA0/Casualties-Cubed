@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.item.misc;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ExperimentalTreatmentItem extends Item implements IAllowInMedicbags,ISimpleMedicalUsable {
+public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags, ISimpleMedicalUsable {
+
     public ExperimentalTreatmentItem() {
         super(new Properties().stacksTo(1).food(new FoodProperties.Builder().alwaysEat().build()));
     }

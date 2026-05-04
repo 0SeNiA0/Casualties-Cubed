@@ -54,6 +54,7 @@ import java.util.*;
 import java.util.List;
 
 public class PlayerHealthData {
+
     private Map<Limb,LimbStatistics> limbStats = new EnumMap<>(Limb.class);
     private List<DelayedChangeEntry> changeEntries = new ArrayList<>();
     private float blood = 5f;

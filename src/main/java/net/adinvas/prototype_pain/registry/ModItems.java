@@ -4,9 +4,9 @@ import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.item.misc.BrownCapMushItem;
 import net.adinvas.prototype_pain.item.misc.ExperimentalTreatmentItem;
 import net.adinvas.prototype_pain.item.multi_tank.*;
-import net.adinvas.prototype_pain.item.special.bags.large.LargeMedibagItem;
-import net.adinvas.prototype_pain.item.special.bags.medium.MediumMedibagItem;
-import net.adinvas.prototype_pain.item.special.bags.small.SmallMedibagItem;
+import net.adinvas.prototype_pain.item.special.bag.LargeMedibagItem;
+import net.adinvas.prototype_pain.item.special.bag.MediumMedibagItem;
+import net.adinvas.prototype_pain.item.special.bag.SmallMedibagItem;
 import net.adinvas.prototype_pain.item.bandages.*;
 import net.adinvas.prototype_pain.item.misc.BrownCapItem;
 import net.adinvas.prototype_pain.item.reusable.SplintItem;
@@ -39,7 +39,7 @@ public class ModItems {
     public static final RegistryObject<Item> MedicalSuture = ITEMS.register("medical_suture", MedicalSutureItem::new);
     public static final RegistryObject<Item> Ice_Pack = ITEMS.register("ice_pack", IcePackItem::new);
     public static final RegistryObject<Item> HeatPack = ITEMS.register("heat_pack", HeatPackItem::new);
-    public static final RegistryObject<Item> GLOW_FRUIT = ITEMS.register("glow_fruit", GlowFruitItem::new);
+    public static final RegistryObject<Item> GLOW_FRUIT = ITEMS.register("glow_fruit", () -> new GlowFruitItem(ModBlocks.GLOW_FRUIT_BUSH.get()));
 
     public static final RegistryObject<Item> SmallMedibag = ITEMS.register("small_medibag", SmallMedibagItem::new);
     public static final RegistryObject<Item> MediumMedibag = ITEMS.register("medium_medibag", MediumMedibagItem::new);
@@ -49,7 +49,7 @@ public class ModItems {
     public static final RegistryObject<Item> Tweezers = ITEMS.register("tweezers", TweezersItem::new);
     public static final RegistryObject<Item> Tourniquet = ITEMS.register("tourniquet", TourniquetItem::new);
 
-    public static final RegistryObject<Item> BrownCap = ITEMS.register("brown_cap", BrownCapItem::new);
+    public static final RegistryObject<Item> BrownCap = ITEMS.register("brown_cap", () -> new BrownCapItem(ModBlocks.BROWN_CAP.get()));
     public static final RegistryObject<Item> BrownCapMush = ITEMS.register("brown_cap_mush", BrownCapMushItem::new);
     public static final RegistryObject<Item> ExperimentalTreatment = ITEMS.register("experimental_treatment", ExperimentalTreatmentItem::new);
     public static final RegistryObject<Item> AutoPump = ITEMS.register("auto_pump", AutoPumpItem::new);

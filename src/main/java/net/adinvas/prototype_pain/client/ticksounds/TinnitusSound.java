@@ -9,9 +9,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.Random;
-
 public class TinnitusSound extends AbstractTickableSoundInstance {
+
     public TinnitusSound(SoundEvent p_235076_) {
         super(p_235076_, SoundSource.PLAYERS, RandomSource.create());
         this.looping= true;

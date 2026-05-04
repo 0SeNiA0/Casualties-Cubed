@@ -14,7 +14,9 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import javax.annotation.Nullable;
 
 public class BrainShaderOverlay implements IShaderOverlay {
+
     public float lastValue=0;
+
     @Override
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();

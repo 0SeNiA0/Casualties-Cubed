@@ -1,6 +1,7 @@
 package net.adinvas.prototype_pain.limbs;
 
 public class LimbStatistics {
+
     float skinHealth = 100f;//
     float muscleHealth = 100f;//
     float pain = 0f;//

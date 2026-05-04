@@ -6,11 +6,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 public class ItemWidget extends AbstractWidget {
+    
     private ItemStack stack;
     private int stack_x,stack_y;
     private boolean dragging;
@@ -48,7 +48,7 @@ public class ItemWidget extends AbstractWidget {
         if (this.stack == null){
             this.stack = ItemStack.EMPTY;
         }
-        guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/item_bg.png"),this.getX(),getY(),0,0,16,16,16,16);
+        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/icons/item_bg.png"),this.getX(),getY(),0,0,16,16,16,16);
         guiGraphics.renderItem(this.stack,stack_x,stack_y);
         guiGraphics.renderItemDecorations(Minecraft.getInstance().font,this.stack,stack_x,stack_y);
         if (!dragging&&isHovered()&&!BGMode){

@@ -1,7 +1,6 @@
 package net.adinvas.prototype_pain.client.ticksounds;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvent;
@@ -11,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 
 public class PainDrone extends AbstractTickableSoundInstance {
+
     public PainDrone(SoundEvent p_235076_) {
         super(p_235076_, SoundSource.PLAYERS, RandomSource.create());
         this.looping= true;

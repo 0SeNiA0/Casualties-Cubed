@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.*;
 
 public class LimbWidget extends AbstractWidget {
+    
     private final Limb limb;
     private final ResourceLocation borderTxt;
     private final ResourceLocation baseTxt;
@@ -58,38 +59,38 @@ public class LimbWidget extends AbstractWidget {
         this.limb = limb;
         switch (limb){
             case RIGHT_FOOT,LEFT_FOOT,RIGHT_HAND,LEFT_HAND ->{
-                borderTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/end_border.png");
-                baseTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/end_base.png");
+                borderTxt = PrototypePain.resourceLoc("textures/gui/limbs/end_border.png");
+                baseTxt = PrototypePain.resourceLoc("textures/gui/limbs/end_base.png");
                 txt_height = 16;
                 txt_width = 16;
             }
             case LEFT_ARM,RIGHT_ARM -> {
-                borderTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/limb_horizontal_border.png");
-                baseTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/limb_horizontal_base.png");
+                borderTxt = PrototypePain.resourceLoc("textures/gui/limbs/limb_horizontal_border.png");
+                baseTxt = PrototypePain.resourceLoc("textures/gui/limbs/limb_horizontal_base.png");
                 txt_height = 16;
                 txt_width = 48;
             }
             case LEFT_LEG,RIGHT_LEG -> {
-                borderTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/limb_vertical_border.png");
-                baseTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/limb_vertical_base.png");
+                borderTxt = PrototypePain.resourceLoc("textures/gui/limbs/limb_vertical_border.png");
+                baseTxt = PrototypePain.resourceLoc("textures/gui/limbs/limb_vertical_base.png");
                 txt_height = 48;
                 txt_width = 16;
             }
             case CHEST -> {
-                borderTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/body_border.png");
-                baseTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/body_base.png");
+                borderTxt = PrototypePain.resourceLoc("textures/gui/limbs/body_border.png");
+                baseTxt = PrototypePain.resourceLoc("textures/gui/limbs/body_base.png");
                 txt_height = 64;
                 txt_width = 32;
             }
             case HEAD -> {
-                borderTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/head_border.png");
-                baseTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/head_base.png");
+                borderTxt = PrototypePain.resourceLoc("textures/gui/limbs/head_border.png");
+                baseTxt = PrototypePain.resourceLoc("textures/gui/limbs/head_base.png");
                 txt_height = 32;
                 txt_width = 32;
             }
             default -> {
-                borderTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/border.png");
-                baseTxt = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/base.png");
+                borderTxt = PrototypePain.resourceLoc("textures/gui/limbs/border.png");
+                baseTxt = PrototypePain.resourceLoc("textures/gui/limbs/base.png");
                 txt_height = 64;
                 txt_width = 64;
             }
@@ -152,13 +153,13 @@ public class LimbWidget extends AbstractWidget {
         expanded = isHoveredOrFocused();
         updateSubSpritePositions();
         if (LeftEyeGone){
-            guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/left_eye.png"), (int) shakex, (int) shakey,0,0,this.width,this.height,this.txt_width,this.txt_height);
+            guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/limbs/left_eye.png"), (int) shakex, (int) shakey,0,0,this.width,this.height,this.txt_width,this.txt_height);
         }
         if(RightEyeGone){
-            guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/right_eye.png"), (int) shakex, (int) shakey,0,0,this.width,this.height,this.txt_width,this.txt_height);
+            guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/limbs/right_eye.png"), (int) shakex, (int) shakey,0,0,this.width,this.height,this.txt_width,this.txt_height);
         }
         if (MouthGone){
-            guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/mouth.png"), (int) shakex, (int) shakey,0,0,this.width,this.height,this.txt_width,this.txt_height);
+            guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/limbs/mouth.png"), (int) shakex, (int) shakey,0,0,this.width,this.height,this.txt_width,this.txt_height);
         }
     }
 

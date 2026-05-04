@@ -1,32 +1,28 @@
 package net.adinvas.prototype_pain.item.usable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.registry.ModBlocks;
+import net.adinvas.prototype_pain.blocks.GlowFruitBushBlock;
 import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GlowFruitItem extends Item implements ISimpleMedicalUsable {
+public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
 
-    public GlowFruitItem() {
-        super(new Item.Properties()
+    public GlowFruitItem(GlowFruitBushBlock block) {
+        super(block, new Item.Properties()
                 .stacksTo(64)
                 .food(new FoodProperties.Builder()
                         .effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1.0F)
@@ -36,28 +32,6 @@ public class GlowFruitItem extends Item implements ISimpleMedicalUsable {
                         .build()
                 )
         );
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
-        BlockState state = world.getBlockState(context.getClickedPos());
-
-        boolean block_test = state.is(Blocks.DIRT) || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.STONE)||state.is(Blocks.DEEPSLATE)
-                ||state.is(Blocks.ANDESITE)
-                ||state.is(Blocks.DIORITE)
-                ||state.is(Blocks.TUFF)
-                ||state.is(Blocks.GRANITE)
-                ||state.is(Blocks.COBBLESTONE)
-                ||state.is(Blocks.COBBLED_DEEPSLATE);
-
-        if (world.getBlockState(pos).isAir()&& block_test) {
-            world.setBlock(pos, ModBlocks.GLOW_FRUIT_BUSH.get().defaultBlockState(), 3);
-            context.getItemInHand().shrink(1);
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.PASS;
     }
 
     @Override

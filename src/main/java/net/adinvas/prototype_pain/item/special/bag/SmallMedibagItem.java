@@ -1,6 +1,7 @@
-package net.adinvas.prototype_pain.item.special.bags.large;
+package net.adinvas.prototype_pain.item.special.bag;
 
 import net.adinvas.prototype_pain.item.api.IBag;
+import net.adinvas.prototype_pain.menu.SmallMedibagMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -8,9 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LargeMedibagItem extends Item implements IBag {
+public class SmallMedibagItem extends Item implements IBag {
 
-    public LargeMedibagItem() {
+    public SmallMedibagItem() {
         super(new Properties().stacksTo(1));
     }
 
@@ -35,18 +34,19 @@ public class LargeMedibagItem extends Item implements IBag {
         if (!pLevel.isClientSide()) {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,
                     new SimpleMenuProvider(
-                            (id, inv, ply) -> new LargeMedibagMenu(id, inv, itemStack),
-                            Component.literal("Large Medibag")
+                            (id, inv, ply) -> new SmallMedibagMenu(id, inv, itemStack),
+                            Component.literal("Small Medibag")
                     ),
                     buf -> buf.writeBoolean(pUsedHand == InteractionHand.MAIN_HAND)
             );
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.prototype_pain.large_medibag.description").withStyle(ChatFormatting.GRAY));
+        pTooltipComponents.add(Component.translatable("item.prototype_pain.small_medibag.description").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LargeMedibagItem extends Item implements IBag {
 
         // --- Determine how many slots this bag has ---
         // You can replace this with a fixed number or a method call (e.g. getSlotCount())
-        int slotCount = 12; // or hardcode: int slotCount = 12;
+        int slotCount = 4; // or hardcode: int slotCount = 12;
 
         // --- Read in order ---
         for (int i = 0; i < slotCount; i++) {

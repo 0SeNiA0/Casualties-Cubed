@@ -14,6 +14,7 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import javax.annotation.Nullable;
 
 public class BlindnessShaderOverlay implements IShaderOverlay {
+
     @Override
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();

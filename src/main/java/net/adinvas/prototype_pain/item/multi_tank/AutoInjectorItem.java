@@ -12,6 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.List;
 
 public class AutoInjectorItem extends MultiTankFluidItem implements ISimpleMedicalUsable {
+
     @Override
     public int getCapacity() {
         return 100;

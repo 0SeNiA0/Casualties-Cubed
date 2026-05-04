@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class SubSprite {
+
     private final ResourceLocation txt;
     private final int txtWidth,txtHeight;
     public float scale;
@@ -22,12 +23,12 @@ public class SubSprite {
     private int tickCount = 0;
 
     public SubSprite(StatusSprites sprite, float parentX, float parentY) {
-        this.txt = sprite.getResourceLocation();
+        this.txt = sprite.tex;
         this.txtWidth = 16;
         this.txtHeight = 16;
         this.currentX = this.targetX = parentX;
         this.currentY = this.targetY = parentY;
-        this.scale = sprite.getBaseScale();
+        this.scale = sprite.scale;
     }
 
     public float getScale() {

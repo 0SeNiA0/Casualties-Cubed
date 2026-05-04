@@ -1,10 +1,6 @@
 package net.adinvas.prototype_pain.limbs;
 
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
@@ -18,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ThermalArmorHandler {
+
     private static final Map<Item, Float> THERMAL_CACHE = new HashMap<>();
 
     private static float getCachedThermalValue(ItemStack stack, Level level) {

@@ -5,7 +5,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -14,9 +13,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class ModBiomeModifiers {
 
-    public static final ResourceKey<BiomeModifier> ADD_GLOW_FRUIT = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS,new ResourceLocation(PrototypePain.MOD_ID,"add_glow_fruit"));
-    public static final ResourceKey<BiomeModifier> ADD_GLOW_FRUIT_SWAMP = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS,new ResourceLocation(PrototypePain.MOD_ID,"add_glow_fruit_swamp"));
-    public static final ResourceKey<BiomeModifier> ADD_BROWN_CAP = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS,new ResourceLocation(PrototypePain.MOD_ID,"add_brown_cap"));
+    public static final ResourceKey<BiomeModifier> ADD_GLOW_FRUIT = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS,PrototypePain.resourceLoc("add_glow_fruit"));
+    public static final ResourceKey<BiomeModifier> ADD_GLOW_FRUIT_SWAMP = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS,PrototypePain.resourceLoc("add_glow_fruit_swamp"));
+    public static final ResourceKey<BiomeModifier> ADD_BROWN_CAP = ResourceKey.create(ForgeRegistries.Keys.BIOME_MODIFIERS,PrototypePain.resourceLoc("add_brown_cap"));
 
     public static void BootStrap(BootstapContext<BiomeModifier> context){
         var placedFeatures = context.lookup(Registries.PLACED_FEATURE);

@@ -6,13 +6,12 @@ import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.packet.AdjustShrapnelPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
+import net.adinvas.prototype_pain.network.packet.AdjustShrapnelPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class ShrapnelMinigameScreen extends Screen {
+    
     private final Screen parent;
     private final Player target;
     private final Limb limb;
@@ -116,7 +116,7 @@ public class ShrapnelMinigameScreen extends Screen {
         int scissorH = (int) ((clipY) * guiScaleY);
 
         for (Integer i:xlists){
-            pGuiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/limbs/blood_decal.png"), i,height/6+157,0,0,32,5,32,5);
+            pGuiGraphics.blit(PrototypePain.resourceLoc("textures/gui/limbs/blood_decal.png"), i,height/6+157,0,0,32,5,32,5);
         }
 
         // Enable scissor

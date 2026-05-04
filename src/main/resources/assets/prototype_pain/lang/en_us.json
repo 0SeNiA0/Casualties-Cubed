@@ -108,7 +108,7 @@
   "item.prototype_pain.band_aids": "Band Aids",
   "item.prototype_pain.band_aid.description": "Simple adhesive bandages usually used on small cuts and bruises.",
 
-  "item.prototype_pain.glow_fruit": "Glow Fruit",
+  "block.prototype_pain.glow_fruit_bush": "Glow Fruit",
   "item.prototype_pain.glow_fruit.description": "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.",
 
   "item.prototype_pain.ceftriaxone": "Ceftriaxone Vial",
@@ -162,7 +162,7 @@
   "item.prototype_pain.reaction_vial": "Medicine Vial",
   "item.prototype_pain.reaction_vial.description": "A 100ml bottle meant for medicine.",
 
-  "item.prototype_pain.brown_cap": "Brown Cap",
+  "block.prototype_pain.brown_cap": "Brown Cap",
   "item.prototype_pain.brown_cap.description": "You have no idea what is this fungus. For all you know it can cure cancer or kill you on the spot",
 
   "item.prototype_pain.heat_pack": "Heat Pack",

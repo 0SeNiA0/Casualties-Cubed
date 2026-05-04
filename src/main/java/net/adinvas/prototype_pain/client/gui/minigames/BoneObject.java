@@ -2,11 +2,10 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
-import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
+import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2d;
@@ -32,7 +31,7 @@ public class BoneObject extends GrabObject{
 
     public BoneObject(int x, int y, float dislocationValue) {
         super(x, y, 16, 16, 144, 48,
-                new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/bone.png"),
+                PrototypePain.resourceLoc( "textures/gui/limbs/bone.png"),
                 160, 80, 1);
         this.dislocationValue = dislocationValue;
 

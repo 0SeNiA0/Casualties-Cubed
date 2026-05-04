@@ -6,7 +6,8 @@ import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class StreptokinaseInjectorItem extends AutoInjectorItem{
+public class StreptokinaseInjectorItem extends AutoInjectorItem {
+
     @Override
     public void setupDefault(ItemStack pStack) {
         MultiTankHelper.addMedicalFluid(pStack,

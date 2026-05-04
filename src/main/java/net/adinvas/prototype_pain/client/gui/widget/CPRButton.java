@@ -12,9 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
 public class CPRButton extends AbstractWidget {
+    
     private final Screen parent;
     private Player target;
-    private final ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/cpr_button.png");
+    private final ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/cpr_button.png");
     public CPRButton(int pX, int pY, Screen parent, Player target) {
         super(pX, pY, 32, 32, Component.empty());
         this.parent = parent;

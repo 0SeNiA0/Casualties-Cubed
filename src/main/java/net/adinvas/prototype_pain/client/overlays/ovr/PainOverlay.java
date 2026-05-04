@@ -6,7 +6,6 @@ import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
@@ -47,7 +46,7 @@ public class PainOverlay implements IOverlay {
 
         ms.setColor(1F, 1F, 1F, (float) lastIntensity);
         ms.blit(
-                new ResourceLocation(PrototypePain.MOD_ID, "textures/overlay/vignette.png"),
+                PrototypePain.resourceLoc( "textures/overlay/vignette.png"),
                 0, 0,                   // screen position
                 0, 0,                   // UV start
                 width, height,          // draw size

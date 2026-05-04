@@ -19,8 +19,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class MedicalMixerScreen extends AbstractContainerScreen<MedicalMixerMenu> {
+    
     private static final ResourceLocation TEX =
-            new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/medical_mixer_gui.png");
+            PrototypePain.resourceLoc("textures/gui/medical_mixer_gui.png");
 
     private FluidTankRenderer[] renderers = new FluidTankRenderer[6];
 

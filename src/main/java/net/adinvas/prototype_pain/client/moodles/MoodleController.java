@@ -1,5 +1,6 @@
 package net.adinvas.prototype_pain.client.moodles;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -61,6 +62,10 @@ public class MoodleController {
         ProfilerFiller profiler = minecraft.getProfiler();
         profiler.push("prototype_pain:moodles");
 
+        PoseStack stack = graphics.pose();
+        stack.pushPose();
+        stack.translate(0, 0, 150);
+
         int hotbarLeft = (width / 2) - 91;
         int y = height - MOODLE_SIZE - 4;
 
@@ -78,6 +83,7 @@ public class MoodleController {
             x += MOODLE_SIZE + PADDING;
         }
 
+        stack.popPose();
         profiler.pop();
     }
 

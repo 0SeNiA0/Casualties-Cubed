@@ -2,7 +2,7 @@ package net.adinvas.prototype_pain.item.reusable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.client.MinigameOpener;
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
@@ -19,7 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TweezersItem extends Item implements IMedicalMinigameUsable, IAllowInMedicbags {
+public class TweezersItem extends Item implements IMedicalMinigameUsable, IAllowInMedicBags {
+
     public TweezersItem() {
         super(new Properties().stacksTo(1));
     }
@@ -40,10 +41,12 @@ public class TweezersItem extends Item implements IMedicalMinigameUsable, IAllow
             }
         });
     }
+
     @Override
     public void openMinigameBagScreen(Player target, ItemStack stack, ItemStack bagStack,int lost, @Nullable Limb limb, InteractionHand hand) {
         this.openMinigameScreen(target,stack,limb,hand);
     }
+
     @Override
     public void useMinigameAction(float durability, Player target, @Nullable Limb limb) {
 

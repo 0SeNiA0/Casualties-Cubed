@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class HealthInfoBoxWidget extends AbstractWidget {
+    
     private Component name;
     private float contiousness = 0;
     private float pain;
@@ -48,14 +49,14 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         this.temp = temp;
     }
 
-    private final ResourceLocation main_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/info_box.png");
-    private final ResourceLocation blood_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/blood_drop.png");
-    private final ResourceLocation pain_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/pain.png");
-    private final ResourceLocation infection_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/inf.png");
-    private final ResourceLocation bloodBag_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/blood_bag.png");
-    private final ResourceLocation contiousness_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/conc_sprites.png");
-    private final ResourceLocation opiate_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/opiate_meter.png");
-    private final ResourceLocation brain_tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/brain.png");
+    private final ResourceLocation main_tex = PrototypePain.resourceLoc("textures/gui/info_box.png");
+    private final ResourceLocation blood_tex = PrototypePain.resourceLoc("textures/gui/icons/blood_drop.png");
+    private final ResourceLocation pain_tex = PrototypePain.resourceLoc("textures/gui/icons/pain.png");
+    private final ResourceLocation infection_tex = PrototypePain.resourceLoc("textures/gui/icons/inf.png");
+    private final ResourceLocation bloodBag_tex = PrototypePain.resourceLoc("textures/gui/icons/blood_bag.png");
+    private final ResourceLocation contiousness_tex = PrototypePain.resourceLoc("textures/gui/icons/conc_sprites.png");
+    private final ResourceLocation opiate_tex = PrototypePain.resourceLoc("textures/gui/icons/opiate_meter.png");
+    private final ResourceLocation brain_tex = PrototypePain.resourceLoc("textures/gui/icons/brain.png");
 
     public HealthInfoBoxWidget(int pX, int pY, int pWidth, int pHeight, Component pMessage) {
         super(pX, pY, pWidth, pHeight, pMessage);

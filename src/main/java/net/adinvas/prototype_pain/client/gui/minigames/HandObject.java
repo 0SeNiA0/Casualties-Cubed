@@ -4,10 +4,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 
 public class HandObject {
-    enum SpriteType {NORMAL,TWEEZERS,GONE,SAW}
+    
+    enum SpriteType {
+        NORMAL,
+        TWEEZERS,
+        GONE,
+        SAW
+    }
+
     public final SpriteType spriteType;
     public double x, y;     // current position
     public double vx, vy;   // velocity
@@ -16,8 +22,6 @@ public class HandObject {
     private double shakeY = 0;
     private final double shakeAmount = 24.0;
     private float shakeScale = 0;
-
-
 
     private double stiffness = 0.15; // how strongly it moves toward mouse
     private final double damping = 0.7;
@@ -109,12 +113,12 @@ public class HandObject {
             case NORMAL -> {
                 if (is_clicked){
                     guiGraphics.blit(
-                            new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/arm_click.png"),
+                            PrototypePain.resourceLoc( "textures/gui/limbs/arm_click.png"),
                             -160, -32, 0, 0, 192, 64, 192, 64
                     );
                 }else {
                     guiGraphics.blit(
-                            new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/arm.png"),
+                            PrototypePain.resourceLoc( "textures/gui/limbs/arm.png"),
                             -160, -32, 0, 0, 192, 64, 192, 64
                     );
                 }
@@ -122,25 +126,25 @@ public class HandObject {
             case TWEEZERS -> {
                 if (is_clicked){
                     guiGraphics.blit(
-                            new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/arm_click_tweezers.png"),
+                            PrototypePain.resourceLoc( "textures/gui/limbs/arm_click_tweezers.png"),
                             -188, -53, 0, 0, 192, 64, 192, 64
                     );
                 }else {
                     guiGraphics.blit(
-                            new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/arm_tweezers.png"),
+                            PrototypePain.resourceLoc( "textures/gui/limbs/arm_tweezers.png"),
                             -188, -53, 0, 0, 192, 64, 192, 64
                     );
                 }
             }
             case GONE -> {
                     guiGraphics.blit(
-                            new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/arm_broken.png"),
+                            PrototypePain.resourceLoc( "textures/gui/limbs/arm_broken.png"),
                             -160, -32, 0, 0, 192, 64, 192, 64
                     );
             }
             case SAW -> {
                 guiGraphics.blit(
-                        new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/limbs/arm_saw.png"),
+                        PrototypePain.resourceLoc( "textures/gui/limbs/arm_saw.png"),
                         -160, -32, 0, 0, 192, 64, 192, 64
                 );
             }

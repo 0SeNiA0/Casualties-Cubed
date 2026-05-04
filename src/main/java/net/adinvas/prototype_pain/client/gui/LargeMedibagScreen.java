@@ -1,18 +1,19 @@
-package net.adinvas.prototype_pain.item.special.bags.medium;
+package net.adinvas.prototype_pain.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.menu.LargeMedibagMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class MediumMedibagScreen extends AbstractContainerScreen<MediumMedibagMenu> {
+public class LargeMedibagScreen extends AbstractContainerScreen<LargeMedibagMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/medium_medibag.png");
+    private static final ResourceLocation TEXTURE = PrototypePain.resourceLoc( "textures/gui/large_medibag.png");
 
-    public MediumMedibagScreen(MediumMedibagMenu menu, Inventory inv, Component title) {
+    public LargeMedibagScreen(LargeMedibagMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
         this.imageWidth = 176;
         this.imageHeight = 166;

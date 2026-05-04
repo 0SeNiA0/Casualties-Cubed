@@ -9,13 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2d;
 
 import java.util.Optional;
 
 public class CPRMinigameScreen extends Screen {
+    
     private final Screen parent;
     private final Player target;
 
@@ -147,7 +147,7 @@ public class CPRMinigameScreen extends Screen {
         guiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.minigame_exit"),this.width/2-40,this.height / 6+190,0xFFFFFF);
 
         cprTimer.render(guiGraphics,partialTicks);
-        guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/cpr_body.png"),
+        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/cpr_body.png"),
                 this.width/2-50,this.height/4-20,0,0,256,256,256,256
         );
         int correctx = this.width/2-50 + 128;

@@ -1,7 +1,8 @@
-package net.adinvas.prototype_pain.item.special.bags.small;
+package net.adinvas.prototype_pain.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.adinvas.prototype_pain.PrototypePain;
+import net.adinvas.prototype_pain.menu.SmallMedibagMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -10,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class SmallMedibagScreen extends AbstractContainerScreen<SmallMedibagMenu> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(PrototypePain.MOD_ID, "textures/gui/small_medibag.png");
+    private static final ResourceLocation TEXTURE = PrototypePain.resourceLoc( "textures/gui/small_medibag.png");
 
     public SmallMedibagScreen(SmallMedibagMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);

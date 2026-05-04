@@ -4,8 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 
-public class OverflowMoodle extends AbstractMoodleVisual{
+public class OverflowMoodle extends AbstractMoodleVisual {
+
     public int leftover = 0;
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         return MoodleStatus.LIGHT;

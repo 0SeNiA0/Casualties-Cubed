@@ -4,17 +4,17 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
+import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.client.event.ClientShaderEvents;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 
 public class ColdOverlay implements IShaderOverlay {
+    
     public static float prevTemp = 0f;
-
 
     @Override
     public boolean shouldRender() {
@@ -47,7 +47,7 @@ public class ColdOverlay implements IShaderOverlay {
 
         // Tell Minecraft to use our shader
         RenderSystem.setShaderTexture(0, input.getColorTextureId());
-        RenderSystem.setShaderTexture(1, new ResourceLocation("prototype_pain:textures/shaders/snow.png"));
+        RenderSystem.setShaderTexture(1, PrototypePain.resourceLoc("textures/shaders/snow.png"));
         RenderSystem.setShader(() -> shader);
         shader.safeGetUniform("Intensity").set(displayedPain);
         shader.safeGetUniform("Time").set(time);

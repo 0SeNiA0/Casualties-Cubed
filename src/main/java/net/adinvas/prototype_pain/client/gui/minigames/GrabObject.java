@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 public class GrabObject {
+
     protected double x, y; // logical position
     protected int hitX, hitY, hitWidth, hitHeight;
     protected final ResourceLocation tex;

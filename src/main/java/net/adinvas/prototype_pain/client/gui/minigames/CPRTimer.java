@@ -2,16 +2,16 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 
 import com.mojang.math.Axis;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.network.packet.CPRPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
+import net.adinvas.prototype_pain.network.packet.CPRPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
 public class CPRTimer {
+    
     protected double x, y; // logical position
     private float angle = 0;
     private float newangle=0;
@@ -31,14 +31,14 @@ public class CPRTimer {
         angle = (float) Mth.lerp(0.25,angle,newangle);
         pose.translate(x, y, 0);
         pose.translate(-128 / 2f, -128 / 2f, 0);
-        guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/cpr_timer.png")
+        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/cpr_timer.png")
                 ,0,0,0,0,128,128,128,128);
         pose.popPose();
         pose.pushPose();
         pose.translate(x, y, 0);
         pose.mulPose(Axis.ZP.rotation(angle));
         pose.translate(-128 / 2f, -128 / 2f, 0);
-        guiGraphics.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/cpr_marker.png")
+        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/cpr_marker.png")
                 ,0,0,0,0,128,128,128,128);
         pose.popPose();
     }

@@ -5,93 +5,31 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public enum StatusSprites {
-    BLEED,
-    INFECTION,
-    FRACTURE,
-    DISLOCATION,
-    SHRAPNEL,
-    SPLINT,
-    DISINFECTION,
-    TOURNIQUET;
 
-    public ResourceLocation getResourceLocation(){
-        switch (this){
-            case BLEED -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/blood.png");
-            }
-            case SPLINT -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/splint.png");
-            }
-            case FRACTURE -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/fracture.png");
-            }
-            case SHRAPNEL -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/shrapnel.png");
-            }
-            case INFECTION -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/infection.png");
-            }
-            case TOURNIQUET -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/tourniquet.png");
-            }
-            case DISLOCATION -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/dislocation.png");
-            }
-            case DISINFECTION -> {
-                return new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/icons/disinfection.png");
-            }
-            default -> {
-                return null;
-            }
-        }
+    BLEED(PrototypePain.resourceLoc("textures/gui/icons/blood.png")),
+    INFECTION(PrototypePain.resourceLoc("textures/gui/icons/infection.png"), 1.3f),
+    FRACTURE(PrototypePain.resourceLoc("textures/gui/icons/fracture.png"), 1.5f),
+    DISLOCATION(PrototypePain.resourceLoc("textures/gui/icons/dislocation.png"), 1.5f, Component.translatable("prototype_pain.gui.dislocation_button")),
+    SHRAPNEL(PrototypePain.resourceLoc("textures/gui/icons/shrapnel.png"), 1.2f, Component.translatable("prototype_pain.gui.shrapnel_button")),
+    SPLINT(PrototypePain.resourceLoc("textures/gui/icons/splint.png"), 1.6f, Component.translatable("prototype_pain.gui.splint_button")),
+    DISINFECTION(PrototypePain.resourceLoc("textures/gui/icons/disinfection.png"), 1.5f),
+    TOURNIQUET(PrototypePain.resourceLoc("textures/gui/icons/tourniquet.png"), 2, Component.translatable("prototype_pain.gui.tourniquet_button"));
+
+    public final ResourceLocation tex;
+    public final float scale;
+    public final Component comp;
+
+    StatusSprites(ResourceLocation tex) {
+        this(tex, 1, Component.empty());
     }
 
-    public float getBaseScale(){
-        switch (this){
-            case SPLINT -> {
-                return 1.6f;
-            }
-            case FRACTURE -> {
-                return 1.5f;
-            }
-            case SHRAPNEL -> {
-                return 1.2f;
-            }
-            case INFECTION -> {
-                return 1.3f;
-            }
-            case TOURNIQUET -> {
-                return 2f;
-            }
-            case DISLOCATION -> {
-                return 1.5f;
-            }
-            case DISINFECTION -> {
-                return 1.5f;
-            }
-            default -> {
-                return 1f;
-            }
-        }
+    StatusSprites(ResourceLocation tex, float scale) {
+        this(tex, scale, Component.empty());
     }
 
-
-    public Component getTextComponents(){
-        switch (this){
-            case TOURNIQUET -> {
-                return Component.translatable("prototype_pain.gui.tourniquet_button");
-            }
-            case DISLOCATION -> {
-                return Component.translatable("prototype_pain.gui.dislocation_button");
-            }
-            case SHRAPNEL -> {
-                return Component.translatable("prototype_pain.gui.shrapnel_button");
-            }
-            case SPLINT -> {
-                return Component.translatable("prototype_pain.gui.splint_button");
-            }
-        }
-
-        return Component.empty();
+    StatusSprites(ResourceLocation tex, float scale, Component comp) {
+        this.tex = tex;
+        this.scale = scale;
+        this.comp = comp;
     }
 }

@@ -7,7 +7,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 
 public interface ISimpleMedicalUsable {
+
     ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack);
+
     default SoundEvent getUseSound(){
         return SoundEvents.DYE_USE;
     };

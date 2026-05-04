@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -27,11 +26,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class MultiTankFluidItem extends Item{
+public class MultiTankFluidItem extends Item {
+
     private final int capacity= 1000;
+
     public MultiTankFluidItem() {
         super(new Properties().stacksTo(1));
     }
+
     public MultiTankFluidItem(Properties properties){
         super(properties);
     }

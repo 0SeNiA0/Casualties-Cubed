@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BleedMoodle extends AbstractMoodleVisual{
+public class BleedMoodle extends AbstractMoodleVisual {
 
     @Override
     public MoodleStatus calculateStatus(Player player) {
@@ -40,7 +40,7 @@ public class BleedMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/blood_moodle.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/blood_moodle.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

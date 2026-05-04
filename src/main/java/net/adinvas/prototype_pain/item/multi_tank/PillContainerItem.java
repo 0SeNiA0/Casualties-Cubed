@@ -16,7 +16,8 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class PillContainerItem extends MultiTankFluidItem{
+public class PillContainerItem extends MultiTankFluidItem {
+
     public PillContainerItem(){
         super(new Item.Properties().stacksTo(1).food(new FoodProperties.Builder().alwaysEat().build()));
     }

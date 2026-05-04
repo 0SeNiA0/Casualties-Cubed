@@ -22,21 +22,21 @@ public class ModCreativeTab {
                     .icon(() -> new ItemStack(ModItems.Dressing.get())) // icon for the tab
                     .displayItems((parameters, output) -> {
                         for (RegistryObject<Item> itemRegistryObject : ModItems.ITEMS.getEntries()){
-                            if (itemRegistryObject == ModItems.ScavPlush)continue;
                             if (itemRegistryObject.get() instanceof INbtDrivenDurability nbt){
                                 ItemStack stack = new ItemStack(itemRegistryObject.get());
                                 nbt.setupDefaults(stack);
                                 output.accept(stack);
                                 continue;
                             }
+
                             if (itemRegistryObject.get() instanceof MultiTankFluidItem multiTankFluidItem){
                                 ItemStack stack = new ItemStack(itemRegistryObject.get());
                                 multiTankFluidItem.setupDefault(stack);
                                 output.accept(stack);
                                 continue;
                             }
-                            output.accept(itemRegistryObject.get());
 
+                            output.accept(itemRegistryObject.get());
                         }
                     })
                     .build()

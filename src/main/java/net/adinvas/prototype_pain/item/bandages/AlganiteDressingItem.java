@@ -4,7 +4,7 @@ import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.client.MinigameOpener;
 
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.limbs.Limb;
@@ -24,11 +24,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AlganiteDressingItem extends Item implements IMedicalMinigameUsable, IAllowInMedicbags, INbtDrivenDurability {
+public class AlganiteDressingItem extends Item implements IMedicalMinigameUsable, IAllowInMedicBags, INbtDrivenDurability {
+
     public AlganiteDressingItem() {
         super(new Properties().stacksTo(1));
     }
-
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {

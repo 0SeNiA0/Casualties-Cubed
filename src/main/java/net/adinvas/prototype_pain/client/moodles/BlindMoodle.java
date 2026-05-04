@@ -12,7 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlindMoodle extends AbstractMoodleVisual{
+public class BlindMoodle extends AbstractMoodleVisual {
+    
     @Override
     public MoodleStatus calculateStatus(Player player) {
         boolean r = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isRightEyeBlind).orElse(false);
@@ -28,7 +29,7 @@ public class BlindMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/eye_gone_moodle.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/eye_gone_moodle.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

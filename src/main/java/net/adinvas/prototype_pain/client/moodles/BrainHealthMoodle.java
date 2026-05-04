@@ -12,7 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrainHealthMoodle extends AbstractMoodleVisual{
+public class BrainHealthMoodle extends AbstractMoodleVisual {
+    
     @Override
     public MoodleStatus calculateStatus(Player player) {
         float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
@@ -31,7 +32,7 @@ public class BrainHealthMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/brainhealth.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/brainhealth.png");
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

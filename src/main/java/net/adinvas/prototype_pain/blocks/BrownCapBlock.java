@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,8 +29,14 @@ public class BrownCapBlock extends BushBlock {
     }
 
     @Override
-    protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return pState.isSolidRender(pLevel, pPos);
+    protected boolean mayPlaceOn(BlockState state, BlockGetter pLevel, BlockPos pPos) {
+        return state.is(Blocks.DIRT) || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.STONE)||state.is(Blocks.DEEPSLATE)
+                ||state.is(Blocks.ANDESITE)
+                ||state.is(Blocks.DIORITE)
+                ||state.is(Blocks.TUFF)
+                ||state.is(Blocks.GRANITE)
+                ||state.is(Blocks.COBBLESTONE)
+                ||state.is(Blocks.COBBLED_DEEPSLATE);
     }
 
     @Override

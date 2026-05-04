@@ -2,7 +2,7 @@ package net.adinvas.prototype_pain.item.usable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.Util;
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
@@ -21,11 +21,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowInMedicbags, INbtDrivenDurability {
+public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowInMedicBags, INbtDrivenDurability {
+
     public AutoPumpItem() {
         super(new Properties().stacksTo(1));
     }
-
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {

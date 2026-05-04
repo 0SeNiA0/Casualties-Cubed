@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class BandageObject extends GrabObject{
+
     private final int centerX;
     private final int centerY;
     private final float radius=70;

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Random;
 
 public class BrownCapMushItem extends Item {
+
     public BrownCapMushItem() {
         super(new Properties()
                 .food(new FoodProperties.Builder()
@@ -31,7 +32,6 @@ public class BrownCapMushItem extends Item {
                         .alwaysEat()
                         .build()));
     }
-
 
     @Override
     public SoundEvent getEatingSound() {

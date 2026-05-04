@@ -1,6 +1,7 @@
-package net.adinvas.prototype_pain.item.special.bags.medium;
+package net.adinvas.prototype_pain.item.special.bag;
 
 import net.adinvas.prototype_pain.item.api.IBag;
+import net.adinvas.prototype_pain.menu.LargeMedibagMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -22,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MediumMedibagItem extends Item implements IBag {
+public class LargeMedibagItem extends Item implements IBag {
 
-    public MediumMedibagItem() {
+    public LargeMedibagItem() {
         super(new Properties().stacksTo(1));
     }
 
@@ -35,8 +36,8 @@ public class MediumMedibagItem extends Item implements IBag {
         if (!pLevel.isClientSide()) {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,
                     new SimpleMenuProvider(
-                            (id, inv, ply) -> new MediumMedibagMenu(id, inv, itemStack),
-                            Component.literal("Medium Medibag")
+                            (id, inv, ply) -> new LargeMedibagMenu(id, inv, itemStack),
+                            Component.literal("Large Medibag")
                     ),
                     buf -> buf.writeBoolean(pUsedHand == InteractionHand.MAIN_HAND)
             );
@@ -46,7 +47,7 @@ public class MediumMedibagItem extends Item implements IBag {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.prototype_pain.medium_medibag.description").withStyle(ChatFormatting.GRAY));
+        pTooltipComponents.add(Component.translatable("item.prototype_pain.large_medibag.description").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -61,7 +62,7 @@ public class MediumMedibagItem extends Item implements IBag {
 
         // --- Determine how many slots this bag has ---
         // You can replace this with a fixed number or a method call (e.g. getSlotCount())
-        int slotCount = 8; // or hardcode: int slotCount = 12;
+        int slotCount = 12; // or hardcode: int slotCount = 12;
 
         // --- Read in order ---
         for (int i = 0; i < slotCount; i++) {

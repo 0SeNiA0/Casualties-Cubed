@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 public class ConsciousnessShaderOverlayOverlay implements IShaderOverlay {
 
     public float lastValue=0;
+
     @Override
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();

@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.item.multi_tank;
 import net.adinvas.prototype_pain.registry.ModMedicalFluids;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
-import net.adinvas.prototype_pain.item.api.IAllowInMedicbags;
+import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,7 +11,8 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 
-public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable, IAllowInMedicbags {
+public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable, IAllowInMedicBags {
+
     public LRDItem() {
         super(new Properties().stacksTo(1));
     }

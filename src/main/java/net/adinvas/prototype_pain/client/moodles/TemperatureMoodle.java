@@ -12,8 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemperatureMoodle extends AbstractMoodleVisual{
+public class TemperatureMoodle extends AbstractMoodleVisual {
+    
     boolean low= false;
+    
     @Override
     public MoodleStatus calculateStatus(Player player) {
         float temp = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTemperature).orElse(36.6f);
@@ -37,9 +39,9 @@ public class TemperatureMoodle extends AbstractMoodleVisual{
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/temphigh.png");
+        ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/moodles/temphigh.png");
         if (low){
-            tex = new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/moodles/templow.png");
+            tex = PrototypePain.resourceLoc("textures/gui/moodles/templow.png");
         }
 
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);

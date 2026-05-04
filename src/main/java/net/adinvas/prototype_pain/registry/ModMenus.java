@@ -2,9 +2,9 @@ package net.adinvas.prototype_pain.registry;
 
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.menu.MedicalMixerMenu;
-import net.adinvas.prototype_pain.item.special.bags.large.LargeMedibagMenu;
-import net.adinvas.prototype_pain.item.special.bags.medium.MediumMedibagMenu;
-import net.adinvas.prototype_pain.item.special.bags.small.SmallMedibagMenu;
+import net.adinvas.prototype_pain.menu.LargeMedibagMenu;
+import net.adinvas.prototype_pain.menu.MediumMedibagMenu;
+import net.adinvas.prototype_pain.menu.SmallMedibagMenu;
 import net.adinvas.prototype_pain.menu.LootPlayerMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

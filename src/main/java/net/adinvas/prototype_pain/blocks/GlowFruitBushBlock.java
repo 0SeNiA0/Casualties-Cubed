@@ -20,9 +20,14 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class GlowFruitBushBlock extends BushBlock implements BonemealableBlock {
+
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
+    private static final VoxelShape SHAPE = Shapes.box(2/16f, 0, 2/16f, 14/16f, 14/16f, 14/16f);
 
     public GlowFruitBushBlock(Properties props) {
         super(props);
@@ -38,6 +43,11 @@ public class GlowFruitBushBlock extends BushBlock implements BonemealableBlock {
                 ||state.is(Blocks.GRANITE)
                 ||state.is(Blocks.COBBLESTONE)
                 ||state.is(Blocks.COBBLED_DEEPSLATE);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return SHAPE;
     }
 
     @Override
@@ -88,6 +98,7 @@ public class GlowFruitBushBlock extends BushBlock implements BonemealableBlock {
             }
             return InteractionResult.sidedSuccess(world.isClientSide);
         }
+
         return InteractionResult.PASS;
     }
 }

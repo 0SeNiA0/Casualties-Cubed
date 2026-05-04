@@ -11,9 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 
-public class ContiousnessOverlay implements IOverlay {
+public class ConsciousnessOverlay implements IOverlay {
 
-    private static final ResourceLocation VIGNETTE_LOCATION = ResourceLocation.withDefaultNamespace("textures/misc/vignette.png");
+    private static final ResourceLocation VIGNETTE_LOCATION = PrototypePain.resourceLoc("textures/consciousness_vignette.png");//ResourceLocation.withDefaultNamespace("textures/misc/consciousness_vignette.png");
 
     private float intensity = 1;
     private float brain = 100;
@@ -35,7 +35,7 @@ public class ContiousnessOverlay implements IOverlay {
 
             // Use multiplicative blending so white is transparent, black darkens screen
             RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR);
-            float intensity2 = (float) Math.pow(intensity,2);
+            float intensity2 = .8f + intensity * .2f;//(float) Math.pow(intensity,2);
             ms.setColor(intensity2, intensity2, intensity2, 1f);
             ms.blit(
                     VIGNETTE_LOCATION,
@@ -44,10 +44,12 @@ public class ContiousnessOverlay implements IOverlay {
                     width, height,
                     width, height
             );
+            RenderSystem.defaultBlendFunc();
         }
 
-        ms.setColor(1F, 1F, 1F, (float) Math.pow(intensity-0.1f,8));
+        ms.setColor(1F, 1F, 1F, intensity);
         ms.fill(0,0,width,height,0xFF000000);
+        ms.flush();
         ms.setColor(1F, 1F, 1F, 1);
         if (intensity > 0.95){
             Component text = Component.translatable("prototype_pain.gui.give_up",Component.keybind("key.protoype_pain.give_up"));

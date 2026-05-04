@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.client.event;
 import net.adinvas.prototype_pain.client.Keybinds;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.client.SoundMenager;
+import net.adinvas.prototype_pain.client.SoundManager;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.client.overlays.OverlayController;
 import net.adinvas.prototype_pain.event.CommonEvent;
@@ -53,7 +53,7 @@ public class ClientEvent {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         ProfilerFiller profiler = mc.getProfiler();
-        SoundMenager.tick();
+        SoundManager.tick();
         if (WaitTimer>0){
             WaitTimer--;
         }

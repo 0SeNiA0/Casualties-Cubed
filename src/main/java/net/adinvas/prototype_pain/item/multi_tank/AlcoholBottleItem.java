@@ -6,7 +6,8 @@ import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class AlcoholBottleItem extends BottleItem{
+public class AlcoholBottleItem extends BottleItem {
+
     @Override
     public int getCapacity() {
         return 500;

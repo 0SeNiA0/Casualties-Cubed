@@ -7,10 +7,10 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class LootPlayerScreen extends AbstractContainerScreen<LootPlayerMenu> {
+    
     public LootPlayerScreen(LootPlayerMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
         this.imageWidth = 176;
@@ -19,7 +19,7 @@ public class LootPlayerScreen extends AbstractContainerScreen<LootPlayerMenu> {
 
     @Override
     protected void renderBg(GuiGraphics gui, float partialTicks, int mouseX, int mouseY) {
-        gui.blit(new ResourceLocation(PrototypePain.MOD_ID,"textures/gui/playerloottex.png"),
+        gui.blit(PrototypePain.resourceLoc("textures/gui/playerloottex.png"),
                 this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
     }
 
