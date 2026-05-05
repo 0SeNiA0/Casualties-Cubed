@@ -12,7 +12,7 @@ public class ServerboundLegUsePacket {
     }
 
     // Encoder (to bytes)
-    public void toBytes(FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         // No payload to write
     }
 }

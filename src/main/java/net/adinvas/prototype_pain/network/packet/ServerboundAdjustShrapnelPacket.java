@@ -9,7 +9,7 @@ public record ServerboundAdjustShrapnelPacket(int targetId, Limb limb, int amoun
         this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readVarInt());
     }
 
-    public void write(FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         buf.writeVarInt(this.targetId);
         buf.writeEnum(this.limb);
         buf.writeVarInt(this.amount);

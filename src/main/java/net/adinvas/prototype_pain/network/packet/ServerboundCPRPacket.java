@@ -14,7 +14,7 @@ public record ServerboundCPRPacket(int targetId, Success success) {
         this(buf.readVarInt(), buf.readEnum(Success.class));
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(success);
     }

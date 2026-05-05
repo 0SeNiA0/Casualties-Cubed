@@ -9,7 +9,7 @@ public record ClientboundSyncHealthPacket(int targetId, CompoundTag data) {
         this(buf.readVarInt(), buf.readNbt());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeNbt(data);
     }

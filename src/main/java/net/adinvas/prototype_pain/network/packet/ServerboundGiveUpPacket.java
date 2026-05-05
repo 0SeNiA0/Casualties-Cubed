@@ -12,7 +12,7 @@ public class ServerboundGiveUpPacket {
     }
 
     // Encoder (to bytes)
-    public void write(FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         // No payload to write
     }
 }

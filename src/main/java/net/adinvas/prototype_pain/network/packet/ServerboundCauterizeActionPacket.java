@@ -9,7 +9,7 @@ public record ServerboundCauterizeActionPacket(int targetId, Limb limb) {
         this(buf.readVarInt(), buf.readEnum(Limb.class));
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
     }

@@ -8,7 +8,7 @@ public record ServerboundGuiSyncTogglePacket(int targetId, boolean enable) {
         this(buf.readVarInt(), buf.readBoolean());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeBoolean(enable);
     }

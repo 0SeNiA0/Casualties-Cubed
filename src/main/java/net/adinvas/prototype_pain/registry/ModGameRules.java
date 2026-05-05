@@ -1,18 +1,16 @@
 package net.adinvas.prototype_pain.registry;
 
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
-public class ModGamerules {
+public class ModGameRules {
 
     public static GameRules.Key<GameRules.BooleanValue> INVENTORY_STEAL;
     public static GameRules.Key<GameRules.IntegerValue> LAST_STAND_CHANCE;
     public static GameRules.Key<GameRules.IntegerValue> BLIDNESS_VIEW;
     public static GameRules.Key<GameRules.BooleanValue> AMPUTATION_RESTRICTION;
 
-    @SubscribeEvent
-    public static void onCommonSetup(FMLCommonSetupEvent event) {
+    public static void registerGamerules(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             INVENTORY_STEAL = GameRules.register(
                     "doInventoryStealing", // gamerule name

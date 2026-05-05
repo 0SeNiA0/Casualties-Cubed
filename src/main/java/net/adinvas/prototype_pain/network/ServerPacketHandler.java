@@ -379,7 +379,7 @@ public class ServerPacketHandler {
         ctx.get().setPacketHandled(true);
     }
 
-    public static void handleExchangeItemInHand(ExchangeItemInHandPacket packet, Supplier<NetworkEvent.Context> ctx){
+    public static void handleExchangeItemInHand(ServerboundExchangeItemInHandPacket packet, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
             if (sender == null) return;

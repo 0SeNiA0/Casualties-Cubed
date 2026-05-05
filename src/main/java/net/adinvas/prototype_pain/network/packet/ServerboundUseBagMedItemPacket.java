@@ -10,7 +10,7 @@ public record ServerboundUseBagMedItemPacket(int targetId, Limb limb, ItemStack 
         this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readItem(), buf.readVarInt(), buf.readItem(), buf.readBoolean());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
         buf.writeItem(bag);

@@ -26,9 +26,9 @@ public class PhysicsEvents {
                 default -> Limb.CHEST;
             };
 
-            float damage = vel*1.5f;
+            float damage = vel * 1.5f;
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h ->
-                    h.handleBluntDamage(damage,player,limb));
+                    h.handleBluntDamage(damage, player, limb));
         }
     }
 }

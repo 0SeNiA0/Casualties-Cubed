@@ -6,7 +6,7 @@ import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.packet.ServerboundExchangeItemInBagPacket;
-import net.adinvas.prototype_pain.network.packet.ExchangeItemInHandPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundExchangeItemInHandPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.network.packet.ServerboundSyringeFailPacket;
 import net.minecraft.client.Minecraft;
@@ -201,7 +201,7 @@ public class InjectMingameScreen extends Screen {
         if (bagstack!=null){
             ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInBagPacket(bagstack, slot, syringeStack, hand == InteractionHand.OFF_HAND));
         }else{
-            ModNetwork.CHANNEL.sendToServer(new ExchangeItemInHandPacket(syringeStack,hand==InteractionHand.OFF_HAND));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInHandPacket(syringeStack,hand==InteractionHand.OFF_HAND));
         }
         syringeObject.stop();
         if (syringeObject.getTickSound()!=null){

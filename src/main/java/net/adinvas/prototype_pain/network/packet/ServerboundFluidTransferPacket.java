@@ -9,7 +9,7 @@ public record ServerboundFluidTransferPacket(ItemStack source, ItemStack target,
         this(buf.readItem(), buf.readItem(), buf.readVarInt(), buf.readFloat());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeItem(source);
         buf.writeItem(target);
         buf.writeVarInt(helperSlot);

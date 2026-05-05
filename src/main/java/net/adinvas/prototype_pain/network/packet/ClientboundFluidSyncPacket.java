@@ -10,7 +10,7 @@ public record ClientboundFluidSyncPacket(BlockPos pos, int tankId, FluidStack fl
         this(buf.readBlockPos(), buf.readVarInt(), buf.readFluidStack());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeBlockPos(pos);
         buf.writeVarInt(tankId);
         buf.writeFluidStack(fluid);

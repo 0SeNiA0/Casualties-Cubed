@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.event;
 
-import net.adinvas.prototype_pain.registry.ModGamerules;
+import net.adinvas.prototype_pain.registry.ModGameRules;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +15,7 @@ public class InventoryAccess {
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget() instanceof Player target)) return;
 
-        if (!target.level().getGameRules().getBoolean(ModGamerules.INVENTORY_STEAL))return;
+        if (!target.level().getGameRules().getBoolean(ModGameRules.INVENTORY_STEAL))return;
         Player actor = event.getEntity();
         if (!actor.isShiftKeyDown()) return; // only when sneaking
 

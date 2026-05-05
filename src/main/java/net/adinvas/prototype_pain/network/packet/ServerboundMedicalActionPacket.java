@@ -10,7 +10,7 @@ public record ServerboundMedicalActionPacket(int targetId, Limb limb, MedicalAct
         this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readEnum(MedicalAction.class));
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
         buf.writeEnum(action);

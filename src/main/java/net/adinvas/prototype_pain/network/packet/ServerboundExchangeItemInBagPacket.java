@@ -9,7 +9,7 @@ public record ServerboundExchangeItemInBagPacket(ItemStack bag, int slot, ItemSt
         this(buf.readItem(), buf.readVarInt(), buf.readItem(), buf.readBoolean());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeItem(bag);
         buf.writeVarInt(slot);
         buf.writeItem(target);

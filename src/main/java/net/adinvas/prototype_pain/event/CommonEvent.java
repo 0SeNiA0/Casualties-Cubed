@@ -9,7 +9,7 @@ import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.network.SyncTracker;
 import net.adinvas.prototype_pain.network.packet.ClientboundAmputateRestrictionSyncPacket;
 import net.adinvas.prototype_pain.network.packet.ClientboundBlindnessViewSyncPacket;
-import net.adinvas.prototype_pain.registry.ModGamerules;
+import net.adinvas.prototype_pain.registry.ModGameRules;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +43,7 @@ import java.util.Optional;
 public class CommonEvent {
 
     @SubscribeEvent
-    public void onAttachCap(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachCap(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             if (!event.getObject().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).isPresent()){
                 event.addCapability(PrototypePain.resourceLoc("properties"),new PlayerHealthProvider());
@@ -67,11 +67,11 @@ public class CommonEvent {
         if (event.getEntity() instanceof ServerPlayer player) {
             int val = player.serverLevel()
                     .getGameRules()
-                    .getInt(ModGamerules.BLIDNESS_VIEW);
+                    .getInt(ModGameRules.BLIDNESS_VIEW);
 
             boolean valb = player.serverLevel()
                     .getGameRules()
-                    .getBoolean(ModGamerules.AMPUTATION_RESTRICTION);
+                    .getBoolean(ModGameRules.AMPUTATION_RESTRICTION);
 
 
             ModNetwork.CHANNEL.send(
@@ -135,7 +135,7 @@ public class CommonEvent {
     }
 
     @SubscribeEvent
-    public void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
+    public static void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
         if (!(event.getEntity() instanceof Player player)) return;
         ItemStack stack = event.getItem();
         FoodAndDrinkCompat.FoodEntry data = FoodAndDrinkCompat.get(stack.getItem());
@@ -150,7 +150,7 @@ public class CommonEvent {
 
 
     @SubscribeEvent
-    public void onServerTick(TickEvent.ServerTickEvent event) {
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
         ProfilerFiller profiler = server.getProfiler();
         profiler.push("prototype_pain:sync_tracker");
@@ -162,13 +162,14 @@ public class CommonEvent {
         profiler.pop();
     }
 
-    public int blindnessRangePrev = 48;
-    public boolean amputationRestrictionPrev = true;
+    private static int blindnessRangePrev = 48;
+    private static boolean amputationRestrictionPrev = true;
+
     @SubscribeEvent
-    public void onLevelTick(TickEvent.LevelTickEvent event) {
+    public static void onLevelTick(TickEvent.LevelTickEvent event) {
         if (event.phase == TickEvent.Phase.START && event.level instanceof ServerLevel serverLevel) {
-            int blindnessRange = serverLevel.getGameRules().getInt(ModGamerules.BLIDNESS_VIEW);
-            boolean amputationRestriction = serverLevel.getGameRules().getBoolean(ModGamerules.AMPUTATION_RESTRICTION);
+            int blindnessRange = serverLevel.getGameRules().getInt(ModGameRules.BLIDNESS_VIEW);
+            boolean amputationRestriction = serverLevel.getGameRules().getBoolean(ModGameRules.AMPUTATION_RESTRICTION);
 
             if (blindnessRange!=blindnessRangePrev){
                 ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new ClientboundBlindnessViewSyncPacket(blindnessRange));
@@ -240,7 +241,7 @@ public class CommonEvent {
     }
 
     @SubscribeEvent
-    public void onJoin(EntityJoinLevelEvent event){
+    public static void onJoin(EntityJoinLevelEvent event){
         if(event.getEntity() instanceof ServerPlayer player){
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 h.isReducedDirty = true;

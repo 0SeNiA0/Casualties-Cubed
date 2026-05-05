@@ -9,6 +9,6 @@ public class ClientboundTriggerLastStandPacket {
     public ClientboundTriggerLastStandPacket(FriendlyByteBuf buf){
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
     }
 }

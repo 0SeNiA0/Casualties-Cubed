@@ -1,7 +1,7 @@
 package net.adinvas.prototype_pain.limbs;
 
 import net.adinvas.prototype_pain.ModDamageTypes;
-import net.adinvas.prototype_pain.registry.ModGamerules;
+import net.adinvas.prototype_pain.registry.ModGameRules;
 import net.adinvas.prototype_pain.registry.ModSounds;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.compat.TempCompat;
@@ -1021,7 +1021,7 @@ public class PlayerHealthData {
         }
         if (!LastStand){
             if (brainHealth<15&&contiousness<=10&&(temperature>=42||Oxygen<=4)){
-                float chance = player.level().getGameRules().getInt(ModGamerules.LAST_STAND_CHANCE)/100f;
+                float chance = player.level().getGameRules().getInt(ModGameRules.LAST_STAND_CHANCE)/100f;
                 if (Math.random()<chance){
                     JustTriggeredLastStand = true;
                     ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),new ClientboundTriggerLastStandPacket());

@@ -28,7 +28,7 @@ public record ServerboundUseSyringePacket(int targetId, Limb limb, String[] ids,
         return amounts;
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
 

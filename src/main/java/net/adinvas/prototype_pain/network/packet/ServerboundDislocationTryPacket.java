@@ -9,7 +9,7 @@ public record ServerboundDislocationTryPacket(int targetId, Limb limb, float dis
         this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readFloat());
     }
 
-    public void write(FriendlyByteBuf buf){
+    public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
         buf.writeFloat(dislocationValue);

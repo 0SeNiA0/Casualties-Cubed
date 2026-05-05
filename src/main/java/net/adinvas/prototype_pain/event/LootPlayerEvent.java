@@ -2,7 +2,7 @@ package net.adinvas.prototype_pain.event;
 
 import net.adinvas.prototype_pain.menu.LootPlayerMenu;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.registry.ModGamerules;
+import net.adinvas.prototype_pain.registry.ModGameRules;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
@@ -19,7 +19,7 @@ public class LootPlayerEvent {
     public static void onPlayerInteract(PlayerInteractEvent.EntityInteract event){
         if (!(event.getTarget() instanceof Player target)) return;
 
-        if (!target.level().getGameRules().getBoolean(ModGamerules.INVENTORY_STEAL))return;
+        if (!target.level().getGameRules().getBoolean(ModGameRules.INVENTORY_STEAL))return;
         Player actor = event.getEntity();
         if (actor.isShiftKeyDown()) return;
 
