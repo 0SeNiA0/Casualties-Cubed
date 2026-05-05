@@ -138,7 +138,7 @@ public class HealthScreen extends Screen {
         R_Foot.populate_sprites();
         R_Hand.populate_sprites();
         R_Leg.populate_sprites();
-        if (target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getContiousness()<10).orElse(false)){
+        if (target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getConsciousness()<10).orElse(false)){
             cprButton.visible= true;
         }else{
             cprButton.visible = false;
@@ -277,7 +277,7 @@ public class HealthScreen extends Screen {
     @Override
     public void tick() {
         super.tick();
-        if (target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getContiousness()<10).orElse(false)&&(target!=Minecraft.getInstance().player)){
+        if (target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getConsciousness()<10).orElse(false)&&(target!=Minecraft.getInstance().player)){
             cprButton.visible= true;
         }else{
             cprButton.visible = false;
@@ -296,9 +296,8 @@ public class HealthScreen extends Screen {
 
         Player viewer = Minecraft.getInstance().player;
         double distSq = viewer.distanceToSqr(target);
-        double maxDist = 3.0D; // example, 8 blocks
 
-        if (distSq > maxDist * maxDist) {
+        if (distSq > ServerPacketHandler.TOO_FAR) {
             Minecraft.getInstance().screen.onClose();
             return;
         }
@@ -313,7 +312,7 @@ public class HealthScreen extends Screen {
             healthbox.setPain2(health.getLimbPain(lastHovered.getLimb()));
             healthbox.setBleed2(health.getLimbBleedRate(lastHovered.getLimb()));
             healthbox.setPain((float)health.getTotalPain());
-            healthbox.setContiousness(health.getContiousness());
+            healthbox.setContiousness(health.getConsciousness());
             healthbox.setBlood(health.getBloodVolume());
             healthbox.setBleed(health.getCombinedBleed());
             healthbox.setInfection(health.getLimbInfection(lastHovered.getLimb()));
@@ -327,7 +326,7 @@ public class HealthScreen extends Screen {
         });
         if (!BGmode) {
             Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                if (h.getContiousness() <= 4)
+                if (h.getConsciousness() <= 4)
                     onClose();
             });
         }

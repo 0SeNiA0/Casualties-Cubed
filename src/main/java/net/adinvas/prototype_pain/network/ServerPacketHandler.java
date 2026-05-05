@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 //TODO ensure that sender actually has the item that they say they are using
 public class ServerPacketHandler {
 
-    static final float TOO_FAR = 8 * 8;
+    public static final float TOO_FAR = 3 * 3;
 
     public static void handleAdjustShrapnel(ServerboundAdjustShrapnelPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
@@ -272,7 +272,7 @@ public class ServerPacketHandler {
                         }
                     }
                 }
-                data.setContiousness(data.getContiousness() - 5);
+                data.setContiousness(data.getConsciousness() - 5);
             });
         });
         ctx.get().setPacketHandled(true);

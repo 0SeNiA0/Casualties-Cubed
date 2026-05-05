@@ -38,7 +38,7 @@ public class PainShaderOverlay implements IShaderOverlay {
         float pain = (float)(mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
                 .map(PlayerHealthData::getTotalPain).orElse(0d) / 100f);
         float Consiousness = (mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getContiousness).orElse(0f));
+                .map(PlayerHealthData::getConsciousness).orElse(0f));
         if (Consiousness<10){
             pain = 0.1f;
         }

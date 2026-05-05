@@ -342,7 +342,7 @@ public class HitboxEvents {
         if (!actor.isShiftKeyDown()) return;
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getContiousness() <= 4) {
+            if (h.getConsciousness() <= 4) {
                 // Vector from target → actor
                 double dx = actor.getX() - target.getX();
                 double dz = actor.getZ() - target.getZ();

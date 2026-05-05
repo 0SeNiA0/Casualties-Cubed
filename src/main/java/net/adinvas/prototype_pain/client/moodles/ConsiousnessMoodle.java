@@ -22,7 +22,7 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
 
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getContiousness);
+        Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
         if (cons.orElse(100f)<10) {
             fullyUNC = true;
             return MoodleStatus.CRITICAL;

@@ -19,7 +19,7 @@ public abstract class MouseHandlerMixin {
         if (mc.player == null) return;
         if (!(PhysicsUtil.isPhysicsLoaded() && ServerConfig.SPEC.isLoaded() && ServerConfig.PHYS_INTEGRATION.get())) {
             mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                if (h.getContiousness() <= 10) {
+                if (h.getConsciousness() <= 10) {
                     ci.cancel();
                 }
             });

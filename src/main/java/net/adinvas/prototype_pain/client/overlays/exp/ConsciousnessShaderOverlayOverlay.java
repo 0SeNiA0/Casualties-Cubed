@@ -20,14 +20,14 @@ public class ConsciousnessShaderOverlayOverlay implements IShaderOverlay {
     @Override
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();
-        float consciousness = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getContiousness).orElse(100f);
+        float consciousness = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
         return consciousness<100;
     }
 
     @Override
     public void render(@Nullable RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
         Minecraft mc = Minecraft.getInstance();
-        float consciousness = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getContiousness).orElse(100f);
+        float consciousness = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
         ShaderInstance shader = ClientShaderEvents.CONSCIOUSNESS_SHADER;
         if (shader != null) {
             float intensity = Mth.clamp((100-consciousness)/100f, 0f, 1f);

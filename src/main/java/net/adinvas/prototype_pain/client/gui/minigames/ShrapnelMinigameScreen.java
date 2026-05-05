@@ -148,7 +148,7 @@ public class ShrapnelMinigameScreen extends Screen {
 
         Player player = Minecraft.getInstance().player;
         if (player!=null){
-            Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getContiousness);
+            Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
             Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
             float consscale = (cons.orElse(100f)/100)*0.15f;
             float painscale = (float) (pain.orElse(0d)/100)*0.55f;
@@ -156,7 +156,7 @@ public class ShrapnelMinigameScreen extends Screen {
             handObject.setStiffness(consscale);
         }
         Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getContiousness()<=10)
+            if (h.getConsciousness()<=10)
                 onClose();
         });
 

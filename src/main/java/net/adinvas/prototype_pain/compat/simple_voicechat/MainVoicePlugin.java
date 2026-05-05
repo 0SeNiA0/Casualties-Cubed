@@ -62,7 +62,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
     }
 
     private float getCons(Player player){
-        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getContiousness).orElse(100f);
+        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
     }
 
     private short[] applyAllInMods(short[] in){

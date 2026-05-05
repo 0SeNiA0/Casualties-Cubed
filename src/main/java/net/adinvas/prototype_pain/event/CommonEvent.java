@@ -10,17 +10,26 @@ import net.adinvas.prototype_pain.network.SyncTracker;
 import net.adinvas.prototype_pain.network.packet.ClientboundAmputateRestrictionSyncPacket;
 import net.adinvas.prototype_pain.network.packet.ClientboundBlindnessViewSyncPacket;
 import net.adinvas.prototype_pain.registry.ModGameRules;
+import net.adinvas.prototype_pain.registry.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
@@ -29,6 +38,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -279,5 +289,78 @@ public class CommonEvent {
         }
 
         return nearest;
+    }
+
+    private static final float HEARING_DISTANCE = 20;
+
+    @SubscribeEvent
+    public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
+        Level level = event.getLevel();
+        if (level.isClientSide()) return;// 1. This logic must run on the server
+
+        Vec3 explosionPos = event.getExplosion().getPosition();
+
+        // 2. Create a bounding box 32 blocks in every direction from the explosion
+        // This is a fast, efficient first-pass check.
+        AABB checkBounds = new AABB(new BlockPos((int) explosionPos.x, (int) explosionPos.y, (int) explosionPos.z)).inflate(HEARING_DISTANCE);
+
+        // 3. Get all players within that box
+        double dist;
+        float distScale;
+        for (Player player : level.getEntitiesOfClass(Player.class, checkBounds)) {
+
+            // 4. Check the precise spherical distance
+            dist = player.position().distanceTo(explosionPos);
+            if (dist > HEARING_DISTANCE) {
+                continue; // Player was in the corner of the AABB but > 32 blocks away
+            }
+
+            distScale = (float) Math.pow(1 - dist / HEARING_DISTANCE, 2f);
+            if (!hasLineOfSight(level, player, explosionPos)) {
+                distScale /= 2;
+            } else distScale += .1f;
+
+            ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
+            if (!helmet.isEmpty()) {
+                if (helmet.is(ModItems.SimpleEarProtection.get())) {
+                    distScale *= .75f;
+                } else if (helmet.is(Tags.Items.ARMORS_HELMETS) && helmet.getItem() instanceof ArmorItem armor
+                        && armor.getDefense() > 1) distScale *= .75f;
+            }
+
+            float finalDistanceScale = Mth.clamp(distScale, 0, 1);
+
+            if (distScale > 0.1) {
+                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                    data.setContiousness(data.getConsciousness() - (100 * finalDistanceScale));
+                    data.setHearingLoss((float) (data.getHearingLoss() + Math.max(0.05, finalDistanceScale / 2f)));
+                    data.setFlashHearingLoss(data.getFlashHearingLoss() + Math.min(0.25f, finalDistanceScale * 4));
+                });
+            }
+        }
+    }
+
+    /**
+     * Checks if a player has a direct line of sight to a target position.
+     * @param level The world
+     * @param player The player
+     * @param targetPos The position of the explosion
+     * @return true if there is a clear line of sight, false otherwise
+     */
+    private static boolean hasLineOfSight(Level level, Player player, Vec3 targetPos) {
+        // Start the raycast from the player's eyes
+        Vec3 eyePos = player.getEyePosition();
+
+        ClipContext clipContext = new ClipContext(
+                eyePos,                 // Start of the ray
+                targetPos,              // End of the ray
+                ClipContext.Block.COLLIDER, // Checks against blocks with collision (e.g., stone, wood)
+                ClipContext.Fluid.NONE,   // Ignores fluids
+                player                  // The entity to ignore (the player themselves)
+        );
+
+        // If the raycast 'missed', it means it didn't hit a block.
+        // Therefore, the player has a clear line of sight.
+        return level.clip(clipContext).getType() == HitResult.Type.MISS;
     }
 }

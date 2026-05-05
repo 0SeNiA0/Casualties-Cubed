@@ -20,7 +20,7 @@ public class InventoryAccess {
         if (!actor.isShiftKeyDown()) return; // only when sneaking
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getContiousness() <= 4) {
+            if (h.getConsciousness() <= 4) {
                 // open target's inventory for the actor
                 event.setCanceled(true);
             }

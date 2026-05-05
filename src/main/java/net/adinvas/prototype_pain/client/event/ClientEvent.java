@@ -63,7 +63,7 @@ public class ClientEvent {
         if (event.side == LogicalSide.CLIENT) {
             AtomicBoolean uncontious = new AtomicBoolean(false);
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                if (h.getContiousness()<=10){
+                if (h.getConsciousness()<=10){
                     uncontious.set(true);
                 }
             });
@@ -88,7 +88,7 @@ public class ClientEvent {
 
 
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                if (h.getContiousness()<=10){
+                if (h.getConsciousness()<=10){
                     if (Keybinds.GIVE_UP.isDown()){
                         GiveUpTime--;
                     }else {
@@ -104,7 +104,7 @@ public class ClientEvent {
         }
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                float contiousness = (100-h.getContiousness())/100;
+                float contiousness = (100-h.getConsciousness())/100;
 
                 if (contiousness<=10){
                     mc.player.setYRot(mc.player.yRotO); // reset yaw
@@ -149,7 +149,7 @@ public class ClientEvent {
         Player player = event.getEntity();
         if (player!=null){
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                if (h.getContiousness()<10) { // your condition here
+                if (h.getConsciousness()<10) { // your condition here
                     event.getInput().down = false;
                     event.getInput().forwardImpulse = 0;
                     event.getInput().jumping = false;
@@ -176,7 +176,7 @@ public class ClientEvent {
         if (player == null) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getContiousness() <= 10) {
+            if (h.getConsciousness() <= 10) {
                 event.setCanceled(true); // block opening inventory
             }
         });

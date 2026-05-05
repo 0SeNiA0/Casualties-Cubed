@@ -41,7 +41,6 @@ public class PrototypePain {
         ModCreativeTab.CREATIVE_TABS.register(modEventBus);
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);
-        modEventBus.addListener(ModGameRules::registerGamerules);
 
         context.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);

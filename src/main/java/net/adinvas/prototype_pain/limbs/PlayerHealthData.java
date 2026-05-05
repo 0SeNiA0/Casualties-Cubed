@@ -559,7 +559,7 @@ public class PlayerHealthData {
         return false;
     }
 
-    public float getContiousness() {
+    public float getConsciousness() {
         return contiousness;
     }
 
@@ -1212,7 +1212,7 @@ public class PlayerHealthData {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION,100,1,true,false));
         }
 
-        boolean isUnc = getContiousness()<=10;
+        boolean isUnc = getConsciousness()<=10;
             if (isUnc){
                 player.zza = 0;
                 player.xxa = 0;
