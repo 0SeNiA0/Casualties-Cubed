@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.ShrapnelFailPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundShrapnelFailPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
@@ -62,6 +62,6 @@ public class ShrapnelObject extends GrabObject {
     }
 
     public void fail(){
-        ModNetwork.CHANNEL.sendToServer(new ShrapnelFailPacket(target.getUUID(),limb));
+        ModNetwork.CHANNEL.sendToServer(new ServerboundShrapnelFailPacket(target.getId(), limb));
     }
 }

@@ -6,7 +6,7 @@ import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundDislocationTryPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -95,7 +95,7 @@ public class DislocationMinigameScreen extends Screen {
     public void onClose() {
         super.onClose();
         if (boneObject.isEndCondition()){
-            ModNetwork.CHANNEL.sendToServer(new DislocationTryPacket(target.getUUID(),limb,0));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundDislocationTryPacket(target.getId(),limb,0));
         }
         if (parent instanceof HealthScreen hp){
             hp.BGmode = false;

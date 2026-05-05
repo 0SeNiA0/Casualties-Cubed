@@ -14,6 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +28,16 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ScavPlush.get())
+                .pattern("OYO")
+                .pattern("WWW")
+                .pattern("OWO")
+                .define('O', Ingredient.of(Tags.Items.DYES_ORANGE))
+                .define('Y', Ingredient.of(Tags.Items.DYES_YELLOW))
+                .define('W', Ingredient.of(Items.BLACK_WOOL))
+                .unlockedBy("has_wool", has(ItemTags.WOOL))
+                .save(consumer);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModItems.RippedDressing.get())
                 .requires(Items.STRING)

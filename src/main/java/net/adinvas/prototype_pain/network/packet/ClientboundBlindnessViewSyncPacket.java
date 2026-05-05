@@ -6,22 +6,17 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class BlindnessViewSyncPacket {
-    private final int value;
+public record ClientboundBlindnessViewSyncPacket(int value) {
 
-    public BlindnessViewSyncPacket(int value) {
-        this.value = value;
-    }
-
-    public static BlindnessViewSyncPacket decode(FriendlyByteBuf buf) {
-        return new BlindnessViewSyncPacket(buf.readInt());
+    public static ClientboundBlindnessViewSyncPacket decode(FriendlyByteBuf buf) {
+        return new ClientboundBlindnessViewSyncPacket(buf.readVarInt());
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(value);
+        buf.writeVarInt(value);
     }
 
-    public static void handle(BlindnessViewSyncPacket msg, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(ClientboundBlindnessViewSyncPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ClientGamerules.blindnessViewDistance = msg.value;
         });

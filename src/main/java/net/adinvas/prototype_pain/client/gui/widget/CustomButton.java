@@ -6,7 +6,7 @@ import net.adinvas.prototype_pain.client.gui.minigames.DislocationMinigameScreen
 import net.adinvas.prototype_pain.client.gui.minigames.ShrapnelMinigameScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.MedicalAction;
-import net.adinvas.prototype_pain.network.packet.MedicalActionPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundMedicalActionPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -57,7 +57,7 @@ public class CustomButton extends AbstractWidget {
             return;
         }
         if (action!=null){
-            ModNetwork.CHANNEL.sendToServer(new MedicalActionPacket(limb,target.getUUID(),action));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundMedicalActionPacket(target.getId(), limb, action));
         }
     }
 

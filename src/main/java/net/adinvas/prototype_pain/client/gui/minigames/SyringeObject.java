@@ -9,7 +9,7 @@ import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.UseSyringePacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundUseSyringePacket;
 import net.adinvas.prototype_pain.registry.ModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -103,7 +103,7 @@ public class SyringeObject extends GrabObject{
             for (int i = 0; i < amounts.size(); i++) {
                 array[i] = amounts.get(i);
             }
-            ModNetwork.CHANNEL.sendToServer(new UseSyringePacket(ids.toArray(String[]::new),array,player.getUUID(),limb));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundUseSyringePacket(player.getId(), limb, ids.toArray(String[]::new),array));
             MultiTankHelper.setFluidsDirect(stack,precisefluidMap);
         }
 

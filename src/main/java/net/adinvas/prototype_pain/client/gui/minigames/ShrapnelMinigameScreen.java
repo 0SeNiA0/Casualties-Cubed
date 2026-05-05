@@ -7,7 +7,7 @@ import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.AdjustShrapnelPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundAdjustShrapnelPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -207,7 +207,7 @@ public class ShrapnelMinigameScreen extends Screen {
         }
         if (!IgnoreResult) {
             int shrapnellLeft = (int) shrapnelObjects.stream().filter(ShrapnelObject::isSticked).count();
-            ModNetwork.CHANNEL.sendToServer(new AdjustShrapnelPacket(target.getUUID(), limb, shrapnellLeft));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundAdjustShrapnelPacket(target.getId(), limb, shrapnellLeft));
         }
         Minecraft.getInstance().setScreen(parent);
     }

@@ -1,6 +1,6 @@
 package net.adinvas.prototype_pain.network;
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.network.packet.SyncHealthPacket;
+import net.adinvas.prototype_pain.network.packet.ClientboundSyncHealthPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +26,7 @@ public class SyncTracker {
                 if (target != null) {
                     target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap -> {
                         CompoundTag tag = cap.serializeNBT(new CompoundTag());
-                        ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new SyncHealthPacket(tag, target.getUUID())
+                        ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new ClientboundSyncHealthPacket(target.getId(), tag)
                         );
                     });
                 }
@@ -51,7 +51,7 @@ public class SyncTracker {
                 if (target != null) {
                     target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap -> {
                         CompoundTag tag = cap.serializeNBT(new CompoundTag());
-                        ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new SyncHealthPacket(tag, target.getUUID())
+                        ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new ClientboundSyncHealthPacket(target.getId(), tag)
                         );
                     });
                 }
@@ -73,7 +73,7 @@ public class SyncTracker {
                 if (!isDirty)continue;
                 target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap -> {
                     CompoundTag tag = cap.serilizeReducedNbt(new CompoundTag());
-                    ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new SyncHealthPacket(tag, target.getUUID())
+                    ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> viewer), new ClientboundSyncHealthPacket(target.getId(), tag)
                     );
                 });
             }
@@ -86,7 +86,7 @@ public class SyncTracker {
                 CompoundTag tag = cap.serilizeReducedNbt(new CompoundTag());
                 ModNetwork.CHANNEL.send(
                         PacketDistributor.PLAYER.with(() -> viewer),
-                        new SyncHealthPacket(tag, target.getUUID())
+                        new ClientboundSyncHealthPacket(target.getId(), tag)
                 );
             });
         }
@@ -98,7 +98,7 @@ public class SyncTracker {
                 if (target != viewer) {
                     ModNetwork.CHANNEL.send(
                             PacketDistributor.PLAYER.with(() -> target),
-                            new SyncHealthPacket(tag, viewer.getUUID())
+                            new ClientboundSyncHealthPacket(target.getId(), tag)
                     );
                 }
             }

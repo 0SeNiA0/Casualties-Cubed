@@ -7,7 +7,7 @@ import net.adinvas.prototype_pain.client.gui.StatusSprites;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.ExchangeItemInBagPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundExchangeItemInBagPacket;
 import net.adinvas.prototype_pain.network.packet.ExchangeItemInHandPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -176,7 +176,7 @@ public class BandageMinigameScreen extends Screen {
         if (bagStack==null){
             ModNetwork.CHANNEL.sendToServer(new ExchangeItemInHandPacket(bandageObject.getItemStack(),hand==InteractionHand.OFF_HAND));
         }else{
-            ModNetwork.CHANNEL.sendToServer(new ExchangeItemInBagPacket(bandageObject.getItemStack(),hand==InteractionHand.OFF_HAND,bagStack,slot));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInBagPacket(bagStack, slot, bandageObject.getItemStack(), hand == InteractionHand.OFF_HAND));
         }
         if (parent instanceof HealthScreen hp){
             hp.BGmode = false;

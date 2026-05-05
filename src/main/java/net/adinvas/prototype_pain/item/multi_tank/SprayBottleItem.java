@@ -14,8 +14,8 @@ import java.util.List;
 public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedicalUsable {
 
     public int getOnSkinAmount(){
-        return 20;
-    }//TODO test, mb lower to 10
+        return 10;
+    }
 
     @Override
     public int getCapacity() {

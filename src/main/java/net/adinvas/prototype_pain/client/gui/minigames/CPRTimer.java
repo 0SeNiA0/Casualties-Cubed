@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 import com.mojang.math.Axis;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.CPRPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundCPRPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.sounds.SoundEvents;
@@ -50,12 +50,12 @@ public class CPRTimer {
         tempAngle += distanceFromMax *25;
         if (tempAngle<20){
             player.playSound(SoundEvents.PLAYER_ATTACK_CRIT);
-            ModNetwork.CHANNEL.sendToServer(new CPRPacket(target.getUUID(), CPRPacket.Success.HIGH));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundCPRPacket(target.getId(), ServerboundCPRPacket.Success.HIGH));
         } else if (tempAngle<45) {
-            ModNetwork.CHANNEL.sendToServer(new CPRPacket(target.getUUID(), CPRPacket.Success.MEDIUM));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundCPRPacket(target.getId(), ServerboundCPRPacket.Success.MEDIUM));
             player.playSound(SoundEvents.PLAYER_ATTACK_STRONG);
         } else {
-            ModNetwork.CHANNEL.sendToServer(new CPRPacket(target.getUUID(), CPRPacket.Success.LOW));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundCPRPacket(target.getId(), ServerboundCPRPacket.Success.LOW));
             player.playSound(SoundEvents.PLAYER_ATTACK_NODAMAGE);
         }
     }

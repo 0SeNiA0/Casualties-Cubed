@@ -7,7 +7,7 @@ import net.adinvas.prototype_pain.item.bandages.PlasticDressingItem;
 import net.adinvas.prototype_pain.item.bandages.SterilizedDressingItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.UseBandagePacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundUseBandagePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -60,14 +60,14 @@ public class BandageObject extends GrabObject{
         if (stack.getItem() instanceof INbtDrivenDurability nbt){
             if (nbt.getNbtDurability(stack)<=0){
                 itemStack = ItemStack.EMPTY;
-                ModNetwork.CHANNEL.sendToServer(new UseBandagePacket(stack,target.getUUID(),durabilitySincePacket,limb));
+                ModNetwork.CHANNEL.sendToServer(new ServerboundUseBandagePacket(target.getId(), limb, stack, durabilitySincePacket));
                 durabilitySincePacket = 0;
                 EndCondition = true;
             }
         }
         if (tickCounter++>5&&!EndCondition){
             tickCounter=0;
-            ModNetwork.CHANNEL.sendToServer(new UseBandagePacket(stack,target.getUUID(),durabilitySincePacket,limb));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundUseBandagePacket(target.getId(), limb, stack, durabilitySincePacket));
             durabilitySincePacket = 0;
         }
     }

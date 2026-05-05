@@ -6,7 +6,7 @@ import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
 import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.menu.MedicalMixerMenu;
-import net.adinvas.prototype_pain.network.packet.FluidSyncS2CPacket;
+import net.adinvas.prototype_pain.network.packet.ClientboundFluidSyncPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.recipe.MedicalMixerRecipe;
 import net.adinvas.prototype_pain.registry.ModRecipes;
@@ -148,7 +148,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
                 protected void onContentsChanged() {
                     super.onContentsChanged();
                     if (!level.isClientSide()){
-                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new FluidSyncS2CPacket(this.fluid,0,worldPosition));
+                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new ClientboundFluidSyncPacket(worldPosition, 0, fluid));
                     }
                 }
             },
@@ -157,7 +157,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
                 protected void onContentsChanged() {
                     super.onContentsChanged();
                     if (!level.isClientSide()){
-                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new FluidSyncS2CPacket(this.fluid,1,worldPosition));
+                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new ClientboundFluidSyncPacket(worldPosition, 1, fluid));
                     }
                 }
             },
@@ -166,7 +166,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
                 protected void onContentsChanged() {
                     super.onContentsChanged();
                     if (!level.isClientSide()){
-                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new FluidSyncS2CPacket(this.fluid,2,worldPosition));
+                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new ClientboundFluidSyncPacket(worldPosition, 2, fluid));
                     }
                 }
             },
@@ -175,7 +175,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
                 protected void onContentsChanged() {
                     super.onContentsChanged();
                     if (!level.isClientSide()){
-                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new FluidSyncS2CPacket(this.fluid,3,worldPosition));
+                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new ClientboundFluidSyncPacket(worldPosition, 3, fluid));
                     }
                 }
             },
@@ -184,7 +184,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
                 protected void onContentsChanged() {
                     super.onContentsChanged();
                     if (!level.isClientSide()){
-                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new FluidSyncS2CPacket(this.fluid,4,worldPosition));
+                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new ClientboundFluidSyncPacket(worldPosition, 4, fluid));
                     }
                 }
             },
@@ -193,7 +193,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
                 protected void onContentsChanged() {
                     super.onContentsChanged();
                     if (!level.isClientSide()){
-                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new FluidSyncS2CPacket(this.fluid,5,worldPosition));
+                        ModNetwork.CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(worldPosition)),new ClientboundFluidSyncPacket(worldPosition, 5, fluid));
                     }
                 }
             }
@@ -626,7 +626,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
         for (int i=0; i<Tanks.length;i++){
             ModNetwork.CHANNEL.send(
                     PacketDistributor.PLAYER.with(()-> (ServerPlayer) pPlayer)
-                    ,new FluidSyncS2CPacket(getFluidInTank(i),i,worldPosition));
+                    ,new ClientboundFluidSyncPacket(worldPosition, i, getFluidInTank(i)));
         }
     }
 }

@@ -5,10 +5,10 @@ import net.adinvas.prototype_pain.PlayerHealthProvider;
 import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.packet.ExchangeItemInBagPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundExchangeItemInBagPacket;
 import net.adinvas.prototype_pain.network.packet.ExchangeItemInHandPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.SyringeFailPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundSyringeFailPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -165,7 +165,7 @@ public class InjectMingameScreen extends Screen {
     }
 
     public void handleFail(){
-        ModNetwork.CHANNEL.sendToServer(new SyringeFailPacket(target.getUUID(),limb));
+        ModNetwork.CHANNEL.sendToServer(new ServerboundSyringeFailPacket(target.getId(), limb));
         onClose();
     }
 
@@ -199,7 +199,7 @@ public class InjectMingameScreen extends Screen {
     public void onClose() {
         super.onClose();
         if (bagstack!=null){
-            ModNetwork.CHANNEL.sendToServer(new ExchangeItemInBagPacket(syringeStack,hand==InteractionHand.OFF_HAND,bagstack,slot));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInBagPacket(bagstack, slot, syringeStack, hand == InteractionHand.OFF_HAND));
         }else{
             ModNetwork.CHANNEL.sendToServer(new ExchangeItemInHandPacket(syringeStack,hand==InteractionHand.OFF_HAND));
         }

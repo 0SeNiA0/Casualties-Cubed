@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.client.gui.minigames;
 import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.DislocationTryPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundDislocationTryPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.sounds.SoundEvents;
@@ -87,7 +87,7 @@ public class BoneObject extends GrabObject{
         float newval = (float) new Vector2d(targetPos).sub(correctPos).length();
         dislocationValue = EndCondition?0:newval;
 
-        ModNetwork.CHANNEL.sendToServer(new DislocationTryPacket(target.getUUID(),limb,dislocationValue));
+        ModNetwork.CHANNEL.sendToServer(new ServerboundDislocationTryPacket(target.getId(),limb,dislocationValue));
     }
 
 

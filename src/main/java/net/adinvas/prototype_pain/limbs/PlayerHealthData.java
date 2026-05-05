@@ -13,7 +13,7 @@ import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.network.MedicalAction;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.TriggerLastStandPacket;
+import net.adinvas.prototype_pain.network.packet.ClientboundTriggerLastStandPacket;
 import net.adinvas.prototype_pain.tags.ModItemTags;
 import net.adinvas.prototype_physics.RagdollPart;
 import net.minecraft.core.BlockPos;
@@ -1024,7 +1024,7 @@ public class PlayerHealthData {
                 float chance = player.level().getGameRules().getInt(ModGamerules.LAST_STAND_CHANCE)/100f;
                 if (Math.random()<chance){
                     JustTriggeredLastStand = true;
-                    ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),new TriggerLastStandPacket());
+                    ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),new ClientboundTriggerLastStandPacket());
                 }
             }
         }

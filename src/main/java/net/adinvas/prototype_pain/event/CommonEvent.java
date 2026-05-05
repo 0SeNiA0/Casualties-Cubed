@@ -7,8 +7,8 @@ import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.adinvas.prototype_pain.network.SyncTracker;
-import net.adinvas.prototype_pain.network.packet.AmputateRescrictionSyncPacket;
-import net.adinvas.prototype_pain.network.packet.BlindnessViewSyncPacket;
+import net.adinvas.prototype_pain.network.packet.ClientboundAmputateRestrictionSyncPacket;
+import net.adinvas.prototype_pain.network.packet.ClientboundBlindnessViewSyncPacket;
 import net.adinvas.prototype_pain.registry.ModGamerules;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -76,11 +76,11 @@ public class CommonEvent {
 
             ModNetwork.CHANNEL.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new BlindnessViewSyncPacket(val)
+                    new ClientboundBlindnessViewSyncPacket(val)
             );
             ModNetwork.CHANNEL.send(
                     PacketDistributor.PLAYER.with(() -> player),
-                    new AmputateRescrictionSyncPacket(valb)
+                    new ClientboundAmputateRestrictionSyncPacket(valb)
             );
         }
     }
@@ -171,11 +171,11 @@ public class CommonEvent {
             boolean amputationRestriction = serverLevel.getGameRules().getBoolean(ModGamerules.AMPUTATION_RESTRICTION);
 
             if (blindnessRange!=blindnessRangePrev){
-                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new BlindnessViewSyncPacket(blindnessRange));
+                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new ClientboundBlindnessViewSyncPacket(blindnessRange));
                 blindnessRangePrev = blindnessRange;
             }
             if (amputationRestriction!=amputationRestrictionPrev){
-                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new AmputateRescrictionSyncPacket(amputationRestriction));
+                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new ClientboundAmputateRestrictionSyncPacket(amputationRestriction));
                 amputationRestrictionPrev = amputationRestriction;
             }
         }

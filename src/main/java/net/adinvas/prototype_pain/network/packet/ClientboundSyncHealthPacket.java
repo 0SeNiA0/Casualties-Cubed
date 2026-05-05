@@ -1,0 +1,16 @@
+package net.adinvas.prototype_pain.network.packet;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+
+public record ClientboundSyncHealthPacket(int targetId, CompoundTag data) {
+
+    public ClientboundSyncHealthPacket(FriendlyByteBuf buf){
+        this(buf.readVarInt(), buf.readNbt());
+    }
+
+    public void write(FriendlyByteBuf buf){
+        buf.writeVarInt(targetId);
+        buf.writeNbt(data);
+    }
+}

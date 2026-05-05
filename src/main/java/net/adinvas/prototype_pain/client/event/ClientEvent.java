@@ -11,8 +11,8 @@ import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.client.gui.FluidExchangeScreen;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.packet.GiveUpPacket;
-import net.adinvas.prototype_pain.network.packet.LegUsePacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundGiveUpPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundLegUsePacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -97,7 +97,7 @@ public class ClientEvent {
                 }
             });
             if (GiveUpTime<=0){
-                ModNetwork.CHANNEL.sendToServer(new GiveUpPacket());
+                ModNetwork.CHANNEL.sendToServer(new ServerboundGiveUpPacket());
                 GiveUpTime = 40;
             }
             profiler.pop();
@@ -160,7 +160,7 @@ public class ClientEvent {
                     event.getInput().shiftKeyDown = false;
                 }
                 if (event.getInput().leftImpulse!=0||event.getInput().forwardImpulse!=0||event.getInput().jumping){
-                    ModNetwork.CHANNEL.sendToServer(new LegUsePacket());
+                    ModNetwork.CHANNEL.sendToServer(new ServerboundLegUsePacket());
                 }
             });
         }

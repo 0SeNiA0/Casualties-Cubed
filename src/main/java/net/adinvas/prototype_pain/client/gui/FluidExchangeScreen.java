@@ -3,7 +3,7 @@ package net.adinvas.prototype_pain.client.gui;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 
-import net.adinvas.prototype_pain.network.packet.FluidTransferPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundFluidTransferPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -88,7 +88,7 @@ public class FluidExchangeScreen extends Screen {
 
     public void confirmTransfer(){
         float amount = sliderValue * MaxSlider;
-        ModNetwork.CHANNEL.sendToServer(new FluidTransferPacket(fromItem, toItem,helperSlot, amount));
+        ModNetwork.CHANNEL.sendToServer(new ServerboundFluidTransferPacket(fromItem, toItem,helperSlot, amount));
         onClose();
     }
 

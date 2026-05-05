@@ -10,7 +10,7 @@ import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.TalkPacket;
+import net.adinvas.prototype_pain.network.packet.ServerboundTalkPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 
@@ -82,7 +82,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
             out = applyVolumeVariation(out);
             out = applyEcho(out,0.3f,850);
         }
-        ModNetwork.CHANNEL.sendToServer(new TalkPacket());
+        ModNetwork.CHANNEL.sendToServer(new ServerboundTalkPacket());
         boolean isBrainDamaged = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getBrainHealth()<60).orElse(false);
         if (getCons(player)<10||isBrainDamaged) {
             for (int i=0;i<out.length;i++){
