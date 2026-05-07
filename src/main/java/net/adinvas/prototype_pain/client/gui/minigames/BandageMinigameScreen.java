@@ -6,9 +6,6 @@ import net.adinvas.prototype_pain.client.gui.HealthScreen;
 import net.adinvas.prototype_pain.client.gui.StatusSprites;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
-import net.adinvas.prototype_pain.network.ModNetwork;
-import net.adinvas.prototype_pain.network.packet.ServerboundExchangeItemInBagPacket;
-import net.adinvas.prototype_pain.network.packet.ServerboundExchangeItemInHandPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -33,8 +30,9 @@ public class BandageMinigameScreen extends Screen {
 
     private HandObject handObject;
 
-    private float bleedRate=0;
-    private float maxBleed =0;
+    private float bleedRate = 0;
+    private float maxBleed = 0;
+
     public BandageMinigameScreen(Screen parent, Player target, ItemStack bandageStack, Limb limb, InteractionHand hand) {
         super(Component.literal("BandageMinigame"));
         this.parent = parent;
@@ -46,7 +44,7 @@ public class BandageMinigameScreen extends Screen {
         slot = -1;
     }
 
-    public BandageMinigameScreen(Screen parent, Player target, ItemStack bandageStack,ItemStack bagStack,int slot, Limb limb, InteractionHand hand) {
+    public BandageMinigameScreen(Screen parent, Player target, ItemStack bandageStack, ItemStack bagStack, int slot, Limb limb, InteractionHand hand) {
         super(Component.literal("BandageMinigame"));
         this.parent = parent;
         this.target = target;
@@ -57,12 +55,12 @@ public class BandageMinigameScreen extends Screen {
         this.slot = slot;
     }
 
-    public boolean isAmputated(){
+    public boolean isAmputated() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player==null) return false;
-        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            for (Limb l:limb.availableHandsForAction()){
-                if (!h.isAmputated(l)){
+        if (mc.player == null) return false;
+        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
+            for (Limb l : limb.availableHandsForAction()) {
+                if (!h.isAmputated(l)) {
                     return false;
                 }
             }
@@ -70,11 +68,11 @@ public class BandageMinigameScreen extends Screen {
         }).orElse(false);
     }
 
-    public boolean isBothAmputated(){
+    public boolean isBothAmputated() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player==null) return false;
-        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            if (h.isAmputated(Limb.LEFT_HAND)&&h.isAmputated(Limb.RIGHT_HAND))return true;
+        if (mc.player == null) return false;
+        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
+            if (h.isAmputated(Limb.LEFT_HAND) && h.isAmputated(Limb.RIGHT_HAND)) return true;
             return false;
         }).orElse(false);
     }
@@ -84,60 +82,62 @@ public class BandageMinigameScreen extends Screen {
         super.init();
         HandObject.SpriteType spriteType;
         if (isAmputated()) {
-            spriteType= HandObject.SpriteType.GONE;
-        }else {
-            spriteType= HandObject.SpriteType.NORMAL;
+            spriteType = HandObject.SpriteType.GONE;
+        } else {
+            spriteType = HandObject.SpriteType.NORMAL;
         }
-        if (target!= minecraft.player){
+        if (target != minecraft.player) {
             if (isBothAmputated()) {
-                spriteType= HandObject.SpriteType.GONE;
-            }else {
-                spriteType= HandObject.SpriteType.NORMAL;
+                spriteType = HandObject.SpriteType.GONE;
+            } else {
+                spriteType = HandObject.SpriteType.NORMAL;
             }
         }
 
-        handObject = new HandObject(spriteType,this.width/2,this.height/2,this.width,this.height/3*2);
-        if (parent instanceof HealthScreen hp){
+        handObject = new HandObject(spriteType, this.width / 2, this.height / 2, this.width, this.height / 3 * 2);
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = true;
         }
-        bandageObject =new BandageObject(
+        bandageObject = new BandageObject(
                 0, 0,
                 0, 0, 64, 64,
                 PrototypePain.resourceLoc("textures/gui/bandage.png"),
                 64, 64,
                 1f,
-                this.width/2,
-                this.height/2,
-                bandageStack
+                this.width / 2,
+                this.height / 2,
+                bandageStack,
+                slot,
+                hand
         );
         maxBleed = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getMAX_BLEED_RATE).orElse(1f);
     }
 
-    private double lastpMouseX=100,lastpMouseY=100;
+    private double lastpMouseX = 100, lastpMouseY = 100;
+
     @Override
     public void tick() {
-        Optional<Float> BD =target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            return h.getLimbBleedRate(limb);
-        });
+        Optional<Float> BD = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
+                data.getLimbBleedRate(limb));
         bleedRate = BD.orElse(0f);
         parent.tick();
-        handObject.update(lastpMouseX,lastpMouseY);
-        bandageObject.update(bandageStack,target,limb);
-        bandageObject.mouseDragged(handObject.x,handObject.y,0);
+        handObject.update(lastpMouseX, lastpMouseY);
+        bandageObject.update(target, limb);
+        bandageObject.mouseDragged(handObject.x, handObject.y, 0);
         Player player = Minecraft.getInstance().player;
-        if (player!=null){
-            Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
+        if (player != null) {
+            Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
             Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
-            float consscale = (cons.orElse(100f)/100)*0.15f;
-            float painscale = (float) (pain.orElse(0d)/100);
+            float consscale = (cons.orElse(100f) / 100) * 0.15f;
+            float painscale = (float) (pain.orElse(0d) / 100);
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getConsciousness()<=10)
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            if (h.getConsciousness() <= 10)
                 onClose();
         });
-        if (bandageObject.isEndCondition()){
+        if (bandageObject.isEndCondition()) {
             onClose();
         }
         super.tick();
@@ -145,8 +145,8 @@ public class BandageMinigameScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (handObject.spriteType!=HandObject.SpriteType.GONE){
-            bandageObject.mouseClicked(handObject.x,handObject.y,pButton);
+        if (handObject.spriteType != HandObject.SpriteType.GONE) {
+            bandageObject.mouseClicked(handObject.x, handObject.y, pButton);
             handObject.mouseClicked();
         }
 
@@ -167,49 +167,41 @@ public class BandageMinigameScreen extends Screen {
         return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
-
-
-
     @Override
     public void onClose() {
         super.onClose();
-        if (bagStack==null){
-            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInHandPacket(bandageObject.getItemStack(),hand==InteractionHand.OFF_HAND));
-        }else{
-            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInBagPacket(bagStack, slot, bandageObject.getItemStack(), hand == InteractionHand.OFF_HAND));
-        }
-        if (parent instanceof HealthScreen hp){
+
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = false;
         }
+
         Minecraft.getInstance().setScreen(parent);
     }
-
-
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         parent.render(guiGraphics, mouseX, mouseY, partialTicks);
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        guiGraphics.fill(0,0,width,height,0x88000000);
+        guiGraphics.fill(0, 0, width, height, 0x88000000);
         Minecraft mc = Minecraft.getInstance();
-        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/bandage_center.png"),this.width/2-40,this.height/2-40,0,0,80,80,80,80,80);
+        guiGraphics.blit(PrototypePain.resourceLoc("textures/gui/bandage_center.png"), this.width / 2 - 40, this.height / 2 - 40, 0, 0, 80, 80, 80, 80, 80);
 
 
-        guiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.bandage_instruction1"),this.width/2,10,0xFFFFFF);
-        guiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.bandage_instruction2"),this.width/2,20,0xFFFFFF);
-        guiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.minigame_exit"),this.width/2,this.height / 6+190,0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font, Component.translatable("prototype_pain.gui.bandage_instruction1"), this.width / 2, 10, 0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font, Component.translatable("prototype_pain.gui.bandage_instruction2"), this.width / 2, 20, 0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font, Component.translatable("prototype_pain.gui.minigame_exit"), this.width / 2, this.height / 6 + 190, 0xFFFFFF);
 
         bandageObject.render(guiGraphics);
-        if(bleedRate>0){
-            float bleedscale = 0.5f+ 1.4f*(bleedRate/maxBleed);
+        if (bleedRate > 0) {
+            float bleedscale = 0.5f + 1.4f * (bleedRate / maxBleed);
             float sizePx = 20 * bleedscale;
-            guiGraphics.blit(StatusSprites.BLEED.tex, (int) (width/2-sizePx/2), (int) (height/2-sizePx/2+10),0,0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
+            guiGraphics.blit(StatusSprites.BLEED.tex, (int) (width / 2 - sizePx / 2), (int) (height / 2 - sizePx / 2 + 10), 0, 0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
         }
-        guiGraphics.renderItem(bandageStack,this.width/10-10,this.height/10+5);
-        guiGraphics.drawString(mc.font,Component.empty().append(bandageStack.getHoverName()),this.width/10+16,this.height/10+5,0xFFFFFF);
+        guiGraphics.renderItem(bandageStack, this.width / 10 - 10, this.height / 10 + 5);
+        guiGraphics.drawString(mc.font, Component.empty().append(bandageStack.getHoverName()), this.width / 10 + 16, this.height / 10 + 5, 0xFFFFFF);
 
 
-        handObject.render(guiGraphics,partialTicks);
+        handObject.render(guiGraphics, partialTicks);
     }
 
     @Override

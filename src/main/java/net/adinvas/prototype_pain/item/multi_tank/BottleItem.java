@@ -29,7 +29,7 @@ import java.util.List;
 
 public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsable {
 
-    public BottleItem(){
+    public BottleItem() {
         super(new Properties().stacksTo(1).food(new FoodProperties.Builder().alwaysEat().build()));
     }
 
@@ -40,18 +40,18 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
 
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
-        if (!(pLivingEntity instanceof ServerPlayer player))return pStack;
+        if (!(pLivingEntity instanceof ServerPlayer player)) return pStack;
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getDrinkingAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(pStack,max);
-        for (FluidStack fs : drained){
+        List<FluidStack> drained = MultiTankHelper.drain(pStack, max);
+        for (FluidStack fs : drained) {
             MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());
-            if (fs.hasTag()){
-                if (fs.getTag().contains("MedicalId")){
+            if (fs.hasTag()) {
+                if (fs.getTag().contains("MedicalId")) {
                     MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
                 }
             }
-            MF.getMedicalEffect().applyIngested(player,fs.getAmount());
+            MF.getMedicalEffect().applyIngested(player, fs.getAmount());
         }
         return pStack;
     }
@@ -71,27 +71,27 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
         return 15;
     }
 
-    public int getDrinkingAmount(){
+    public int getDrinkingAmount() {
         return 100;
     }
 
-    public int getOnSkinAmount(){
+    public int getOnSkinAmount() {
         return 100;
     }
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack),getOnSkinAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(stack,max);
-        for (FluidStack fs : drained){
+        int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getOnSkinAmount());
+        List<FluidStack> drained = MultiTankHelper.drain(stack, max);
+        for (FluidStack fs : drained) {
             MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());
-            if (fs.hasTag()){
-                if (fs.getTag().contains("MedicalId")){
+            if (fs.hasTag()) {
+                if (fs.getTag().contains("MedicalId")) {
                     MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
                 }
             }
-            MF.getMedicalEffect().applyOnSkin(target,fs.getAmount(),limb);
+            MF.getMedicalEffect().applyOnSkin(target, fs.getAmount(), limb);
         }
         return stack;
     }
@@ -105,7 +105,7 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
         float cap = MultiTankHelper.getCapacity(stack);
         float amountOfFluids = MultiTankHelper.getFilledTotal(stack);
         float amountToFill = Math.min(100, cap - amountOfFluids);
-        if (hitResult.getType() == HitResult.Type.BLOCK&&amountToFill>0) {
+        if (hitResult.getType() == HitResult.Type.BLOCK && amountToFill > 0) {
             BlockPos pos = hitResult.getBlockPos();
             BlockState state = level.getBlockState(pos);
 
@@ -113,7 +113,7 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
             if (state.getBlock() == Blocks.WATER && state.getFluidState().isSource()) {
 
 
-                MultiTankHelper.addFluid(stack,100,new FluidStack(Fluids.WATER,1));
+                MultiTankHelper.addFluid(stack, 100, new FluidStack(Fluids.WATER, 1));
 
                 // play a sound (optional)
                 player.playSound(SoundEvents.BOTTLE_FILL, 1.0F, 1.0F);
@@ -129,6 +129,4 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
 
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
-
-
 }

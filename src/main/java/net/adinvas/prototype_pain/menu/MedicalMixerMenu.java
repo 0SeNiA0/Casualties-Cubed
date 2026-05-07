@@ -1,8 +1,8 @@
 package net.adinvas.prototype_pain.menu;
 
 import net.adinvas.prototype_pain.blocks.medical_mixer.MedicalMixerBlockEntity;
-import net.adinvas.prototype_pain.registry.ModMenus;
 import net.adinvas.prototype_pain.registry.ModBlocks;
+import net.adinvas.prototype_pain.registry.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,57 +15,57 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class MedicalMixerMenu extends AbstractContainerMenu {
+
     public final MedicalMixerBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
     private FluidStack[] tanks = new FluidStack[6];
 
-    public MedicalMixerMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf){
-        this(pContainerId,inv,inv.player.level().getBlockEntity(buf.readBlockPos()),new SimpleContainerData(19));
+    public MedicalMixerMenu(int pContainerId, Inventory inv, FriendlyByteBuf buf) {
+        this(pContainerId, inv, inv.player.level().getBlockEntity(buf.readBlockPos()), new SimpleContainerData(19));
     }
 
-    public MedicalMixerMenu(int pContainerId, Inventory inv, BlockEntity blockEntity,ContainerData data){
-        super(ModMenus.MEDICAL_MIXER.get(),pContainerId);
-        checkContainerSize(inv,2);
+    public MedicalMixerMenu(int pContainerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
+        super(ModMenus.MEDICAL_MIXER.get(), pContainerId);
+        checkContainerSize(inv, 2);
         this.blockEntity = ((MedicalMixerBlockEntity) blockEntity);
         this.level = inv.player.level();
         this.data = data;
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
 
-        for (int i=0;i<tanks.length;i++){
+        for (int i = 0; i < tanks.length; i++) {
             tanks[i] = this.blockEntity.getFluidInTank(i);
         }
 
 
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
             int id = 0;
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,82,8));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,100,8));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,118,8));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,91,26));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,109,26));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 82, 8));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 100, 8));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 118, 8));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 91, 26));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 109, 26));
 
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,91,54));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,109,54));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,82,72));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,100,72));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,118,72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 91, 54));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 109, 54));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 82, 72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 100, 72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 118, 72));
 
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,8,8));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,28,8));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,48,8));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 8, 8));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 28, 8));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 48, 8));
 
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,8,72));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,28,72));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,48,72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 8, 72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 28, 72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 48, 72));
 
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,152,72));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,172,72));
-            this.addSlot(new SlotItemHandler(iItemHandler,id++,192,72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 152, 72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 172, 72));
+            this.addSlot(new SlotItemHandler(iItemHandler, id++, 192, 72));
 
         });
-
 
 
         addDataSlots(data);
@@ -73,20 +73,21 @@ public class MedicalMixerMenu extends AbstractContainerMenu {
 
     }
 
-    public boolean isCrafting(){
-        return data.get(0)>0;
+    public boolean isCrafting() {
+        return data.get(0) > 0;
     }
 
-    public float getScaledProgress(){
+    public float getScaledProgress() {
         int progress = this.data.get(0);
-        int maxProgress= this.data.get(1);
-        return maxProgress !=0 &&progress!=0 ? (float) progress /maxProgress :0;
+        int maxProgress = this.data.get(1);
+        return maxProgress != 0 && progress != 0 ? (float) progress / maxProgress : 0;
     }
 
-    public int getProgress(){
+    public int getProgress() {
         return this.data.get(0);
     }
-    public int getmaxProgress(){
+
+    public int getmaxProgress() {
         return this.data.get(1);
     }
 
@@ -107,6 +108,7 @@ public class MedicalMixerMenu extends AbstractContainerMenu {
 
     // THIS YOU HAVE TO DEFINE!
     private static final int TE_INVENTORY_SLOT_COUNT = 19;  // must be the number of slots you have!
+
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);
@@ -143,11 +145,11 @@ public class MedicalMixerMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(ContainerLevelAccess.create(level,blockEntity.getBlockPos()),player, ModBlocks.MEDICAL_MIXER.get());
+        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.MEDICAL_MIXER.get());
     }
 
 
-    private void addPlayerInventory(Inventory inv){
+    private void addPlayerInventory(Inventory inv) {
         int startX = 28;
         int startY = 104;
         for (int row = 0; row < 3; ++row) {
@@ -157,7 +159,7 @@ public class MedicalMixerMenu extends AbstractContainerMenu {
         }
     }
 
-    private void addPlayerHotbar(Inventory inv){
+    private void addPlayerHotbar(Inventory inv) {
         int startX = 28;
         int startY = 162;
         for (int col = 0; col < 9; ++col) {

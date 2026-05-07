@@ -26,7 +26,7 @@ public class InjectMingameScreen extends Screen {
     private final Player target;
     private final ItemStack syringeStack;
     private final Limb limb;
-    private double lastpMouseX=this.width/2,lastpMouseY=this.height/2;
+    private double lastpMouseX = this.width / 2.0, lastpMouseY = this.height / 2.0;
     private final ItemStack bagstack;
     private final int slot;
 
@@ -46,7 +46,7 @@ public class InjectMingameScreen extends Screen {
         slot = -1;
     }
 
-    public InjectMingameScreen(Screen parent, Player target, ItemStack syringeStack,ItemStack bagstack,int slot, Limb limb, InteractionHand hand) {
+    public InjectMingameScreen(Screen parent, Player target, ItemStack syringeStack, ItemStack bagstack, int slot, Limb limb, InteractionHand hand) {
         super(Component.literal("Inject screen"));
         this.parent = parent;
         this.target = target;
@@ -56,12 +56,13 @@ public class InjectMingameScreen extends Screen {
         this.bagstack = bagstack;
         this.slot = slot;
     }
-    public boolean isAmputated(){
+
+    public boolean isAmputated() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player==null) return false;
-        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            for (Limb l:limb.availableHandsForAction()){
-                if (!h.isAmputated(l)){
+        if (mc.player == null) return false;
+        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
+            for (Limb l : limb.availableHandsForAction()) {
+                if (!h.isAmputated(l)) {
                     return false;
                 }
             }
@@ -69,13 +70,12 @@ public class InjectMingameScreen extends Screen {
         }).orElse(false);
     }
 
-    public boolean isBothAmputated(){
+    public boolean isBothAmputated() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player==null) return false;
-        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            if (h.isAmputated(Limb.LEFT_HAND)&&h.isAmputated(Limb.RIGHT_HAND))return true;
-            return false;
-        }).orElse(false);
+        if (mc.player == null) return false;
+
+        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
+                data.isAmputated(Limb.LEFT_HAND) && data.isAmputated(Limb.RIGHT_HAND)).orElse(false);
     }
 
     @Override
@@ -83,22 +83,22 @@ public class InjectMingameScreen extends Screen {
         super.init();
         HandObject.SpriteType spriteType;
         if (isAmputated()) {
-            spriteType= HandObject.SpriteType.GONE;
-        }else {
-            spriteType= HandObject.SpriteType.NORMAL;
+            spriteType = HandObject.SpriteType.GONE;
+        } else {
+            spriteType = HandObject.SpriteType.NORMAL;
         }
-        if (target!= minecraft.player){
+        if (target != minecraft.player) {
             if (isBothAmputated()) {
-                spriteType= HandObject.SpriteType.GONE;
-            }else {
-                spriteType= HandObject.SpriteType.NORMAL;
+                spriteType = HandObject.SpriteType.GONE;
+            } else {
+                spriteType = HandObject.SpriteType.NORMAL;
             }
         }
-        handObject = new HandObject(spriteType,this.width/2,this.height/2,this.width,this.height/3*2);
-        if (parent instanceof HealthScreen hp){
+        handObject = new HandObject(spriteType, this.width / 2.0, this.height / 2.0, this.width, this.height / 3 * 2);
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = true;
         }
-        syringeObject = new SyringeObject(this.width/2,0,1f,this.height/6);
+        syringeObject = new SyringeObject(this.width / 2, 0, 1f, this.height / 6);
         syringeObject.setFullness(syringeStack);
         syringeObject.setColor(syringeStack);
     }
@@ -107,8 +107,8 @@ public class InjectMingameScreen extends Screen {
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         parent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        pGuiGraphics.fill(0,0,width,height,0x88000000);
-        pGuiGraphics.fill(0,height/6+158,width,height/6+161,0xFFFFFFFF);
+        pGuiGraphics.fill(0, 0, width, height, 0x88000000);
+        pGuiGraphics.fill(0, height / 6 + 158, width, height / 6 + 161, 0xFFFFFFFF);
 
         Minecraft mc = Minecraft.getInstance();
         int screenHeight = mc.getWindow().getScreenHeight();
@@ -117,7 +117,7 @@ public class InjectMingameScreen extends Screen {
         double guiScaleX = (double) screenWidth / (double) this.width;
         double guiScaleY = (double) screenHeight / (double) this.height;
 
-        int clipY = this.height / 6+161;
+        int clipY = this.height / 6 + 161;
 
         int scissorX = 0;
         int scissorY = (int) (screenHeight - (clipY * guiScaleY));
@@ -129,50 +129,48 @@ public class InjectMingameScreen extends Screen {
         syringeObject.render(pGuiGraphics);
         RenderSystem.disableScissor();
 
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.syringe_instruction"),this.width/2,10,0xFFFFFF);
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("prototype_pain.gui.minigame_exit"),this.width/2,clipY+30,0xFFFFFF);
-        pGuiGraphics.renderItem(syringeStack,this.width/10-10,this.height/10+5);
-        pGuiGraphics.drawString(mc.font,Component.empty().append(syringeStack.getHoverName()),this.width/10+16,this.height/10+5,0xFFFFFF);
+        pGuiGraphics.drawCenteredString(mc.font, Component.translatable("prototype_pain.gui.syringe_instruction"), this.width / 2, 10, 0xFFFFFF);
+        pGuiGraphics.drawCenteredString(mc.font, Component.translatable("prototype_pain.gui.minigame_exit"), this.width / 2, clipY + 30, 0xFFFFFF);
+        pGuiGraphics.renderItem(syringeStack, this.width / 10 - 10, this.height / 10 + 5);
+        pGuiGraphics.drawString(mc.font, Component.empty().append(syringeStack.getHoverName()), this.width / 10 + 16, this.height / 10 + 5, 0xFFFFFF);
 
-        handObject.render(pGuiGraphics,pPartialTick);
+        handObject.render(pGuiGraphics, pPartialTick);
     }
-
-
 
     @Override
     public void tick() {
         parent.tick();
-        handObject.update(lastpMouseX,lastpMouseY);
-        syringeObject.mouseDragged(handObject.x,handObject.y,0);
-        syringeObject.update(syringeStack,target,limb);
-        if (syringeObject.isSnapped()){
+        handObject.update(lastpMouseX, lastpMouseY);
+        syringeObject.mouseDragged(handObject.x, handObject.y, 0);
+        syringeObject.update(syringeStack, target, limb);
+        if (syringeObject.isSnapped()) {
             handleFail();
         }
         Player player = Minecraft.getInstance().player;
-        if (player!=null){
-            Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
+        if (player != null) {
+            Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
             Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
-            float consscale = (cons.orElse(100f)/100)*0.15f;
-            float painscale = (float) (pain.orElse(0d)/100);
+            float consscale = (cons.orElse(100f) / 100) * 0.15f;
+            float painscale = (float) (pain.orElse(0d) / 100);
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getConsciousness()<=10)
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            if (h.getConsciousness() <= 10)
                 onClose();
         });
         super.tick();
     }
 
-    public void handleFail(){
+    public void handleFail() {
         ModNetwork.CHANNEL.sendToServer(new ServerboundSyringeFailPacket(target.getId(), limb));
         onClose();
     }
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (handObject.spriteType!=HandObject.SpriteType.GONE){
-        syringeObject.mouseClicked(handObject.x,handObject.y,pButton);
+        if (handObject.spriteType != HandObject.SpriteType.GONE) {
+            syringeObject.mouseClicked(handObject.x, handObject.y, pButton);
 
             handObject.mouseClicked();
         }
@@ -198,19 +196,19 @@ public class InjectMingameScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        if (bagstack!=null){
+        if (bagstack != null) {
             ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInBagPacket(bagstack, slot, syringeStack, hand == InteractionHand.OFF_HAND));
-        }else{
-            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInHandPacket(syringeStack,hand==InteractionHand.OFF_HAND));
+        } else {
+            ModNetwork.CHANNEL.sendToServer(new ServerboundExchangeItemInHandPacket(syringeStack, hand == InteractionHand.OFF_HAND));
         }
         syringeObject.stop();
-        if (syringeObject.getTickSound()!=null){
+        if (syringeObject.getTickSound() != null) {
             minecraft.getSoundManager().stop(syringeObject.getTickSound());
         }
-        if (syringeObject.isSnapped()){
-            Minecraft.getInstance().player.playSound(SoundEvents.GLASS_BREAK,1f,1f);
+        if (syringeObject.isSnapped()) {
+            Minecraft.getInstance().player.playSound(SoundEvents.GLASS_BREAK, 1f, 1f);
         }
-        if (parent instanceof HealthScreen hp){
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = false;
         }
         Minecraft.getInstance().setScreen(parent);
@@ -220,6 +218,4 @@ public class InjectMingameScreen extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-
-
 }

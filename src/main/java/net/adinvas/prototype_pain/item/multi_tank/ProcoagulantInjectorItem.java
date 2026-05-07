@@ -13,6 +13,6 @@ public class ProcoagulantInjectorItem extends AutoInjectorItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 100,
                 ModMedicalFluids.PROCOAGULANT.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

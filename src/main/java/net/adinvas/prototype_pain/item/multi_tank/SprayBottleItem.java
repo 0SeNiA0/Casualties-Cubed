@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedicalUsable {
 
-    public int getOnSkinAmount(){
+    public int getOnSkinAmount() {
         return 10;
     }
 
@@ -24,17 +24,17 @@ public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedica
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack),getOnSkinAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(stack,max);
-        for (FluidStack fs : drained){
+        int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getOnSkinAmount());
+        List<FluidStack> drained = MultiTankHelper.drain(stack, max);
+        for (FluidStack fs : drained) {
             MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());
-            if (fs.hasTag()){
-                if (fs.getTag().contains("MedicalId")){
+            if (fs.hasTag()) {
+                if (fs.getTag().contains("MedicalId")) {
                     MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
                 }
             }
-            MF.getMedicalEffect().applyOnSkin(target,fs.getAmount(),limb);
+            MF.getMedicalEffect().applyOnSkin(target, fs.getAmount(), limb);
         }
         return stack;
     }

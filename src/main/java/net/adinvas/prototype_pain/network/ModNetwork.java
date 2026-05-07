@@ -85,9 +85,6 @@ public class ModNetwork {
         registerServerbound(ServerboundTalkPacket.class, ServerboundTalkPacket::encode,
                 ServerboundTalkPacket::new, ServerPacketHandler::handleTalk);
 
-        registerServerbound(ServerboundUseBagMedItemPacket.class, ServerboundUseBagMedItemPacket::encode,
-                ServerboundUseBagMedItemPacket::new,ServerPacketHandler::handleUseBagMedItem);
-
         registerServerbound(ServerboundUseBandagePacket.class, ServerboundUseBandagePacket::encode,
                 ServerboundUseBandagePacket::new, ServerPacketHandler::handleUseBandage);
 

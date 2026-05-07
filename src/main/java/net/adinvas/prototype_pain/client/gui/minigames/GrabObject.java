@@ -5,14 +5,14 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GrabObject {
 
-    protected double x, y; // logical position
-    protected int hitX, hitY, hitWidth, hitHeight;
     protected final ResourceLocation tex;
     protected final int texWidth, texHeight;
-    protected boolean dragging = false;
-    protected int dragOffsetX, dragOffsetY;
     protected final float scale;
 
+    protected double x, y; // logical position
+    protected int hitX, hitY, hitWidth, hitHeight;
+    protected boolean dragging = false;
+    protected int dragOffsetX, dragOffsetY;
 
     public GrabObject(int x, int y, int hitX, int hitY, int hitWidth, int hitHeight,
                       ResourceLocation tex, int texWidth, int texHeight, float scale) {
@@ -54,12 +54,22 @@ public class GrabObject {
     }
 
     // --- Position setters ---
-    public void setX(int x) { this.x = x; }
-    public void setY(int y) { this.y = y; }
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 
     // --- Dragging ---
-    public boolean isDragging() { return dragging; }
-    public void setDragging(boolean dragging) { this.dragging = dragging; }
+    public boolean isDragging() {
+        return dragging;
+    }
+
+    public void setDragging(boolean dragging) {
+        this.dragging = dragging;
+    }
 
     public void mouseClicked(double mouseX, double mouseY, int button) {
         if (isInside(mouseX, mouseY) && button == 0) { // left click

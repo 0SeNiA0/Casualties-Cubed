@@ -13,7 +13,7 @@ public class BrainGrowPillItem extends PillContainerItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 50,
                 ModMedicalFluids.BRAINGROW.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 
     @Override

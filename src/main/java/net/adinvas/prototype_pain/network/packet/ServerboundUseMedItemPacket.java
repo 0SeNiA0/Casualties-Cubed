@@ -2,18 +2,22 @@ package net.adinvas.prototype_pain.network.packet;
 
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
 
-public record ServerboundUseMedItemPacket(int targetId, Limb limb, ItemStack item, boolean offhand) {
+public record ServerboundUseMedItemPacket(int targetId, Limb limb, InteractionHand usedHand, byte bagSlot) {
 
-    public ServerboundUseMedItemPacket(FriendlyByteBuf buf){
-        this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readItem(), buf.readBoolean());
+    public ServerboundUseMedItemPacket(int targetId, Limb limb, InteractionHand usedHand) {
+        this(targetId, limb, usedHand, (byte) -1);
     }
 
-    public void encode(FriendlyByteBuf buf){
+    public ServerboundUseMedItemPacket(FriendlyByteBuf buf) {
+        this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readEnum(InteractionHand.class), buf.readByte());
+    }
+
+    public void encode(FriendlyByteBuf buf) {
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
-        buf.writeItem(item);
-        buf.writeBoolean(offhand);
+        buf.writeEnum(usedHand);
+        buf.writeByte(bagSlot);
     }
 }

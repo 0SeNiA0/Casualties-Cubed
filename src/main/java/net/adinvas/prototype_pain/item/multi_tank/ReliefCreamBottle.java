@@ -28,6 +28,6 @@ public class ReliefCreamBottle extends BottleItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 200,
                 ModMedicalFluids.RELIEF_CREAM.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

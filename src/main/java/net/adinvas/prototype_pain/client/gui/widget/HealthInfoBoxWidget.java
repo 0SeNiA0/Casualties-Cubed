@@ -79,7 +79,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
     }
 
     public void setLimbname(Limb limb) {
-        this.limbname = limb.getComponent();
+        this.limbname = limb.comp;
     }
 
     public void setInfection(float infection) {

@@ -1,18 +1,15 @@
 package net.adinvas.prototype_pain.item.usable;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
-import net.adinvas.prototype_pain.Util;
 import net.adinvas.prototype_pain.item.api.IAllowInMedicBags;
 import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -30,29 +27,26 @@ public class BandAidItem extends Item implements ISimpleMedicalUsable, IAllowInM
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        AtomicReference<ItemStack> newitem= new AtomicReference<>(stack);
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            h.setLimbSkinHealth(limb,h.getLimbSkinHealth(limb)+3);
-            h.addDelayedChange(((0.1f)/20f)/60f,100,limb);
-            h.setLimbPain(limb,h.getLimbPain(limb)*0.90f);
+        AtomicReference<ItemStack> newitem = new AtomicReference<>(stack);
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) + 3);
+            h.addDelayedChange(((0.1f) / 20f) / 60f, 100, limb);
+            h.setLimbPain(limb, h.getLimbPain(limb) * 0.90f);
             ItemStack newitemstack = stack;
-            setNbtDurability(stack,getNbtDurability(stack)-20);
-            if (getNbtDurability(stack)<=0){
+            subNbtDurability(stack, 20);
+            if (getNbtDurability(stack) <= 0) {
                 newitemstack = ItemStack.EMPTY;
             }
             newitem.set(newitemstack);
         });
         return newitem.get();
     }
+
     @Override
     public Component getName(ItemStack pStack) {
-        Component finalcomp = super.getName(pStack);
-        finalcomp = Component.empty().append(finalcomp)
-                .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal((int)(getNbtDurabilityRatio(pStack)*100)+"%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(getNbtDurabilityRatio(pStack)))))
-                .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
-        return finalcomp;
+        return appendDurability(pStack, Component.empty().append(super.getName(pStack)));
     }
+
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
@@ -62,11 +56,5 @@ public class BandAidItem extends Item implements ISimpleMedicalUsable, IAllowInM
     @Override
     public SoundEvent getUseSound() {
         return SoundEvents.BONE_MEAL_USE;
-    }
-
-    @Override
-    public void onCraftedBy(ItemStack pStack, Level pLevel, Player pPlayer) {
-        setupDefaults(pStack);
-        super.onCraftedBy(pStack, pLevel, pPlayer);
     }
 }

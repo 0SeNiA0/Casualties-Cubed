@@ -7,14 +7,13 @@ import net.minecraft.world.item.Item;
 
 public class ModItemTags {
 
-    public static TagKey<Item> ARMOR_FULL_ARM = tag("armorfullarm");
-    public static TagKey<Item> ARMOR_CHEST_ONLY = tag("armorchestonly");
-    public static TagKey<Item> VIAL_ITEMS =tag("vial_items");
-    public static TagKey<Item> DRESSINGS = tag("dressings");
-    public static TagKey<Item> ALCOHOL_CREATABLE = tag("alcohol_create");
-    public static TagKey<Item> CAUTERIZE = tag("medical_cauterize");
-    public static TagKey<Item> AMPUTATE_MINIGAME = tag("amputate_minigame");
-
+    public static final TagKey<Item> ARMOR_FULL_ARM = tag("armorfullarm");
+    public static final TagKey<Item> ARMOR_CHEST_ONLY = tag("armorchestonly");
+    public static final TagKey<Item> VIAL_ITEMS =tag("vial_items");
+    public static final TagKey<Item> DRESSINGS = tag("dressings");
+    public static final TagKey<Item> ALCOHOL_CREATABLE = tag("alcohol_create");
+    public static final TagKey<Item> CAUTERIZE = tag("medical_cauterize");
+    public static final TagKey<Item> AMPUTATE_MINIGAME = tag("amputate_minigame");
 
     private static TagKey<Item> tag(String name) {
         return ItemTags.create(PrototypePain.resourceLoc(name));

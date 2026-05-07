@@ -13,6 +13,6 @@ public class AntibioticsItem extends PillContainerItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 100,
                 ModMedicalFluids.ANTIBIOTICS.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

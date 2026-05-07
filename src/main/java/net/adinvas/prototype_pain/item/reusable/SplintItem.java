@@ -24,15 +24,15 @@ public class SplintItem extends Item implements ISimpleMedicalUsable, IAllowInMe
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        if (limb!=Limb.CHEST) {
+        if (limb != Limb.CHEST) {
             AtomicBoolean used = new AtomicBoolean(false);
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                if (!h.hasLimbSplint(limb)){
+                if (!h.hasLimbSplint(limb)) {
                     h.setLimbSplint(limb, true);
                     used.set(true);
                 }
             });
-            if (used.get()){
+            if (used.get()) {
                 return ItemStack.EMPTY;
             }
         }

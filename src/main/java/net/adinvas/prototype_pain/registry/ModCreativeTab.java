@@ -1,7 +1,6 @@
 package net.adinvas.prototype_pain.registry;
 
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -22,13 +21,6 @@ public class ModCreativeTab {
                     .icon(() -> new ItemStack(ModItems.Dressing.get())) // icon for the tab
                     .displayItems((parameters, output) -> {
                         for (RegistryObject<Item> itemRegistryObject : ModItems.ITEMS.getEntries()){
-                            if (itemRegistryObject.get() instanceof INbtDrivenDurability nbt){
-                                ItemStack stack = new ItemStack(itemRegistryObject.get());
-                                nbt.setupDefaults(stack);
-                                output.accept(stack);
-                                continue;
-                            }
-
                             if (itemRegistryObject.get() instanceof MultiTankFluidItem multiTankFluidItem){
                                 ItemStack stack = new ItemStack(itemRegistryObject.get());
                                 multiTankFluidItem.setupDefault(stack);

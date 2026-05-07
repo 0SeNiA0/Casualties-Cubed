@@ -1,32 +1,61 @@
 package net.adinvas.prototype_pain.item.api;
 
+import net.adinvas.prototype_pain.Util;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 
 public interface INbtDrivenDurability {
 
-    default float getNbtDurability(ItemStack stack){
-        CompoundTag tag = stack.getOrCreateTag();
+    default float getMaxNbtDurability(ItemStack stack) {
+        return 100f;
+    }
+
+    default float getNbtDurability(ItemStack stack) {//Assume no tag == full durability
+        if (!stack.hasTag()) return getMaxNbtDurability(stack);
+
+        CompoundTag tag = stack.getTag();
+        assert tag != null;
+        if (!tag.contains("Durability", Tag.TAG_FLOAT)) return getMaxNbtDurability(stack);
+
         return tag.getFloat("Durability");
     }
 
-    default float getMaxNbtDurability(ItemStack stack){
-        return 100f;
-    };
-
-    default void setNbtDurability(ItemStack stack,float value){
+    default void subNbtDurability(ItemStack stack, float value) {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putFloat("Durability",value);
+
+        float prev = tag.contains("Durability", Tag.TAG_FLOAT) ? tag.getFloat("Durability") : getMaxNbtDurability(stack);
+        float new_ = prev - value;
+
+        if (new_ <= 0) {
+            stack.shrink(1);
+            tag.remove("Durability");
+            return;
+        }
+
+        tag.putFloat("Durability", new_);
     }
 
-    default void setupDefaults(ItemStack stack){
+    default void setNbtDurability(ItemStack stack, float value) {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putFloat("Durability",getMaxNbtDurability(stack));
+
+        if (value >= getMaxNbtDurability(stack)) {
+            tag.remove("Durability");
+            return;
+        }
+
+        tag.putFloat("Durability", value);
     }
 
-    default float getNbtDurabilityRatio(ItemStack stack){
-        float maxDur = getMaxNbtDurability(stack);
-        float currDur = getNbtDurability(stack);
-        return currDur/maxDur;
+    default Component appendDurability(ItemStack stack, MutableComponent component) {
+        float delta = getNbtDurability(stack) / getMaxNbtDurability(stack);
+        return component
+                .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal((int) (delta * 100) + "%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(delta))))
+                .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
     }
 }

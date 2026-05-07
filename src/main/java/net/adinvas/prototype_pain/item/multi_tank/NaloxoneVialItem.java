@@ -13,6 +13,6 @@ public class NaloxoneVialItem extends MedicineVialItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 100,
                 ModMedicalFluids.NALOXONE.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

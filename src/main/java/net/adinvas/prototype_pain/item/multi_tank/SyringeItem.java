@@ -20,20 +20,15 @@ public class SyringeItem extends MultiTankFluidItem implements IMedicalMinigameU
 
     @Override
     public void openMinigameScreen(Player target, ItemStack stack, @Nullable Limb limb, InteractionHand hand) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT,() -> () ->{
-            MinigameOpener.OpenSyringeMinigame(target,stack,limb,hand);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            MinigameOpener.OpenSyringeMinigame(target, stack, limb, hand);
         });
     }
 
     @Override
     public void openMinigameBagScreen(Player target, ItemStack stack, ItemStack bagStack, int slot, @Nullable Limb limb, InteractionHand hand) {
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT,() -> () ->{
-            MinigameOpener.OpenSyringeMinigame(target,stack,bagStack,slot,limb,hand);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+            MinigameOpener.OpenSyringeMinigame(target, stack, bagStack, slot, limb, hand);
         });
-    }
-
-    @Override
-    public void useMinigameAction(float durability, Player target, @Nullable Limb limb) {
-
     }
 }

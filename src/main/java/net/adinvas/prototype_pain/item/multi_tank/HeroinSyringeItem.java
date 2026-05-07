@@ -13,12 +13,11 @@ public class HeroinSyringeItem extends SyringeItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 150,
                 ModMedicalFluids.HEROIN.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 
     @Override
     public int getCapacity() {
         return 150;
     }
-
 }

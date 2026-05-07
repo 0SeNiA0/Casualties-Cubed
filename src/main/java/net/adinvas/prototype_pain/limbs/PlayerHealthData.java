@@ -9,7 +9,6 @@ import net.adinvas.prototype_pain.compat.prototype_physics.PhysicsUtil;
 import net.adinvas.prototype_pain.compat.serene_seasons.SereneSeasonsUtil;
 import net.adinvas.prototype_pain.config.ServerConfig;
 import net.adinvas.prototype_pain.hitbox.HitSector;
-import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.registry.ModItems;
 import net.adinvas.prototype_pain.network.MedicalAction;
 import net.adinvas.prototype_pain.network.ModNetwork;
@@ -22,7 +21,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -47,6 +45,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.lang3.BooleanUtils;
 
@@ -1278,7 +1277,7 @@ public class PlayerHealthData {
             moveReduction = 0.2;
         }
 
-        HumanoidArm handpart = Limb.getFromHand(InteractionHand.MAIN_HAND, player);
+        HumanoidArm handpart = Limb.getArmFromHand(InteractionHand.MAIN_HAND, player);
         double attackMultiplier =0;
 
         attackMultiplier = ((100-getLimbMuscleHealth(Limb.RIGHT_ARM))  / 100.0) * 0.1 +
@@ -1346,7 +1345,7 @@ public class PlayerHealthData {
 
 
             if (!stack.isEmpty()) {
-                HumanoidArm arm = Limb.getFromHand(hand, player);
+                HumanoidArm arm = Limb.getArmFromHand(hand, player);
                 Limb limb = (arm == HumanoidArm.LEFT) ? Limb.LEFT_HAND : Limb.RIGHT_HAND;
 
                 boolean broken = getLimbMuscleHealth(limb) < 10
@@ -1683,45 +1682,15 @@ public class PlayerHealthData {
         recalculateConsciousness();
     }
 
-
-    public ItemStack tryUseItem(Limb limb, ItemStack itemstack, ServerPlayer source, ServerPlayer target){
-        if (itemstack.getItem() instanceof ISimpleMedicalUsable medItem){
-            ItemStack used =  medItem.onMedicalUse(limb,source,target,itemstack);
-            if (used!=itemstack){
-                source.serverLevel().getLevel().playSound(null,source.getOnPos(),medItem.getUseSound(), SoundSource.PLAYERS);
-            }
-            return used;
-        }
-        return itemstack;
-    }
-
-
     public void medicalAction(MedicalAction action, Limb limb, Player source){
-        Random random = new Random();
         switch (action){
-            case TRY_SHRAPNEL -> {
-                applyPain(limb,10);
-                int damage = random.nextInt(3);
-                applySkinDamage(limb,damage);
-                applyMuscleDamage(limb,damage,source);
-                applyBleedDamage(limb,damage/6f,source);
-                if (random.nextFloat()<=getMANUAL_SHRAPNEL_SUCCESS_CHANCE()){
-                    setLimbShrapnell(limb,0);
-                }
-            }
             case REMOVE_SPLINT -> {
                 setLimbSplint(limb,false);
                 source.getInventory().add(new ItemStack(ModItems.Splint.get()));
             }
-            case FIX_DISLOCATION -> {
-                applyPain(limb,30);
-                if (random.nextFloat()<=getDISLOCATION_FIX_CHANCE()){
-                    setLimbDislocation(limb,Math.max(isLimbDislocated(limb)-20,0));
-                }
-            }
             case REMOVE_TOURNIQUET -> {
                 limbStats.get(limb).Tourniquet = false;
-                source.getInventory().add(new ItemStack(ModItems.Tourniquet.get()));
+                ItemHandlerHelper.giveItemToPlayer(source, new ItemStack(ModItems.Tourniquet.get()));
             }
         }
     }
@@ -2049,7 +2018,7 @@ public class PlayerHealthData {
     }
 
     public void onArmUse(InteractionHand hand,Player player){
-        HumanoidArm arm = Limb.getFromHand(hand,player);
+        HumanoidArm arm = Limb.getArmFromHand(hand,player);
 
         if (arm ==HumanoidArm.LEFT){
             if ((getLimbFracture(Limb.LEFT_HAND)>0||getLimbDislocated(Limb.LEFT_HAND)>0))applyPain(Limb.LEFT_HAND,0.5f);

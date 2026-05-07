@@ -13,6 +13,6 @@ public class MorphineVialItem extends MedicineVialItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 100,
                 ModMedicalFluids.MORPHINE.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

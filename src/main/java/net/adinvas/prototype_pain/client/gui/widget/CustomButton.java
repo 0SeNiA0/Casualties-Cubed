@@ -17,10 +17,11 @@ import net.minecraft.world.entity.player.Player;
 
 public class CustomButton extends AbstractWidget {
     
-    private StatusSprites status;
-    private Limb limb;
-    private Player target;
-    private final ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/button.png");
+    private final StatusSprites status;
+    private final Limb limb;
+    private final Player target;
+    private static final ResourceLocation tex = PrototypePain.resourceLoc("textures/gui/button.png");
+
     public CustomButton(int pX, int pY, StatusSprites status, Limb limb, Player target) {
         super(pX, pY, 128, 16, status.comp);
         this.status = status;
@@ -35,9 +36,7 @@ public class CustomButton extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-
-    }
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
     public void onClick(double pMouseX, double pMouseY) {
@@ -48,20 +47,19 @@ public class CustomButton extends AbstractWidget {
             case SPLINT -> MedicalAction.REMOVE_SPLINT;
             default -> null;
         };
-        if (action==MedicalAction.FIX_DISLOCATION){
+
+        if (action == MedicalAction.FIX_DISLOCATION){
             Minecraft.getInstance().setScreen(new DislocationMinigameScreen(Minecraft.getInstance().screen,target,limb));
             return;
         }
-        if (action==MedicalAction.TRY_SHRAPNEL){
+
+        if (action == MedicalAction.TRY_SHRAPNEL){
             Minecraft.getInstance().setScreen(new ShrapnelMinigameScreen(Minecraft.getInstance().screen,target,limb,false));
             return;
         }
-        if (action!=null){
+
+        if (action != null){
             ModNetwork.CHANNEL.sendToServer(new ServerboundMedicalActionPacket(target.getId(), limb, action));
         }
-    }
-
-    public StatusSprites getStatus() {
-        return status;
     }
 }

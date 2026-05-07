@@ -22,7 +22,7 @@ public class LootPlayerMenu extends AbstractContainerMenu {
         }
         // hotbar
         for (int col = 0; col < 9; ++col) {
-            this.addSlot(new Slot(targetInv, col, 8 + col * 18, 76 ));
+            this.addSlot(new Slot(targetInv, col, 8 + col * 18, 76));
         }
 
         // actor’s inventory slots
@@ -74,9 +74,6 @@ public class LootPlayerMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         float distance = player.distanceTo(targetPlayer);
-        if (distance>3){
-            return false;
-        }
-        return true;
+        return !(distance > 3);
     }
 }

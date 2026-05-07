@@ -18,6 +18,6 @@ public class SalineSyringeItem extends SyringeItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 750,
                 ModMedicalFluids.SALINE.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

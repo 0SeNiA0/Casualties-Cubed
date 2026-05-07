@@ -24,8 +24,8 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        if (MultiTankHelper.getAmountOfFluid(stack,ModMedicalFluids.LRD_SERUM.get().getAsStack(1))>=25) {
-            MultiTankHelper.drainSpecificFluid(stack,25,ModMedicalFluids.LRD_SERUM.get().getAsStack(1));
+        if (MultiTankHelper.getAmountOfFluid(stack, ModMedicalFluids.LRD_SERUM.get().getAsStack(1)) >= 25) {
+            MultiTankHelper.drainSpecificFluid(stack, 25, ModMedicalFluids.LRD_SERUM.get().getAsStack(1));
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                 h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) + 50f);
                 h.setLimbInfection(limb, h.getLimbInfection(limb) - 10);

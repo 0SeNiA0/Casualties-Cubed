@@ -28,13 +28,13 @@ import java.util.List;
 
 public class MultiTankFluidItem extends Item {
 
-    private final int capacity= 1000;
+    private final int capacity = 1000;
 
     public MultiTankFluidItem() {
         super(new Properties().stacksTo(1));
     }
 
-    public MultiTankFluidItem(Properties properties){
+    public MultiTankFluidItem(Properties properties) {
         super(properties);
     }
 
@@ -60,7 +60,7 @@ public class MultiTankFluidItem extends Item {
         };
     }
 
-    public MultiFluidTankHandler getHandler(ItemStack stack){
+    public MultiFluidTankHandler getHandler(ItemStack stack) {
         if (stack.isEmpty() || stack.getItem() != this) return null;
         LazyOptional<IFluidHandlerItem> cap = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (!cap.isPresent()) return null;
@@ -74,17 +74,17 @@ public class MultiTankFluidItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-       appendDescription(stack,level,tooltip,flag);
-       appendFluidText(stack,level,tooltip,flag);
+        appendDescription(stack, level, tooltip, flag);
+        appendFluidText(stack, level, tooltip, flag);
     }
 
     @Override
     public Component getName(ItemStack pStack) {
-        float scale = MultiTankHelper.getFilledTotal(pStack)/MultiTankHelper.getCapacity(pStack);
+        float scale = MultiTankHelper.getFilledTotal(pStack) / MultiTankHelper.getCapacity(pStack);
         Component finalcomp = super.getName(pStack);
         finalcomp = Component.empty().append(finalcomp)
                 .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal((int)((scale)*100)+"%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(scale))))
+                .append(Component.literal((int) ((scale) * 100) + "%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(scale))))
                 .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
         return finalcomp;
     }
@@ -97,7 +97,7 @@ public class MultiTankFluidItem extends Item {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
-    public void setupDefault(ItemStack pStack){
+    public void setupDefault(ItemStack pStack) {
 
     }
 
@@ -106,7 +106,7 @@ public class MultiTankFluidItem extends Item {
         setupDefault(pStack);
     }
 
-    public void appendFluidText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag){
+    public void appendFluidText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = stack.getTagElement("MultiFluidTank");
         boolean hasSpecial = false;
         if (tag == null) {
@@ -125,7 +125,7 @@ public class MultiTankFluidItem extends Item {
             if (fs.hasTag()) {
                 MedicalFluid Mfluid = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
                 if (Mfluid != null) {
-                    if (!Mfluid.showInTooltip(stack))continue;
+                    if (!Mfluid.showInTooltip(stack)) continue;
                     hasSpecial = true;
                     color = Mfluid.getColor();
                     tooltip.add(Component.literal(fs.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(color)).append("(" + fs.getAmount() + "mb)"));
@@ -136,14 +136,12 @@ public class MultiTankFluidItem extends Item {
                 }
             }
 
-            color = Util.getColorFromFluid(fs,level);
-            tooltip.add(Component.literal(fs.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(color)).append("("+fs.getAmount()+"mb)"));
+            color = Util.getColorFromFluid(fs, level);
+            tooltip.add(Component.literal(fs.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(color)).append("(" + fs.getAmount() + "mb)"));
         }
 
-        if (hasSpecial&&!Screen.hasShiftDown()){
+        if (hasSpecial && !Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("prototype_pain.multi_tank.hint").withStyle(ChatFormatting.GRAY));
         }
     }
-
-
 }

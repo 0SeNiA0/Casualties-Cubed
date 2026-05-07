@@ -1,17 +1,16 @@
 package net.adinvas.prototype_pain.blocks.medical_mixer;
 
 import net.adinvas.prototype_pain.PrototypePain;
-import net.adinvas.prototype_pain.registry.ModBlockEntities;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.ModFluids;
-import net.adinvas.prototype_pain.item.api.INbtDrivenDurability;
 import net.adinvas.prototype_pain.menu.MedicalMixerMenu;
-import net.adinvas.prototype_pain.network.packet.ClientboundFluidSyncPacket;
 import net.adinvas.prototype_pain.network.ModNetwork;
+import net.adinvas.prototype_pain.network.packet.ClientboundFluidSyncPacket;
 import net.adinvas.prototype_pain.recipe.MedicalMixerRecipe;
-import net.adinvas.prototype_pain.registry.ModRecipes;
 import net.adinvas.prototype_pain.recipe.ingridients.FluidIngredient;
 import net.adinvas.prototype_pain.recipe.ingridients.ItemIngredient;
+import net.adinvas.prototype_pain.registry.ModBlockEntities;
+import net.adinvas.prototype_pain.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -508,16 +507,10 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
 
                 if (slotStack.isEmpty()) {
                     ItemStack toInsert = new ItemStack(item, amountLeft);
-                    if (toInsert.getItem() instanceof INbtDrivenDurability nbtDrivenDurability){
-                        nbtDrivenDurability.setupDefaults(toInsert);
-                    }
                     ItemStack leftover = itemHandler.insertItem(i, toInsert, false);
                     amountLeft = leftover.getCount();
                 } else if (slotStack.is(item)) {
                     ItemStack toInsert = new ItemStack(item, amountLeft);
-                    if (toInsert.getItem() instanceof INbtDrivenDurability nbtDrivenDurability){
-                        nbtDrivenDurability.setupDefaults(toInsert);
-                    }
                     ItemStack leftover = itemHandler.insertItem(i, toInsert, false);
                     amountLeft = leftover.getCount();
                 }

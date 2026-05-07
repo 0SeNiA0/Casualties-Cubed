@@ -14,7 +14,6 @@ public class AntisepticSprayItem extends SprayBottleItem implements IAllowInMedi
         MultiTankHelper.addMedicalFluid(pStack,
                 200,
                 ModMedicalFluids.ANTISEPTIC.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
-
 }

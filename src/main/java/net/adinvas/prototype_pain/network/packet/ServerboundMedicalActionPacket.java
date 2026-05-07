@@ -4,6 +4,7 @@ import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.MedicalAction;
 import net.minecraft.network.FriendlyByteBuf;
 
+///Only supports {@link MedicalAction#REMOVE_SPLINT} and {@link MedicalAction#REMOVE_TOURNIQUET}
 public record ServerboundMedicalActionPacket(int targetId, Limb limb, MedicalAction action) {
 
     public ServerboundMedicalActionPacket(FriendlyByteBuf buf){

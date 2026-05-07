@@ -13,10 +13,10 @@ public class FentanylVialItem extends MedicineVialItem {
         MultiTankHelper.addMedicalFluid(pStack,
                 10,
                 ModMedicalFluids.FENTANYL.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
         MultiTankHelper.addMedicalFluid(pStack,
                 90,
                 ModMedicalFluids.CLEAN_WATER.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

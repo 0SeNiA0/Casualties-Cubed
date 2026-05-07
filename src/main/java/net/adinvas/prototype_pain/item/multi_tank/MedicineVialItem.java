@@ -6,5 +6,4 @@ public class MedicineVialItem extends MultiTankFluidItem {
     public int getCapacity() {
         return 100;
     }
-
 }

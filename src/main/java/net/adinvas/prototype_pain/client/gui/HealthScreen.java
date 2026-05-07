@@ -1,19 +1,18 @@
 package net.adinvas.prototype_pain.client.gui;
 
 import net.adinvas.prototype_pain.PlayerHealthProvider;
+import net.adinvas.prototype_pain.client.MinigameOpener;
 import net.adinvas.prototype_pain.client.gui.widget.*;
 import net.adinvas.prototype_pain.client.moodles.AbstractMoodleVisual;
 import net.adinvas.prototype_pain.client.moodles.MoodleController;
 import net.adinvas.prototype_pain.client.ticksounds.HeartBeatSound;
 import net.adinvas.prototype_pain.item.api.IBag;
+import net.adinvas.prototype_pain.item.api.IBandage;
 import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
 
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.network.*;
-import net.adinvas.prototype_pain.network.packet.ServerboundCauterizeActionPacket;
-import net.adinvas.prototype_pain.network.packet.ServerboundGuiSyncTogglePacket;
-import net.adinvas.prototype_pain.network.packet.ServerboundUseBagMedItemPacket;
-import net.adinvas.prototype_pain.network.packet.ServerboundUseMedItemPacket;
+import net.adinvas.prototype_pain.network.packet.*;
 import net.adinvas.prototype_pain.tags.ModItemTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -67,8 +66,6 @@ public class HealthScreen extends Screen {
 
     }
 
-
-
     @Override
     protected void init() {
         super.init();
@@ -95,7 +92,7 @@ public class HealthScreen extends Screen {
                 ItemStack stack = player.getItemInHand(hand);
 
                 // Which arm is this hand using? (LEFT or RIGHT)
-                HumanoidArm arm = Limb.getFromHand(hand, player);
+                HumanoidArm arm = Limb.getArmFromHand(hand, player);
 
                 if (arm == HumanoidArm.RIGHT) {
                     // Draw right-hand item on the right side of HUD
@@ -277,11 +274,7 @@ public class HealthScreen extends Screen {
     @Override
     public void tick() {
         super.tick();
-        if (target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getConsciousness()<10).orElse(false)&&(target!=Minecraft.getInstance().player)){
-            cprButton.visible= true;
-        }else{
-            cprButton.visible = false;
-        }
+        cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getConsciousness() < 10).orElse(false) && (target != Minecraft.getInstance().player);
         if (heartBeatSound != null && Minecraft.getInstance().player != null) {
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 float bpm = h.getBPM();
@@ -379,7 +372,7 @@ public class HealthScreen extends Screen {
             for (InteractionHand hand : InteractionHand.values()) {
                 ItemStack stack = player.getItemInHand(hand);
 
-                HumanoidArm arm = Limb.getFromHand(hand, player);
+                HumanoidArm arm = Limb.getArmFromHand(hand, player);
 
                 if (arm == HumanoidArm.RIGHT) {
                     RightItem.setStack(stack);
@@ -472,26 +465,37 @@ public class HealthScreen extends Screen {
                 if (widget != null&&!widget.isAmputated()) {
                     Limb limb = widget.getLimb();
                     ItemStack itemstack = getItemstackForHand(HumanoidArm.RIGHT, minecraft.player);
-                    if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+
+                    if (itemstack.getItem() instanceof IBandage) {
+                        MinigameOpener.OpenBandageMinigame(target, itemstack, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
+                    } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
                         helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
                     }
+
                     if (itemstack.is(ModItemTags.CAUTERIZE)){
                         ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
                     }
-                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, itemstack, getHand(HumanoidArm.RIGHT, minecraft.player) == InteractionHand.OFF_HAND));
+
+                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.RIGHT, minecraft.player)));
                 }
         }else if (LeftItem.isDragging()){
                 LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
                 if (widget != null&&!widget.isAmputated()) {
                     Limb limb = widget.getLimb();
                     ItemStack itemstack = getItemstackForHand(HumanoidArm.LEFT, minecraft.player);
-                    if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+
+                    if (itemstack.getItem() instanceof IBandage) {
+                        MinigameOpener.OpenBandageMinigame(target, itemstack, limb, getHand(HumanoidArm.LEFT, minecraft.player));
+                    } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+
                         helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.LEFT, minecraft.player));
                     }
+
                     if (itemstack.is(ModItemTags.CAUTERIZE)){
                         ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
                     }
-                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, itemstack, getHand(HumanoidArm.RIGHT, minecraft.player) == InteractionHand.OFF_HAND));
+
+                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.LEFT, minecraft.player)));
                 }
         }
         for (int i=0;i<RightItemsubWidgets.size();i++){
@@ -501,10 +505,14 @@ public class HealthScreen extends Screen {
                     Limb limb = widget.getLimb();
                     ItemStack itemstack = RightItemsubWidgets.get(i).getStack();
                     ItemStack bagstack = getItemstackForHand(HumanoidArm.RIGHT, minecraft.player);
-                    if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+
+                    if (itemstack.getItem() instanceof IBandage) {
+                        MinigameOpener.OpenBandageMinigame(target, itemstack, bagstack, i, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
+                    } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
                         helper.openMinigameBagScreen(target, itemstack, bagstack, i, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
                     }
-                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseBagMedItemPacket(target.getId(), limb, bagstack, i, itemstack, getHand(HumanoidArm.RIGHT, minecraft.player) == InteractionHand.OFF_HAND));
+
+                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.RIGHT, minecraft.player), (byte) i));
                 }
         }
         for (int i=0;i<LeftItemsubWidgets.size();i++){
@@ -514,10 +522,14 @@ public class HealthScreen extends Screen {
                     Limb limb = widget.getLimb();
                     ItemStack itemstack = LeftItemsubWidgets.get(i).getStack();
                     ItemStack bagstack = getItemstackForHand(HumanoidArm.LEFT, minecraft.player);
-                    if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+
+                    if (itemstack.getItem() instanceof IBandage) {
+                        MinigameOpener.OpenBandageMinigame(target, itemstack, bagstack, i, limb, getHand(HumanoidArm.LEFT, minecraft.player));
+                    } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
                         helper.openMinigameBagScreen(target, itemstack, bagstack, i, limb, getHand(HumanoidArm.LEFT, minecraft.player));
                     }
-                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseBagMedItemPacket(target.getId(), limb, bagstack, i, itemstack, getHand(HumanoidArm.RIGHT, minecraft.player) == InteractionHand.OFF_HAND));
+
+                    ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.LEFT, minecraft.player), (byte) i));
                 }
         }
         RightItem.onRelease(pMouseX,pMouseY);
@@ -590,25 +602,24 @@ public class HealthScreen extends Screen {
         return super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
-    public void UpdateButtons(LimbWidget widget){
+    public void UpdateButtons(LimbWidget widget) {
         List<StatusSprites> statusList = new ArrayList<>();
-        if (widget!=null) {
-            for (CustomButton button : buttonList){
+        if (widget != null) {
+            for (CustomButton button : buttonList) {
                 removeWidget(button);
             }
-            buttonList= new ArrayList<>();
+            buttonList = new ArrayList<>();
             if (widget.isSpritePresent(StatusSprites.SHRAPNEL)) statusList.add(StatusSprites.SHRAPNEL);
             if (widget.isSpritePresent(StatusSprites.DISLOCATION)) statusList.add(StatusSprites.DISLOCATION);
             if (widget.isSpritePresent(StatusSprites.TOURNIQUET)) statusList.add(StatusSprites.TOURNIQUET);
             if (widget.isSpritePresent(StatusSprites.SPLINT)) statusList.add(StatusSprites.SPLINT);
             int i = 0;
-            for (StatusSprites sprite:statusList){
-                buttonList.add(new CustomButton(listStartX,listStartY+(16*i),sprite,widget.getLimb(),target));
+            for (StatusSprites sprite : statusList) {
+                buttonList.add(new CustomButton(listStartX, listStartY + (16 * i), sprite, widget.getLimb(), target));
                 addRenderableWidget(buttonList.get(i));
                 i++;
             }
             lastClicked = widget;
         }
     }
-
 }

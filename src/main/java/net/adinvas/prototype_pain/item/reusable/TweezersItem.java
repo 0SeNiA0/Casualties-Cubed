@@ -47,8 +47,4 @@ public class TweezersItem extends Item implements IMedicalMinigameUsable, IAllow
         this.openMinigameScreen(target,stack,limb,hand);
     }
 
-    @Override
-    public void useMinigameAction(float durability, Player target, @Nullable Limb limb) {
-
-    }
 }

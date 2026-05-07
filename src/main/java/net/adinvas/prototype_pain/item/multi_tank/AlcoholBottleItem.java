@@ -15,6 +15,6 @@ public class AlcoholBottleItem extends BottleItem {
 
     @Override
     public void setupDefault(ItemStack pStack) {
-        MultiTankHelper.addMedicalFluid(pStack,500, ModMedicalFluids.ALCOHOL.getId().toString(),new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(),1));
+        MultiTankHelper.addMedicalFluid(pStack, 500, ModMedicalFluids.ALCOHOL.getId().toString(), new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
     }
 }

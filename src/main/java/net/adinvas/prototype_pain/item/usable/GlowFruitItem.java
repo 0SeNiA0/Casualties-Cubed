@@ -26,7 +26,7 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
                 .stacksTo(64)
                 .food(new FoodProperties.Builder()
                         .effect(() -> new MobEffectInstance(MobEffects.GLOWING, 200, 0), 1.0F)
-                        .effect(() -> new MobEffectInstance(MobEffects.POISON,100,3),1f)
+                        .effect(() -> new MobEffectInstance(MobEffects.POISON, 100, 3), 1f)
                         .nutrition(1)
                         .saturationMod(1)
                         .build()
@@ -36,14 +36,14 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
 
     @Override
     public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            h.setLimbSkinHealth(limb,h.getLimbSkinHealth(limb)-1);
-            h.setLimbMuscleHealth(limb,h.getLimbMuscleHealth(limb)-4);
-            h.setLimbDesinfected(limb,Math.max(h.getLimbDesinfected(limb),4400));
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) - 1);
+            h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) - 4);
+            h.setLimbDesinfected(limb, Math.max(h.getLimbDesinfected(limb), 4400));
             List<Limb> conected = limb.getConnectedLimbs();
-            for (Limb limb1: conected){
-                h.setLimbMuscleHealth(limb1,h.getLimbMuscleHealth(limb1)-3);
-                h.setLimbDesinfected(limb1,Math.max(h.getLimbDesinfected(limb1),2200));
+            for (Limb limb1 : conected) {
+                h.setLimbMuscleHealth(limb1, h.getLimbMuscleHealth(limb1) - 3);
+                h.setLimbDesinfected(limb1, Math.max(h.getLimbDesinfected(limb1), 2200));
             }
             stack.shrink(1);
         });

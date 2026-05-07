@@ -5,16 +5,19 @@ import net.adinvas.prototype_pain.PrototypePain;
 import net.adinvas.prototype_pain.fluid_system.MedicalFluid;
 import net.adinvas.prototype_pain.fluid_system.MultiTankHelper;
 import net.adinvas.prototype_pain.item.api.IBag;
-import net.adinvas.prototype_pain.item.api.IMedicalMinigameUsable;
+import net.adinvas.prototype_pain.item.api.IBandage;
+import net.adinvas.prototype_pain.item.api.ISimpleMedicalUsable;
 import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.packet.*;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
@@ -36,8 +39,8 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                    data.setLimbShrapnell(packet.limb(), packet.amount()));
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData ->
+                    targetData.setLimbShrapnell(packet.limb(), packet.amount()));
         });
         ctx.get().setPacketHandled(true);
     }
@@ -50,15 +53,13 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data->{
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 Limb limb = packet.limb();
-                if (data.hasLimbShrapnell(limb) == 0) return;
-
                 RandomSource random = sender.getRandom();
-                data.setLimbPain(limb, data.getLimbPain(limb) + (random.nextFloat() + 1) * 6);
-                data.setLimbMuscleHealth(limb,data.getLimbMuscleHealth(limb) - (random.nextFloat() + 0.5f) * 2.5f);
-                data.setLimbSkinHealth(limb,data.getLimbSkinHealth(limb) - (random.nextFloat() + 0.5f) * 3.5f);
-                data.applyBleedDamage(limb,(random.nextFloat() + 0.5f) / 5,null);
+                targetData.setLimbPain(limb, targetData.getLimbPain(limb) + (random.nextFloat() + 1) * 6);
+                targetData.setLimbMuscleHealth(limb,targetData.getLimbMuscleHealth(limb) - (random.nextFloat() + 0.5f) * 2.5f);
+                targetData.setLimbSkinHealth(limb,targetData.getLimbSkinHealth(limb) - (random.nextFloat() + 0.5f) * 3.5f);
+                targetData.applyBleedDamage(limb,(random.nextFloat() + 0.5f) / 5,null);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -72,13 +73,16 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
                 Limb limb = packet.limb();
-                data.setLimbPain(limb,data.getLimbPain(limb) + (random.nextFloat() + 1) * 80);
-                data.setLimbBleedRate(limb,data.getLimbBleedRate(limb) * 0.4f);
-                data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) - (random.nextFloat() + 1) * 15);
-                data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) - (random.nextFloat() + 1) * 25);
+                targetData.setLimbPain(limb,targetData.getLimbPain(limb) + (random.nextFloat() + 1) * 80);
+                targetData.setLimbBleedRate(limb,targetData.getLimbBleedRate(limb) * 0.4f);
+                targetData.setLimbMuscleHealth(limb, targetData.getLimbMuscleHealth(limb) - (random.nextFloat() + 1) * 15);
+                targetData.setLimbSkinHealth(limb, targetData.getLimbSkinHealth(limb) - (random.nextFloat() + 1) * 25);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -92,10 +96,15 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 Limb limb = packet.limb();
-                data.setLimbDislocation(limb, packet.dislocationValue());
-                data.setLimbPain(limb, data.getLimbPain(limb) + (sender.getRandom().nextFloat() * 20) + 20);
+                if (targetData.getLimbDislocated(limb) == 0) return;
+
+                targetData.setLimbDislocation(limb, packet.dislocationValue());
+                targetData.setLimbPain(limb, targetData.getLimbPain(limb) + (sender.getRandom().nextFloat() * 20) + 20);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -110,10 +119,12 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            for (int i=0;i<packet.ids().length;i++){
+            //TODO ensure hand not missing
+
+            for (int i = 0; i < packet.ids().length; i++) {
                 MedicalFluid fluid = MedicalFluid.getFromId(packet.ids()[i]);
                 float amount = packet.amounts()[i];
-                if (fluid!=null&& !Float.isNaN(amount)){
+                if (fluid != null && !Float.isNaN(amount)) {
                     fluid.getMedicalEffect().applyInjected(target, amount, packet.limb());
                 }
             }
@@ -129,80 +140,104 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.RIGHT_HAND) && data.isAmputated(Limb.LEFT_HAND)) return;// Cant use syringe without a hand
+
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
                 Limb limb = packet.limb();
-                data.setLimbPain(limb, data.getLimbPain(limb) + ((random.nextFloat() + 0.5f) * 20));
-                data.setLimbShrapnell(limb,data.hasLimbShrapnell(limb) + 1);
+                targetData.setLimbPain(limb, targetData.getLimbPain(limb) + ((random.nextFloat() + 0.5f) * 20));
+                targetData.setLimbShrapnell(limb,targetData.hasLimbShrapnell(limb) + 1);
             });
         });
         ctx.get().setPacketHandled(true);
     }
 
-    public static void handleUseBandage(ServerboundUseBandagePacket packet, Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->{
-            ServerPlayer sender = ctx.get().getSender();
+    public static void handleUseBandage(ServerboundUseBandagePacket packet, Supplier<NetworkEvent.Context> supplier) {
+        NetworkEvent.Context context = supplier.get();
+        context.enqueueWork(() -> {
+            if (packet.durability() == 0) return;// Noop
+
+            ServerPlayer sender = context.getSender();
             if (sender == null) return;
 
             Entity entity = sender.level().getEntity(packet.targetId());
-            if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
+            if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > ServerPacketHandler.TOO_FAR) return;
 
-            ItemStack stack = packet.bandage();
-            if (stack.getItem() instanceof IMedicalMinigameUsable medicalMinigameUsable) {
-                medicalMinigameUsable.useMinigameAction(packet.durability(), target, packet.limb());
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.getFromHand(packet.usedHand(), sender))) return;// Cant use amputated limb
+
+            PlayerHealthData targetData = sender == target ? data : target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (targetData.isAmputated(packet.limb())) return;// Cant treat missing limb
+
+            ItemStack stack = sender.getItemInHand(packet.usedHand());
+            Item item = stack.getItem();
+            if (item instanceof IBag bag) {
+                int bagSlot = packet.bagSlot();
+                if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
+
+                ItemStack stackInBag = bag.getItem(stack, bagSlot);
+                item = stackInBag.getItem();
+
+                if (!(item instanceof IBandage bandage)) return;
+
+                bandage.use(target, packet.limb(), stackInBag, packet.durability());
+                bag.setItem(stack, bagSlot, stackInBag);
+                return;
+            }
+
+            if (item instanceof IBandage bandage) {
+                bandage.use(target, packet.limb(), stack, packet.durability());
             }
         });
+        context.setPacketHandled(true);
     }
 
     public static void handleUseMedItem(ServerboundUseMedItemPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer sender = ctx.get().getSender();
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            ServerPlayer sender = context.getSender();
             if (sender == null) return;
 
             Entity entity = sender.level().getEntity(packet.targetId());
-            if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > TOO_FAR) return;
+            if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > ServerPacketHandler.TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                InteractionHand hand = packet.offhand() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
-                ItemStack used = data.tryUseItem(packet.limb(), sender.getItemInHand(hand), sender, target);
-                sender.setItemInHand(hand, used);
-            });
-        });
-        ctx.get().setPacketHandled(true);
-    }
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.getFromHand(packet.usedHand(), sender))) return;// Cant use amputated limb
 
-    public static void handleUseBagMedItem(ServerboundUseBagMedItemPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer sender = ctx.get().getSender();
-            if (sender == null) return;
+            PlayerHealthData targetData = sender == target ? data : target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (targetData.isAmputated(packet.limb())) return;// Cant treat missing limb
 
-            Entity entity = sender.level().getEntity(packet.targetId());
-            if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > TOO_FAR) return;
+            ItemStack stack = sender.getItemInHand(packet.usedHand());
+            Item item = stack.getItem();
+            if (item instanceof IBag bag) {
+                int bagSlot = packet.bagSlot();
+                if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
 
-            // Verify the bag is in the player’s hands before allowing this
+                ItemStack stack1 = bag.getItem(stack, bagSlot);
+                item = stack1.getItem();
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(health -> {
-                // We don’t have a specific hand (it’s inside a bag),
-                // but we can still treat it as “internal use”:
-                ItemStack itemstack = packet.item().copy();
+                if (!(item instanceof ISimpleMedicalUsable usable)) return;
 
-                // Perform the same logic as tryUseItem, but no hand reference
-                ItemStack used = health.tryUseItem(packet.limb(), itemstack, sender, target);
-                if (packet.bag().getItem() instanceof IBag iBag) {
-                    List<ItemStack> items = iBag.getItems(packet.bag());
+                ItemStack used = usable.onMedicalUse(packet.limb(), sender, target, stack);
 
-                    // Find the used item and remove/damage it
-                    items.set(packet.slot(), used);
-
-                    // Save the updated inventory back to the bag
-                    iBag.setItems(packet.bag(), items);
-
-                    // Update the bag in the player hand
-                    sender.setItemInHand(packet.offhand() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND, packet.bag());
+                if (used != stack){
+                    sender.serverLevel().getLevel().playSound(null,sender.getOnPos(),usable.getUseSound(), SoundSource.PLAYERS);
                 }
-            });
+
+                bag.setItem(stack, bagSlot, used);
+                return;
+            }
+
+            if (item instanceof ISimpleMedicalUsable usable) {
+                ItemStack used = usable.onMedicalUse(packet.limb(), sender, target, stack);
+
+                if (used != stack){
+                    sender.serverLevel().getLevel().playSound(null,sender.getOnPos(),usable.getUseSound(), SoundSource.PLAYERS);
+                }
+            }
         });
-        ctx.get().setPacketHandled(true);
+        context.setPacketHandled(true);
     }
 
     public static void handleMedicalAction(ServerboundMedicalActionPacket packet, Supplier<NetworkEvent.Context> ctx) {
@@ -213,8 +248,14 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h ->
-                    h.medicalAction(packet.action(), packet.limb(), sender));
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
+                if (targetData.isAmputated(packet.limb())) return;// Cant interact with amputated limb
+
+                targetData.medicalAction(packet.action(), packet.limb(), sender);
+            });
         });
         ctx.get().setPacketHandled(true);
     }
@@ -227,52 +268,55 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
 
                 switch (packet.success()) {
                     case LOW -> {
-                        if (data.getLimbMuscleHealth(Limb.CHEST) <= 5)
-                            data.setOxygen(Math.max(data.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 3));
+                        if (targetData.getLimbMuscleHealth(Limb.CHEST) <= 5)
+                            targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 3));
                         else
-                            data.setOxygen(Math.max(data.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
+                            targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
 
-                        data.setLimbPain(Limb.CHEST, data.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 30);
+                        targetData.setLimbPain(Limb.CHEST, targetData.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 30);
                         if (random.nextInt(8) == 0) {
-                            data.setLimbFracture(Limb.CHEST, data.getLimbFracture(Limb.CHEST) + 10);
+                            targetData.setLimbFracture(Limb.CHEST, targetData.getLimbFracture(Limb.CHEST) + 10);
                         }
                         if (random.nextInt(2) == 0) {
-                            data.setLimbMuscleHealth(Limb.CHEST, data.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 8);
+                            targetData.setLimbMuscleHealth(Limb.CHEST, targetData.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 8);
                         }
                     }
                     case MEDIUM -> {
-                        if (data.getLimbMuscleHealth(Limb.CHEST) <= 5)
-                            data.setOxygen(Math.max(data.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 4));
+                        if (targetData.getLimbMuscleHealth(Limb.CHEST) <= 5)
+                            targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 4));
                         else
-                            data.setOxygen(Math.max(data.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 8));
-                        data.setLimbPain(Limb.CHEST, data.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 20);
+                            targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 8));
+                        targetData.setLimbPain(Limb.CHEST, targetData.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 20);
                         if (random.nextInt(6) == 0) {
-                            data.setLimbFracture(Limb.CHEST, data.getLimbFracture(Limb.CHEST) + 10);
+                            targetData.setLimbFracture(Limb.CHEST, targetData.getLimbFracture(Limb.CHEST) + 10);
                         }
                         if (random.nextInt(4) == 0) {
-                            data.setLimbMuscleHealth(Limb.CHEST, data.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 5);
+                            targetData.setLimbMuscleHealth(Limb.CHEST, targetData.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 5);
                         }
                     }
                     case HIGH -> {
-                        if (data.getLimbMuscleHealth(Limb.CHEST) <= 5)
-                            data.setOxygen(Math.max(data.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
+                        if (targetData.getLimbMuscleHealth(Limb.CHEST) <= 5)
+                            targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
                         else
-                            data.setOxygen(Math.max(data.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 12));
-                        data.setLimbPain(Limb.CHEST, data.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 10);
+                            targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 12));
+                        targetData.setLimbPain(Limb.CHEST, targetData.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 10);
                         if (random.nextInt(4) == 0) {
-                            data.setLimbFracture(Limb.CHEST, data.getLimbFracture(Limb.CHEST) + 10);
+                            targetData.setLimbFracture(Limb.CHEST, targetData.getLimbFracture(Limb.CHEST) + 10);
                         }
                         if (random.nextInt(8) == 0) {
-                            data.setLimbMuscleHealth(Limb.CHEST, data.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 1);
+                            targetData.setLimbMuscleHealth(Limb.CHEST, targetData.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 1);
                         }
                     }
                 }
-                data.setContiousness(data.getConsciousness() - 5);
+                targetData.setContiousness(targetData.getConsciousness() - 5);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -284,7 +328,9 @@ public class ServerPacketHandler {
             if (sender == null) return;
 
             sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                    .ifPresent(data -> data.killPlayer(sender, true));
+                    .ifPresent(data -> {
+                        if (data.getConsciousness() <= 10) data.killPlayer(sender, true);
+                    });
         });
         ctx.get().setPacketHandled(true);
     }
