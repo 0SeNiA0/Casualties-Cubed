@@ -37,6 +37,8 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue MANUAL_SHRAPNEL_SUCCESS_CHANCE;
     public static final ForgeConfigSpec.DoubleValue DISLOCATION_FIX_CHANCE;
 
+    public static final ForgeConfigSpec.IntValue GROW_LIMB_REGEN_LEVEL;
+
     // Tourniquet behavior
     public static final ForgeConfigSpec.DoubleValue TOURNIQUET_PAIN_PER_TICK;
     public static final ForgeConfigSpec.IntValue TOURNIQUET_SAFE_TICKS;             // 60s before muscle damage starts
@@ -134,6 +136,10 @@ public class ServerConfig {
         MAGICAL_HEAL_RATE = BUILDER
                 .comment("the Heal Scalar of magical healing(potions,regenration)")
                 .defineInRange("magicalHealRate",0.5,0,Double.MAX_VALUE);
+
+        GROW_LIMB_REGEN_LEVEL = BUILDER
+                .comment("Regen level needed to grow back limbs")
+                .defineInRange("growLimbRegenLevel", 2, 0, 255);
 
 
         CONS_PENALTY_PER_OPIOID = BUILDER

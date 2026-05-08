@@ -2,26 +2,31 @@ package net.adinvas.casualties_cubed.limbs;
 
 public class LimbStatistics {
 
-    float skinHealth = 100f;//
-    float muscleHealth = 100f;//
-    float pain = 0f;//
-    float infection = 0f;//
-    float fracture = 0f;//
-    float dislocation = 0f;
-    int shrapnell = 0;//
-    boolean hasSplint = false;//
-    float bleedRate = 0f;//
-    float desinfectionTimer = 0f;//
-    float MinPain = 0f;//
-    float finalPain = 0f;
-    boolean SkinHeal = false;
-    boolean MuscleHeal = false;
-    boolean Tourniquet = false;
-    int tourniquetTimer = 0;
-    boolean amputated = false;
+    public float skinHealth = 100f;//
+    public float muscleHealth = 100f;//
+    public float pain = 0f;//
+    public float infection = 0f;//
+    public float fracture = 0f;//
+    public float dislocation = 0f;
+    public int shrapnell = 0;//
+    public boolean hasSplint = false;//
+    public float bleedRate = 0f;//
+    public float desinfectionTimer = 0f;//
+    public float MinPain = 0f;//
+    public float finalPain = 0f;
+    public boolean SkinHeal = false;
+    public boolean MuscleHeal = false;
+    public boolean Tourniquet = false;
+    public int tourniquetTimer = 0;
+    public boolean amputated = false;
 
 
-    LimbStatistics(){}
+    public LimbStatistics(){
+    }
+
+    public boolean isAmputated() {
+        return amputated;
+    }
 
     @Override
     public String toString() {
