@@ -1,0 +1,416 @@
+{
+
+  "casualties_cubed.gui.tourniquet_button": "Remove Tourniquet",
+  "casualties_cubed.gui.dislocation_button": "Fix Dislocation",
+  "casualties_cubed.gui.shrapnel_button": "Remove Shrapnel",
+  "casualties_cubed.gui.splint_button": "Remove Splint",
+
+  "casualties_cubed.limb.chest": "Torso",
+  "casualties_cubed.limb.lfoot": "Left Foot",
+  "casualties_cubed.limb.head": "Head",
+  "casualties_cubed.limb.rleg": "Right Leg",
+  "casualties_cubed.limb.rfoot": "Right Foot",
+  "casualties_cubed.limb.lleg": "Left Leg",
+  "casualties_cubed.limb.larm": "Left Arm",
+  "casualties_cubed.limb.lhand": "Left Hand",
+  "casualties_cubed.limb.rarm": "Right Arm",
+  "casualties_cubed.limb.rhand": "Right Hand",
+
+  "casualties_cubed.gui.inject": "Inject",
+  "casualties_cubed.gui.give_up": "Press %1$s to Give Up.",
+  "casualties_cubed.gui.fluid_screen": "Press %1$s to Open Fluid GUI",
+  "casualties_cubed.gui.syringe_instruction": "Push the syringe down to inject. Make sure to check the dosage.",
+  "casualties_cubed.gui.minigame_exit": "Press ESC to Exit",
+
+  "death.attack.give_up": "%1$s gave up",
+  "death.attack.bleed": "%1$s lost too much blood",
+  "death.attack.heavy_bleed": "%1$s was drained of blood",
+  "death.attack.internal_bleed": "%1$s learned the hard way that blood isn’t meant to be everywhere inside your body.",
+  "death.attack.opioids": "%1$s took too much pain medication",
+  "death.attack.oxygen": "%1$s forgot to breathe",
+
+  "death.attack.give_up.player": "%1$s gave up, with some encouragement from %2$s",
+  "death.attack.bleed.player": "%1$s bled out thanks to %2$s",
+  "death.attack.heavy_bleed.player": "%1$s was drained dry after meeting %2$s",
+  "death.attack.internal_bleed.player": "%1$s discovered misplaced blood, courtesy of %2$s",
+  "death.attack.opioids.player": "%1$s overdosed with a little help from %2$s",
+  "death.attack.oxygen.player": "%1$s forgot to breathe while fighting %2$s",
+
+  "item.casualties_cubed.dressing": "Bandage",
+  "item.casualties_cubed.dressing.description": "Basic bandage for covering and protecting wounds.",
+
+  "item.casualties_cubed.plastic_dressing": "Occlusive Dressing",
+  "item.casualties_cubed.plastic_dressing.description": "Stronger bandage that protects wounds more effectively.",
+
+  "item.casualties_cubed.sterilized_dressing": "Sterilized Dressing",
+  "item.casualties_cubed.sterilized_dressing.description": "Cleans and covers wounds, preventing infection.",
+
+  "item.casualties_cubed.bottle": "Bottle",
+  "item.casualties_cubed.bottle.description": "A plastic bottle that can hold 0.25L of liquid.",
+
+  "item.casualties_cubed.alcohol": "Alcohol Bottle",
+  "item.casualties_cubed.alcohol.description": "A glass bottle that can hold 0.5L of liquid.",
+
+  "item.casualties_cubed.ice_pack": "Ice Pack",
+  "item.casualties_cubed.ice_pack.description": "Reduces swelling and eases sore muscles.",
+
+  "item.casualties_cubed.aid_gel": "Relief Gel",
+  "item.casualties_cubed.aid_gel.description": "A crudely made gel for aiding sore limbs.",
+
+  "item.casualties_cubed.saline": "Saline",
+  "item.casualties_cubed.saline.description": "A 750ml fluid bag with a needle at the end.",
+
+  "item.casualties_cubed.opium_vial": "Poppy Extract",
+  "item.casualties_cubed.opium_vial.description": "A 100ml bottle. The overdose label says 200ml.",
+
+  "item.casualties_cubed.morphine_vial": "Morphine",
+  "item.casualties_cubed.morphine_vial.description": "A 100ml bottle. The overdose label says 90ml.",
+
+  "item.casualties_cubed.heroin_vial": "Heroin",
+  "item.casualties_cubed.heroin_vial.description": "A 150ml syringe for intravenous injection. The dosage marks are scratched off.",
+
+  "item.casualties_cubed.fentanyl_vial": "Fentanyl",
+  "item.casualties_cubed.fentanyl_vial.description": "A 100ml bottle containing diluted fentanyl for pain relief. The overdose label says 20ml.",
+
+  "item.casualties_cubed.naloxone_vial": "Naloxone",
+  "item.casualties_cubed.naloxone_vial.description": "A 100ml bottle. The label reads \"Nal...\" — the rest is unreadable.",
+
+  "item.casualties_cubed.painkillers": "Painkillers",
+  "item.casualties_cubed.painkillers.description": "A 100ml pill bottle. The dosage is 10ml.",
+
+  "item.casualties_cubed.antibiotics": "Antibiotics",
+  "item.casualties_cubed.antibiotics.description": "A 100ml bottle of antibiotic pills. The dose is 10ml.",
+
+  "item.casualties_cubed.blood_clotting": "Hemostatic Agent",
+  "item.casualties_cubed.blood_clotting.description": "A 100ml bottle with an autoinjector attached. The dosage is 34ml.",
+
+  "item.casualties_cubed.blood_thinner": "Anticoagulant",
+  "item.casualties_cubed.blood_thinner.description": "A 100ml bottle with an autoinjector attached. The dosage is 34ml.",
+
+  "item.casualties_cubed.splint": "Splint",
+  "item.casualties_cubed.splint.description": "Stabilizes broken bones and aids healing.",
+
+  "item.casualties_cubed.tweezers": "Tweezers",
+  "item.casualties_cubed.tweezers.description": "Removes shrapnel, glass, or debris from wounds.",
+
+  "item.casualties_cubed.tourniquet": "Tourniquet",
+  "item.casualties_cubed.tourniquet.description": "Stops heavy bleeding but limits blood flow.",
+
+  "item.casualties_cubed.small_medibag": "Small Medical Bag",
+  "item.casualties_cubed.small_medibag.description": "A compact pouch for four medical items.",
+
+  "item.casualties_cubed.medium_medibag": "Medium Medical Bag",
+  "item.casualties_cubed.medium_medibag.description": "A balanced pack with room for eight items.",
+
+  "item.casualties_cubed.large_medibag": "Large Medical Bag",
+  "item.casualties_cubed.large_medibag.description": "A spacious medical kit that can hold up to twelve items.",
+
+  "item.casualties_cubed.band_aids": "Band Aids",
+  "item.casualties_cubed.band_aid.description": "Simple adhesive bandages usually used on small cuts and bruises.",
+
+  "block.casualties_cubed.glow_fruit_bush": "Glow Fruit",
+  "item.casualties_cubed.glow_fruit.description": "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.",
+
+  "item.casualties_cubed.ceftriaxone": "Ceftriaxone Vial",
+  "item.casualties_cubed.ceftriaxone.description": "A 100ml bottle. The safe dose label says \"may vary.\"",
+
+  "item.casualties_cubed.medicine_vial": "Medicine Vial",
+  "item.casualties_cubed.medicine_vial.description": "A 100ml bottle meant for medicine.",
+
+  "item.casualties_cubed.antiseptic": "Antiseptic",
+  "item.casualties_cubed.antiseptic.description": "A 200ml spray bottle. Sprays 10ml of liquid at a time.",
+
+  "item.casualties_cubed.relief_cream": "Relief Cream",
+  "item.casualties_cubed.relief_cream.description": "A 100ml bottle. The label warns, \"Do not use more than 10 bottles in one day.\"",
+
+  "item.casualties_cubed.antiserum": "Antiserum",
+  "item.casualties_cubed.antiserum.description": "A 100ml bottle with an autoinjector attached. The dosage is 50ml.",
+
+  "item.casualties_cubed.brain_grow": "Brain Grow",
+  "item.casualties_cubed.brain_grow.description": "A 50ml bottle. The label says, \"Take up to one dose per day.\"",
+
+  "item.casualties_cubed.syringe": "Syringe",
+  "item.casualties_cubed.syringe.description": "A 100ml syringe for intravenous injection.",
+
+  "item.casualties_cubed.old_rag": "Old Rag",
+  "item.casualties_cubed.old_rag.description": "A worn piece of cloth. Can be used as a makeshift dressing.",
+
+  "item.casualties_cubed.ripped_dressing": "Ripped Dressing",
+  "item.casualties_cubed.ripped_dressing.description": "A worn piece of what used to be a bandage. Can be used as a makeshift dressing.",
+
+  "item.casualties_cubed.bruise_kit": "Bruise Kit",
+  "item.casualties_cubed.bruise_kit.description": "A combination of various medicines, made to aid sore muscles. Cannot stop the bleeding.",
+
+  "item.casualties_cubed.alganate_dressing": "Alginate dressing ",
+  "item.casualties_cubed.alganate_dressing.description": "A specially treated piece of a dressing. Slows down bleeding and highly improves skin healing.",
+
+  "item.casualties_cubed.medical_gauze": "Medical Gauze",
+  "item.casualties_cubed.medical_gauze.description": "Woven gauze containing painkilling drugs. Decent at slowing bleeding and reducing pain from injuries.",
+
+  "item.casualties_cubed.bone_welder": "Bone Welding Tool",
+  "item.casualties_cubed.bone_welder.description": "An experimental piece of technology. Welds the bone structure back together. Causes some damage on the way in.",
+
+  "item.casualties_cubed.lrd": "L.R.D",
+  "item.casualties_cubed.lrd.description": "A Localized Resuscitation Device, made to easily provide effective general trauma care. Many thank their lives to this piece of machinery. Holds 75mb of fluid. Needs at least 25mb of LRD serum to function",
+
+  "item.casualties_cubed.makeshift_lrd": "Makeshift L.R.D",
+  "item.casualties_cubed.makeshift_lrd.description": "A Localized Resuscitation Device, made to easily provide effective general trauma care. This one seems to be crudely made. Holds 50mb of fluid. Needs at least 25mb of LRD serum to function",
+
+  "item.casualties_cubed.medical_suture": "Medical Suture",
+  "item.casualties_cubed.medical_suture.description": "Used to stitch wounds back together. Instantly stops most of the bleeding.",
+
+  "item.casualties_cubed.reaction_vial": "Medicine Vial",
+  "item.casualties_cubed.reaction_vial.description": "A 100ml bottle meant for medicine.",
+
+  "block.casualties_cubed.brown_cap": "Brown Cap",
+  "item.casualties_cubed.brown_cap.description": "You have no idea what is this fungus. For all you know it can cure cancer or kill you on the spot",
+
+  "item.casualties_cubed.heat_pack": "Heat Pack",
+  "item.casualties_cubed.heat_pack.description": "A slightly larger chemical hand warmer. Aids in healing of muscles slightly.",
+
+  "item.casualties_cubed.auto_pump": "Auto Pump",
+  "item.casualties_cubed.auto_pump.description": "A very advanced Life support device with internal batteries. Keeps oxygen at stable levels,provides adrenaline and energy. Batteries last about 5min. Usable on Chest",
+
+  "item.casualties_cubed.thermometer": "Thermometer",
+  "item.casualties_cubed.thermometer.description": "A small device that reads the temperature around the user.",
+
+  "item.casualties_cubed.pill_bottle": "Pill bottle",
+  "item.casualties_cubed.pill_bottle.description": "A small pill container, the dosage is 10mb.",
+
+  "item.casualties_cubed.auto_injector": "Auto Injector",
+  "item.casualties_cubed.auto_injector.description": "A 100ml bottle with an autoinjector attached. The dosage is 34ml.",
+
+  "block.casualties_cubed.scav_plushie": "Scav Plushie",
+
+  "medical_fluid.casualties_cubed.opium": "Opium",
+  "medical_fluid.casualties_cubed.opium.description": "A light opiate, lesser effect when taken orally",
+
+  "medical_fluid.casualties_cubed.fentanyl": "Fentanyl",
+  "medical_fluid.casualties_cubed.fentanyl.description": "Highly dangerous opiate. 100 times stronger than morphine",
+
+  "medical_fluid.casualties_cubed.heroin": "Heroin",
+  "medical_fluid.casualties_cubed.heroin.description": "A very strong opiate. Very addicting",
+
+  "medical_fluid.casualties_cubed.morphine": "Morphine",
+  "medical_fluid.casualties_cubed.morphine.description": "A strong opiate, lesser effect when taken orally",
+
+  "medical_fluid.casualties_cubed.clean_water": "Clean Water",
+  "medical_fluid.casualties_cubed.clean_water.description": "Tasteless",
+
+  "medical_fluid.casualties_cubed.painkillers": "Painkillers",
+  "medical_fluid.casualties_cubed.painkillers.description": "Medication for pain relief. Overdose at 80ml",
+
+  "medical_fluid.casualties_cubed.braingrow": "BrainGrow",
+  "medical_fluid.casualties_cubed.braingrow.description": "Special medicine used for heavy concussions and brain trauma. May cause discomfort. Meant to be taken orally",
+
+  "medical_fluid.casualties_cubed.alcohol": "Alcohol",
+  "medical_fluid.casualties_cubed.alcohol.description": "Highly distilled spirit. Useful for disinfecting wounds.",
+
+  "medical_fluid.casualties_cubed.antiseptic": "Antiseptic",
+  "medical_fluid.casualties_cubed.antiseptic.description": "A potent disinfecting gel. Stings a lot.",
+
+  "medical_fluid.casualties_cubed.saline": "Saline",
+  "medical_fluid.casualties_cubed.saline.description": "A mix of water, salt, and minerals. Useful for thirst and regaining body liquid.",
+
+  "medical_fluid.casualties_cubed.antibiotics": "Antibiotics",
+  "medical_fluid.casualties_cubed.antibiotics.description": "Pills that increase your immunity to infection. For some reason they taste like nickels.",
+
+  "medical_fluid.casualties_cubed.antiserum": "Antiserum",
+  "medical_fluid.casualties_cubed.antiserum.description": "Blood serum containing antibodies. Helps when fighting infections. Slightly increases blood volume.",
+
+  "medical_fluid.casualties_cubed.ceftriaxone": "Ceftriaxone",
+  "medical_fluid.casualties_cubed.ceftriaxone.description": "Very advanced form of injected antibiotic. May cause excruciating chest pain.",
+
+  "medical_fluid.casualties_cubed.procoagulant": "Procoagulant",
+  "medical_fluid.casualties_cubed.procoagulant.description": "A simple blood-clotting agent. Decreases bleeding overall but causes clotting. Dangerous in excess.",
+
+  "medical_fluid.casualties_cubed.streptokinase": "Streptokinase",
+  "medical_fluid.casualties_cubed.streptokinase.description": "A blood thinner. Decreases blood clotting. May cause increased bleeding.",
+
+  "medical_fluid.casualties_cubed.naloxone": "Naloxone",
+  "medical_fluid.casualties_cubed.naloxone.description": "A common opiate antagonist. Used to reverse opioid overdose.",
+
+  "medical_fluid.casualties_cubed.relief_cream": "Relief Cream",
+  "medical_fluid.casualties_cubed.relief_cream.description": "A slightly antiseptic cream with soothing properties.",
+
+  "medical_fluid.casualties_cubed.reaction_liquid": "Reaction Liquid",
+  "medical_fluid.casualties_cubed.reaction_liquid.description": "Slightly acidic liquid made from glow fruits. Has some reactive properties.",
+
+  "medical_fluid.casualties_cubed.chocolate_milk": "Chocolate Milk",
+  "medical_fluid.casualties_cubed.chocolate_milk.description": "Who doesn't like chocolate milk?",
+
+  "medical_fluid.casualties_cubed.lrd_serum": "LRD Serum",
+  "medical_fluid.casualties_cubed.lrd_serum.description": "Special mixture used by a Localized Resuscitation Device. Does nothing when injected with other means. Unpleasant taste.",
+
+
+  "key.casualties_cubed.open_pain_gui": "Open Health Screen",
+  "key.casualties_cubed.give_up": "Give Up",
+  "key.categories.casualties_cubed": "Prototype: Pain",
+
+  "itemGroup.casualties_cubed_tab": "Prototype: Pain",
+  "casualties_cubed.gui.bandage_instruction1": "Wrap the bandage around the limb to stop the bleeding.",
+  "casualties_cubed.gui.bandage_instruction2": " You dont have to use the entire bandage.",
+  "casualties_cubed.gui.fluid_crafting": "Fluid Crafting",
+
+
+
+  "casualties_cubed.gui.moodle.bleeding.title1": "Minor Bleeding",
+  "casualties_cubed.gui.moodle.bleeding.description1": "Blood is slowly escaping. No imidiate danger.",
+  "casualties_cubed.gui.moodle.bleeding.title2": "Bleeding",
+  "casualties_cubed.gui.moodle.bleeding.description2": "Blood is flowing out from a decently sized wound. Treatment recomended.",
+  "casualties_cubed.gui.moodle.bleeding.title3": "Heavy Bleeding",
+  "casualties_cubed.gui.moodle.bleeding.description3": "A large volume of blood is comming out of your body. Treatment needed.",
+  "casualties_cubed.gui.moodle.bleeding.title4": "Catastrophic Bleeding",
+  "casualties_cubed.gui.moodle.bleeding.description4": "Blood is spraying like out of a fire hose. Treatment critical!",
+  "casualties_cubed.gui.moodle.internal_bleeding.title3": "Internal Bleeding",
+  "casualties_cubed.gui.moodle.internal_bleeding.description3": "Turns out your guts and lungs are NOT where the blood is supposed to be. Treatment recommended.",
+  "casualties_cubed.gui.moodle.brain_health.title1": "Cognitive impairment",
+  "casualties_cubed.gui.moodle.brain_health.title2": "Neurological damage",
+  "casualties_cubed.gui.moodle.brain_health.title3": "Severe neurophysiological deterioration",
+  "casualties_cubed.gui.moodle.brain_health.title4": "Comatose",
+  "casualties_cubed.gui.moodle.brain_health.description1": "Mentally impaired from damage to the brain. You feel weirdly confused...",
+  "casualties_cubed.gui.moodle.brain_health.description2": "Strong mental deficit. Ability to think intelligently and self-sustain is limited. Serious brain damage present.",
+  "casualties_cubed.gui.moodle.brain_health.description3": "reality  ..  stops   making   sense",
+  "casualties_cubed.gui.moodle.brain_health.description4": ". . .",
+  "casualties_cubed.gui.moodle.consiousness.title1": "Confused",
+  "casualties_cubed.gui.moodle.consiousness.title2": "Very confused",
+  "casualties_cubed.gui.moodle.consiousness.title3": "Fainting",
+  "casualties_cubed.gui.moodle.consiousness.title4": "Incapacitated",
+  "casualties_cubed.gui.moodle.consiousness.title5": "Unconscious",
+  "casualties_cubed.gui.moodle.consiousness.description1": "Feeling disoriented and slightly dizzy.",
+  "casualties_cubed.gui.moodle.consiousness.description2": "Confused and dizzy, struggling to keep up with the world around you.",
+  "casualties_cubed.gui.moodle.consiousness.description3": "Barely conscious, feeling like you could collapse at any moment.",
+  "casualties_cubed.gui.moodle.consiousness.description4": "Can't stand or think. You barely feel anything.",
+  "casualties_cubed.gui.moodle.consiousness.description5": "Not responding to any external stimuli. Lights out.",
+  "casualties_cubed.gui.moodle.dirty.description1": "Consider taking a quick bath.",
+  "casualties_cubed.gui.moodle.dirty.title1": "Dirty",
+  "casualties_cubed.gui.moodle.dirty.title2": "Very dirty",
+  "casualties_cubed.gui.moodle.dirty.description2": "While you don't particularly mind the lack of hygiene, your immune system certainly will. Take a bath.",
+  "casualties_cubed.gui.moodle.dislocation.title3": "Dislocated joint",
+  "casualties_cubed.gui.moodle.dislocation.description3": "You dislocated something. Try not to use the affected limb, and find a way to fix it. Treatment recommended.",
+  "casualties_cubed.gui.moodle.fracture.title3": "Fractured bone",
+  "casualties_cubed.gui.moodle.fracture.description3": "You broke something. Try not to use the affected limb, and rest as much as possible. Treatment highly recommended.",
+  "casualties_cubed.gui.moodle.hemothorax.title3": "Hemothorax",
+  "casualties_cubed.gui.moodle.hemothorax.description3": "Blood is accumulating in the pleural cavity due to internal bleeding. Your chest hurts... Treatment needed.",
+  "casualties_cubed.gui.moodle.high_blood.title1": "Bloated",
+  "casualties_cubed.gui.moodle.high_blood.title2": "Hypervolemic",
+  "casualties_cubed.gui.moodle.high_blood.title3": "Critically hypervolemic",
+  "casualties_cubed.gui.moodle.high_blood.title4": "Lethally hypervolemic",
+  "casualties_cubed.gui.moodle.high_blood.description1": "Feeling uncomfortable. Increased blood pressure.",
+  "casualties_cubed.gui.moodle.high_blood.description2": "Body bloated, blood pressure high, feeling dizzy with a headache.",
+  "casualties_cubed.gui.moodle.high_blood.description3": "Grossly bloated. Extremely high blood pressure. Can barely stand, or think.",
+  "casualties_cubed.gui.moodle.high_blood.description4": "There's a terrible pain in your chest... Vital signs fading. Blood volume and pressure way too high.",
+  "casualties_cubed.gui.moodle.infection.title1": "Infection",
+  "casualties_cubed.gui.moodle.infection.description1": "The infection site is swollen and warm. Treatment needed. Find something that can kill off foreign bodies.",
+  "casualties_cubed.gui.moodle.infection.title2": "Painful infection",
+  "casualties_cubed.gui.moodle.infection.description2": "The infection site is leaking dark pus, and is swelling more. Treatment needed.",
+  "casualties_cubed.gui.moodle.infection.title3": "Severe infection",
+  "casualties_cubed.gui.moodle.infection.description3": "The infection is spreading across the limb quickly and painfully. Chances of going into sepsis. Urgent treatment needed.",
+  "casualties_cubed.gui.moodle.infection.title4": "Life-threatening infection",
+  "casualties_cubed.gui.moodle.infection.description4": "The infection is spreading to other limbs, and the infected limb is starting to undergo necrosis. Sepsis is setting in. Emergency care needed.",
+  "casualties_cubed.gui.moodle.low_blood.title1": "Pale",
+  "casualties_cubed.gui.moodle.low_blood.description1": "Minor blood loss. You're feeling a little weak, with pale skin.",
+  "casualties_cubed.gui.moodle.low_blood.title2": "Hypovolemic",
+  "casualties_cubed.gui.moodle.low_blood.description2": "Weak and confused from blood loss. You feel really unwell. Treatment recommended.",
+  "casualties_cubed.gui.moodle.low_blood.title3": "Critically hypovolemic",
+  "casualties_cubed.gui.moodle.low_blood.description3": "Missing a major amount of blood, barely conscious. Your vision is fuzzy... Treatment needed.",
+  "casualties_cubed.gui.moodle.low_blood.title4": "Exsanguinated",
+  "casualties_cubed.gui.moodle.low_blood.description4": "Life-threatening blood loss, about to pass out. Moments away from total heart failure. Death imminent.",
+  "casualties_cubed.gui.moodle.lung_faliure.title4": "Lung failure",
+  "casualties_cubed.gui.moodle.lung_faliure.description4": "Your lungs are too damaged to function, caused by critically low chest muscle health. Asphyxiation imminent.",
+  "casualties_cubed.gui.moodle.not_breathing.title4": "Respiratory arrest",
+  "casualties_cubed.gui.moodle.not_breathing.description4": "Suffocating! Loss of consciousness and death imminent if untreated.",
+  "casualties_cubed.gui.moodle.opiate.title1": "Opiated",
+  "casualties_cubed.gui.moodle.opiate.description1": "Relaxed and calm. Your body feels numb.",
+  "casualties_cubed.gui.moodle.opiate.title2": "Drugged",
+  "casualties_cubed.gui.moodle.opiate.description2": "Very relaxed and calm, but your lungs feel heavy. A little more tired than usual. This feels pretty good, for now...",
+  "casualties_cubed.gui.moodle.opiate.title3": "Highly drugged",
+  "casualties_cubed.gui.moodle.opiate.description3": "Breathing is difficult, but your mind is in euphoria. This definitely isn't healthy. If only it could last forever...",
+  "casualties_cubed.gui.moodle.opiate.title4": "Fatal opioid overdose",
+  "casualties_cubed.gui.moodle.opiate.description4": "Respiratory failure. You are leaving this world in a drug-filled euphoria. Brain damage and death imminent.",
+  "casualties_cubed.gui.moodle.oxygen.title1": "Hypoxemic",
+  "casualties_cubed.gui.moodle.oxygen.description1": "Lowered blood oxygen. Slightly confused, with rubbery skin. Something's wrong...",
+  "casualties_cubed.gui.moodle.oxygen.title2": "Very hypoxemic",
+  "casualties_cubed.gui.moodle.oxygen.description2": "Not enough oxygen is circulating around the body. Feeling light-headed and numb in the extremities. Something is very wrong.",
+  "casualties_cubed.gui.moodle.oxygen.title3": "Asphyxiating",
+  "casualties_cubed.gui.moodle.oxygen.description3": "Consciousness lost. Tissues deprived of oxygen. Brain damage imminent.",
+  "casualties_cubed.gui.moodle.oxygen.title4": "Cardiac arrest",
+  "casualties_cubed.gui.moodle.oxygen.description4": "Heart stopped. Brain dying from oxygen deprivation. Your entire body is rapidly shutting down; Death imminent.",
+  "casualties_cubed.gui.moodle.pain.title1": "Discomfort",
+  "casualties_cubed.gui.moodle.pain.description1": "Feeling mild pain.",
+  "casualties_cubed.gui.moodle.pain.title2": "Pain",
+  "casualties_cubed.gui.moodle.pain.description2": "Hurting a decent bit. Unhappiness rising slowly.",
+  "casualties_cubed.gui.moodle.pain.title3": "Severe pain",
+  "casualties_cubed.gui.moodle.pain.description3": "Half-conscious, mind fogged by intense pain. Unhappiness rising.",
+  "casualties_cubed.gui.moodle.pain.title4": "Agony",
+  "casualties_cubed.gui.moodle.pain.description4": "Mind-shattering pain. Movement compromised. Death sounds preferable right about now. Unhappiness rising quickly.",
+  "casualties_cubed.gui.moodle.shock.title3": "Shock",
+  "casualties_cubed.gui.moodle.shock.description3": "Going into shock from agony.",
+  "casualties_cubed.gui.moodle.low_temp.title1": "Chilly",
+  "casualties_cubed.gui.moodle.low_temp.description1": "A little cold for comfort.",
+  "casualties_cubed.gui.moodle.low_temp.title2": "Cold",
+  "casualties_cubed.gui.moodle.low_temp.description2": "Unpleasantly cold. Your body is slowing down.",
+  "casualties_cubed.gui.moodle.low_temp.title3": "Hypothermia",
+  "casualties_cubed.gui.moodle.low_temp.description3": "Dangerously low temperature, body and mind taken by the cold. Your entire body is slowly shutting down.",
+  "casualties_cubed.gui.moodle.low_temp.title4": "Freezing to death",
+  "casualties_cubed.gui.moodle.low_temp.description4": "You will soon fall asleep and never wake up. Goodnight.",
+  "casualties_cubed.gui.moodle.high_temp.title1": "Warm",
+  "casualties_cubed.gui.moodle.high_temp.description1": "A little warm for comfort.",
+  "casualties_cubed.gui.moodle.high_temp.title2": "Hot",
+  "casualties_cubed.gui.moodle.high_temp.description2": "Unpleasantly hot. Thirst increased.",
+  "casualties_cubed.gui.moodle.high_temp.title3": "Hyperthermia",
+  "casualties_cubed.gui.moodle.high_temp.description3": "Dangerously hot. You're struggling to go on in the heat... Thirst highly increased.",
+  "casualties_cubed.gui.moodle.high_temp.title4": "Heatstroke",
+  "casualties_cubed.gui.moodle.high_temp.description4": "Cells are starting to die from the intense heat. Irreversible organ damage imminent.",
+  "casualties_cubed.gui.moodle.withdrawal.title1": "Opioid craving",
+  "casualties_cubed.gui.moodle.withdrawal.description1": "You really want another shot.",
+  "casualties_cubed.gui.moodle.withdrawal.title2": "Withdrawal",
+  "casualties_cubed.gui.moodle.withdrawal.description2": "Your body is desperate for another hit. You want to vomit... This feels really bad. Treatment recommended.",
+  "casualties_cubed.gui.moodle.withdrawal.title3": "Severe withdrawal",
+  "casualties_cubed.gui.moodle.withdrawal.description3": "You are struggling to hold yourself together, shaking, desperate for any sort of relief. It feels horrible. Treatment needed.",
+  "casualties_cubed.gui.moodle.withdrawal.title4": "Dying of withdrawal",
+  "casualties_cubed.gui.moodle.withdrawal.description4": "Your body is failing to sustain itself without the opiates it became so reliant on. Your heart is struggling to pump oxygen around the body, resulting in hypoxic brain damage during a desperate episode.",
+  "casualties_cubed.gui.dislocation_instruction1": "Hit the bone into the correct spot to fix dislocation.",
+  "casualties_cubed.gui.shrapnel_instruction": "Slowly extract shrapnel from thie limb. Use tweezers to ignore the speed restriction",
+  "casualties_cubed.gui.moodle.adrenaline.title1": "Adrenaline",
+  "casualties_cubed.gui.moodle.adrenaline.description1": "Pain numbed. You're on high alert.",
+  "casualties_cubed.gui.moodle.life_support.description1": "Oxygen and awareness levels kept at sustainable levels by a life support machine",
+  "casualties_cubed.gui.moodle.life_support.title1": "Life Support",
+  "casualties_cubed.gui.moodle.amputated.description1": "One of your extremities has been dismembered. Traumatizing. Obviously, any use of the lobbed off limb is permanently gone.",
+  "casualties_cubed.gui.moodle.amputated.title1": "Amputated",
+  "casualties_cubed.gui.moodle.fracture_chest.description3": "Your ribs are broken, making breathing painful and way harder. Hope none of them punctured your lungs.",
+  "casualties_cubed.gui.moodle.fracture_chest.title3": "Fractured ribs",
+  "casualties_cubed.gui.moodle.fracture_head.description3": "Your neck is broken. Your spinal cord isn't severed, but any amount of moving around will be agonizing. Physically weaker from the neck down",
+  "casualties_cubed.gui.moodle.fracture_head.title3": "Fractured neck",
+  "casualties_cubed.gui.moodle.dislocation_chest.title3": "Dislocated spine",
+  "casualties_cubed.gui.moodle.dislocation_chest.description3": "Your spine is dislocated. Your spinal cord isn't severed, but moving your body at all is really painful. Physically weaker from the waist down.",
+  "casualties_cubed.gui.moodle.dislocation_head.title3": "Dislocated jaw",
+  "casualties_cubed.gui.moodle.dislocation_head.description3": "Your jaw is dislocated, impairing your speech and making eating anything extremely painful.",
+  "casualties_cubed.gui.moodle.eye_gone.title1": "Half-blind",
+  "casualties_cubed.gui.moodle.eye_gone.title2": "Blind",
+  "casualties_cubed.gui.moodle.eye_gone.description1": "One of your eyes has been ripped out, halving your field of view. You are somewhat scarred by the experience. Don't lose the remaining one.",
+  "casualties_cubed.gui.moodle.eye_gone.description2": "Both of your eyes have been ripped out. You can only get by using feel and sound. At least you no longer need a light source...",
+  "casualties_cubed.gui.moodle.mouth_gone.title2": "Disfigured",
+  "casualties_cubed.gui.moodle.mouth_gone.description2": "Your lower jaw has been ripped off due severe trauma to the head. Eating and talking is much harder. You are horribly scarred by the experience.",
+  "casualties_cubed.gui.moodle.sound_loss.title1": "Impaired hearing",
+  "casualties_cubed.gui.moodle.sound_loss.title2": "Hearing loss",
+  "casualties_cubed.gui.moodle.sound_loss.title3": "Severe hearing loss",
+  "casualties_cubed.gui.moodle.sound_loss.description1": "You can't hear those high frequencies as well as before. Let your ears rest for a while.",
+  "casualties_cubed.gui.moodle.sound_loss.description2": "Everything sounds very muffled and echo-y. You feel irritated. This may take a bit.",
+  "casualties_cubed.gui.moodle.sound_loss.description3": "You can barely hear anything. You feel very irritated. Your ears will take a good while to improve.",
+  "casualties_cubed.gui.cpr_instruction1": "Preform chest compressions to the rythm of the timer.",
+  "casualties_cubed.gui.cpr_instruction2": "Don't mess up.",
+
+  "item.casualties_cubed.brown_cap_mush.description": "Probably a bad idea to eat this...",
+  "item.casualties_cubed.brown_cap_mush": "Brown Cap Mush",
+  "item.casualties_cubed.experimental_treatment": "Experimental Treatment",
+  "item.casualties_cubed.experimental_treatment.description1": "The label says:",
+  "item.casualties_cubed.experimental_treatment.description2": "EXPERIMENTAL TREATMENT EX-8UN, For authorized Study participants only. Effects may include:",
+  "item.casualties_cubed.experimental_treatment.description3": "Mild dizziness ;Permanent dizziness ;Energy ;Lethargy ;Metallic taste ;Sudden bleeding ;Cardiac arrest;Minor brain damage ;Major brain damage ; Respiratory arrest; Deja vu; Paranoia; Loss of limbs; Grow of limbs; Hunger; Vomiting; Deja vu; Memory loss...",
+  "item.casualties_cubed.experimental_treatment.description4": "The list goes on for another 2 lines.",
+  "casualties_cubed.multi_tank.hint": "Press SHIFT for fluid description",
+  "casualties_cubed.tooltip.liquid.amount.with.capacity": "%s / %s mb",
+  "casualties_cubed.tooltip.liquid.amount": "%s mb",
+  "block.casualties_cubed.medical_mixer": "Medical Mixer"
+
+}

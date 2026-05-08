@@ -1,0 +1,15 @@
+{
+  "vertex": "casualties_cubed:pass_trough",
+  "fragment": "casualties_cubed:heat",
+  "samplers": [
+    { "name": "Sampler0" }
+  ],
+  "attributes": [
+    "Position",
+    "UV0"
+  ],
+  "uniforms": [
+    { "name": "Intensity", "type": "float", "count": 1, "values": [0.5] },
+    { "name": "Time", "type": "float", "count": 1, "values": [0] }
+  ]
+}

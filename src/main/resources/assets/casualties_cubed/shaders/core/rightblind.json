@@ -1,0 +1,13 @@
+{
+  "vertex": "casualties_cubed:pass_trough",
+  "fragment": "casualties_cubed:rightblind",
+  "samplers": [
+    { "name": "Sampler0" }
+  ],
+  "attributes": [
+    "Position",
+    "UV0"
+  ],
+  "uniforms": [
+  ]
+}

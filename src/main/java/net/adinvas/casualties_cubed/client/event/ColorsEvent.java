@@ -1,0 +1,47 @@
+package net.adinvas.casualties_cubed.client.event;
+
+import net.adinvas.casualties_cubed.CasualtiesCubed;
+import net.adinvas.casualties_cubed.Util;
+import net.adinvas.casualties_cubed.fluid_system.MultiTankHelper;
+import net.adinvas.casualties_cubed.registry.ModItems;
+import net.adinvas.casualties_cubed.item.multi_tank.MultiTankFluidItem;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(modid = CasualtiesCubed.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ColorsEvent {
+
+    @SubscribeEvent
+    public static void onItemColors(RegisterColorHandlersEvent.Item event){
+        event.register(
+                (stack,tintIndex)->{
+
+                    if (tintIndex == 1) { // only tint the syringe liquid part
+                        if (stack.getItem() instanceof MultiTankFluidItem) {
+                            if (MultiTankHelper.getFilledTotal(stack) <=0){
+                                return 0x00FFFFFF;
+                            }
+                            return Util.mixColors(MultiTankHelper.getColorRatios(stack, Minecraft.getInstance().level)); // return full ARGB or RGB color
+                        }
+                    }
+                    return 0xFFFFFFFF; // white = no tint
+                },
+                ModItems.MEDICINE_VIAL.get(),
+                ModItems.BOTTLE.get(),
+                ModItems.AUTO_INJECTOR.get(),
+                ModItems.PROCOAGULANT_INJECTOR.get(),
+                ModItems.STREPTOKINASE_INJECTOR.get(),
+                ModItems.CEFTRIAXONE_VIAL.get(),
+                ModItems.FENTANYL_VIAL.get(),
+                ModItems.MORPHINE_VIAL.get(),
+                ModItems.NALOXONE_VIAL.get(),
+                ModItems.OPIUM_VIAL.get(),
+                ModItems.ANTISERUM_INJECTOR.get(),
+                ModItems.REACTION_LIQUID_VIAL.get(),
+                ModItems.PILL_BOTTLE.get()
+        );
+    }
+}

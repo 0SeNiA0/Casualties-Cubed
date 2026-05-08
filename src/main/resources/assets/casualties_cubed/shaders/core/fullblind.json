@@ -1,0 +1,16 @@
+{
+  "vertex": "casualties_cubed:pass_trough",
+  "fragment": "casualties_cubed:fullblind",
+  "samplers": [
+    { "name": "Sampler0" },
+    { "name": "Sampler1" }
+  ],
+  "attributes": [
+    "Position",
+    "UV0"
+  ],
+  "uniforms": [
+    { "name": "DistanceMin", "type": "float", "count": 1, "values": [0.0] },
+    { "name": "DistanceMax", "type": "float", "count": 1, "values": [16.0] }
+  ]
+}

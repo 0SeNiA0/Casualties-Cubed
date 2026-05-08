@@ -1,0 +1,171 @@
+package net.adinvas.casualties_cubed.limbs;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public enum Limb {
+    HEAD(Component.translatable("casualties_cubed.limb.head")),
+    CHEST(Component.translatable("casualties_cubed.limb.chest")),
+    LEFT_ARM(Component.translatable("casualties_cubed.limb.larm")),
+    RIGHT_ARM(Component.translatable("casualties_cubed.limb.rarm")),
+    RIGHT_HAND(Component.translatable("casualties_cubed.limb.rhand")),
+    LEFT_HAND(Component.translatable("casualties_cubed.limb.lhand")),
+    LEFT_LEG(Component.translatable("casualties_cubed.limb.lleg")),
+    RIGHT_LEG(Component.translatable("casualties_cubed.limb.rleg")),
+    LEFT_FOOT(Component.translatable("casualties_cubed.limb.lfoot")),
+    RIGHT_FOOT(Component.translatable("casualties_cubed.limb.rfoot"));
+
+    public final Component comp;
+
+    Limb(Component comp) {
+        this.comp = comp;
+    }
+
+    public static Limb getFromHand(InteractionHand hand, Player player) {
+        HumanoidArm arm = player.getMainArm();
+        if (hand == InteractionHand.MAIN_HAND) {
+            return arm == HumanoidArm.RIGHT ? RIGHT_ARM : LEFT_ARM;
+        }
+
+        return arm == HumanoidArm.LEFT ? LEFT_ARM : RIGHT_ARM;
+    }
+
+    public Limb randomFromConectedLimb(){
+        List<Limb> temp_Limb_list= this.getConnectedLimbs();
+        Limb[] limb_list = temp_Limb_list.toArray(new Limb[]{});
+        Random rand = new Random();
+        return limb_list[rand.nextInt(limb_list.length)];
+    }
+
+    public List<Limb> getConnectedLimbs(){
+            List<Limb> temp_Limb_list= new ArrayList<>();
+            switch (this){
+                case CHEST -> {
+                    temp_Limb_list.add(Limb.HEAD);
+                    temp_Limb_list.add(Limb.LEFT_ARM);
+                    temp_Limb_list.add(Limb.LEFT_LEG);
+                    temp_Limb_list.add(Limb.RIGHT_ARM);
+                    temp_Limb_list.add(Limb.RIGHT_LEG);
+                }
+                case LEFT_ARM -> {
+                    temp_Limb_list.add(Limb.CHEST);
+                    temp_Limb_list.add(Limb.LEFT_HAND);
+                }
+                case LEFT_HAND -> {
+                    temp_Limb_list.add(Limb.LEFT_ARM);
+                }
+                case RIGHT_ARM -> {
+                    temp_Limb_list.add(Limb.CHEST);
+                    temp_Limb_list.add(Limb.RIGHT_HAND);
+                }
+                case RIGHT_HAND -> {
+                    temp_Limb_list.add(Limb.RIGHT_ARM);
+                }
+                case LEFT_LEG -> {
+                    temp_Limb_list.add(Limb.CHEST);
+                    temp_Limb_list.add(Limb.LEFT_FOOT);
+                }
+                case RIGHT_LEG -> {
+                    temp_Limb_list.add(Limb.CHEST);
+                    temp_Limb_list.add(Limb.RIGHT_FOOT);
+                }
+                case LEFT_FOOT -> {
+                    temp_Limb_list.add(Limb.LEFT_LEG);
+                }
+                case RIGHT_FOOT -> {
+                    temp_Limb_list.add(Limb.RIGHT_LEG);
+                }
+                case HEAD -> {
+                    temp_Limb_list.add(Limb.CHEST);
+                }
+            }
+            return temp_Limb_list;
+    }
+
+    static Limb randomLimb(){
+        Limb[] values = Limb.values();
+        Random rand = new Random();
+        return values[rand.nextInt(values.length)];
+    }
+
+    public static Limb weigtedRandomLimb(){
+        Limb[] limb_list = {
+                HEAD, //~4%
+                CHEST,//~8%
+                CHEST,
+                RIGHT_ARM,//~12%
+                RIGHT_ARM,
+                RIGHT_ARM,
+                LEFT_ARM,//~12%
+                LEFT_ARM,
+                LEFT_ARM,
+                RIGHT_LEG,//~12%
+                RIGHT_LEG,
+                RIGHT_LEG,
+                LEFT_LEG,//~12%
+                LEFT_LEG,
+                LEFT_LEG,
+                RIGHT_HAND,//~8%
+                RIGHT_HAND,
+                LEFT_HAND,//~8%
+                LEFT_HAND,
+                RIGHT_FOOT,//~8%
+                RIGHT_FOOT,
+                LEFT_FOOT,//~8%
+                LEFT_FOOT,
+        };
+        Random rand = new Random();
+        return limb_list[rand.nextInt(limb_list.length)];
+    }
+
+
+    static InteractionHand getRightHand(Player player){
+        if (player.getMainArm()== HumanoidArm.RIGHT){
+            return InteractionHand.MAIN_HAND;
+        }
+        return InteractionHand.OFF_HAND;
+    }
+
+    static InteractionHand getLeftHand(Player player){
+        if (player.getMainArm()== HumanoidArm.LEFT){
+            return InteractionHand.MAIN_HAND;
+        }
+        return InteractionHand.OFF_HAND;
+    }
+
+    public static HumanoidArm getArmFromHand(InteractionHand hand, Player player){
+        HumanoidArm mainArm = player.getMainArm();
+        if (hand == InteractionHand.MAIN_HAND) {
+            // MAIN_HAND always uses the player's dominant arm
+            return mainArm;
+        } else {
+            // OFF_HAND is always the opposite of the main arm
+            return (mainArm == HumanoidArm.RIGHT) ? HumanoidArm.LEFT : HumanoidArm.RIGHT;
+        }
+    }
+
+
+    public List<Limb> availableHandsForAction(){
+        List<Limb> limbList = new ArrayList<>();
+        switch (this){
+            case RIGHT_HAND,RIGHT_ARM -> {
+                limbList.add(Limb.LEFT_HAND);
+            }
+            case LEFT_ARM,LEFT_HAND ->{
+                limbList.add(Limb.RIGHT_HAND);
+            }
+            default -> {
+                limbList.add(Limb.LEFT_HAND);
+                limbList.add(Limb.RIGHT_HAND);
+            }
+        }
+        return limbList;
+    }
+}
+
