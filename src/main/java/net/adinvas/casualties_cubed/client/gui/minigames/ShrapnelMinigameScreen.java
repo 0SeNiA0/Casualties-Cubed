@@ -75,7 +75,7 @@ public class ShrapnelMinigameScreen extends Screen {
         if (parent instanceof HealthScreen hp){
             hp.BGmode = true;
         }
-        int ShrapnelAmount = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.hasLimbShrapnell(limb)).orElse(0);
+        int ShrapnelAmount = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.hasLimbShrapnel(limb)).orElse(0);
         RememberShrapnel = ShrapnelAmount;
         int x = this.width/2-16;
         shrapnelObjects.clear();
@@ -161,7 +161,7 @@ public class ShrapnelMinigameScreen extends Screen {
         });
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if(h.hasLimbShrapnell(limb)!=RememberShrapnel){
+            if(h.hasLimbShrapnel(limb)!=RememberShrapnel){
                 IgnoreResult = true;
                 onClose();
             }

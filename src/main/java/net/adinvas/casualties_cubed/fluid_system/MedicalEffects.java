@@ -148,7 +148,7 @@ public class MedicalEffects {
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 h.setLimbPain(limb, h.getLimbPain(limb)+0.1f*ml);
-                h.setLimbDesinfected(limb,Math.max(h.getLimbDesinfected(limb),700*ml));
+                h.setLimbDisinfected(limb,Math.max(h.getLimbDisinfected(limb),700*ml));
             });
         }
     };
@@ -176,7 +176,7 @@ public class MedicalEffects {
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 h.setLimbPain(limb, h.getLimbPain(limb)+5*ml);
-                h.setLimbDesinfected(limb,h.getLimbDesinfected(limb)+300*ml);
+                h.setLimbDisinfected(limb,h.getLimbDisinfected(limb)+300*ml);
             });
         }
 
@@ -190,7 +190,7 @@ public class MedicalEffects {
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 h.setLimbPain(limb, h.getLimbPain(limb)+3.5f*ml);
-                h.setLimbDesinfected(limb,Math.max(h.getLimbDesinfected(limb),1200*ml));
+                h.setLimbDisinfected(limb,Math.max(h.getLimbDisinfected(limb),1200*ml));
             });
         }
     };
@@ -199,7 +199,7 @@ public class MedicalEffects {
         @Override
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbDesinfected(limb,Math.max(h.getLimbDesinfected(limb),636*ml));
+                h.setLimbDisinfected(limb,Math.max(h.getLimbDisinfected(limb),636*ml));
                 h.setLimbPain(limb, h.getLimbPain(limb)*0.01f);
             });
         }
@@ -229,7 +229,7 @@ public class MedicalEffects {
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
                 h.setAntibiotic_timer(Math.max(h.getAntibiotic_timer(),6000));
-                h.setLimbDesinfected(limb,h.getLimbDesinfected(limb)+70*ml);
+                h.setLimbDisinfected(limb,h.getLimbDisinfected(limb)+70*ml);
                 h.setBloodVolume(h.getBloodVolume()+0.001f*ml);
             });
         }

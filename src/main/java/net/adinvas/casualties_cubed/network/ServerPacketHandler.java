@@ -42,7 +42,7 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData ->
-                    targetData.setLimbShrapnell(packet.limb(), packet.amount()));
+                    targetData.setLimbShrapnel(packet.limb(), packet.amount()));
         });
         ctx.get().setPacketHandled(true);
     }
@@ -149,7 +149,7 @@ public class ServerPacketHandler {
                 RandomSource random = sender.getRandom();
                 Limb limb = packet.limb();
                 targetData.setLimbPain(limb, targetData.getLimbPain(limb) + ((random.nextFloat() + 0.5f) * 20));
-                targetData.setLimbShrapnell(limb,targetData.hasLimbShrapnell(limb) + 1);
+                targetData.setLimbShrapnel(limb,targetData.hasLimbShrapnel(limb) + 1);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -318,7 +318,7 @@ public class ServerPacketHandler {
                         }
                     }
                 }
-                targetData.setContiousness(targetData.getConsciousness() - 5);
+                targetData.setConsciousness(targetData.getConsciousness() - 5);
             });
         });
         ctx.get().setPacketHandled(true);

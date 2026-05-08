@@ -27,7 +27,7 @@ public class ReliefGel extends Item implements ISimpleMedicalUsable, IAllowInMed
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setPendingOpioids(data.getPendingOpioids() + 1);
             data.setLimbPain(limb, data.getLimbPain(limb) - 5);
-            data.setLimbDesinfected(limb, 300);
+            data.setLimbDisinfected(limb, 300);
             data.setLimbMuscleHeal(limb, true);
             data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 10);
         });

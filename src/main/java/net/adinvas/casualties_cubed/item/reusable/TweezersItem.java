@@ -34,7 +34,7 @@ public class TweezersItem extends Item implements IMedicalMinigameUsable, IAllow
     @Override
     public void openMinigameScreen(Player target, ItemStack stack, @Nullable Limb limb, InteractionHand hand) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.hasLimbShrapnell(limb)>0){
+            if (h.hasLimbShrapnel(limb)>0){
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT,() -> () ->{
                     MinigameOpener.OpenShrapnelMinigame(target,limb);
                 });

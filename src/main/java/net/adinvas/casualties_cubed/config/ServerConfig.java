@@ -42,7 +42,7 @@ public class ServerConfig {
     public static final ForgeConfigSpec.IntValue TOURNIQUET_SAFE_TICKS;             // 60s before muscle damage starts
     public static final ForgeConfigSpec.DoubleValue TOURNIQUET_MUSCLE_DAMAGE;
     public static final ForgeConfigSpec.DoubleValue CONS_PENALTY_PER_OPIOID;
-    public static final ForgeConfigSpec.DoubleValue CONSIOUSNESS_REGEN;
+    public static final ForgeConfigSpec.DoubleValue CONSCIOUSNESS_REGEN;
 
     //Heavy Shit
 
@@ -50,7 +50,8 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue CHESTPLATE_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue LEGS_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue BOOTS_ARMOR_SCALE;
-    public static final ForgeConfigSpec.BooleanValue PERNAMENT_DAMAGE;
+    public static final ForgeConfigSpec.BooleanValue PERMANENT_DAMAGE;
+    public static final ForgeConfigSpec.BooleanValue LIMB_REGROWTH;
     public static final ForgeConfigSpec.DoubleValue BRAIN_DRAIN;
     public static final ForgeConfigSpec.DoubleValue BRAIN_HEALTH_REGEN;
     public static final ForgeConfigSpec.DoubleValue IMMUNITY_SCALE;
@@ -58,16 +59,13 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec.BooleanValue PHYS_INTEGRATION;
 
-
-
-
     static {
         ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
         BUILDER.push("Prototype Pain Server Config");
 
         DISINFECTION_SCALE = BUILDER
-                .comment("The scale of strenght of Disinfectants")
+                .comment("The scale of strength of Disinfectants")
                         .defineInRange("disinfectionScale",1d,0,100);
 
         WUND_ANTIBLEED_RATE = BUILDER
@@ -84,7 +82,7 @@ public class ServerConfig {
                 .comment("The rate at which Hemothorax is healed (pts/s)")
                         .defineInRange("hemothoraxHealRate",0.05,0,100);
         OXYGEN_REPLENISH = BUILDER
-                .comment("The rate at which Oxygen Replenishies (%/s)")
+                .comment("The rate at which Oxygen Replenishes (%/s)")
                         .defineInRange("oxygenReplenish",8d,0,100);
         OXYGEN_DRAIN = BUILDER
                 .comment("The rate at which Oxygen Drains when not breathing (%/s)")
@@ -114,36 +112,36 @@ public class ServerConfig {
                 .comment("The normal rate at which Limbs Heal their Health passively (%/s)")
                         .defineInRange("normalLimbHealRate",0.04,0,100);
         BOOSTED_LIMB_HEAL_RATE = BUILDER
-                .comment("The Boosted rate at which Limbs Heal ther Health passively (%/s)")
+                .comment("The Boosted rate at which Limbs Heal their Health passively (%/s)")
                         .defineInRange("boostedLimbHealRate",0.125,0,100);
         TOURNIQUET_PAIN_PER_TICK = BUILDER
                 .comment("Pain per tick for limb with applied tourniquet")
                         .defineInRange("tourniquetPainPerTick",0.05,0,100);
         TOURNIQUET_SAFE_TICKS=BUILDER
-                .comment("Ticks for how long a tourniquet can be on a limb befor causing muscle damage (ticks)")
+                .comment("Ticks for how long a tourniquet can be on a limb before causing muscle damage (ticks)")
                         .defineInRange("tourniquetSafeTicks",20*60*5,0, Integer.MAX_VALUE);
         TOURNIQUET_MUSCLE_DAMAGE=BUILDER
                 .comment("Damage to the muscle health of the limb with a tourniquet after safe ticks have passed (s)")
                         .defineInRange("tourniquetMuscleDamage",1.5,0,100);
         MANUAL_SHRAPNEL_SUCCESS_CHANCE=BUILDER
-                .comment("Chance for removing Shrapnell from Limb without use of Tweezers")
+                .comment("Chance for removing Shrapnel from Limb without use of Tweezers")
                         .defineInRange("manualShrapnelRemoveChance",0.3,0,1);
         DISLOCATION_FIX_CHANCE= BUILDER
-                .comment("Chance for Manualy fixing a dislocation")
+                .comment("Chance for Manually fixing a dislocation")
                         .defineInRange("manualDislocationFixChance",0.7,0,1);
         MAGICAL_HEAL_RATE = BUILDER
-                .comment("the Heal Scalar of magical healing(potions,regenration)")
+                .comment("the Heal Scalar of magical healing(potions, regeneration)")
                 .defineInRange("magicalHealRate",0.5,0,Double.MAX_VALUE);
 
 
         CONS_PENALTY_PER_OPIOID = BUILDER
-                .comment("How much consiousness is penalized by one point of Opioids (opioids max is 100)")
+                .comment("How much consciousness is penalized by one point of Opioids (opioids max is 100)")
                         .defineInRange("consPenaltyPerOpiod",0.2,0,Double.MAX_VALUE);
-        CONSIOUSNESS_REGEN = BUILDER
-                .comment("How fast contiousness resores itself(keep in mind that contiousness is also capped by things such as:")
+        CONSCIOUSNESS_REGEN = BUILDER
+                .comment("How fast consciousness restores itself(keep in mind that consciousness is also capped by things such as:")
                         .comment("Oxygen,Opioids,High Pain,Head Health ...")
                                 .comment("(%/s)")
-                                        .defineInRange("consiousnessDelta",4,0,Double.MAX_VALUE);
+                                        .defineInRange("consciousnessDelta",4,0,Double.MAX_VALUE);
 
         HELMET_ARMOR_SCALE = BUILDER
                 .comment("Scaling of Armor values")
@@ -160,17 +158,20 @@ public class ServerConfig {
 
 
  */
-        PERNAMENT_DAMAGE = BUILDER
-                .comment("True/False Pernament Damage(until death)")
-                        .define("pernamentDamage",true);
+        PERMANENT_DAMAGE = BUILDER
+                .comment("True/False Permanent Damage(until death)")
+                        .define("permanentDamage",true);
 
+        LIMB_REGROWTH = BUILDER
+                .comment("Lets players regrow missing limbs with long enough regeneration 2+ effect")
+                        .define("limbRegrowth", false);
 
         BRAIN_DRAIN = BUILDER
                 .comment("How much the Brain health is drain per s when dying")
                         .defineInRange("deathBrainDrain",1.5,0.01,100);
 
         BRAIN_HEALTH_REGEN = BUILDER
-                .comment("Brain health Regeneration per min (only works in Pernament Damage mode")
+                .comment("Brain health Regeneration per min (only works in Permanent Damage mode")
                         .defineInRange("brainRegen",0.3,0,Double.MAX_VALUE);
 
         IMMUNITY_SCALE = BUILDER

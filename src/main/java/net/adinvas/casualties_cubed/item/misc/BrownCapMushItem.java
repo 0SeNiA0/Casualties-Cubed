@@ -111,7 +111,7 @@ public class BrownCapMushItem extends Item {
 
                 if (maineffect < 10) {
                     player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                        h.setContiousness(0);
+                        h.setConsciousness(0);
                     });
                 } else if (maineffect < 15) {
                     player.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 4));

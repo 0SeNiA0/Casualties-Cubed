@@ -186,7 +186,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
                     } else if (roll < 90) {
                         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                             for (Limb limb : Limb.values()) {
-                                h.setLimbDesinfected(limb, 10 * 60 * 20);
+                                h.setLimbDisinfected(limb, 10 * 60 * 20);
                             }
                             h.setAntibiotic_timer(10 * 60 * 20);
                         });
@@ -347,7 +347,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
                     } else if (roll < 90) {
                         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                             for (Limb limb : Limb.values()) {
-                                h.setLimbDesinfected(limb, 10 * 60 * 20);
+                                h.setLimbDisinfected(limb, 10 * 60 * 20);
                             }
                             h.setAntibiotic_timer(10 * 60 * 20);
                         });

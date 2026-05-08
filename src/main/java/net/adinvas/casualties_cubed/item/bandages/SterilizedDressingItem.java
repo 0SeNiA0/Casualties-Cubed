@@ -37,7 +37,7 @@ public class SterilizedDressingItem extends Item implements IBandage, IAllowInMe
             float fractRed = Math.max(0f, 1f - 0.001f * scalableAmount);
             h.setLimbFracture(limb, h.getLimbFracture(limb) * fractRed);
             h.setLimbDislocation(limb, h.getLimbDislocated(limb) * fractRed);
-            h.setLimbDesinfected(limb, h.getLimbDesinfected(limb) + 250 * scalableAmount);
+            h.setLimbDisinfected(limb, h.getLimbDisinfected(limb) + 250 * scalableAmount);
         });
     }
 

@@ -29,7 +29,7 @@ public class MakeshiftLRDItem extends MultiTankFluidItem implements ISimpleMedic
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                 h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) + 50f);
                 h.setLimbInfection(limb, h.getLimbInfection(limb) - 10);
-                h.setLimbDesinfected(limb, Math.max(h.getLimbDesinfected(limb), 12000));
+                h.setLimbDisinfected(limb, Math.max(h.getLimbDisinfected(limb), 12000));
                 h.setLimbBleedRate(limb, h.getLimbBleedRate(limb) * 0.7f);
                 h.setInternalBleeding(h.getInternalBleeding() * 0.45f);
                 h.setPendingOpioids(h.getPendingOpioids() + 20);
@@ -37,7 +37,7 @@ public class MakeshiftLRDItem extends MultiTankFluidItem implements ISimpleMedic
                 for (Limb limb1 : limb.getConnectedLimbs()) {
                     h.setLimbMuscleHealth(limb1, h.getLimbMuscleHealth(limb1) + 40f);
                     h.setLimbInfection(limb1, h.getLimbInfection(limb1) - 5);
-                    h.setLimbDesinfected(limb1, Math.max(h.getLimbDesinfected(limb1), 6000));
+                    h.setLimbDisinfected(limb1, Math.max(h.getLimbDisinfected(limb1), 6000));
                     h.setLimbBleedRate(limb1, h.getLimbBleedRate(limb1) * 0.75f);
                 }
             });

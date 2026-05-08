@@ -416,9 +416,9 @@ public class HealthScreen extends Screen {
                 boolean infection = health.getLimbInfection(limb) > 25;
                 boolean dislocated = health.isLimbDislocated(limb) > 0;
                 boolean splint = health.hasLimbSplint(limb);
-                boolean shrapnel = health.hasLimbShrapnell(limb) > 0;
+                boolean shrapnel = health.hasLimbShrapnel(limb) > 0;
                 boolean fractured = health.getLimbFracture(limb) > 0;
-                boolean desinfection = health.getLimbDesinfected(limb) > 0;
+                boolean desinfection = health.getLimbDisinfected(limb) > 0;
                 boolean tourniquet = health.getTourniquet(limb);
 
                 // ---- apply to the widget ----

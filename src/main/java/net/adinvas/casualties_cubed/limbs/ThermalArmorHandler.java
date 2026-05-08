@@ -38,8 +38,7 @@ public class ThermalArmorHandler {
         float fromName = getThermalFromName(item);
         if (fromName != 0f) return fromName;
 
-        float fromMaterial = getThermalFromMaterial(item);
-        return fromMaterial;
+        return getThermalFromMaterial(item);
     }
 
     private static float getThermalFromRecipe(Item item, Level level) {

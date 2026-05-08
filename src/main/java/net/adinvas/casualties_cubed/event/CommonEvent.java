@@ -332,7 +332,7 @@ public class CommonEvent {
 
             if (distScale > 0.1) {
                 player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                    data.setContiousness(data.getConsciousness() - (100 * finalDistanceScale));
+                    data.setConsciousness(data.getConsciousness() - (100 * finalDistanceScale));
                     data.setHearingLoss((float) (data.getHearingLoss() + Math.max(0.05, finalDistanceScale / 2f)));
                     data.setFlashHearingLoss(data.getFlashHearingLoss() + Math.min(0.25f, finalDistanceScale * 4));
                 });

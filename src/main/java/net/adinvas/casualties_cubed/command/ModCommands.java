@@ -139,7 +139,7 @@ public class ModCommands {
                                                                     case "infection" -> h.setLimbInfection(limb,value);
                                                                     case "fracturetimer" -> h.setLimbFracture(limb,value);
                                                                     case "dislocatedtimer" -> h.setLimbDislocation(limb,value);
-                                                                    case "desinfectiontimer" -> h.setLimbDesinfected(limb,value);
+                                                                    case "desinfectiontimer" -> h.setLimbDisinfected(limb,value);
                                                                     case "bleedrate" -> h.setLimbBleedRate(limb,value);
                                                                     default -> ctx.getSource().sendFailure(Component.literal("Unknown field: " + finalRaw));
                                                                 }
@@ -190,8 +190,8 @@ public class ModCommands {
                                                     target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                                                         switch (field) {
                                                             case "blood" -> h.setBloodVolume(value);
-                                                            case "contiousness" -> h.setContiousness(value);
-                                                            case "contiousnesscap" -> h.setContiousnessCap(value);
+                                                            case "contiousness" -> h.setConsciousness(value);
+                                                            case "contiousnesscap" -> h.setConsciousnessCap(value);
                                                             case "hemothorax" -> h.setHemothorax(value);
                                                             case "internalbleeding" -> h.setInternalBleeding(value);
                                                             case "oxygen" -> h.setOxygen(value);

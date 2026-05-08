@@ -39,11 +39,11 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
             h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) - 1);
             h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) - 4);
-            h.setLimbDesinfected(limb, Math.max(h.getLimbDesinfected(limb), 4400));
+            h.setLimbDisinfected(limb, Math.max(h.getLimbDisinfected(limb), 4400));
             List<Limb> conected = limb.getConnectedLimbs();
             for (Limb limb1 : conected) {
                 h.setLimbMuscleHealth(limb1, h.getLimbMuscleHealth(limb1) - 3);
-                h.setLimbDesinfected(limb1, Math.max(h.getLimbDesinfected(limb1), 2200));
+                h.setLimbDisinfected(limb1, Math.max(h.getLimbDisinfected(limb1), 2200));
             }
             stack.shrink(1);
         });

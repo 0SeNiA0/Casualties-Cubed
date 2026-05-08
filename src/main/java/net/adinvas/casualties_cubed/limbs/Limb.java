@@ -43,6 +43,17 @@ public enum Limb {
         return limb_list[rand.nextInt(limb_list.length)];
     }
 
+    public Limb getConnectedTo() {
+        return switch (this) {
+            case HEAD, RIGHT_ARM, LEFT_ARM, RIGHT_LEG, LEFT_LEG -> CHEST;
+            case RIGHT_HAND -> RIGHT_ARM;
+            case LEFT_HAND -> LEFT_ARM;
+            case RIGHT_FOOT -> RIGHT_LEG;
+            case LEFT_FOOT -> LEFT_LEG;
+            case CHEST -> HEAD;//Chest and head loop but that shouldn't be an issue
+        };
+    }
+
     public List<Limb> getConnectedLimbs(){
             List<Limb> temp_Limb_list= new ArrayList<>();
             switch (this){
