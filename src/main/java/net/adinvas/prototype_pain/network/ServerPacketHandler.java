@@ -11,6 +11,7 @@ import net.adinvas.prototype_pain.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.prototype_pain.limbs.Limb;
 import net.adinvas.prototype_pain.limbs.PlayerHealthData;
 import net.adinvas.prototype_pain.network.packet.*;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -214,15 +215,15 @@ public class ServerPacketHandler {
                 int bagSlot = packet.bagSlot();
                 if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
 
-                ItemStack stack1 = bag.getItem(stack, bagSlot);
-                item = stack1.getItem();
+                ItemStack stackInBag = bag.getItem(stack, bagSlot);
+                item = stackInBag.getItem();
 
                 if (!(item instanceof ISimpleMedicalUsable usable)) return;
 
-                ItemStack used = usable.onMedicalUse(packet.limb(), sender, target, stack);
+                ItemStack used = usable.onMedicalUse(packet.limb(), sender, target, stackInBag);
 
-                if (used != stack){
-                    sender.serverLevel().getLevel().playSound(null,sender.getOnPos(),usable.getUseSound(), SoundSource.PLAYERS);
+                if (used != stackInBag){
+                    sender.serverLevel().getLevel().playSound(null, sender.getOnPos(), usable.getUseSound(), SoundSource.PLAYERS);
                 }
 
                 bag.setItem(stack, bagSlot, used);
@@ -378,7 +379,7 @@ public class ServerPacketHandler {
         ctx.get().setPacketHandled(true);
     }
 
-//TODO fix fluid transfer dupe
+///TODO fix fluid transfer dupe -> use {@link net.minecraftforge.client.extensions.IForgeMinecraft#pushGuiLayer(Screen)} to display extra screen
     public static void handleFluidTransfer(ServerboundFluidTransferPacket packet, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             ServerPlayer sender = ctx.get().getSender();
