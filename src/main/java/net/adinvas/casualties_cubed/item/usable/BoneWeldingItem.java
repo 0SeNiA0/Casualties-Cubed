@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,21 +26,18 @@ public class BoneWeldingItem extends Item implements ISimpleMedicalUsable, IAllo
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) - 25);
-            h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) - 26);
-            h.setLimbFracture(limb, h.getLimbFracture(limb) * 0.15f);
-            h.setLimbBleedRate(limb, h.getLimbBleedRate(limb) + ((0.09f) / 20f / 60f));
-            h.setLimbPain(limb, h.getLimbPain(limb) + 30);
-            h.setBloodViscosity(h.getBloodViscosity() + 2);
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) - 25);
+            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) - 26);
+            data.setLimbFracture(limb, data.getLimbFracture(limb) * 0.15f);
+            data.setLimbBleedRate(limb, data.getLimbBleedRate(limb) + ((0.09f) / 20f / 60f));
+            data.setLimbPain(limb, data.getLimbPain(limb) + 30);
+            data.setBloodViscosity(data.getBloodViscosity() + 2);
         });
-        ItemStack newitemstack = stack;
-        subNbtDurability(stack, 50);
-        if (getNbtDurability(stack) <= 0) {
-            newitemstack = ItemStack.EMPTY;
-        }
-        return newitemstack;
+
+        if (!source.isCreative()) subNbtDurability(stack, 50);
+        source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
     }
 
     @Override

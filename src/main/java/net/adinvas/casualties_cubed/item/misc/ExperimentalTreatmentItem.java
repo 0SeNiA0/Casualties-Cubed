@@ -406,10 +406,9 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
         if (limb == Limb.HEAD) {
-            return this.finishUsingItem(stack, target.level(), target);
+            finishUsingItem(stack, target.level(), target);
         }
-        return stack;
     }
 }

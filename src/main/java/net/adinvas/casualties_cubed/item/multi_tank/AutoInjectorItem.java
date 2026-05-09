@@ -23,11 +23,11 @@ public class AutoInjectorItem extends MultiTankFluidItem implements ISimpleMedic
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getInjectAmount());
         List<FluidStack> drained = MultiTankHelper.drain(stack, max);
+        MedicalFluid MF;
         for (FluidStack fs : drained) {
-            MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());
             if (fs.hasTag()) {
                 if (fs.getTag().contains("MedicalId")) {
@@ -36,6 +36,5 @@ public class AutoInjectorItem extends MultiTankFluidItem implements ISimpleMedic
             }
             MF.getMedicalEffect().applyInjected(target, fs.getAmount(), limb);
         }
-        return stack;
     }
 }

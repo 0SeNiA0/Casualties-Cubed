@@ -7,6 +7,7 @@ import net.adinvas.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TourniquetItem extends Item implements ISimpleMedicalUsable, IAllowInMedicBags {
 
@@ -23,20 +23,16 @@ public class TourniquetItem extends Item implements ISimpleMedicalUsable, IAllow
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        if (limb != Limb.CHEST) {
-            AtomicBoolean used = new AtomicBoolean(false);
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                if (!h.getTourniquet(limb)) {
-                    h.setTourniquet(limb, true);
-                    used.set(true);
-                }
-            });
-            if (used.get()) {
-                return ItemStack.EMPTY;
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+        if (limb == Limb.CHEST) return;
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!data.getTourniquet(limb)) {
+                data.setTourniquet(limb, true);
+
+                if (!source.isCreative()) stack.shrink(1);
+                source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
             }
-        }
-        return stack;
+        });
     }
 
     @Override

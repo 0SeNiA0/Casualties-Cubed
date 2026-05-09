@@ -1,7 +1,7 @@
 package net.adinvas.casualties_cubed.network;
 
-import net.adinvas.casualties_cubed.PlayerHealthProvider;
 import net.adinvas.casualties_cubed.CasualtiesCubed;
+import net.adinvas.casualties_cubed.PlayerHealthProvider;
 import net.adinvas.casualties_cubed.fluid_system.MedicalFluid;
 import net.adinvas.casualties_cubed.fluid_system.MultiTankHelper;
 import net.adinvas.casualties_cubed.item.api.IBag;
@@ -12,7 +12,6 @@ import net.adinvas.casualties_cubed.limbs.Limb;
 import net.adinvas.casualties_cubed.limbs.PlayerHealthData;
 import net.adinvas.casualties_cubed.network.packet.*;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -221,22 +220,13 @@ public class ServerPacketHandler {
 
                 if (!(item instanceof ISimpleMedicalUsable usable)) return;
 
-                ItemStack used = usable.onMedicalUse(packet.limb(), sender, target, stackInBag);
-
-                if (used != stackInBag){
-                    sender.serverLevel().getLevel().playSound(null, sender.getOnPos(), usable.getUseSound(), SoundSource.PLAYERS);
-                }
-
-                bag.setItem(stack, bagSlot, used);
+                usable.onMedicalUse(packet.limb(), sender, target, stackInBag);
+                bag.setItem(stack, bagSlot, stackInBag);
                 return;
             }
 
             if (item instanceof ISimpleMedicalUsable usable) {
-                ItemStack used = usable.onMedicalUse(packet.limb(), sender, target, stack);
-
-                if (used != stack){
-                    sender.serverLevel().getLevel().playSound(null,sender.getOnPos(),usable.getUseSound(), SoundSource.PLAYERS);
-                }
+                usable.onMedicalUse(packet.limb(), sender, target, stack);
             }
         });
         context.setPacketHandled(true);

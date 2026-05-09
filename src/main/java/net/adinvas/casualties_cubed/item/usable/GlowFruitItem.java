@@ -7,6 +7,7 @@ import net.adinvas.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -35,19 +36,20 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) - 1);
-            h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) - 4);
-            h.setLimbDisinfected(limb, Math.max(h.getLimbDisinfected(limb), 4400));
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) - 1);
+            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) - 4);
+            data.setLimbDisinfected(limb, Math.max(data.getLimbDisinfected(limb), 4400));
             List<Limb> conected = limb.getConnectedLimbs();
             for (Limb limb1 : conected) {
-                h.setLimbMuscleHealth(limb1, h.getLimbMuscleHealth(limb1) - 3);
-                h.setLimbDisinfected(limb1, Math.max(h.getLimbDisinfected(limb1), 2200));
+                data.setLimbMuscleHealth(limb1, data.getLimbMuscleHealth(limb1) - 3);
+                data.setLimbDisinfected(limb1, Math.max(data.getLimbDisinfected(limb1), 2200));
             }
-            stack.shrink(1);
+
+            if (!source.isCreative()) stack.shrink(1);
+            source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
         });
-        return stack;
     }
 
     @Override

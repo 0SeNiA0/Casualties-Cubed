@@ -8,6 +8,7 @@ import net.adinvas.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -23,7 +24,7 @@ public class ReliefGel extends Item implements ISimpleMedicalUsable, IAllowInMed
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setPendingOpioids(data.getPendingOpioids() + 1);
             data.setLimbPain(limb, data.getLimbPain(limb) - 5);
@@ -31,12 +32,9 @@ public class ReliefGel extends Item implements ISimpleMedicalUsable, IAllowInMed
             data.setLimbMuscleHeal(limb, true);
             data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 10);
         });
-        ItemStack newitemstack = stack;
-        subNbtDurability(stack, 20);
-        if (getNbtDurability(stack) <= 0) {
-            newitemstack = ItemStack.EMPTY;
-        }
-        return newitemstack;
+
+        if (!source.isCreative()) subNbtDurability(stack, 20);
+        source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
     }
 
     @Override

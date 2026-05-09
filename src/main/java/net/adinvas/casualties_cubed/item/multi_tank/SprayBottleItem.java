@@ -23,11 +23,11 @@ public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedica
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getOnSkinAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(stack, max);
+        List<FluidStack> drained = MultiTankHelper.drain(stack, max);//TODO fake drain for creative
+        MedicalFluid MF;
         for (FluidStack fs : drained) {
-            MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());
             if (fs.hasTag()) {
                 if (fs.getTag().contains("MedicalId")) {
@@ -36,6 +36,5 @@ public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedica
             }
             MF.getMedicalEffect().applyOnSkin(target, fs.getAmount(), limb);
         }
-        return stack;
     }
 }

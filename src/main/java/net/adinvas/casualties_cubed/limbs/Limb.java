@@ -5,7 +5,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -55,48 +54,18 @@ public enum Limb {
     }
 
     public List<Limb> getConnectedLimbs(){
-            List<Limb> temp_Limb_list= new ArrayList<>();
-            switch (this){
-                case CHEST -> {
-                    temp_Limb_list.add(Limb.HEAD);
-                    temp_Limb_list.add(Limb.LEFT_ARM);
-                    temp_Limb_list.add(Limb.LEFT_LEG);
-                    temp_Limb_list.add(Limb.RIGHT_ARM);
-                    temp_Limb_list.add(Limb.RIGHT_LEG);
-                }
-                case LEFT_ARM -> {
-                    temp_Limb_list.add(Limb.CHEST);
-                    temp_Limb_list.add(Limb.LEFT_HAND);
-                }
-                case LEFT_HAND -> {
-                    temp_Limb_list.add(Limb.LEFT_ARM);
-                }
-                case RIGHT_ARM -> {
-                    temp_Limb_list.add(Limb.CHEST);
-                    temp_Limb_list.add(Limb.RIGHT_HAND);
-                }
-                case RIGHT_HAND -> {
-                    temp_Limb_list.add(Limb.RIGHT_ARM);
-                }
-                case LEFT_LEG -> {
-                    temp_Limb_list.add(Limb.CHEST);
-                    temp_Limb_list.add(Limb.LEFT_FOOT);
-                }
-                case RIGHT_LEG -> {
-                    temp_Limb_list.add(Limb.CHEST);
-                    temp_Limb_list.add(Limb.RIGHT_FOOT);
-                }
-                case LEFT_FOOT -> {
-                    temp_Limb_list.add(Limb.LEFT_LEG);
-                }
-                case RIGHT_FOOT -> {
-                    temp_Limb_list.add(Limb.RIGHT_LEG);
-                }
-                case HEAD -> {
-                    temp_Limb_list.add(Limb.CHEST);
-                }
-            }
-            return temp_Limb_list;
+        return switch (this){
+            case CHEST -> List.of(HEAD, RIGHT_ARM, LEFT_ARM, RIGHT_LEG, LEFT_LEG);
+            case LEFT_ARM -> List.of(CHEST, LEFT_HAND);
+            case LEFT_HAND -> List.of(Limb.LEFT_ARM);
+            case RIGHT_ARM -> List.of(CHEST, RIGHT_HAND);
+            case RIGHT_HAND -> List.of(Limb.RIGHT_ARM);
+            case LEFT_LEG -> List.of(CHEST, LEFT_FOOT);
+            case RIGHT_LEG -> List.of(CHEST, RIGHT_FOOT);
+            case LEFT_FOOT -> List.of(Limb.LEFT_LEG);
+            case RIGHT_FOOT -> List.of(Limb.RIGHT_LEG);
+            case HEAD -> List.of(Limb.CHEST);
+        };
     }
 
     static Limb randomLimb(){
@@ -135,21 +104,6 @@ public enum Limb {
         return limb_list[rand.nextInt(limb_list.length)];
     }
 
-
-    static InteractionHand getRightHand(Player player){
-        if (player.getMainArm()== HumanoidArm.RIGHT){
-            return InteractionHand.MAIN_HAND;
-        }
-        return InteractionHand.OFF_HAND;
-    }
-
-    static InteractionHand getLeftHand(Player player){
-        if (player.getMainArm()== HumanoidArm.LEFT){
-            return InteractionHand.MAIN_HAND;
-        }
-        return InteractionHand.OFF_HAND;
-    }
-
     public static HumanoidArm getArmFromHand(InteractionHand hand, Player player){
         HumanoidArm mainArm = player.getMainArm();
         if (hand == InteractionHand.MAIN_HAND) {
@@ -161,22 +115,12 @@ public enum Limb {
         }
     }
 
-
     public List<Limb> availableHandsForAction(){
-        List<Limb> limbList = new ArrayList<>();
-        switch (this){
-            case RIGHT_HAND,RIGHT_ARM -> {
-                limbList.add(Limb.LEFT_HAND);
-            }
-            case LEFT_ARM,LEFT_HAND ->{
-                limbList.add(Limb.RIGHT_HAND);
-            }
-            default -> {
-                limbList.add(Limb.LEFT_HAND);
-                limbList.add(Limb.RIGHT_HAND);
-            }
-        }
-        return limbList;
+        return switch (this) {
+            case RIGHT_HAND, RIGHT_ARM -> List.of(Limb.LEFT_HAND);
+            case LEFT_ARM, LEFT_HAND -> List.of(Limb.RIGHT_HAND);
+            default -> List.of(RIGHT_HAND, LEFT_HAND);
+        };
     }
 }
 

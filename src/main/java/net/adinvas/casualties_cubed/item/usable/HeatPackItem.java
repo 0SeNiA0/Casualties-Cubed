@@ -8,6 +8,7 @@ import net.adinvas.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -23,19 +24,15 @@ public class HeatPackItem extends Item implements ISimpleMedicalUsable, IAllowIn
     }
 
     @Override
-    public ItemStack onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) + 10);
-            h.setLimbMuscleHeal(limb, true);
-            h.setTemperature(h.getTemperature() + .5f);
-
+    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 10);
+            data.setLimbMuscleHeal(limb, true);
+            data.setTemperature(data.getTemperature() + .5f);
         });
-        ItemStack newitemstack = stack;
-        subNbtDurability(stack, 20);
-        if (getNbtDurability(stack) <= 0) {
-            newitemstack = ItemStack.EMPTY;
-        }
-        return newitemstack;
+
+        if (!source.isCreative()) subNbtDurability(stack, 20);
+        source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
     }
 
     @Override
