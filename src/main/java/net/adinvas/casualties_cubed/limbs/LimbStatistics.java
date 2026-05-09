@@ -10,23 +10,163 @@ public class LimbStatistics {
     float infection = 0f;//
     float fracture = 0f;//
     float dislocation = 0f;
-    int shrapnell = 0;//
+    int shrapnel = 0;//
     boolean hasSplint = false;//
     float bleedRate = 0f;//
     float desinfectionTimer = 0f;//
-    float MinPain = 0f;//
+    float minPain = 0f;//
     float finalPain = 0f;
-    boolean SkinHeal = false;
-    boolean MuscleHeal = false;
-    boolean Tourniquet = false;
+    boolean skinHeal = false;
+    boolean muscleHeal = false;
+    boolean tourniquet = false;
     int tourniquetTimer = 0;
     boolean amputated = false;
     float regrowthProgress = 0;
 
     LimbStatistics(){}
 
+    public float getSkinHealth() {
+        return skinHealth;
+    }
+
+    public void setSkinHealth(float skinHealth) {
+        this.skinHealth = skinHealth;
+    }
+
+    public float getMuscleHealth() {
+        return muscleHealth;
+    }
+
+    public void setMuscleHealth(float muscleHealth) {
+        this.muscleHealth = muscleHealth;
+    }
+
+    public float getPain() {
+        return pain;
+    }
+
+    public void setPain(float pain) {
+        this.pain = pain;
+    }
+
+    public float getInfection() {
+        return infection;
+    }
+
+    public void setInfection(float infection) {
+        this.infection = infection;
+    }
+
+    public float getFracture() {
+        return fracture;
+    }
+
+    public void setFracture(float fracture) {
+        this.fracture = fracture;
+    }
+
+    public float getDislocation() {
+        return dislocation;
+    }
+
+    public void setDislocation(float dislocation) {
+        this.dislocation = dislocation;
+    }
+
+    public int getShrapnel() {
+        return shrapnel;
+    }
+
+    public void setShrapnel(int shrapnel) {
+        this.shrapnel = shrapnel;
+    }
+
+    public float getBleedRate() {
+        return bleedRate;
+    }
+
+    public void setBleedRate(float bleedRate) {
+        this.bleedRate = bleedRate;
+    }
+
+    public boolean isHasSplint() {
+        return hasSplint;
+    }
+
+    public void setHasSplint(boolean hasSplint) {
+        this.hasSplint = hasSplint;
+    }
+
+    public float getDisinfectionTimer() {
+        return desinfectionTimer;
+    }
+
+    public void setDisinfectionTimer(float disinfectionTimer) {
+        this.desinfectionTimer = disinfectionTimer;
+    }
+
+    public float getMinPain() {
+        return minPain;
+    }
+
+    public void setMinPain(float minPain) {
+        this.minPain = minPain;
+    }
+
+    public float getFinalPain() {
+        return finalPain;
+    }
+
+    public void setFinalPain(float finalPain) {
+        this.finalPain = finalPain;
+    }
+
+    public boolean isSkinHeal() {
+        return skinHeal;
+    }
+
+    public void setSkinHeal(boolean skinHeal) {
+        this.skinHeal = skinHeal;
+    }
+
+    public boolean isMuscleHeal() {
+        return muscleHeal;
+    }
+
+    public void setMuscleHeal(boolean muscleHeal) {
+        this.muscleHeal = muscleHeal;
+    }
+
+    public boolean isTourniquet() {
+        return tourniquet;
+    }
+
+    public void setTourniquet(boolean tourniquet) {
+        this.tourniquet = tourniquet;
+    }
+
+    public int getTourniquetTimer() {
+        return tourniquetTimer;
+    }
+
+    public void setTourniquetTimer(int tourniquetTimer) {
+        this.tourniquetTimer = tourniquetTimer;
+    }
+
     public boolean isAmputated() {
         return amputated;
+    }
+
+    public void setAmputated(boolean amputated) {
+        this.amputated = amputated;
+    }
+
+    public float getRegrowthProgress() {
+        return regrowthProgress;
+    }
+
+    public void setRegrowthProgress(float regrowthProgress) {
+        this.regrowthProgress = regrowthProgress;
     }
 
     void copyFrom(LimbStatistics other) {
@@ -36,15 +176,15 @@ public class LimbStatistics {
         infection = other.infection;
         fracture = other.fracture;
         dislocation = other.dislocation;
-        shrapnell = other.shrapnell;
+        shrapnel = other.shrapnel;
         hasSplint = other.hasSplint;
         bleedRate = other.bleedRate;
         desinfectionTimer = other.desinfectionTimer;
-        MinPain = other.MinPain;
+        minPain = other.minPain;
         finalPain = other.finalPain;
-        SkinHeal = other.SkinHeal;
-        MuscleHeal = other.MuscleHeal;
-        Tourniquet = other.Tourniquet;
+        skinHeal = other.skinHeal;
+        muscleHeal = other.muscleHeal;
+        tourniquet = other.tourniquet;
         tourniquetTimer = other.tourniquetTimer;
         amputated = other.amputated;
         regrowthProgress = other.regrowthProgress;
@@ -57,15 +197,15 @@ public class LimbStatistics {
         tag.putFloat("Infection", infection);
         tag.putFloat("FractureTimer", fracture);
         tag.putFloat("Dislocated", dislocation);
-        tag.putInt("Shrapnell", shrapnell);
+        tag.putInt("Shrapnell", shrapnel);
         tag.putBoolean("HasSplint", hasSplint);
         tag.putFloat("BleedRate", bleedRate);
         tag.putFloat("DesinfectionTimer", desinfectionTimer);
-        tag.putFloat("MinPain", MinPain);
+        tag.putFloat("MinPain", minPain);
         tag.putFloat("FinalPain", finalPain);
-        tag.putBoolean("SkinHeal", SkinHeal);
-        tag.putBoolean("MuscleHeal", MuscleHeal);
-        tag.putBoolean("Tourniquet", Tourniquet);
+        tag.putBoolean("SkinHeal", skinHeal);
+        tag.putBoolean("MuscleHeal", muscleHeal);
+        tag.putBoolean("Tourniquet", tourniquet);
         tag.putInt("TourniquetTime", tourniquetTimer);
         tag.putBoolean("Amputated", amputated);
         tag.putFloat("RegrowthProgress", regrowthProgress);
@@ -78,15 +218,15 @@ public class LimbStatistics {
         if (tag.contains("Infection")) infection = tag.getFloat("Infection");
         if (tag.contains("FractureTimer")) fracture = tag.getFloat("FractureTimer");
         if (tag.contains("Dislocated")) dislocation = tag.getFloat("Dislocated");
-        if (tag.contains("Shrapnell")) shrapnell = tag.getInt("Shrapnell");
+        if (tag.contains("Shrapnell")) shrapnel = tag.getInt("Shrapnell");
         if (tag.contains("HasSplint")) hasSplint = tag.getBoolean("HasSplint");
         if (tag.contains("BleedRate")) bleedRate = tag.getFloat("BleedRate");
         if (tag.contains("DesinfectionTimer")) desinfectionTimer = tag.getFloat("DesinfectionTimer");
-        if (tag.contains("MinPain")) MinPain = tag.getFloat("MinPain");
+        if (tag.contains("MinPain")) minPain = tag.getFloat("MinPain");
         if (tag.contains("FinalPain")) finalPain = tag.getFloat("FinalPain");
-        if (tag.contains("SkinHeal")) SkinHeal = tag.getBoolean("SkinHeal");
-        if (tag.contains("MuscleHeal")) MuscleHeal = tag.getBoolean("MuscleHeal");
-        if (tag.contains("Tourniquet")) Tourniquet = tag.getBoolean("Tourniquet");
+        if (tag.contains("SkinHeal")) skinHeal = tag.getBoolean("SkinHeal");
+        if (tag.contains("MuscleHeal")) muscleHeal = tag.getBoolean("MuscleHeal");
+        if (tag.contains("Tourniquet")) tourniquet = tag.getBoolean("Tourniquet");
         if (tag.contains("TourniquetTime")) tourniquetTimer = tag.getInt("TourniquetTime");
         if (tag.contains("Amputated")) amputated = tag.getBoolean("Amputated");
         if (tag.contains("RegrowthProgress")) regrowthProgress = tag.getFloat("RegrowthProgress");
@@ -103,15 +243,15 @@ public class LimbStatistics {
                 ", infection=" + infection +
                 ", fractureTimer=" + fracture +
                 ", dislocatedTimer=" + dislocation +
-                ", shrapnell=" + shrapnell +
+                ", shrapnell=" + shrapnel +
                 ", hasSplint=" + hasSplint +
                 ", bleedRate=" + bleedRate +
                 ", desinfectionTimer=" + desinfectionTimer +
-                ", minPain=" + MinPain +
+                ", minPain=" + minPain +
                 ", finalPain=" + finalPain +
-                ", skinHeal=" + SkinHeal +
-                ", muscleHeal=" + MuscleHeal +
-                ", tourniquet=" + Tourniquet +
+                ", skinHeal=" + skinHeal +
+                ", muscleHeal=" + muscleHeal +
+                ", tourniquet=" + tourniquet +
                 ", tourniquetTimer=" + tourniquetTimer +
                 '}';
     }

@@ -27,7 +27,7 @@ public class ReducedContiousnessOverlay implements IOverlay {
         intensity = (float) Mth.lerp(0.25,lastInt,intensity);
         lastInt = intensity;
         if (intensity>0.95){
-            Component text = Component.translatable("casualties_cubed.gui.give_up",Component.keybind("key.protoype_pain.give_up"));
+            Component text = Component.translatable("casualties_cubed.gui.give_up",Component.keybind("key.casualties_cubed.give_up"));
             ms.drawCenteredString(mc.font,text,width/2,height/2,0xFFFFFF);
         }
         if (dying){

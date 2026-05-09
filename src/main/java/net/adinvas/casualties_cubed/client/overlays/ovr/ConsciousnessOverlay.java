@@ -6,6 +6,7 @@ import net.adinvas.casualties_cubed.CasualtiesCubed;
 import net.adinvas.casualties_cubed.PlayerHealthProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -13,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class ConsciousnessOverlay implements IOverlay {
 
-    private static final ResourceLocation VIGNETTE_LOCATION = CasualtiesCubed.resourceLoc("textures/consciousness_vignette.png");//ResourceLocation.withDefaultNamespace("textures/misc/consciousness_vignette.png");
+    private static final ResourceLocation VIGNETTE_LOCATION = CasualtiesCubed.resourceLoc("textures/consciousness_vignette.png");
 
     private float intensity = 1;
     private float brain = 100;
@@ -48,11 +49,11 @@ public class ConsciousnessOverlay implements IOverlay {
         }
 
         ms.setColor(1F, 1F, 1F, intensity);
-        ms.fill(0,0,width,height,0xFF000000);
+        ms.fill(RenderType.guiOverlay(), 0,0,width,height,0xFF000000);
         ms.flush();
         ms.setColor(1F, 1F, 1F, 1);
         if (intensity > 0.95){
-            Component text = Component.translatable("casualties_cubed.gui.give_up",Component.keybind("key.protoype_pain.give_up"));
+            Component text = Component.translatable("casualties_cubed.gui.give_up",Component.keybind("key.casualties_cubed.give_up"));
             ms.drawCenteredString(mc.font,text,width/2,height/2,0xFFFFFF);
         }
 

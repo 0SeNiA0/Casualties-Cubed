@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import net.adinvas.casualties_cubed.registry.ModMedicalFluids;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.adinvas.casualties_cubed.PlayerHealthProvider;
 import net.adinvas.casualties_cubed.fluid_system.MedicalFluid;
 import net.adinvas.casualties_cubed.fluid_system.ModFluids;
@@ -12,6 +12,7 @@ import net.adinvas.casualties_cubed.fluid_system.MultiTankHelper;
 import net.adinvas.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.adinvas.casualties_cubed.limbs.Limb;
 import net.adinvas.casualties_cubed.limbs.PlayerHealthData;
+import net.adinvas.casualties_cubed.registry.ModMedicalFluids;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -33,13 +34,26 @@ import java.util.Optional;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModCommands {
 
+    private static final SuggestionProvider<CommandSourceStack> LIMBS = (context, builder) -> {
+        for (Limb e : Limb.values()) {
+            builder.suggest(e.name().toLowerCase()); // lowercase is more user-friendly
+        }
+        return builder.buildFuture();
+    };
+
+    private static final SuggestionProvider<CommandSourceStack> MED_FLUIDS = (context, builder) -> {
+        for (RegistryObject<MedicalFluid> medicalFluid: ModMedicalFluids.MEDICAL_FLUIDS.getEntries()){
+            builder.suggest(medicalFluid.getId().toString());
+        }
+        return builder.buildFuture();
+    };
+
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         dispatcher.register(
-                Commands.literal("prototypepain")
+                Commands.literal("casualties_cubed")
                 .requires(source -> source.hasPermission(0))
-
                 .then(Commands.literal("heal")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("targets", EntityArgument.players())
@@ -62,12 +76,7 @@ public class ModCommands {
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .then(Commands.argument("limb", StringArgumentType.word())
-                                        .suggests((ctx, builder) -> {
-                                            for (Limb e : Limb.values()) {
-                                                builder.suggest(e.name().toLowerCase()); // lowercase is more user-friendly
-                                            }
-                                            return builder.buildFuture();
-                                        })
+                                        .suggests(LIMBS)
                                         .executes(ctx -> {
                                             String raw = StringArgumentType.getString(ctx, "limb");
                                             Limb limb = Limb.valueOf(raw.toUpperCase());
@@ -104,12 +113,7 @@ public class ModCommands {
                         .requires(source ->source.hasPermission(2))
                         .then(Commands.argument("target",EntityArgument.player())
                                 .then(Commands.argument("limb",StringArgumentType.word())
-                                        .suggests((ctx, builder) -> {
-                                            for (Limb e : Limb.values()) {
-                                                builder.suggest(e.name().toLowerCase()); // lowercase is more user-friendly
-                                            }
-                                            return builder.buildFuture();
-                                        })
+                                        .suggests(LIMBS)
                                         .then(Commands.argument("field",StringArgumentType.word())
                                                 .suggests((ctx,builder) -> {
                                                     builder.suggest("skinhealth");
@@ -224,12 +228,7 @@ public class ModCommands {
                         .requires(source ->source.hasPermission(2))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .then(Commands.argument("limb", StringArgumentType.word())
-                                        .suggests((ctx, builder) -> {
-                                            for (Limb e : Limb.values()) {
-                                                builder.suggest(e.name().toLowerCase()); // lowercase is more user-friendly
-                                            }
-                                            return builder.buildFuture();
-                                        })
+                                        .suggests(LIMBS)
                                         .executes(ctx -> {
                                             String raw = StringArgumentType.getString(ctx, "limb");
                                             Limb limb = Limb.valueOf(raw.toUpperCase());
@@ -250,12 +249,7 @@ public class ModCommands {
                 .then(Commands.literal("fillfluid")
                         .requires(source->source.hasPermission(2))
                         .then(Commands.argument("fluid", ResourceLocationArgument.id())
-                                .suggests((ctx,builder)->{
-                                    for (RegistryObject<MedicalFluid> medicalFluid: ModMedicalFluids.MEDICAL_FLUIDS.getEntries()){
-                                        builder.suggest(medicalFluid.getId().toString());
-                                    }
-                                    return builder.buildFuture();
-                                })
+                                .suggests(MED_FLUIDS)
                                 .then(Commands.argument("amount", IntegerArgumentType.integer())
                                         .executes(ctx -> {
                                             ResourceLocation id = ResourceLocationArgument.getId(ctx,"fluid");

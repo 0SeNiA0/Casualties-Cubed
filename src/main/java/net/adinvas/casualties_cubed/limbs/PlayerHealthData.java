@@ -1,18 +1,18 @@
 package net.adinvas.casualties_cubed.limbs;
 
-import net.adinvas.casualties_cubed.ModDamageTypes;
-import net.adinvas.casualties_cubed.registry.ModGameRules;
-import net.adinvas.casualties_cubed.registry.ModSounds;
 import net.adinvas.casualties_cubed.CasualtiesCubed;
+import net.adinvas.casualties_cubed.ModDamageTypes;
 import net.adinvas.casualties_cubed.compat.TempCompat;
 import net.adinvas.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.adinvas.casualties_cubed.compat.serene_seasons.SereneSeasonsUtil;
 import net.adinvas.casualties_cubed.config.ServerConfig;
 import net.adinvas.casualties_cubed.hitbox.HitSector;
-import net.adinvas.casualties_cubed.registry.ModItems;
 import net.adinvas.casualties_cubed.network.MedicalAction;
 import net.adinvas.casualties_cubed.network.ModNetwork;
 import net.adinvas.casualties_cubed.network.packet.ClientboundTriggerLastStandPacket;
+import net.adinvas.casualties_cubed.registry.ModGameRules;
+import net.adinvas.casualties_cubed.registry.ModItems;
+import net.adinvas.casualties_cubed.registry.ModSounds;
 import net.adinvas.casualties_cubed.tags.ModItemTags;
 import net.adinvas.prototype_physics.RagdollPart;
 import net.minecraft.core.BlockPos;
@@ -50,7 +50,6 @@ import net.minecraftforge.network.PacketDistributor;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.*;
-import java.util.List;
 
 public class PlayerHealthData {
 
@@ -419,7 +418,7 @@ public class PlayerHealthData {
 
 
     public void setLimbMinPain(Limb limb, float paintarget) {
-        ensureLimb(limb).MinPain = paintarget;
+        ensureLimb(limb).minPain = paintarget;
     }
 
 
@@ -454,11 +453,11 @@ public class PlayerHealthData {
 
 
     public int hasLimbShrapnel(Limb limb) {
-        return ensureLimb(limb).shrapnell;
+        return ensureLimb(limb).shrapnel;
     }
 
     public void setLimbShrapnel(Limb limb, int shrapnel) {
-        ensureLimb(limb).shrapnell = Math.min(shrapnel, 5);
+        ensureLimb(limb).shrapnel = Math.min(shrapnel, 5);
     }
 
 
@@ -529,7 +528,7 @@ public class PlayerHealthData {
         float bleed_all = 0f;
         for (Limb limb : limbStats.keySet()) {
             LimbStatistics stats = limbStats.get(limb);
-            if (!stats.Tourniquet && !isOppositeToChestUnderTourniquet(limb)) {
+            if (!stats.tourniquet && !isOppositeToChestUnderTourniquet(limb)) {
                 bleed_all += stats.bleedRate;
             }
         }
@@ -730,11 +729,11 @@ public class PlayerHealthData {
     }
 
     public void setTourniquet(Limb limb, boolean value) {
-        ensureLimb(limb).Tourniquet = value;
+        ensureLimb(limb).tourniquet = value;
     }
 
     public boolean getTourniquet(Limb limb) {
-        return ensureLimb(limb).Tourniquet;
+        return ensureLimb(limb).tourniquet;
     }
 
     public boolean isBreathing() {
@@ -771,7 +770,7 @@ public class PlayerHealthData {
         if (stats.amputated) {
             stats.muscleHealth = 0;
             stats.infection = 0;
-            stats.Tourniquet = false;
+            stats.tourniquet = false;
             stats.skinHealth = 0;
             stats.hasSplint = false;
             stats.bleedRate = 0;
@@ -780,7 +779,7 @@ public class PlayerHealthData {
             stats.dislocation = 0;
             stats.tourniquetTimer = 0;
             stats.pain = 0;
-            stats.shrapnell = 0;
+            stats.shrapnel = 0;
             stats.desinfectionTimer = 0;
             return;
         }
@@ -788,18 +787,18 @@ public class PlayerHealthData {
 
         //MinpainCalculation
 
-        stats.MinPain = ((stats.infection / 100) * 10) + (((stats.skinHealth - 100) / -100) * 15);
+        stats.minPain = ((stats.infection / 100) * 10) + (((stats.skinHealth - 100) / -100) * 15);
 
         //Healing
-        if (stats.SkinHeal && stats.shrapnell <= 0) {
+        if (stats.skinHeal && stats.shrapnel <= 0) {
             stats.skinHealth += getBOOSTED_LIMB_HEAL_RATE();
         } else {
             stats.skinHealth += getNORMAL_LIMB_HEAL_RATE();
         }
 
-        if (stats.MuscleHeal && stats.shrapnell <= 0 && stats.infection <= 0) {
+        if (stats.muscleHeal && stats.shrapnel <= 0 && stats.infection <= 0) {
             stats.muscleHealth += getBOOSTED_LIMB_HEAL_RATE();
-        } else if (stats.shrapnell <= 0 && stats.infection <= 0) {
+        } else if (stats.shrapnel <= 0 && stats.infection <= 0) {
             stats.muscleHealth += getNORMAL_LIMB_HEAL_RATE();
         }
         stats.skinHealth = Math.min(stats.skinHealth, 100);
@@ -808,12 +807,12 @@ public class PlayerHealthData {
         // Pain Adjustment
         float x = stats.pain / 100f;
         float decay = 0.05f + 0.1f * (float) Math.pow(x, 1.2f);
-        if (stats.Tourniquet) {
+        if (stats.tourniquet) {
             if (stats.pain > 60) {
-                stats.pain = Math.max(stats.MinPain, stats.pain - decay * (1 + (Math.max(0, getNetOpiodids() / 40))));
+                stats.pain = Math.max(stats.minPain, stats.pain - decay * (1 + (Math.max(0, getNetOpiodids() / 40))));
             }
         } else {
-            stats.pain = Math.max(stats.MinPain, stats.pain - decay * (1 + (Math.max(0, getNetOpiodids()) / 40)));
+            stats.pain = Math.max(stats.minPain, stats.pain - decay * (1 + (Math.max(0, getNetOpiodids()) / 40)));
         }
 
         // Infection Adjustment
@@ -857,7 +856,7 @@ public class PlayerHealthData {
             stats.muscleHealth += getBOOSTED_LIMB_HEAL_RATE() * 3;
         }
 
-        if (stats.Tourniquet) {
+        if (stats.tourniquet) {
             // Pain ramps up towards 40
             if (stats.pain < 60) {
                 stats.pain = Math.min(60, stats.pain + getTOURNIQUET_PAIN_PER_TICK());
@@ -889,11 +888,11 @@ public class PlayerHealthData {
     }
 
     public void setLimbMuscleHeal(Limb limb, boolean value) {
-        ensureLimb(limb).MuscleHeal = value;
+        ensureLimb(limb).muscleHeal = value;
     }
 
     public void setLimbSkinHeal(Limb limb, boolean value) {
-        ensureLimb(limb).SkinHeal = value;
+        ensureLimb(limb).skinHeal = value;
     }
 
 
@@ -919,8 +918,8 @@ public class PlayerHealthData {
 
     public void applySkinDamage(Limb limb, float damage) {
         limbStats.get(limb).skinHealth = (float) Math.max(limbStats.get(limb).skinHealth - damage * getDAMAGE_SCALE(), 0);
-        limbStats.get(limb).SkinHeal = false;
-        limbStats.get(limb).MuscleHeal = false;
+        limbStats.get(limb).skinHeal = false;
+        limbStats.get(limb).muscleHeal = false;
 
     }
 
@@ -946,8 +945,8 @@ public class PlayerHealthData {
             internalBleeding += (damage / 15) * (getMAX_BLEED_RATE() / 3);
         }
         limbStats.get(limb).muscleHealth = (float) Math.max(limbStats.get(limb).muscleHealth - damage * getDAMAGE_SCALE(), 0);
-        limbStats.get(limb).SkinHeal = false;
-        limbStats.get(limb).MuscleHeal = false;
+        limbStats.get(limb).skinHeal = false;
+        limbStats.get(limb).muscleHeal = false;
         if (Math.random() > 0.9 && limb == Limb.HEAD) {
             brainHealth -= (float) (Math.random() * 5);
         }
@@ -1142,7 +1141,7 @@ public class PlayerHealthData {
         double headpenalty = Math.min((limbStats.get(Limb.HEAD).muscleHealth - 50) * 2, 0);
 
         if (limbStats.get(Limb.HEAD).muscleHealth < 15) {
-            limbStats.get(Limb.HEAD).MuscleHeal = true;
+            limbStats.get(Limb.HEAD).muscleHeal = true;
         }
         if (consciousnessCap > 100 + headpenalty) consciousnessCap = (float) (100 + headpenalty);
 
@@ -1659,7 +1658,7 @@ public class PlayerHealthData {
                 source.getInventory().add(new ItemStack(ModItems.SPLINT.get()));
             }
             case REMOVE_TOURNIQUET -> {
-                limbStats.get(limb).Tourniquet = false;
+                limbStats.get(limb).tourniquet = false;
                 ItemHandlerHelper.giveItemToPlayer(source, new ItemStack(ModItems.TOURNIQUET.get()));
             }
         }
@@ -2042,7 +2041,7 @@ public class PlayerHealthData {
         }
         for (Limb limb : limbStats.keySet()) {
             LimbStatistics lstat = limbStats.get(limb);
-            if (lstat.Tourniquet) {
+            if (lstat.tourniquet) {
                 player.getInventory().add(new ItemStack(ModItems.TOURNIQUET.get()));
             }
             if (lstat.hasSplint) {

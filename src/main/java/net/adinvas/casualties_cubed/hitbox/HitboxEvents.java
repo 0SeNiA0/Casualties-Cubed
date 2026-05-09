@@ -1,6 +1,5 @@
 package net.adinvas.casualties_cubed.hitbox;
 
-
 import net.adinvas.casualties_cubed.PlayerHealthProvider;
 import net.adinvas.casualties_cubed.tags.ModDamageTypeTags;
 import net.minecraft.core.registries.Registries;

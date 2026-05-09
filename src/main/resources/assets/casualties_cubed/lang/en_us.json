@@ -245,7 +245,7 @@
 
   "key.casualties_cubed.open_pain_gui": "Open Health Screen",
   "key.casualties_cubed.give_up": "Give Up",
-  "key.categories.casualties_cubed": "Prototype: Pain",
+  "key.categories.casualties_cubed": "Casualties: Cubed",
 
   "itemGroup.casualties_cubed_tab": "Prototype: Pain",
   "casualties_cubed.gui.bandage_instruction1": "Wrap the bandage around the limb to stop the bleeding.",
