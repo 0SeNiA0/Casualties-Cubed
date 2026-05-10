@@ -29,6 +29,9 @@ public class ConsciousnessOverlay implements IOverlay {
         int height = mc.getWindow().getGuiScaledHeight();
         intensity = (float) Mth.lerp(0.25,lastInt,intensity);
         lastInt = intensity;
+
+        float b = intensity <= .2 ? Mth.lerp(intensity * 5, 0, 1) : 1;
+
         if (intensity < 1){
 
             RenderSystem.disableDepthTest();
@@ -36,7 +39,7 @@ public class ConsciousnessOverlay implements IOverlay {
 
             // Use multiplicative blending so white is transparent, black darkens screen
             RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR);
-            float intensity2 = .8f + intensity * .2f;//(float) Math.pow(intensity,2);
+            float intensity2 = b * .8f + intensity * .2f;
             ms.setColor(intensity2, intensity2, intensity2, 1f);
             ms.blit(
                     VIGNETTE_LOCATION,
@@ -47,9 +50,8 @@ public class ConsciousnessOverlay implements IOverlay {
             );
             RenderSystem.defaultBlendFunc();
         }
-
-        ms.setColor(1F, 1F, 1F, intensity);
-        ms.fill(RenderType.guiOverlay(), 0,0,width,height,0xFF000000);
+        ms.setColor(b, b, b, intensity);
+        ms.fill(RenderType.guiOverlay(), 0,0,width,height, 0xFF000000);
         ms.flush();
         ms.setColor(1F, 1F, 1F, 1);
         if (intensity > 0.95){
