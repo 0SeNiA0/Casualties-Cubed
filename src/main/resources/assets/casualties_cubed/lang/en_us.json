@@ -18,7 +18,7 @@
 
   "casualties_cubed.gui.inject": "Inject",
   "casualties_cubed.gui.give_up": "Press %1$s to Give Up.",
-  "casualties_cubed.gui.fluid_screen": "Press %1$s to Open Fluid GUI",
+  "casualties_cubed.gui.fluid_screen": "Press %1$s to transfer fluids",
   "casualties_cubed.gui.syringe_instruction": "Push the syringe down to inject. Make sure to check the dosage.",
   "casualties_cubed.gui.minigame_exit": "Press ESC to Exit",
 

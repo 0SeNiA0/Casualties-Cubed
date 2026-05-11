@@ -1,0 +1,71 @@
+package net.zaharenko424.casualties_cubed.client.moodles;
+
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class BleedMoodle extends AbstractMoodleVisual {
+
+    @Override
+    public MoodleStatus calculateStatus(Player player) {
+        AtomicReference<MoodleStatus> status = new AtomicReference<>(this.getMoodleStatus());
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
+            float bleed = h.getCombinedBleed();
+            if (bleed > 0.6f / 20 / 60) {
+                status.set(MoodleStatus.CRITICAL);
+            } else if (bleed > 0.3f / 20 / 60) {
+                status.set(MoodleStatus.HEAVY);
+            } else if (bleed > 0.15f / 20 / 60) {
+                status.set(MoodleStatus.NORMAL);
+            } else if (bleed > 0.05f / 20 / 60) {
+                status.set(MoodleStatus.LIGHT);
+            } else {
+                status.set(MoodleStatus.NONE);
+            }
+        });
+        if (status.get()!=null){
+            return status.get();
+        }
+        return this.getMoodleStatus();
+
+    }
+
+    @Override
+    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/blood_moodle.png");
+        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+    }
+
+    @Override
+    public List<Component> getTooltip(Player player) {
+        List<Component> componentList = new ArrayList<>();
+        switch (getMoodleStatus()){
+            case LIGHT -> {
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title1"));
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description1").withStyle(ChatFormatting.GRAY));
+            }
+            case NORMAL -> {
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title2").withStyle(ChatFormatting.YELLOW));
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description2").withStyle(ChatFormatting.GRAY));
+            }
+            case HEAVY -> {
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title3").withStyle(ChatFormatting.GOLD));
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description3").withStyle(ChatFormatting.GRAY));
+            }
+            case CRITICAL -> {
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title4").withStyle(ChatFormatting.RED));
+                componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description4").withStyle(ChatFormatting.GRAY));
+            }
+        }
+        return componentList;
+    }
+
+}

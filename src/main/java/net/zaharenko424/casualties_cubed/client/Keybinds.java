@@ -1,0 +1,17 @@
+package net.zaharenko424.casualties_cubed.client;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import org.lwjgl.glfw.GLFW;
+
+public class Keybinds {
+
+    public static KeyMapping OPEN_PAIN_GUI = new KeyMapping("key.casualties_cubed.open_pain_gui", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_P,"key.categories.casualties_cubed");
+    public static KeyMapping GIVE_UP = new KeyMapping("key.casualties_cubed.give_up",InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K,"key.categories.casualties_cubed");
+
+    public static void register(RegisterKeyMappingsEvent event){
+        event.register(OPEN_PAIN_GUI);
+        event.register(GIVE_UP);
+    }
+}

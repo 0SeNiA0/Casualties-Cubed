@@ -1,10 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.adinvas.casualties_cubed.mixin",
+  "package": "net.zaharenko424.casualties_cubed.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "casualties_cubed.refmap.json",
-  "plugin": "net.adinvas.casualties_cubed.mixin.MixingConfig",
+  "plugin": "net.zaharenko424.casualties_cubed.mixin.MixingConfig",
   "mixins": [
     "PlayerMixin"
   ],
