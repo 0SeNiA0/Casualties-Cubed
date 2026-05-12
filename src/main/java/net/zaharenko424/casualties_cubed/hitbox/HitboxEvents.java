@@ -1,7 +1,5 @@
 package net.zaharenko424.casualties_cubed.hitbox;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.tags.ModDamageTypeTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +24,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.tags.ModDamageTypeTags;
 
 import java.util.List;
 import java.util.Map;
@@ -93,63 +93,60 @@ public class HitboxEvents {
         float damageamount = event.getAmount(); // final damage after armor/enchantments
         DamageSource src = (ctx != null && ctx.source != null) ? ctx.source : event.getSource();
 
-        if (src.is(ModDamageTypeTags.IGNORE))return;
-        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount) || damageamount == Float.POSITIVE_INFINITY)return;
-        if (src.is(DamageTypes.FREEZE)){
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setTemperature(h.getTemperature()- damageamount *1.8f);
-            });
-            event.setAmount(0);
+        if (src.is(ModDamageTypeTags.IGNORE)) return;
+        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount) || damageamount == Float.POSITIVE_INFINITY)
             return;
-        }
-        if (src.is(DamageTypes.FALL)){
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.handleFallDamage(damageamount,player);
-            });
-            event.setAmount(0);
-            return;
-        }
-        if (src.is(CBCmg)||src.is(CBCmgwat)) {
+        if (src.is(DamageTypes.FREEZE)) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleProjectileDamage(HitSector.getCBCChances(), damageamount,player);
+                h.setTemperature(h.getTemperature() - damageamount * 1.8f);
             });
             event.setAmount(0);
             return;
-        } else if (src.is(CBCproj)||src.is(CBCprojbig)||src.is(CBCtraff)) {
-            if (damageamount<5){
-                float finalDamage = damageamount*15;
+        }
+        if (src.is(DamageTypes.FALL)) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.handleFallDamage(damageamount, player);
+            });
+            event.setAmount(0);
+            return;
+        }
+        if (src.is(CBCmg) || src.is(CBCmgwat)) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.handleProjectileDamage(HitSector.getCBCChances(), damageamount, player);
+            });
+            event.setAmount(0);
+            return;
+        } else if (src.is(CBCproj) || src.is(CBCprojbig) || src.is(CBCtraff)) {
+            if (damageamount < 5) {
+                float finalDamage = damageamount * 15;
 
                 player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage,player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
                 });
-            }else {
+            } else {
                 player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                    h.handleExplosionDamage(damageamount, true,player);
+                    h.handleExplosionDamage(damageamount, true, player);
                 });
             }
             event.setAmount(0);
             return;
-        } else if (src.is(DamageTypeTags.IS_EXPLOSION)){
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.handleExplosionDamage(damageamount,event.getSource().is(ModDamageTypeTags.SHRAPNELL),player);
+        } else if (src.is(DamageTypeTags.IS_EXPLOSION)) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.handleExplosionDamage(damageamount, event.getSource().is(ModDamageTypeTags.SHRAPNELL), player);
             });
             event.setAmount(0);
             return;
-        }
-
-        else if (isAnyProjectile(src)){
+        } else if (isAnyProjectile(src)) {
             Entity directEntity = event.getSource().getDirectEntity();
             if ((directEntity instanceof Projectile projectile)) {
-                ;
                 Vec3 hitPos = sweepProjectileStep(projectile, player);
-
             /*
             if (event.getSource().getEntity() instanceof Player pp){
                 pp.sendSystemMessage(Component.literal("hitpos "+hitPos));
@@ -170,55 +167,54 @@ public class HitboxEvents {
                 event.setAmount(0);
                 return;
             }
-        }
-        else if (src.is(ModDamageTypeTags.MAGIC)||event.getSource().is(DamageTypes.MAGIC)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
+        } else if (src.is(ModDamageTypeTags.MAGIC) || event.getSource().is(DamageTypes.MAGIC)) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                 h.handleMagicDamage(damageamount, (ServerPlayer) player);
             });
             event.setAmount(0);
             return;
         } else if (src.is(DamageTypeTags.IS_FIRE)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.handleFireDamage(damageamount,player);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.handleFireDamage(damageamount, player);
             });
             event.setAmount(0);
             return;
-        }
-        else if (src.getEntity() instanceof Player shooter) {
+        } else if (src.getEntity() instanceof Player shooter) {
             double range = 400.0;
             EntityHitResult hitPos = rayTraceLivingEntity(shooter, range);
+            if (hitPos == null) {
+                return;
+            }
             // Your custom hit sector logic
             HitSector hit = detectHit(player, hitPos.getLocation());
             // This damage value is AFTER vanilla reductions (armor, resistance, etc.)
             float finalDamage = event.getAmount();
             // Call into your capability with final damage
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleProjectileDamage(hit, finalDamage,player);
+                h.handleProjectileDamage(hit, finalDamage, player);
             });
             event.setAmount(0);
             return;
-        }
-        else if (src.is(DamageTypeTags.BYPASSES_ARMOR)){
+        } else if (src.is(DamageTypeTags.BYPASSES_ARMOR)) {
 
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.handleRandomDamage(damageamount,player);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.handleRandomDamage(damageamount, player);
             });
             event.setAmount(0);
             return;
         }
         //fuck you warium
 
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            h.handleRandomDamage(damageamount,player);
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            h.handleRandomDamage(damageamount, player);
         });
         event.setAmount(0);
     }
 
 
-
     //@SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void oLivingDamage(LivingHurtEvent event){
-        if (!(event.getEntity() instanceof Player player))return;
+    public static void oLivingDamage(LivingHurtEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
         float absorb = player.getAbsorptionAmount();
         float damageamount = event.getAmount();
 
@@ -227,12 +223,12 @@ public class HitboxEvents {
             float reduction = 0.2f * (amp + 1); // 20% per level
             damageamount *= (1.0f - reduction);
         }
-        if (absorb>0){
-            float reduction = Math.min(absorb, damageamount*0.75f);
-            player.setAbsorptionAmount(absorb-reduction);
+        if (absorb > 0) {
+            float reduction = Math.min(absorb, damageamount * 0.75f);
+            player.setAbsorptionAmount(absorb - reduction);
             damageamount -= reduction;
         }
-        damageamount = Math.max(damageamount,0);
+        damageamount = Math.max(damageamount, 0);
 
         /*
         player.sendSystemMessage(Component.literal(
@@ -251,11 +247,11 @@ public class HitboxEvents {
 
 
     @SubscribeEvent
-    public static void onHeal(LivingHealEvent event){
+    public static void onHeal(LivingHealEvent event) {
         if (event.getEntity() instanceof Player player) {
             float amount = event.getAmount();
             event.setAmount(0);
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                 h.handleMagicHeal(amount);
             });
         }
@@ -285,7 +281,6 @@ public class HitboxEvents {
         // No hit → fallback to *final sub-step* (closer to true position)
         return pos;
     }
-
 
 
     public static HitSector detectHit(Player player, Vec3 hitpos) {
@@ -331,7 +326,7 @@ public class HitboxEvents {
     }
 
     @SubscribeEvent
-    public static void onPlayerInteract(PlayerInteractEvent.EntityInteract event){
+    public static void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget() instanceof Player target)) return;
         Player actor = event.getEntity();
 
@@ -380,17 +375,13 @@ public class HitboxEvents {
         return false;
     }
 
-    static final ResourceKey<DamageType> CBCproj = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","cannon_projectile"));
-    static final ResourceKey<DamageType> CBCprojbig = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","big_cannon_projectile"));
-    static final ResourceKey<DamageType> CBCmg = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","machine_gun_fire"));
-    static final ResourceKey<DamageType> CBCmgwat = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","machine_gun_fire_in_water"));
-    static final ResourceKey<DamageType> CBCtraff = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","traffic_cone"));
-    static final ResourceKey<DamageType> CBCshrap = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","shrapnel"));
-    static final ResourceKey<DamageType> CBCgrape = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons","grapeshot"));
-
-
-
-
+    static final ResourceKey<DamageType> CBCproj = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "cannon_projectile"));
+    static final ResourceKey<DamageType> CBCprojbig = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "big_cannon_projectile"));
+    static final ResourceKey<DamageType> CBCmg = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "machine_gun_fire"));
+    static final ResourceKey<DamageType> CBCmgwat = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "machine_gun_fire_in_water"));
+    static final ResourceKey<DamageType> CBCtraff = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "traffic_cone"));
+    static final ResourceKey<DamageType> CBCshrap = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "shrapnel"));
+    static final ResourceKey<DamageType> CBCgrape = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "grapeshot"));
 
 
     public static EntityHitResult rayTraceLivingEntity(LivingEntity shooter, double range) {
