@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+@Deprecated
+//Use AutoCropRecipeBuilder for better handle
 public class CropRecipeBuilder {
     private final Ingredient seed;
     private final List<String> categories = new ArrayList<>();

@@ -5,8 +5,6 @@ import net.darkhax.botanypots.data.displaystate.SimpleDisplayState;
 import net.darkhax.botanypots.data.displaystate.TransitionalDisplayState;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.blocks.GlowFruitBushBlock;
 import net.zaharenko424.casualties_cubed.registry.ModBlocks;
@@ -30,7 +28,7 @@ public class BasicCropRecipeProvider {
         DisplayState transitionalDisplay = new TransitionalDisplayState(List.of(age0, age1, age2, age3));
 
         // 3. Build and save the recipe
-        new SimpleCropRecipeBuilder(Ingredient.of(ModItems.GLOW_FRUIT.get()))
+        new AutoCropRecipeBuilder(Ingredient.of(ModItems.GLOW_FRUIT.get()))
                 .addCategory("dirt").addCategory("stone")
                 .setGrowthTicks(1200)
                 .setLightLevel(0)

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class SimpleCropRecipeBuilder {
+public class AutoCropRecipeBuilder {
     private final Ingredient seed;
     private final List<String> categories = new ArrayList<>();
     private int growthTicks = 1200;
@@ -34,39 +34,39 @@ public class SimpleCropRecipeBuilder {
     private final List<HarvestEntry> drops = new ArrayList<>();
     private final List<DisplayState> displayStates = new ArrayList<>();
 
-    public SimpleCropRecipeBuilder(Ingredient seed) {
+    public AutoCropRecipeBuilder(Ingredient seed) {
         this.seed = seed;
     }
 
-    public static SimpleCropRecipeBuilder seed(Item item) {
-        return new SimpleCropRecipeBuilder(Ingredient.of(item));
+    public static AutoCropRecipeBuilder seed(Item item) {
+        return new AutoCropRecipeBuilder(Ingredient.of(item));
     }
 
-    public SimpleCropRecipeBuilder addCategory(String category) {
+    public AutoCropRecipeBuilder addCategory(String category) {
         this.categories.add(category);
         return this;
     }
 
-    public SimpleCropRecipeBuilder setGrowthTicks(int ticks) {
+    public AutoCropRecipeBuilder setGrowthTicks(int ticks) {
         this.growthTicks = ticks;
         return this;
     }
 
-    public SimpleCropRecipeBuilder setLightLevel(int level) {
+    public AutoCropRecipeBuilder setLightLevel(int level) {
         this.lightLevel = level;
         return this;
     }
 
-    public SimpleCropRecipeBuilder addDisplayState(DisplayState state) {
+    public AutoCropRecipeBuilder addDisplayState(DisplayState state) {
         this.displayStates.add(state);
         return this;
     }
 
-    public SimpleCropRecipeBuilder addDrop(Item item, float chance, int minRolls, int maxRolls) {
+    public AutoCropRecipeBuilder addDrop(Item item, float chance, int minRolls, int maxRolls) {
         return this.addDrop(new ItemStack(item), chance, minRolls, maxRolls);
     }
 
-    public SimpleCropRecipeBuilder addDrop(ItemStack stack, float chance, int minRolls, int maxRolls) {
+    public AutoCropRecipeBuilder addDrop(ItemStack stack, float chance, int minRolls, int maxRolls) {
         this.drops.add(new HarvestEntry(chance, stack, minRolls, maxRolls));
         return this;
     }
