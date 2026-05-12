@@ -192,6 +192,8 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    implementation fg.deobf("curse.maven:bookshelf-228525:7612389")
+    implementation fg.deobf("curse.maven:botany-pots-353928:7612402")
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     compileOnly(fg.deobf("de.maxhenkel.voicechat:voicechat-api:2.5.0"))
