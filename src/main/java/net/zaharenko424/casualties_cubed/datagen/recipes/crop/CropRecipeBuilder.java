@@ -3,9 +3,12 @@ package net.zaharenko424.casualties_cubed.datagen.recipes.crop;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.darkhax.botanypots.data.displaystate.DisplayState;
+import net.darkhax.botanypots.data.recipes.crop.HarvestEntry;
+import net.darkhax.botanypots.data.recipes.crop.SerializerHarvestEntry;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +22,7 @@ public class CropRecipeBuilder {
     private final List<String> categories = new ArrayList<>();
     private int growthTicks = 1200;
     private int lightLevel = 0;
-    private final List<JsonObject> drops = new ArrayList<>();
+    private final List<HarvestEntry> drops = new ArrayList<>();
     private final List<DisplayState> displayStates = new ArrayList<>();
 
     public CropRecipeBuilder(Ingredient seed) {
@@ -50,17 +53,18 @@ public class CropRecipeBuilder {
         return this;
     }
 
-    public CropRecipeBuilder addDrop(Item item, float chance, int min, int max) {
-        JsonObject dropJson = new JsonObject();
-        dropJson.addProperty("chance", chance);
+    /**
+     * Adiciona um drop padrão a partir de um Item.
+     */
+    public CropRecipeBuilder addDrop(Item item, float chance, int minRolls, int maxRolls) {
+        return this.addDrop(new ItemStack(item), chance, minRolls, maxRolls);
+    }
 
-        JsonObject itemObj = new JsonObject();
-        itemObj.addProperty("item", item.toString());
-        dropJson.add("item", itemObj);
-
-        dropJson.addProperty("min", min);
-        dropJson.addProperty("max", max);
-        this.drops.add(dropJson);
+    /**
+     * Adiciona um drop permitindo ItemStacks customizados (com NBT).
+     */
+    public CropRecipeBuilder addDrop(ItemStack stack, float chance, int minRolls, int maxRolls) {
+        this.drops.add(new HarvestEntry(chance, stack, minRolls, maxRolls));
         return this;
     }
 
@@ -69,7 +73,7 @@ public class CropRecipeBuilder {
     }
 
     private record Result(ResourceLocation id, Ingredient seed, List<String> categories, int growthTicks,
-                          List<JsonObject> drops, List<DisplayState> displayStates, int lightLevel) implements FinishedRecipe {
+                          List<HarvestEntry> drops, List<DisplayState> displayStates, int lightLevel) implements FinishedRecipe {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
@@ -81,11 +85,14 @@ public class CropRecipeBuilder {
 
             json.addProperty("growthTicks", growthTicks);
 
+            // Utiliza o Serializer oficial do Botany Pots para cada HarvestEntry
             JsonArray dropArray = new JsonArray();
-            drops.forEach(dropArray::add);
+            for (HarvestEntry entry : drops) {
+                dropArray.add(SerializerHarvestEntry.SERIALIZER.toJSON(entry));
+            }
             json.add("drops", dropArray);
 
-            // Utilizing the official serializer for DisplayState
+            // Utiliza o Serializer oficial para DisplayState
             JsonArray displayArray = new JsonArray();
             for (DisplayState state : displayStates) {
                 displayArray.add(DisplayState.SERIALIZER.toJSON(state));

@@ -30,7 +30,7 @@ public class BasicCropRecipeProvider {
         DisplayState transitionalDisplay = new TransitionalDisplayState(List.of(age0, age1, age2, age3));
 
         // 3. Build and save the recipe
-        new CropRecipeBuilder(Ingredient.of(ModItems.GLOW_FRUIT.get()))
+        new SimpleCropRecipeBuilder(Ingredient.of(ModItems.GLOW_FRUIT.get()))
                 .addCategory("dirt").addCategory("stone")
                 .setGrowthTicks(1200)
                 .setLightLevel(0)
