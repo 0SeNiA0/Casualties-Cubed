@@ -3,10 +3,7 @@ package net.zaharenko424.casualties_cubed.datagen.recipes.crop;
 import net.darkhax.botanypots.data.displaystate.DisplayState;
 import net.darkhax.botanypots.data.displaystate.SimpleDisplayState;
 import net.darkhax.botanypots.data.displaystate.TransitionalDisplayState;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
@@ -16,14 +13,9 @@ import net.zaharenko424.casualties_cubed.registry.ModItems;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class BasicCropRecipeProvider extends RecipeProvider {
+public class BasicCropRecipeProvider {
 
-    public BasicCropRecipeProvider(PackOutput pOutput) {
-        super(pOutput);
-    }
-
-    @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    public static void buildRecipes(Consumer<FinishedRecipe> consumer) {
         // Example: Sweet Berries with age phases
 
         // 1. Define the individual states (ages 0, 1, and 2)

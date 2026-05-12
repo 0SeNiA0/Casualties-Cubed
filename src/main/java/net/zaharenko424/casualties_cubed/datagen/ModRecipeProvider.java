@@ -1,6 +1,7 @@
 package net.zaharenko424.casualties_cubed.datagen;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.datagen.recipes.crop.BasicCropRecipeProvider;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipeBuilder;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
@@ -413,6 +414,10 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.MORPHINE_VIAL.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.FENTANYL_VIAL.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC, ModItems.CEFTRIAXONE_VIAL.get(),Items.GLASS_BOTTLE);
+
+
+        // Botany Pots Compatibility
+        BasicCropRecipeProvider.buildRecipes(consumer);
     }
 
     protected static void stonecutterResultFromBase(@NotNull Consumer<FinishedRecipe> pFinishedRecipeConsumer, @NotNull RecipeCategory pCategory, ItemLike pResult, ItemLike pMaterial) {
