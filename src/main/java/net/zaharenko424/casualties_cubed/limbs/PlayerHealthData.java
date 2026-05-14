@@ -359,6 +359,9 @@ public class PlayerHealthData {
         return list;
     }
 
+    public Map<Limb, LimbStatistics> getLimbStats() {
+        return limbStats;
+    }
 
     //1.8L/min = 0.03L/s
 

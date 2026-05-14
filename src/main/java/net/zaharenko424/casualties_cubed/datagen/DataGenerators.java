@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.datagen;
 
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.datagen.recipes.crop.BasicCropRecipeProvider;
 import net.zaharenko424.casualties_cubed.datagen.worldgen.ModWorldGenProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = CasualtiesCubed.MOD_ID,bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DataGenretors {
+public class DataGenerators {
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
