@@ -1,7 +1,7 @@
 package net.zaharenko424.casualties_cubed.network.packet;
 
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.network.FriendlyByteBuf;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 ///FIXME DONT LISTEN TO SOME RANDOM CLIENT DATA, TAKE DATA FROM ITEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public record ServerboundUseSyringePacket(int targetId, Limb limb, String[] ids, float[] amounts) {

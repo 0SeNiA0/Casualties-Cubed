@@ -25,6 +25,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.tags.ModDamageTypeTags;
 
 import java.util.List;
@@ -94,56 +95,55 @@ public class HitboxEvents {
         DamageSource src = (ctx != null && ctx.source != null) ? ctx.source : event.getSource();
 
         if (src.is(ModDamageTypeTags.IGNORE)) return;
-        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount) || damageamount == Float.POSITIVE_INFINITY)
-            return;
+        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount) || damageamount == Float.POSITIVE_INFINITY) return;
+
+        PlayerHealthData data = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).resolve().orElse(null);
+        if (data == null) return;
+
         if (src.is(DamageTypes.FREEZE)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature() - damageamount * 1.8f);
-            });
+            data.setTemperature(data.getTemperature() - damageamount * 1.8f);
             event.setAmount(0);
             return;
         }
+
         if (src.is(DamageTypes.FALL)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleFallDamage(damageamount, player);
-            });
+            data.handleFallDamage(damageamount, player);
             event.setAmount(0);
             return;
         }
+
         if (src.is(CBCmg) || src.is(CBCmgwat)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleProjectileDamage(HitSector.getCBCChances(), damageamount, player);
-            });
+            data.handleProjectileDamage(HitSector.getCBCChances(), damageamount, player);
             event.setAmount(0);
             return;
-        } else if (src.is(CBCproj) || src.is(CBCprojbig) || src.is(CBCtraff)) {
+        }
+
+        if (src.is(CBCproj) || src.is(CBCprojbig) || src.is(CBCtraff)) {
             if (damageamount < 5) {
                 float finalDamage = damageamount * 15;
-
-                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                    h.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                });
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
             } else {
-                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                    h.handleExplosionDamage(damageamount, true, player);
-                });
+                data.handleExplosionDamage(damageamount, true, player);
             }
+
             event.setAmount(0);
             return;
-        } else if (src.is(DamageTypeTags.IS_EXPLOSION)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleExplosionDamage(damageamount, event.getSource().is(ModDamageTypeTags.SHRAPNELL), player);
-            });
+        }
+
+        if (src.is(DamageTypeTags.IS_EXPLOSION)) {
+            data.handleExplosionDamage(damageamount, event.getSource().is(ModDamageTypeTags.SHRAPNELL), player);
             event.setAmount(0);
             return;
-        } else if (isAnyProjectile(src)) {
+        }
+
+        if (isAnyProjectile(src)) {
             Entity directEntity = event.getSource().getDirectEntity();
             if ((directEntity instanceof Projectile projectile)) {
                 Vec3 hitPos = sweepProjectileStep(projectile, player);
@@ -161,22 +161,16 @@ public class HitboxEvents {
                 // This damage value is AFTER vanilla reductions (armor, resistance, etc.)
 
                 // Call into your capability with final damage
-                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                    h.handleProjectileDamage(hit, damageamount, player);
-                });
+                data.handleProjectileDamage(hit, damageamount, player);
                 event.setAmount(0);
                 return;
             }
         } else if (src.is(ModDamageTypeTags.MAGIC) || event.getSource().is(DamageTypes.MAGIC)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleMagicDamage(damageamount, (ServerPlayer) player);
-            });
+            data.handleMagicDamage(damageamount, (ServerPlayer) player);
             event.setAmount(0);
             return;
         } else if (src.is(DamageTypeTags.IS_FIRE)) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleFireDamage(damageamount, player);
-            });
+            data.handleFireDamage(damageamount, player);
             event.setAmount(0);
             return;
         } else if (src.getEntity() instanceof Player shooter) {
@@ -190,24 +184,17 @@ public class HitboxEvents {
             // This damage value is AFTER vanilla reductions (armor, resistance, etc.)
             float finalDamage = event.getAmount();
             // Call into your capability with final damage
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleProjectileDamage(hit, finalDamage, player);
-            });
+            data.handleProjectileDamage(hit, finalDamage, player);
             event.setAmount(0);
             return;
         } else if (src.is(DamageTypeTags.BYPASSES_ARMOR)) {
-
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.handleRandomDamage(damageamount, player);
-            });
+            data.handleRandomDamage(damageamount, player);
             event.setAmount(0);
             return;
         }
         //fuck you warium
 
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            h.handleRandomDamage(damageamount, player);
-        });
+        data.handleRandomDamage(damageamount, player);
         event.setAmount(0);
     }
 

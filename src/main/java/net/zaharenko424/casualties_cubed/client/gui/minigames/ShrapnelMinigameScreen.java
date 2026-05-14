@@ -13,22 +13,23 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ShrapnelMinigameScreen extends Screen {
-    
+
     private final Screen parent;
     private final Player target;
     private final Limb limb;
-    private double lastpMouseX=this.width/2,lastpMouseY=this.height/2;
+    private double lastpMouseX = this.width / 2f, lastpMouseY = this.height / 2f;
     private final boolean ignorevel;
     private int RememberShrapnel;
 
-    private List<ShrapnelObject> shrapnelObjects = new ArrayList<>();
-    private List<Integer> xlists = new ArrayList<>();
+    private final List<ShrapnelObject> shrapnelObjects = new ArrayList<>();
+    private final List<Integer> xlists = new ArrayList<>();
 
     private HandObject handObject;
 
@@ -40,18 +41,16 @@ public class ShrapnelMinigameScreen extends Screen {
         this.ignorevel = ignorevel;
     }
 
-    public boolean isAmputated(){
+    public boolean isAmputated() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player==null) return false;
-        if (target!=mc.player){
-            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-                if (h.isAmputated(Limb.LEFT_HAND)&&h.isAmputated(Limb.RIGHT_HAND))return true;
-                return false;
-            }).orElse(false);
-        }else{
-            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-                for (Limb l:limb.availableHandsForAction()){
-                    if (!h.isAmputated(l)){
+        if (mc.player == null) return false;
+        if (target != mc.player) {
+            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
+                    data.isAmputated(Limb.LEFT_HAND) && data.isAmputated(Limb.RIGHT_HAND)).orElse(false);
+        } else {
+            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> {
+                for (Limb l : limb.availableHandsForAction()) {
+                    if (!data.isAmputated(l)) {
                         return false;
                     }
                 }
@@ -64,42 +63,42 @@ public class ShrapnelMinigameScreen extends Screen {
     protected void init() {
         super.init();
         HandObject.SpriteType spriteType;
-        if (ignorevel){
-            spriteType= HandObject.SpriteType.TWEEZERS;
+        if (ignorevel) {
+            spriteType = HandObject.SpriteType.TWEEZERS;
         } else if (isAmputated()) {
-            spriteType= HandObject.SpriteType.GONE;
-        }else {
-            spriteType= HandObject.SpriteType.NORMAL;
+            spriteType = HandObject.SpriteType.GONE;
+        } else {
+            spriteType = HandObject.SpriteType.NORMAL;
         }
-        handObject = new HandObject(spriteType,this.width/2,this.height/2,this.width,this.height/3*2);
-        if (parent instanceof HealthScreen hp){
+        handObject = new HandObject(spriteType, this.width / 2f, this.height / 2f, this.width, this.height / 3 * 2);
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = true;
         }
-        int ShrapnelAmount = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.hasLimbShrapnel(limb)).orElse(0);
+        int ShrapnelAmount = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.hasLimbShrapnel(limb)).orElse(0);
         RememberShrapnel = ShrapnelAmount;
-        int x = this.width/2-16;
+        int x = this.width / 2 - 16;
         shrapnelObjects.clear();
         xlists.clear();
-        for (int i=0;i<ShrapnelAmount;i++){
+        for (int i = 0; i < ShrapnelAmount; i++) {
             int passX = x;
-            if (i%2==0){
-                passX-= 48*i;
-            }else {
-                passX += 48*i;
+            if (i % 2 == 0) {
+                passX -= 48 * i;
+            } else {
+                passX += 48 * i;
             }
             xlists.add(passX);
             shrapnelObjects.add(
-                    new ShrapnelObject(passX, (int) (height/6+145+((Math.random()*2-0.5f)*5)),this.height / 6,this.height / 6+150,target,limb)
+                    new ShrapnelObject(passX, (int) (height / 6f + 145 + ((Math.random() * 2 - 0.5f) * 5)), this.height / 6, this.height / 6 + 150, target, limb)
             );
         }
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(@NotNull GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         parent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        pGuiGraphics.fill(0,0,width,height,0x88000000);
-        pGuiGraphics.fill(0,height/6+158,width,height/6+162,0xFFFFFFFF);
+        pGuiGraphics.fill(0, 0, width, height, 0x88000000);
+        pGuiGraphics.fill(0, height / 6 + 158, width, height / 6 + 162, 0xFFFFFFFF);
 
         Minecraft mc = Minecraft.getInstance();
         int screenHeight = mc.getWindow().getScreenHeight();
@@ -108,60 +107,61 @@ public class ShrapnelMinigameScreen extends Screen {
         double guiScaleX = (double) screenWidth / (double) this.width;
         double guiScaleY = (double) screenHeight / (double) this.height;
 
-        int clipY = this.height / 6+161;
+        int clipY = this.height / 6 + 161;
 
         int scissorX = 0;
         int scissorY = (int) (screenHeight - (clipY * guiScaleY));
         int scissorW = (int) (this.width * guiScaleX);
         int scissorH = (int) ((clipY) * guiScaleY);
 
-        for (Integer i:xlists){
-            pGuiGraphics.blit(CasualtiesCubed.resourceLoc("textures/gui/limbs/blood_decal.png"), i,height/6+157,0,0,32,5,32,5);
+        for (Integer i : xlists) {
+            pGuiGraphics.blit(CasualtiesCubed.resourceLoc("textures/gui/limbs/blood_decal.png"), i, height / 6 + 157, 0, 0, 32, 5, 32, 5);
         }
 
         // Enable scissor
         RenderSystem.enableScissor(scissorX, scissorY, scissorW, scissorH);
 
-        for (ShrapnelObject shrapnelObject:shrapnelObjects){
+        for (ShrapnelObject shrapnelObject : shrapnelObjects) {
             shrapnelObject.render(pGuiGraphics);
         }
 
         RenderSystem.disableScissor();
 
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.shrapnel_instruction"),this.width/2,10,0xFFFFFF);
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.minigame_exit"),this.width/2,clipY+30,0xFFFFFF);
+        pGuiGraphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.shrapnel_instruction"), this.width / 2, 10, 0xFFFFFF);
+        pGuiGraphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.minigame_exit"), this.width / 2, clipY + 30, 0xFFFFFF);
 
-        handObject.render(pGuiGraphics,pPartialTick);
+        handObject.render(pGuiGraphics, pPartialTick);
     }
 
 
-    private boolean IgnoreResult= false;
+    private boolean IgnoreResult = false;
+
     @Override
     public void tick() {
         parent.tick();
-        handObject.update(lastpMouseX,lastpMouseY);
+        handObject.update(lastpMouseX, lastpMouseY);
         float yVel = (float) Math.abs(handObject.getVy());
-        for (ShrapnelObject shrapnelObject:shrapnelObjects){
-            shrapnelObject.mouseDragged(handObject.x,handObject.y,0);
-            shrapnelObject.update(yVel,ignorevel);
+        for (ShrapnelObject shrapnelObject : shrapnelObjects) {
+            shrapnelObject.mouseDragged(handObject.x, handObject.y, 0);
+            shrapnelObject.update(yVel, ignorevel);
         }
 
         Player player = Minecraft.getInstance().player;
-        if (player!=null){
-            Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
+        if (player != null) {
+            Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
             Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
-            float consscale = (cons.orElse(100f)/100)*0.15f;
-            float painscale = (float) (pain.orElse(0d)/100)*0.55f;
+            float consscale = (cons.orElse(100f) / 100) * 0.15f;
+            float painscale = (float) (pain.orElse(0d) / 100) * 0.55f;
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getConsciousness()<=10)
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (data.getConsciousness() <= 10)
                 onClose();
         });
 
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if(h.hasLimbShrapnel(limb)!=RememberShrapnel){
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (data.hasLimbShrapnel(limb) != RememberShrapnel) {
                 IgnoreResult = true;
                 onClose();
             }
@@ -171,10 +171,10 @@ public class ShrapnelMinigameScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (handObject.spriteType!=HandObject.SpriteType.GONE){
-        for (ShrapnelObject shrapnelObject:shrapnelObjects){
-            shrapnelObject.mouseClicked(handObject.x,handObject.y,0);
-        }
+        if (handObject.spriteType != HandObject.SpriteType.GONE) {
+            for (ShrapnelObject shrapnelObject : shrapnelObjects) {
+                shrapnelObject.mouseClicked(handObject.x, handObject.y, 0);
+            }
 
             handObject.mouseClicked();
         }
@@ -192,7 +192,7 @@ public class ShrapnelMinigameScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-        for (ShrapnelObject shrapnelObject:shrapnelObjects){
+        for (ShrapnelObject shrapnelObject : shrapnelObjects) {
             shrapnelObject.setDragging(false);
         }
         handObject.mouseReleased();
@@ -202,7 +202,7 @@ public class ShrapnelMinigameScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        if (parent instanceof HealthScreen hp){
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = false;
         }
         if (!IgnoreResult) {

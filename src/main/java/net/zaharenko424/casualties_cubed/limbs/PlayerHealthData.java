@@ -359,8 +359,8 @@ public class PlayerHealthData {
         return list;
     }
 
-    public Map<Limb, LimbStatistics> getLimbStats() {
-        return limbStats;
+    public LimbStatistics getLimbStats(Limb limb) {
+        return limbStats.computeIfAbsent(limb, l -> new LimbStatistics());
     }
 
     //1.8L/min = 0.03L/s

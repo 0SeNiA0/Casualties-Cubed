@@ -207,7 +207,7 @@ dependencies {
 
     //compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
     // Use the full Curios API jar at runtime
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    //runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     //runtimeOnly( fg.deobf("maven.modrinth:serene-seasons:9.1.0.2"))
     //runtimeOnly(fg.deobf("maven.modrinth:glitchcore:0.0.1.1"))
     runtimeOnly(fg.deobf("curse.maven:create-328085:7178761"))

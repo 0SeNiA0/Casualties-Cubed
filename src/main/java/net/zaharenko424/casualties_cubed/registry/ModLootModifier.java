@@ -1,4 +1,4 @@
-package net.zaharenko424.casualties_cubed.loot;
+package net.zaharenko424.casualties_cubed.registry;
 
 import com.mojang.serialization.Codec;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
@@ -7,6 +7,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import net.zaharenko424.casualties_cubed.loot.AddFilledToChestsModifier;
+import net.zaharenko424.casualties_cubed.loot.AddRandomFillToChestsModifier;
 
 public class ModLootModifier {
 

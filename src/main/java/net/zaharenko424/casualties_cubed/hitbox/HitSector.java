@@ -14,30 +14,13 @@ public enum HitSector {
     LEGS;
 
     public List<Limb> getLimbsPerSector(){
-        List<Limb> limbList = new ArrayList<>();
-        switch (this){
-            case RIGHT_ARM -> {
-                limbList.add(Limb.RIGHT_ARM);
-                limbList.add(Limb.RIGHT_HAND);
-            }
-            case HEAD -> {
-                limbList.add(Limb.HEAD);
-            }
-            case TORSO -> {
-                limbList.add(Limb.CHEST);
-            }
-            case LEFT_ARM -> {
-                limbList.add(Limb.LEFT_ARM);
-                limbList.add(Limb.LEFT_HAND);
-            }
-            case LEGS -> {
-                limbList.add(Limb.LEFT_LEG);
-                limbList.add(Limb.LEFT_FOOT);
-                limbList.add(Limb.RIGHT_FOOT);
-                limbList.add(Limb.RIGHT_LEG);
-            }
-        }
-        return limbList;
+        return switch (this){
+            case RIGHT_ARM -> List.of(Limb.RIGHT_ARM, Limb.RIGHT_HAND);
+            case HEAD -> List.of(Limb.HEAD);
+            case TORSO -> List.of(Limb.CHEST);
+            case LEFT_ARM -> List.of(Limb.LEFT_ARM, Limb.LEFT_HAND);
+            case LEGS -> List.of(Limb.RIGHT_LEG, Limb.RIGHT_FOOT, Limb.LEFT_LEG, Limb.LEFT_FOOT);
+        };
     }
 
     public static HitSector getCBCChances(){

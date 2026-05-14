@@ -5,8 +5,7 @@ import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsEvents;
 import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
-import net.zaharenko424.casualties_cubed.loot.ModLootModifier;
-import net.zaharenko424.casualties_cubed.registry.*;
+import net.zaharenko424.casualties_cubed.registry.ModLootModifier;
 import net.zaharenko424.casualties_cubed.registry.*;
 import net.zaharenko424.casualties_cubed.visual.particles.ModParticles;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +20,7 @@ import org.slf4j.Logger;
 @Mod(CasualtiesCubed.MOD_ID)
 public class CasualtiesCubed {
 
-    public static final String MOD_ID = "casualties_cubed";//"prototype_pain";
+    public static final String MOD_ID = "casualties_cubed";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static ResourceLocation resourceLoc(String path) {
