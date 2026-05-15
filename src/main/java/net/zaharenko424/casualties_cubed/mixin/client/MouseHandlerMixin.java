@@ -1,6 +1,8 @@
 package net.zaharenko424.casualties_cubed.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.event.BrainDamageClientController;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.minecraft.client.Minecraft;
@@ -24,5 +26,11 @@ public abstract class MouseHandlerMixin {
                 }
             });
         }
+    }
+
+    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/OptionInstance;get()Ljava/lang/Object;", ordinal = 0),
+            method = "turnPlayer")
+    private <T> T modifySensitivity(T original) {
+        return (T)(Object)((Double)original * BrainDamageClientController.sensitivityScale);
     }
 }

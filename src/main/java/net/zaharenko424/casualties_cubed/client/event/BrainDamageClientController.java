@@ -1,9 +1,8 @@
 package net.zaharenko424.casualties_cubed.client.event;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -12,24 +11,26 @@ import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class BrainDamageClientController {
 
     @SubscribeEvent
-    public static void onRenderOverlay(RenderGuiOverlayEvent.Post event){
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        if (player!=null){
-            float brain= player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+    public static void onRenderOverlay(RenderGuiOverlayEvent.Post event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Player player = minecraft.player;
+        if (player == null) return;
 
-            if (brain < 95 && mc.level != null && mc.player != null) {
-                if (mc.level.getGameTime() % 400 == 0&&Math.random()>1-brain/120f) { // every 20s roughly
-                    float alpha = (float) (0.2f + Math.random() * 0.3f);
-                    GuiGraphics g = event.getGuiGraphics();
-                    g.fill(0, 0, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(),
-                            ((int) (alpha * 255) << 24));
-                }
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+
+        if (brain < 95 && minecraft.level != null && minecraft.player != null) {
+            if (minecraft.level.getGameTime() % 400 == 0 && Math.random() > 1 - brain / 120f) { // every 20s roughly
+                float alpha = (float) (0.2f + Math.random() * 0.3f);
+                GuiGraphics g = event.getGuiGraphics();
+                g.fill(0, 0, minecraft.getWindow().getGuiScaledWidth(), minecraft.getWindow().getGuiScaledHeight(),
+                        ((int) (alpha * 255) << 24));
             }
         }
     }
@@ -41,10 +42,10 @@ public class BrainDamageClientController {
 
     @SubscribeEvent
     public static void onCameraAngles(ViewportEvent.ComputeCameraAngles event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.level == null) return;
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null || minecraft.level == null) return;
 
-        float brain= mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brain = minecraft.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
         if (brain >= 95) return;
 
         // Delta time-like increment (ensures consistent speed)
@@ -84,40 +85,32 @@ public class BrainDamageClientController {
         }
     }
 
-    private static Double baseSensitivity = -1d;
+    public static float sensitivityScale = 1;
 
     @SubscribeEvent
-    public static void onclientTick(TickEvent.ClientTickEvent event){
-        if (event.phase == TickEvent.Phase.END) {
-            Minecraft mc = Minecraft.getInstance();
-            Player player = mc.player;
-            if (player==null)return;
-            float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+    public static void onclientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
 
-            if (baseSensitivity == -1f)
-                baseSensitivity = mc.options.sensitivity().get();
+        Minecraft minecraft = Minecraft.getInstance();
+        Player player = minecraft.player;
+        if (player == null) return;
 
-            if (brain < 80) {
-                double t = mc.level.getGameTime();
-                double factor = 1.0 + Math.sin(t * 0.1) * 0.05; // ±5%
-                mc.options.sensitivity().set((baseSensitivity * factor));
-            } else {
-                mc.options.sensitivity().set(baseSensitivity);
-            }
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
 
-
+        if (brain < 80) {
+            sensitivityScale = 1 + Mth.sin(minecraft.level.getGameTime() * 0.1f) * 0.05f; // ±5%
+        } else {
+            sensitivityScale = 1;
         }
     }
 
     @SubscribeEvent
     public static void onTooltip(RenderTooltipEvent.GatherComponents event) {
-        Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
-        if (player==null)return;
-        if (player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f)< 60) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        if (player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f) < 60) {
             event.getTooltipElements().clear();
         }
     }
-
-
 }
