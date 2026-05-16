@@ -244,11 +244,8 @@ public class ServerPacketHandler {
             PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
             if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
 
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
-                if (targetData.isAmputated(packet.limb())) return;// Cant interact with amputated limb
-
-                targetData.medicalAction(packet.action(), packet.limb(), sender);
-            });
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData ->
+                    targetData.medicalAction(packet.action(), packet.limb(), sender));
         });
         ctx.get().setPacketHandled(true);
     }

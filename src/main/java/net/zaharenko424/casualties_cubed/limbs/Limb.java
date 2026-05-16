@@ -11,14 +11,14 @@ import java.util.Random;
 public enum Limb {
     HEAD(Component.translatable("casualties_cubed.limb.head")),
     CHEST(Component.translatable("casualties_cubed.limb.chest")),
-    LEFT_ARM(Component.translatable("casualties_cubed.limb.larm")),
-    RIGHT_ARM(Component.translatable("casualties_cubed.limb.rarm")),
-    RIGHT_HAND(Component.translatable("casualties_cubed.limb.rhand")),
-    LEFT_HAND(Component.translatable("casualties_cubed.limb.lhand")),
-    LEFT_LEG(Component.translatable("casualties_cubed.limb.lleg")),
-    RIGHT_LEG(Component.translatable("casualties_cubed.limb.rleg")),
-    LEFT_FOOT(Component.translatable("casualties_cubed.limb.lfoot")),
-    RIGHT_FOOT(Component.translatable("casualties_cubed.limb.rfoot"));
+    LEFT_ARM(Component.translatable("casualties_cubed.limb.left_arm")),
+    RIGHT_ARM(Component.translatable("casualties_cubed.limb.right_arm")),
+    RIGHT_HAND(Component.translatable("casualties_cubed.limb.right_hand")),
+    LEFT_HAND(Component.translatable("casualties_cubed.limb.left_hand")),
+    LEFT_LEG(Component.translatable("casualties_cubed.limb.left_leg")),
+    RIGHT_LEG(Component.translatable("casualties_cubed.limb.right_leg")),
+    LEFT_FOOT(Component.translatable("casualties_cubed.limb.left_foot")),
+    RIGHT_FOOT(Component.translatable("casualties_cubed.limb.right_foot"));
 
     public final Component comp;
 
@@ -36,10 +36,9 @@ public enum Limb {
     }
 
     public Limb randomFromConectedLimb(){
-        List<Limb> temp_Limb_list= this.getConnectedLimbs();
-        Limb[] limb_list = temp_Limb_list.toArray(new Limb[]{});
+        List<Limb> limbs = this.getConnectedLimbs();
         Random rand = new Random();
-        return limb_list[rand.nextInt(limb_list.length)];
+        return limbs.get(rand.nextInt(limbs.size()));
     }
 
     public Limb getConnectedTo() {

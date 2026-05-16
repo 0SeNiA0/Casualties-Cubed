@@ -40,7 +40,6 @@ public class ColorsEvent {
                 ModItems.NALOXONE_VIAL.get(),
                 ModItems.OPIUM_VIAL.get(),
                 ModItems.ANTISERUM_INJECTOR.get(),
-                ModItems.REACTION_LIQUID_VIAL.get(),
                 ModItems.PILL_BOTTLE.get()
         );
     }

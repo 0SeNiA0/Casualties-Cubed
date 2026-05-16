@@ -1,8 +1,11 @@
 package net.zaharenko424.casualties_cubed.limbs;
 
 import net.minecraft.nbt.CompoundTag;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 
 public class LimbStatistics {
+
+    public static final float MAX_REGROWTH_PROGRESS = 20 * 60;
 
     float skinHealth = 100f;//
     float muscleHealth = 100f;//
@@ -30,6 +33,7 @@ public class LimbStatistics {
     }
 
     public void setSkinHealth(float skinHealth) {
+        if (amputated) return;
         this.skinHealth = skinHealth;
     }
 
@@ -38,6 +42,7 @@ public class LimbStatistics {
     }
 
     public void setMuscleHealth(float muscleHealth) {
+        if (amputated) return;
         this.muscleHealth = muscleHealth;
     }
 
@@ -46,6 +51,7 @@ public class LimbStatistics {
     }
 
     public void setPain(float pain) {
+        if (amputated) return;
         this.pain = pain;
     }
 
@@ -54,6 +60,7 @@ public class LimbStatistics {
     }
 
     public void setInfection(float infection) {
+        if (amputated) return;
         this.infection = infection;
     }
 
@@ -62,6 +69,7 @@ public class LimbStatistics {
     }
 
     public void setFracture(float fracture) {
+        if (amputated) return;
         this.fracture = fracture;
     }
 
@@ -70,6 +78,7 @@ public class LimbStatistics {
     }
 
     public void setDislocation(float dislocation) {
+        if (amputated) return;
         this.dislocation = dislocation;
     }
 
@@ -78,6 +87,7 @@ public class LimbStatistics {
     }
 
     public void setShrapnel(int shrapnel) {
+        if (amputated) return;
         this.shrapnel = shrapnel;
     }
 
@@ -86,6 +96,7 @@ public class LimbStatistics {
     }
 
     public void setBleedRate(float bleedRate) {
+        if (amputated) return;
         this.bleedRate = bleedRate;
     }
 
@@ -94,6 +105,7 @@ public class LimbStatistics {
     }
 
     public void setHasSplint(boolean hasSplint) {
+        if (amputated) return;
         this.hasSplint = hasSplint;
     }
 
@@ -102,6 +114,7 @@ public class LimbStatistics {
     }
 
     public void setDisinfectionTimer(float disinfectionTimer) {
+        if (amputated) return;
         this.desinfectionTimer = disinfectionTimer;
     }
 
@@ -110,6 +123,7 @@ public class LimbStatistics {
     }
 
     public void setMinPain(float minPain) {
+        if (amputated) return;
         this.minPain = minPain;
     }
 
@@ -118,6 +132,7 @@ public class LimbStatistics {
     }
 
     public void setFinalPain(float finalPain) {
+        if (amputated) return;
         this.finalPain = finalPain;
     }
 
@@ -126,6 +141,7 @@ public class LimbStatistics {
     }
 
     public void setSkinHeal(boolean skinHeal) {
+        if (amputated) return;
         this.skinHeal = skinHeal;
     }
 
@@ -134,6 +150,7 @@ public class LimbStatistics {
     }
 
     public void setMuscleHeal(boolean muscleHeal) {
+        if (amputated) return;
         this.muscleHeal = muscleHeal;
     }
 
@@ -142,6 +159,7 @@ public class LimbStatistics {
     }
 
     public void setTourniquet(boolean tourniquet) {
+        if (amputated) return;
         this.tourniquet = tourniquet;
     }
 
@@ -150,6 +168,7 @@ public class LimbStatistics {
     }
 
     public void setTourniquetTimer(int tourniquetTimer) {
+        if (amputated) return;
         this.tourniquetTimer = tourniquetTimer;
     }
 
@@ -158,15 +177,41 @@ public class LimbStatistics {
     }
 
     public void setAmputated(boolean amputated) {
+        if (this.amputated == amputated) return;
         this.amputated = amputated;
+
+        if (!amputated) return;
+
+        skinHealth = 0;
+        muscleHealth = 0;
+        pain = 0;
+        infection = 0;
+        fracture = 0;
+        dislocation = 0;
+        shrapnel = 0;
+        hasSplint = false;
+        bleedRate = 0;
+        desinfectionTimer = 0;
+        minPain = 0;
+        finalPain = 0;
+        skinHeal = false;
+        muscleHeal = false;
+        tourniquet = false;
+        tourniquetTimer = 0;
     }
 
     public float getRegrowthProgress() {
         return regrowthProgress;
     }
 
-    public void setRegrowthProgress(float regrowthProgress) {
-        this.regrowthProgress = regrowthProgress;
+    public void progressRegrowth(float amount) {
+        if (!ServerConfig.LIMB_REGROWTH.get() || !amputated) return;
+
+        regrowthProgress += amount;
+        if (regrowthProgress >= MAX_REGROWTH_PROGRESS) {
+            amputated = false;
+            regrowthProgress = 0;
+        }
     }
 
     void copyFrom(LimbStatistics other) {
@@ -191,6 +236,12 @@ public class LimbStatistics {
     }
 
     void save(CompoundTag tag) {
+        tag.putBoolean("Amputated", amputated);
+        if (amputated) {
+            if (regrowthProgress > 0)tag.putFloat("RegrowthProgress", regrowthProgress);
+            return;
+        }
+
         tag.putFloat("SkinHealth", skinHealth);
         tag.putFloat("MuscleHealth", muscleHealth);
         tag.putFloat("Pain", pain);
@@ -207,29 +258,31 @@ public class LimbStatistics {
         tag.putBoolean("MuscleHeal", muscleHeal);
         tag.putBoolean("Tourniquet", tourniquet);
         tag.putInt("TourniquetTime", tourniquetTimer);
-        tag.putBoolean("Amputated", amputated);
-        tag.putFloat("RegrowthProgress", regrowthProgress);
     }
 
     void load(CompoundTag tag) {
-        if (tag.contains("SkinHealth")) skinHealth = tag.getFloat("SkinHealth");
-        if (tag.contains("MuscleHealth")) muscleHealth = tag.getFloat("MuscleHealth");
-        if (tag.contains("Pain")) pain = tag.getFloat("Pain");
-        if (tag.contains("Infection")) infection = tag.getFloat("Infection");
-        if (tag.contains("FractureTimer")) fracture = tag.getFloat("FractureTimer");
-        if (tag.contains("Dislocated")) dislocation = tag.getFloat("Dislocated");
-        if (tag.contains("Shrapnell")) shrapnel = tag.getInt("Shrapnell");
-        if (tag.contains("HasSplint")) hasSplint = tag.getBoolean("HasSplint");
-        if (tag.contains("BleedRate")) bleedRate = tag.getFloat("BleedRate");
-        if (tag.contains("DesinfectionTimer")) desinfectionTimer = tag.getFloat("DesinfectionTimer");
-        if (tag.contains("MinPain")) minPain = tag.getFloat("MinPain");
-        if (tag.contains("FinalPain")) finalPain = tag.getFloat("FinalPain");
-        if (tag.contains("SkinHeal")) skinHeal = tag.getBoolean("SkinHeal");
-        if (tag.contains("MuscleHeal")) muscleHeal = tag.getBoolean("MuscleHeal");
-        if (tag.contains("Tourniquet")) tourniquet = tag.getBoolean("Tourniquet");
-        if (tag.contains("TourniquetTime")) tourniquetTimer = tag.getInt("TourniquetTime");
-        if (tag.contains("Amputated")) amputated = tag.getBoolean("Amputated");
-        if (tag.contains("RegrowthProgress")) regrowthProgress = tag.getFloat("RegrowthProgress");
+        setAmputated(tag.getBoolean("Amputated"));
+        if (amputated) {
+            regrowthProgress = tag.getFloat("RegrowthProgress");
+            return;
+        }
+
+        skinHealth = tag.contains("SkinHealth") ? tag.getFloat("SkinHealth") : 100;
+        muscleHealth = tag.contains("MuscleHealth") ? tag.getFloat("MuscleHealth") : 100;
+        pain = tag.getFloat("Pain");
+        infection = tag.getFloat("Infection");
+        fracture = tag.getFloat("FractureTimer");
+        dislocation = tag.getFloat("Dislocated");
+        shrapnel = tag.getInt("Shrapnell");
+        hasSplint = tag.getBoolean("HasSplint");
+        bleedRate = tag.getFloat("BleedRate");
+        desinfectionTimer = tag.getFloat("DesinfectionTimer");
+        minPain = tag.getFloat("MinPain");
+        finalPain = tag.getFloat("FinalPain");
+        skinHeal = tag.getBoolean("SkinHeal");
+        muscleHeal = tag.getBoolean("MuscleHeal");
+        tourniquet = tag.getBoolean("Tourniquet");
+        tourniquetTimer = tag.getInt("TourniquetTime");
 
         if (Float.isNaN(bleedRate)) bleedRate = 0;
     }

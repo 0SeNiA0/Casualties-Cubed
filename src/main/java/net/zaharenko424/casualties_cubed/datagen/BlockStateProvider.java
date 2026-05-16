@@ -27,7 +27,7 @@ public class BlockStateProvider extends net.minecraftforge.client.model.generato
     protected void registerStatesAndModels() {
         simpleBlockWithItem(BROWN_CAP.get(), models().cross(BROWN_CAP.getId().toString(), blockTexture(BROWN_CAP.get())).renderType("cutout"));
         simpleBlockWithItem(MEDICAL_MIXER.get(), models().getExistingFile(MEDICAL_MIXER.getId()));
-        horizontalBlockWithItem(SCAV_BLOCK, ScavBlock.WATERLOGGED);
+        horizontalBlockWithItem(EXPIE_PLUSHY, ScavBlock.WATERLOGGED);
         glowFruit();
     }
 

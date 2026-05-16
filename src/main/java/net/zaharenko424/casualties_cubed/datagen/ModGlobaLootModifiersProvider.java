@@ -40,7 +40,7 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.225f*sanityScale).build()
                 },       // no extra conditions
-                ModItems.BAND_AIDS.get()
+                ModItems.ADHESIVE_BANDAGE.get()
         ));
         add("add_ice", new AddFilledToChestsModifier(
                 new LootItemCondition[] {
@@ -88,7 +88,7 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.10f*sanityScale).build()
                 },       // no extra conditions
-                ModItems.ALGANATE_DRESSING.get()
+                ModItems.ALGINATE_DRESSING.get()
         ));
         add("add_medicalgauze", new AddFilledToChestsModifier(
                 new LootItemCondition[] {
@@ -167,7 +167,7 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.07f * sanityScale).build()
                 },
-                ModItems.PainkillersPills.get()
+                ModItems.PAINKILLERS_PILLS.get()
         ));
 
         add("add_antibiotics", new AddFilledToChestsModifier(
@@ -258,7 +258,7 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.01f * sanityScale).build()
                 },
-                ModItems.ScavPlush.get()
+                ModItems.EXPIE_PLUSHY.get()
         ));
 
 

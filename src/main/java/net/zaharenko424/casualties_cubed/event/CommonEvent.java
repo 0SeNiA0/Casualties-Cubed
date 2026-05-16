@@ -1,17 +1,7 @@
 package net.zaharenko424.casualties_cubed.event;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.compat.FoodAndDrinkCompat;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import net.zaharenko424.casualties_cubed.network.ModNetwork;
-import net.zaharenko424.casualties_cubed.network.SyncTracker;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundAmputateRestrictionSyncPacket;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundBlindnessViewSyncPacket;
-import net.zaharenko424.casualties_cubed.registry.ModGameRules;
-import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -43,7 +34,20 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.compat.FoodAndDrinkCompat;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.network.ModNetwork;
+import net.zaharenko424.casualties_cubed.network.SyncTracker;
+import net.zaharenko424.casualties_cubed.network.packet.ClientboundAmputateRestrictionSyncPacket;
+import net.zaharenko424.casualties_cubed.network.packet.ClientboundBlindnessViewSyncPacket;
+import net.zaharenko424.casualties_cubed.registry.ModBlocks;
+import net.zaharenko424.casualties_cubed.registry.ModGameRules;
+import net.zaharenko424.casualties_cubed.registry.ModItems;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,38 @@ import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = CasualtiesCubed.MOD_ID)
 public class CommonEvent {
+
+    @SubscribeEvent
+    public static void remap(MissingMappingsEvent event) {
+        List<MissingMappingsEvent.Mapping<Block>> blocks = event.getMappings(Registries.BLOCK, CasualtiesCubed.MOD_ID);
+        for (MissingMappingsEvent.Mapping<Block> mapping : blocks) {
+            switch (mapping.getKey().getPath()) {
+                case "scav_plushie" -> mapping.remap(ModBlocks.EXPIE_PLUSHY.get());
+            }
+        }
+
+        List<MissingMappingsEvent.Mapping<Item>> items = event.getMappings(Registries.ITEM, CasualtiesCubed.MOD_ID);
+        for (MissingMappingsEvent.Mapping<Item> mapping : items) {
+            switch (mapping.getKey().getPath()) {
+                case "band_aids" -> mapping.remap(ModItems.ADHESIVE_BANDAGE.get());
+                case "alcohol" -> mapping.remap(ModItems.ALCOHOL_BOTTLE.get());
+                case "antiserum" -> mapping.remap(ModItems.ANTISERUM_INJECTOR.get());
+                case "antibiotics" -> mapping.remap(ModItems.ANTIBIOTICS_PILLS.get());
+                case "antiseptic" -> mapping.remap(ModItems.ANTISEPTIC_SPRAY.get());
+                case "blood_clotting" -> mapping.remap(ModItems.PROCOAGULANT_INJECTOR.get());
+                case "blood_thinner" -> mapping.remap(ModItems.STREPTOKINASE_INJECTOR.get());
+                case "brain_grow" -> mapping.remap(ModItems.BRAIN_GROW_PILLS.get());
+                case "ceftriaxone" -> mapping.remap(ModItems.CEFTRIAXONE_VIAL.get());
+                case "painkillers" -> mapping.remap(ModItems.PAINKILLERS_PILLS.get());
+                case "saline" -> mapping.remap(ModItems.SALINE_SYRINGE.get());
+                case "relief_cream" -> mapping.remap(ModItems.RELIEF_CREAM_BOTTLE.get());
+                case "heroin_vial" -> mapping.remap(ModItems.HEROIN_SYRINGE.get());
+                case "alganate_dressing" -> mapping.remap(ModItems.ALGINATE_DRESSING.get());
+                case "reaction_vial" -> mapping.remap(ModItems.MEDICINE_VIAL.get());
+                case "scav_plushie" -> mapping.remap(ModItems.EXPIE_PLUSHY.get());
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onAttachCap(AttachCapabilitiesEvent<Entity> event) {

@@ -1,9 +1,6 @@
 package net.zaharenko424.casualties_cubed.datagen;
 
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.datagen.recipes.crop.BasicCropRecipeProvider;
-import net.zaharenko424.casualties_cubed.datagen.worldgen.ModWorldGenProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -12,6 +9,9 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.datagen.lang.ENLanguageProvider;
+import net.zaharenko424.casualties_cubed.datagen.worldgen.ModWorldGenProvider;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -48,5 +48,6 @@ public class DataGenerators {
 
         generator.addProvider(event.includeClient(), new BlockStateProvider(output, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelProvider(output, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ENLanguageProvider(output));
     }
 }

@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BandAidItem extends Item implements ISimpleMedicalUsable, IAllowInMedicBags, INbtDrivenDurability {
+public class AdhesiveBandage extends Item implements ISimpleMedicalUsable, IAllowInMedicBags, INbtDrivenDurability {
 
-    public BandAidItem() {
+    public AdhesiveBandage() {
         super(new Item.Properties().stacksTo(1));
     }
 
@@ -45,7 +45,7 @@ public class BandAidItem extends Item implements ISimpleMedicalUsable, IAllowInM
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.band_aid.description").withStyle(ChatFormatting.GRAY));
+        pTooltipComponents.add(Component.translatable("item.casualties_cubed.adhesive_bandage.description").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

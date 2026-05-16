@@ -1,7 +1,5 @@
 package net.zaharenko424.casualties_cubed.registry;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,6 +7,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 
 public class ModCreativeTab {
 
@@ -25,6 +25,11 @@ public class ModCreativeTab {
                                 ItemStack stack = new ItemStack(itemRegistryObject.get());
                                 multiTankFluidItem.setupDefault(stack);
                                 output.accept(stack);
+
+                                if (itemRegistryObject == ModItems.OPIUM_VIAL) {
+                                    output.accept(((MultiTankFluidItem)ModItems.MEDICINE_VIAL.get()).withMedicalFluid(ModMedicalFluids.REACTION_LIQUID, 100));
+                                }
+
                                 continue;
                             }
 

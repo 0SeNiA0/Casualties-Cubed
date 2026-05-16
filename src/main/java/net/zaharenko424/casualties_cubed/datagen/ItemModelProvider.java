@@ -16,7 +16,7 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
     @Override
     protected void registerModels() {
         basicItem(ALCOHOL_BOTTLE.get());
-        basicItem(ALGANATE_DRESSING.get());
+        basicItem(ALGINATE_DRESSING.get());
         basicItem(ANTIBIOTICS_PILLS.get());
         basicItem(ANTISEPTIC_SPRAY.get());
         basicItem(AUTO_PUMP.get());
@@ -27,7 +27,7 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
                 .texture("layer1", AUTO_INJECTOR.getId().withPrefix("item/").withSuffix("_fill"));
 
         withExistingParent(ANTISERUM_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
-        basicItem(BAND_AIDS.get());
+        basicItem(ADHESIVE_BANDAGE.get());
         withExistingParent(PROCOAGULANT_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
         withExistingParent(STREPTOKINASE_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
         basicItem(BONE_WELDER.get());
@@ -61,8 +61,8 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         withExistingParent(MORPHINE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(NALOXONE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(OPIUM_VIAL.getId().toString(), MEDICINE_VIAL.getId());
-        withExistingParent(REACTION_LIQUID_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         basicItem(OLD_RAG.get());
+        basicItem(PAINKILLERS_PILLS.get());
 
         getBuilder(PILL_BOTTLE.getId().toString())
                 .parent(new ModelFile.UncheckedModelFile("item/generated"))

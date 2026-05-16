@@ -1,9 +1,5 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
-import net.zaharenko424.casualties_cubed.Util;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -21,6 +17,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.registries.RegistryObject;
+import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
+import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -74,7 +76,7 @@ public class MultiTankFluidItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
         appendDescription(stack, level, tooltip, flag);
-        appendFluidText(stack, level, tooltip, flag);
+        appendFluidText(stack, level, tooltip);
     }
 
     @Override
@@ -100,7 +102,16 @@ public class MultiTankFluidItem extends Item {
 
     }
 
-    public void appendFluidText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public ItemStack withMedicalFluid(RegistryObject<? extends MedicalFluid> fluid, int ml) {
+        ItemStack stack = new ItemStack(this);
+        MultiTankHelper.addMedicalFluid(stack,
+                ml,
+                fluid.getId().toString(),
+                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
+        return stack;
+    }
+
+    public void appendFluidText(ItemStack stack, Level level, List<Component> tooltip) {
         CompoundTag tag = stack.getTagElement("MultiFluidTank");
         boolean hasSpecial = false;
         if (tag == null) {
@@ -115,7 +126,7 @@ public class MultiTankFluidItem extends Item {
         tooltip.add(Component.literal("Contents:"));
         for (Tag t : list) {
             FluidStack fs = FluidStack.loadFluidStackFromNBT((CompoundTag) t);
-            int color = 0xFF0088;
+            int color;
             if (fs.hasTag()) {
                 MedicalFluid Mfluid = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
                 if (Mfluid != null) {

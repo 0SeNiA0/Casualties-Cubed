@@ -15,16 +15,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class AlganiteDressingItem extends Item implements IBandage, IAllowInMedicBags {
+public class AlginateDressingItem extends Item implements IBandage, IAllowInMedicBags {
 
-    public AlganiteDressingItem() {
+    public AlginateDressingItem() {
         super(new Properties().stacksTo(1));
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.alganate_dressing.description").withStyle(ChatFormatting.GRAY));
+        pTooltipComponents.add(Component.translatable("item.casualties_cubed.alginate_dressing.description").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

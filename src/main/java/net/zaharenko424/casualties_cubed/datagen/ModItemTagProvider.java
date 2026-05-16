@@ -27,7 +27,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
                     ModItems.PLASTIC_DRESSING.get(),
                     ModItems.STERILIZED_DRESSING.get(),
                     ModItems.MEDICAL_GAUZE.get(),
-                    ModItems.ALGANATE_DRESSING.get());
+                    ModItems.ALGINATE_DRESSING.get());
 
         this.tag(ModItemTags.VIAL_ITEMS)
                 .add(ModItems.MEDICINE_VIAL.get(),
@@ -37,7 +37,6 @@ public class ModItemTagProvider extends ItemTagsProvider {
                         ModItems.ANTISERUM_INJECTOR.get(),
                         ModItems.STREPTOKINASE_INJECTOR.get(),
                         ModItems.PROCOAGULANT_INJECTOR.get(),
-                        ModItems.REACTION_LIQUID_VIAL.get(),
                         ModItems.OPIUM_VIAL.get(),
                         ModItems.NALOXONE_VIAL.get(),
                         ModItems.MORPHINE_VIAL.get(),

@@ -9,6 +9,11 @@ import net.minecraftforge.fluids.FluidStack;
 public class AntiserumInjectorItem extends AutoInjectorItem {
 
     @Override
+    public int getInjectAmount() {
+        return 50;
+    }
+
+    @Override
     public void setupDefault(ItemStack pStack) {
         MultiTankHelper.addMedicalFluid(pStack,
                 100,

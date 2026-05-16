@@ -19,7 +19,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import java.util.List;
 
 @JeiPlugin
-public class JeiPrototypePainCompatPlugin implements IModPlugin {
+public class JeiCompatPlugin implements IModPlugin {
 
     private static final ResourceLocation ID = CasualtiesCubed.resourceLoc( "jei_recipe");
 
@@ -35,7 +35,7 @@ public class JeiPrototypePainCompatPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModItems.MedicalMixer.get()),MedicalMixerCategory.MEDICAL_MIXER_RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModItems.MEDICAL_MIXER.get()),MedicalMixerCategory.MEDICAL_MIXER_RECIPE_TYPE);
     }
 
     @Override

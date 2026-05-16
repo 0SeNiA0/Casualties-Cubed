@@ -50,7 +50,7 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
 
     public MedicalMixerCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEX,5,5,206,86);
-        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(ModItems.MedicalMixer.get()));
+        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(ModItems.MEDICAL_MIXER.get()));
         CasualtiesCubed.LOGGER.info("MADE RECIPE TYPE");
     }
 

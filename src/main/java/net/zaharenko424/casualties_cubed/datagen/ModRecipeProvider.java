@@ -30,7 +30,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.ScavPlush.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.EXPIE_PLUSHY.get())
                 .pattern("OYO")
                 .pattern("WWW")
                 .pattern("OWO")
@@ -47,7 +47,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.BAND_AIDS.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.ADHESIVE_BANDAGE.get())
                 .pattern("PHP")
                 .define('P',Items.PAPER.asItem())
                 .define('H',Items.HONEY_BOTTLE)
@@ -109,7 +109,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.SmallMedibag.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.SMALL_MEDIBAG.get())
                 .pattern("NNN")
                 .pattern("WLW")
                 .define('N',Items.IRON_INGOT)
@@ -118,23 +118,23 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MediumMedibag.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MEDIUM_MEDIBAG.get())
                 .pattern("GWG")
                 .pattern("SLS")
                 .define('W',ItemTags.WOOL)
                 .define('L',Items.LEATHER)
                 .define('G',Items.GOLD_INGOT)
-                .define('S',ModItems.SmallMedibag.get())
+                .define('S',ModItems.SMALL_MEDIBAG.get())
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.LargeMedibag.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.LARGE_MEDIBAG.get())
                 .pattern("DWD")
                 .pattern("MNM")
                 .define('N',Items.IRON_NUGGET)
                 .define('W',ItemTags.WOOL)
                 .define('D',Items.DIAMOND)
-                .define('M',ModItems.MediumMedibag.get())
+                .define('M',ModItems.MEDIUM_MEDIBAG.get())
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModItems.SPLINT.get())
@@ -173,7 +173,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern("AAA")
                 .pattern("ABA")
                 .pattern("AAA")
-                .define('A',ModItems.BrownCap.get())
+                .define('A',ModItems.BROWN_CAP.get())
                 .define('B',Items.BOWL)
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
@@ -354,7 +354,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         MedicalMixerRecipeBuilder.mixer()
                 .input(ItemTags.WOOL,2)
                 .inputM(ModMedicalFluidTags.DISINFECTING,20)
-                .output(ModItems.ALGANATE_DRESSING.get(), 1)
+                .output(ModItems.ALGINATE_DRESSING.get(), 1)
                 .save(consumer, CasualtiesCubed.resourceLoc("alganate_dressing"));
 
         MedicalMixerRecipeBuilder.mixer()
@@ -385,7 +385,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer, CasualtiesCubed.resourceLoc("lrd"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MedicalMixer.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MEDICAL_MIXER.get())
                 .pattern("MMM")
                 .pattern("IPI")
                 .pattern("PGP")
@@ -408,7 +408,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.ANTISERUM_INJECTOR.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.STREPTOKINASE_INJECTOR.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.PROCOAGULANT_INJECTOR.get(),Items.GLASS_BOTTLE);
-        stonecutterResultFromBase(consumer,RecipeCategory.MISC, ModItems.REACTION_LIQUID_VIAL.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC, ModItems.OPIUM_VIAL.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.NALOXONE_VIAL.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.MORPHINE_VIAL.get(),Items.GLASS_BOTTLE);

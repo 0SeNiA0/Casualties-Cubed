@@ -1,19 +1,5 @@
 package net.zaharenko424.casualties_cubed.limbs;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.ModDamageTypes;
-import net.zaharenko424.casualties_cubed.compat.TempCompat;
-import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
-import net.zaharenko424.casualties_cubed.compat.serene_seasons.SereneSeasonsUtil;
-import net.zaharenko424.casualties_cubed.config.ServerConfig;
-import net.zaharenko424.casualties_cubed.hitbox.HitSector;
-import net.zaharenko424.casualties_cubed.network.MedicalAction;
-import net.zaharenko424.casualties_cubed.network.ModNetwork;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundTriggerLastStandPacket;
-import net.zaharenko424.casualties_cubed.registry.ModGameRules;
-import net.zaharenko424.casualties_cubed.registry.ModItems;
-import net.zaharenko424.casualties_cubed.registry.ModSounds;
-import net.zaharenko424.casualties_cubed.tags.ModItemTags;
 import net.adinvas.prototype_physics.RagdollPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -47,6 +33,20 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.PacketDistributor;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.ModDamageTypes;
+import net.zaharenko424.casualties_cubed.compat.TempCompat;
+import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
+import net.zaharenko424.casualties_cubed.compat.serene_seasons.SereneSeasonsUtil;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
+import net.zaharenko424.casualties_cubed.hitbox.HitSector;
+import net.zaharenko424.casualties_cubed.network.MedicalAction;
+import net.zaharenko424.casualties_cubed.network.ModNetwork;
+import net.zaharenko424.casualties_cubed.network.packet.ClientboundTriggerLastStandPacket;
+import net.zaharenko424.casualties_cubed.registry.ModGameRules;
+import net.zaharenko424.casualties_cubed.registry.ModItems;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
+import net.zaharenko424.casualties_cubed.tags.ModItemTags;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.*;
@@ -1092,24 +1092,15 @@ public class PlayerHealthData {
         }
 
         if (ServerConfig.LIMB_REGROWTH.get() && player.hasEffect(MobEffects.REGENERATION)) {
-            List<Limb> amputated = new ArrayList<>();
-            for (Limb limb : limbStats.keySet()) {
-                if (limbStats.get(limb).isAmputated() && !limbStats.get(limb.getConnectedTo()).isAmputated()) amputated.add(limb);
-            }
-
             int amplifier = player.getEffect(MobEffects.REGENERATION).getAmplifier();
             if (amplifier > 0) {
+                List<Limb> amputated = new ArrayList<>();
+                for (Limb limb : limbStats.keySet()) {
+                    if (limbStats.get(limb).isAmputated() && !limbStats.get(limb.getConnectedTo()).isAmputated()) amputated.add(limb);
+                }
+
                 float regenAmount = (float) amplifier / amputated.size();
-
-                amputated.forEach(limb -> {
-                    LimbStatistics stats = limbStats.get(limb);
-                    stats.regrowthProgress += regenAmount;
-
-                    if (stats.regrowthProgress >= 20 * 60) {
-                        stats.amputated = false;
-                        stats.regrowthProgress = 0;
-                    }
-                });
+                amputated.forEach(limb -> limbStats.get(limb).progressRegrowth(regenAmount));
             }
         }
 
@@ -1655,13 +1646,20 @@ public class PlayerHealthData {
     }
 
     public void medicalAction(MedicalAction action, Limb limb, Player source) {
+        LimbStatistics stats = getLimbStats(limb);
+        if (stats.amputated) return;
+
         switch (action) {
             case REMOVE_SPLINT -> {
-                setLimbSplint(limb, false);
+                if (!stats.hasSplint) return;
+
+                stats.hasSplint = false;
                 source.getInventory().add(new ItemStack(ModItems.SPLINT.get()));
             }
             case REMOVE_TOURNIQUET -> {
-                limbStats.get(limb).tourniquet = false;
+                if (!stats.tourniquet) return;
+
+                stats.tourniquet = false;
                 ItemHandlerHelper.giveItemToPlayer(source, new ItemStack(ModItems.TOURNIQUET.get()));
             }
         }

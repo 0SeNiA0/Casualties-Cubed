@@ -23,7 +23,7 @@ public class ModBlocks {
 
     public static final RegistryObject<BrownCapBlock> BROWN_CAP = BLOCKS.register("brown_cap", ()-> new BrownCapBlock(BlockBehaviour.Properties.copy(Blocks.BROWN_MUSHROOM).randomTicks()));
 
-    public static final RegistryObject<ScavBlock> SCAV_BLOCK = BLOCKS.register("scav_plushie",()-> new ScavBlock(
+    public static final RegistryObject<ScavBlock> EXPIE_PLUSHY = BLOCKS.register("expie_plushy",()-> new ScavBlock(
             BlockBehaviour.Properties.of().instabreak().noOcclusion().noCollission()
     ));
 
