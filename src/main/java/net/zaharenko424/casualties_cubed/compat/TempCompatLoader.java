@@ -26,8 +26,9 @@ public class TempCompatLoader extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager manager, ProfilerFiller profilerFiller) {
         TempCompat.clearBlock();
         TempCompat.clearBiome();
-        files.forEach((fileLocation,jsonElement)->{
-            if (!fileLocation.getPath().equals("temperature_blocks")&&!fileLocation.getPath().equals("temperature_biomes"))return;
+        files.forEach((fileLocation, jsonElement) -> {
+            if (!fileLocation.getPath().equals("temperature_blocks") && !fileLocation.getPath().equals("temperature_biomes"))
+                return;
 
             if (fileLocation.getPath().equals("temperature_blocks")) {
                 JsonObject json = jsonElement.getAsJsonObject();
@@ -55,7 +56,7 @@ public class TempCompatLoader extends SimpleJsonResourceReloadListener {
                         float fall = obj.has("fall") ? obj.get("fall").getAsFloat() : day;
                         float winter = obj.has("winter") ? obj.get("winter").getAsFloat() : day;
 
-                        if (!Float.isNaN(day)){
+                        if (!Float.isNaN(day)) {
                             TempCompat.BiomeTemperatureEntry entry = new TempCompat.BiomeTemperatureEntry();
                             entry.temperature = day;
                             entry.nightChange = night;
@@ -63,7 +64,7 @@ public class TempCompatLoader extends SimpleJsonResourceReloadListener {
                             entry.fall = fall;
                             entry.spring = spring;
                             entry.winter = winter;
-                            TempCompat.addEntryBiome(blockId,entry);
+                            TempCompat.addEntryBiome(blockId, entry);
                         }
                     } catch (Exception e) {
                         System.err.println("[Prototype Pain] Failed to parse temperaturebiome compat entry: " + key);

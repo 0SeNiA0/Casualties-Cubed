@@ -3,7 +3,7 @@ package net.zaharenko424.casualties_cubed.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
 import net.zaharenko424.casualties_cubed.registry.ModRecipes;

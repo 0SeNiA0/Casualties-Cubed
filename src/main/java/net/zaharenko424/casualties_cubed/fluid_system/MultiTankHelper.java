@@ -111,7 +111,7 @@ public class MultiTankHelper {
         return map;
     }
 
-    public static List<FluidStack> drain(ItemStack stack, float ml) {
+    public static List<FluidStack> drain(ItemStack stack, float ml, boolean simulate) {
         MultiFluidTankHandler handler = getHandler(stack);
         List<FluidStack> drained = new ArrayList<>();
         if (handler == null) return drained;
@@ -130,9 +130,9 @@ public class MultiTankHelper {
                 if (fs.hasTag()) out.setTag(fs.getTag().copy());
 
                 drained.add(out);
-                handler.getTank().drain(fs.copy(), IFluidHandler.FluidAction.EXECUTE);
+                handler.getTank().drain(fs.copy(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
             }
-            handler.saveToNBT();
+            if (!simulate) handler.saveToNBT();
             return drained;
         }
 
@@ -153,7 +153,7 @@ public class MultiTankHelper {
             if (amountToDrain <= 0) continue;
 
             // drain from tank
-            handler.getTank().drain(new FluidStack(fs.getFluid(), amountToDrain, fs.getTag()), IFluidHandler.FluidAction.EXECUTE);
+            handler.getTank().drain(new FluidStack(fs.getFluid(), amountToDrain, fs.getTag()), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
 
             // copy drained fluid
             FluidStack out = new FluidStack(fs.getFluid(), amountToDrain);
@@ -166,7 +166,7 @@ public class MultiTankHelper {
             if (remaining <= 0) break;
         }
 
-        handler.saveToNBT();
+        if (!simulate) handler.saveToNBT();
         return drained;
     }
 

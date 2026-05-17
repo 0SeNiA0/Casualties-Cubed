@@ -11,7 +11,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;

@@ -21,7 +21,7 @@ public class ModLootModifier {
     public static final RegistryObject<Codec<? extends IGlobalLootModifier>> ADD_VIAL_RANDOM_FILL =
             LOOT_MODIFIER_SERIALIZERS.register("add_vial_random_fill", AddRandomFillToChestsModifier.CODEC);
 
-    public static void register(IEventBus bus){
+    public static void register(IEventBus bus) {
         LOOT_MODIFIER_SERIALIZERS.register(bus);
     }
 }

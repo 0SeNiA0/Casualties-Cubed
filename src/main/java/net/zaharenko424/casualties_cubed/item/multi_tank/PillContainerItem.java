@@ -35,7 +35,7 @@ public class PillContainerItem extends MultiTankFluidItem {
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!(pLivingEntity instanceof ServerPlayer player)) return pStack;
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getUseAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(pStack, max);
+        List<FluidStack> drained = MultiTankHelper.drain(pStack, max, player.isCreative());
         for (FluidStack fs : drained) {
             MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());

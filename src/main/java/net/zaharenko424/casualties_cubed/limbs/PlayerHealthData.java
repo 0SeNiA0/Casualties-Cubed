@@ -34,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.PacketDistributor;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.ModDamageTypes;
 import net.zaharenko424.casualties_cubed.compat.TempCompat;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
@@ -46,7 +47,6 @@ import net.zaharenko424.casualties_cubed.network.packet.ClientboundTriggerLastSt
 import net.zaharenko424.casualties_cubed.registry.ModGameRules;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
-import net.zaharenko424.casualties_cubed.tags.ModItemTags;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.*;
@@ -1781,9 +1781,9 @@ public class PlayerHealthData {
             case LEFT_ARM, RIGHT_ARM, LEFT_HAND, RIGHT_HAND -> {
                 ItemStack item = player.getItemBySlot(EquipmentSlot.CHEST);
                 float scalar = 0.5f;
-                if (item.is(ModItemTags.ARMOR_CHEST_ONLY))
+                if (item.is(CasualtiesCubedTags.Item.ARMOR_CHEST_ONLY))
                     scalar = 0;
-                else if (item.is(ModItemTags.ARMOR_FULL_ARM))
+                else if (item.is(CasualtiesCubedTags.Item.ARMOR_FULL_ARM))
                     scalar = 1;
                 if (item.getItem() instanceof ArmorItem armor) {
                     armPoints = (float) (armor.getDefense() * scalar * armorScale[1]);

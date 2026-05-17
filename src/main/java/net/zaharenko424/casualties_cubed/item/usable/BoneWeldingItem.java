@@ -26,7 +26,7 @@ public class BoneWeldingItem extends Item implements ISimpleMedicalUsable, IAllo
     }
 
     @Override
-    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) - 25);
             data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) - 26);

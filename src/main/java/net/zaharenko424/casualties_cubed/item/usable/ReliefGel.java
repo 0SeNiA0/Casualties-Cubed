@@ -24,7 +24,7 @@ public class ReliefGel extends Item implements ISimpleMedicalUsable, IAllowInMed
     }
 
     @Override
-    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setPendingOpioids(data.getPendingOpioids() + 1);
             data.setLimbPain(limb, data.getLimbPain(limb) - 5);

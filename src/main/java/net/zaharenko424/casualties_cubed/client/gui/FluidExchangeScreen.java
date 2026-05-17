@@ -114,7 +114,7 @@ public class FluidExchangeScreen extends Screen {
 
         if (toTransfer < 1) return;
 
-        List<FluidStack> drained = MultiTankHelper.drain(fromStack, toTransfer);
+        List<FluidStack> drained = MultiTankHelper.drain(fromStack, toTransfer, false);
         for (FluidStack stack : drained) {
             MultiTankHelper.addFluid(toStack, stack.getAmount(), stack);
         }

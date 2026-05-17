@@ -24,9 +24,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import net.zaharenko424.casualties_cubed.tags.ModDamageTypeTags;
 
 import java.util.List;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class HitboxEvents {
         float damageamount = event.getAmount(); // final damage after armor/enchantments
         DamageSource src = (ctx != null && ctx.source != null) ? ctx.source : event.getSource();
 
-        if (src.is(ModDamageTypeTags.IGNORE)) return;
+        if (src.is(CasualtiesCubedTags.DamageType.IGNORE)) return;
         if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount) || damageamount == Float.POSITIVE_INFINITY) return;
 
         PlayerHealthData data = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).resolve().orElse(null);
@@ -138,7 +138,7 @@ public class HitboxEvents {
         }
 
         if (src.is(DamageTypeTags.IS_EXPLOSION)) {
-            data.handleExplosionDamage(damageamount, event.getSource().is(ModDamageTypeTags.SHRAPNELL), player);
+            data.handleExplosionDamage(damageamount, event.getSource().is(CasualtiesCubedTags.DamageType.SHRAPNELL), player);
             event.setAmount(0);
             return;
         }
@@ -165,7 +165,7 @@ public class HitboxEvents {
                 event.setAmount(0);
                 return;
             }
-        } else if (src.is(ModDamageTypeTags.MAGIC) || event.getSource().is(DamageTypes.MAGIC)) {
+        } else if (src.is(CasualtiesCubedTags.DamageType.MAGIC) || event.getSource().is(DamageTypes.MAGIC)) {
             data.handleMagicDamage(damageamount, (ServerPlayer) player);
             event.setAmount(0);
             return;

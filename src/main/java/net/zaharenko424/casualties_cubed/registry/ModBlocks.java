@@ -16,16 +16,16 @@ public class ModBlocks {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, CasualtiesCubed.MOD_ID);
 
-    public static final RegistryObject<GlowFruitBushBlock> GLOW_FRUIT_BUSH = BLOCKS.register("glow_fruit_bush",() -> new GlowFruitBushBlock(BlockBehaviour.Properties.copy(Blocks.SWEET_BERRY_BUSH)
+    public static final RegistryObject<GlowFruitBushBlock> GLOW_FRUIT_BUSH = BLOCKS.register("glow_fruit_bush", () -> new GlowFruitBushBlock(BlockBehaviour.Properties.copy(Blocks.SWEET_BERRY_BUSH)
             .randomTicks()
             .instabreak()
             .noCollission()));
 
-    public static final RegistryObject<BrownCapBlock> BROWN_CAP = BLOCKS.register("brown_cap", ()-> new BrownCapBlock(BlockBehaviour.Properties.copy(Blocks.BROWN_MUSHROOM).randomTicks()));
+    public static final RegistryObject<BrownCapBlock> BROWN_CAP = BLOCKS.register("brown_cap", () -> new BrownCapBlock(BlockBehaviour.Properties.copy(Blocks.BROWN_MUSHROOM).randomTicks()));
 
-    public static final RegistryObject<ScavBlock> EXPIE_PLUSHY = BLOCKS.register("expie_plushy",()-> new ScavBlock(
+    public static final RegistryObject<ScavBlock> EXPIE_PLUSHY = BLOCKS.register("expie_plushy", () -> new ScavBlock(
             BlockBehaviour.Properties.of().instabreak().noOcclusion().noCollission()
     ));
 
-    public static final RegistryObject<MedicalMixerBlock> MEDICAL_MIXER = BLOCKS.register("medical_mixer",()->new MedicalMixerBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+    public static final RegistryObject<MedicalMixerBlock> MEDICAL_MIXER = BLOCKS.register("medical_mixer", () -> new MedicalMixerBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
 }

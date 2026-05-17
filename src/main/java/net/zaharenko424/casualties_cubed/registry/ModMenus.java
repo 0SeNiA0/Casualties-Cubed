@@ -53,10 +53,10 @@ public class ModMenus {
 
 
     public static final RegistryObject<MenuType<MedicalMixerMenu>> MEDICAL_MIXER =
-            registerMenuType("medical_mixer_menu",MedicalMixerMenu::new);
+            registerMenuType("medical_mixer_menu", MedicalMixerMenu::new);
 
 
-    public static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory){
-        return MENUS.register(name, ()->IForgeMenuType.create(factory));
+    public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
+        return MENUS.register(name, () -> IForgeMenuType.create(factory));
     }
 }

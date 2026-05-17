@@ -23,9 +23,9 @@ public class AutoInjectorItem extends MultiTankFluidItem implements ISimpleMedic
     }
 
     @Override
-    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getInjectAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(stack, max);
+        List<FluidStack> drained = MultiTankHelper.drain(stack, max, source.isCreative());
         MedicalFluid MF;
         for (FluidStack fs : drained) {
             MF = Util.getFallback(fs.getFluid());

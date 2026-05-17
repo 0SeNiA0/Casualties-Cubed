@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsEvents;
 import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
-import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.registry.ModLootModifier;
 import net.zaharenko424.casualties_cubed.registry.*;
 import net.zaharenko424.casualties_cubed.visual.particles.ModParticles;

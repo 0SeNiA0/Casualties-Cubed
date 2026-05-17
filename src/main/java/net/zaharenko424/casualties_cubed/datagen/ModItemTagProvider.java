@@ -1,8 +1,8 @@
 package net.zaharenko424.casualties_cubed.datagen;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
-import net.zaharenko424.casualties_cubed.tags.ModItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -22,14 +22,14 @@ public class ModItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
 
-        this.tag(ModItemTags.DRESSINGS)
+        this.tag(CasualtiesCubedTags.Item.DRESSINGS)
                 .add(ModItems.DRESSING.get(),
                     ModItems.PLASTIC_DRESSING.get(),
                     ModItems.STERILIZED_DRESSING.get(),
                     ModItems.MEDICAL_GAUZE.get(),
                     ModItems.ALGINATE_DRESSING.get());
 
-        this.tag(ModItemTags.VIAL_ITEMS)
+        this.tag(CasualtiesCubedTags.Item.VIAL_ITEMS)
                 .add(ModItems.MEDICINE_VIAL.get(),
                         ModItems.BOTTLE.get(),
                         ModItems.PILL_BOTTLE.get(),
@@ -44,7 +44,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
                         ModItems.CEFTRIAXONE_VIAL.get()
                 );
 
-        this.tag(ModItemTags.ALCOHOL_CREATABLE)
+        this.tag(CasualtiesCubedTags.Item.ALCOHOL_CREATABLE)
                 .add(
                         Items.APPLE,
                         Items.POTATO,
@@ -55,7 +55,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
                         Items.SWEET_BERRIES
                 );
 
-        this.tag(ModItemTags.CAUTERIZE)
+        this.tag(CasualtiesCubedTags.Item.CAUTERIZE)
                 .add(
                         Items.TORCH,
                         Items.SOUL_TORCH,

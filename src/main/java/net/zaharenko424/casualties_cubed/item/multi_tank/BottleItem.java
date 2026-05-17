@@ -42,7 +42,7 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!(pLivingEntity instanceof ServerPlayer player)) return pStack;
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getDrinkingAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(pStack, max);
+        List<FluidStack> drained = MultiTankHelper.drain(pStack, max, player.isCreative());
         for (FluidStack fs : drained) {
             MedicalFluid MF;
             MF = Util.getFallback(fs.getFluid());
@@ -80,9 +80,9 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
     }
 
     @Override
-    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getOnSkinAmount());
-        List<FluidStack> drained = MultiTankHelper.drain(stack, max);
+        List<FluidStack> drained = MultiTankHelper.drain(stack, max, source.isCreative());
         MedicalFluid MF;
         for (FluidStack fs : drained) {
             MF = Util.getFallback(fs.getFluid());

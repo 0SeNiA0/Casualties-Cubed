@@ -1,13 +1,14 @@
 package net.zaharenko424.casualties_cubed.fluid_system;
 
 
-import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
+import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
 
 public class MedicalFluid {
 

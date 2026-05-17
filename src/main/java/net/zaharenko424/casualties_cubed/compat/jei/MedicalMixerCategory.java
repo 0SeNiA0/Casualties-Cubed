@@ -14,7 +14,7 @@ import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
 import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;

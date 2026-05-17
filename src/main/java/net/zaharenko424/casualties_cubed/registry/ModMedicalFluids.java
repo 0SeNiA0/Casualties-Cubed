@@ -12,8 +12,8 @@ public class ModMedicalFluids {
 
     public static final DeferredRegister<MedicalFluid> MEDICAL_FLUIDS = DeferredRegister.create(ModMedicalRegistry.MEDICAL_FLUIDS_KEY, CasualtiesCubed.MOD_ID);
 
-    public static final RegistryObject<MedicalFluid> OPIUM = MEDICAL_FLUIDS.register("opium",() -> new MedicalFluid(MedicalEffects.OPIUM, 0xeb4034));
-    public static final RegistryObject<MedicalFluid> FENTANYL = MEDICAL_FLUIDS.register("fentanyl",()->new MedicalFluid(MedicalEffects.FENTANYL,0xa1d9ff));
+    public static final RegistryObject<MedicalFluid> OPIUM = MEDICAL_FLUIDS.register("opium", () -> new MedicalFluid(MedicalEffects.OPIUM, 0xeb4034));
+    public static final RegistryObject<MedicalFluid> FENTANYL = MEDICAL_FLUIDS.register("fentanyl", () -> new MedicalFluid(MedicalEffects.FENTANYL, 0xa1d9ff));
     public static final RegistryObject<MedicalFluid> MORPHINE = MEDICAL_FLUIDS.register("morphine", () -> new MedicalFluid(MedicalEffects.MORPHINE, 0x632329));
     public static final RegistryObject<MedicalFluid> HEROIN = MEDICAL_FLUIDS.register("heroin", () -> new MedicalFluid(MedicalEffects.HEROIN, 0xedf8ff));
     public static final RegistryObject<MedicalFluid> PAINKILLERS = MEDICAL_FLUIDS.register("painkillers", () -> new MedicalFluid(MedicalEffects.PAINKILLERS, 0x888888));
@@ -29,9 +29,9 @@ public class ModMedicalFluids {
     public static final RegistryObject<MedicalFluid> STREPTOKINASE = MEDICAL_FLUIDS.register("streptokinase", () -> new MedicalFluid(MedicalEffects.STREPTOKINASE, 0x0aecfc));
     public static final RegistryObject<MedicalFluid> NALOXONE = MEDICAL_FLUIDS.register("naloxone", () -> new MedicalFluid(MedicalEffects.NALOXONE, 0xf2abff));
     public static final RegistryObject<MedicalFluid> REACTION_LIQUID = MEDICAL_FLUIDS.register("reaction_liquid", () -> new MedicalFluid(MedicalEffects.WATER, 0xbceb23));
-    public static final RegistryObject<MedicalFluid> CLEAN_WATER = MEDICAL_FLUIDS.register("clean_water",()->new MedicalFluid(MedicalEffects.WATER,0x5276d1));
-    public static final RegistryObject<MedicalFluid> CHOCO_MILK = MEDICAL_FLUIDS.register("chocolate_milk",()->new MedicalFluid(MedicalEffects.CHOCOLATE_MILK,0x2e251c));
-    public static final RegistryObject<MedicalFluid> LRD_SERUM = MEDICAL_FLUIDS.register("lrd_serum",()->new MedicalFluid(MedicalEffect.EMPTY,0xebb734));
+    public static final RegistryObject<MedicalFluid> CLEAN_WATER = MEDICAL_FLUIDS.register("clean_water", () -> new MedicalFluid(MedicalEffects.WATER, 0x5276d1));
+    public static final RegistryObject<MedicalFluid> CHOCO_MILK = MEDICAL_FLUIDS.register("chocolate_milk", () -> new MedicalFluid(MedicalEffects.CHOCOLATE_MILK, 0x2e251c));
+    public static final RegistryObject<MedicalFluid> LRD_SERUM = MEDICAL_FLUIDS.register("lrd_serum", () -> new MedicalFluid(MedicalEffect.EMPTY, 0xebb734));
     // Generic variant
     public static final RegistryObject<MedicalFluid> VANILLA_WATER = MEDICAL_FLUIDS.register("v_water", () -> new FallbackMedicalFluid(MedicalEffects.WATER, 0x0349fc));
     public static final RegistryObject<MedicalFluid> VANILLA_LAVA = MEDICAL_FLUIDS.register("v_lava", () -> new FallbackMedicalFluid(MedicalEffects.VANILLA_LAVA, 0xfc4103));

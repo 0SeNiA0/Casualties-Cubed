@@ -22,7 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
-import net.zaharenko424.casualties_cubed.network.packet.*;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -121,7 +120,8 @@ public class ServerPacketHandler {
             Entity entity = sender.level().getEntity(packet.targetId());
             if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
-            //TODO ensure hand not missing
+            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
 
             for (int i = 0; i < packet.ids().length; i++) {
                 MedicalFluid fluid = MedicalFluid.getFromId(packet.ids()[i]);
@@ -183,13 +183,13 @@ public class ServerPacketHandler {
 
                 if (!(item instanceof IBandage bandage)) return;
 
-                bandage.use(target, packet.limb(), stackInBag, packet.durability());
+                bandage.use(sender, target, packet.limb(), packet.durability(), stackInBag);
                 bag.setItem(stack, bagSlot, stackInBag);
                 return;
             }
 
             if (item instanceof IBandage bandage) {
-                bandage.use(target, packet.limb(), stack, packet.durability());
+                bandage.use(sender, target, packet.limb(), packet.durability(), stack);
             }
         });
         context.setPacketHandled(true);
@@ -221,13 +221,13 @@ public class ServerPacketHandler {
 
                 if (!(item instanceof ISimpleMedicalUsable usable)) return;
 
-                usable.onMedicalUse(packet.limb(), sender, target, stackInBag);
+                usable.onMedicalUse(sender, target, packet.limb(), stackInBag);
                 bag.setItem(stack, bagSlot, stackInBag);
                 return;
             }
 
             if (item instanceof ISimpleMedicalUsable usable) {
-                usable.onMedicalUse(packet.limb(), sender, target, stack);
+                usable.onMedicalUse(sender, target, packet.limb(), stack);
             }
         });
         context.setPacketHandled(true);
@@ -387,7 +387,7 @@ public class ServerPacketHandler {
 
             if (toTransfer < 1) return;
 
-            List<FluidStack> drained = MultiTankHelper.drain(fromStack, toTransfer);
+            List<FluidStack> drained = MultiTankHelper.drain(fromStack, toTransfer, false);
             for (FluidStack stack : drained) {
                 CasualtiesCubed.LOGGER.info("fluid {}, amount {}", stack.getFluid(), stack.getAmount());
                 MultiTankHelper.addFluid(toStack, stack.getAmount(), stack);

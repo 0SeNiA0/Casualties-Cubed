@@ -8,18 +8,16 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class ModDamageTypes {
 
-    public static final ResourceKey<DamageType> GIVE_UP = ResourceKey.create(Registries.DAMAGE_TYPE,
-            CasualtiesCubed.resourceLoc("give_up"));
-    public static final ResourceKey<DamageType> BLEED = ResourceKey.create(Registries.DAMAGE_TYPE,
-            CasualtiesCubed.resourceLoc("bleed"));
-    public static final ResourceKey<DamageType> OPIOIDS = ResourceKey.create(Registries.DAMAGE_TYPE,
-            CasualtiesCubed.resourceLoc("opioids"));
-    public static final ResourceKey<DamageType> HEAVY_BLEED = ResourceKey.create(Registries.DAMAGE_TYPE,
-            CasualtiesCubed.resourceLoc("heavy_bleed"));
-    public static final ResourceKey<DamageType> INTERNAL_BLEED = ResourceKey.create(Registries.DAMAGE_TYPE,
-            CasualtiesCubed.resourceLoc("internal_bleed"));
-    public static final ResourceKey<DamageType> OXYGEN = ResourceKey.create(Registries.DAMAGE_TYPE,
-            CasualtiesCubed.resourceLoc("oxygen"));
+    public static final ResourceKey<DamageType> GIVE_UP = key("give_up");
+    public static final ResourceKey<DamageType> BLEED = key("bleed");
+    public static final ResourceKey<DamageType> OPIOIDS = key("opioids");
+    public static final ResourceKey<DamageType> HEAVY_BLEED = key("heavy_bleed");
+    public static final ResourceKey<DamageType> INTERNAL_BLEED = key("internal_bleed");
+    public static final ResourceKey<DamageType> OXYGEN = key("oxygen");
+
+    private static ResourceKey<DamageType> key(String path) {
+        return ResourceKey.create(Registries.DAMAGE_TYPE, CasualtiesCubed.resourceLoc(path));
+    }
 
     public static DamageSource giveUp(ServerLevel level) {
         return new DamageSource(level.registryAccess()

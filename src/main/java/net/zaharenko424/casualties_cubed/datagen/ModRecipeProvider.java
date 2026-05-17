@@ -1,12 +1,11 @@
 package net.zaharenko424.casualties_cubed.datagen;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.datagen.recipes.crop.BasicCropRecipeProvider;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipeBuilder;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
-import net.zaharenko424.casualties_cubed.tags.ModItemTags;
-import net.zaharenko424.casualties_cubed.tags.ModMedicalFluidTags;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
@@ -66,7 +65,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,ModItems.PLASTIC_DRESSING.get())
-                .requires(ModItemTags.DRESSINGS)
+                .requires(CasualtiesCubedTags.Item.DRESSINGS)
                 .requires(Items.SLIME_BALL)
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer);
@@ -209,22 +208,22 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("chocolate_milk"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .input(ModItemTags.ALCOHOL_CREATABLE,4)
+                .input(CasualtiesCubedTags.Item.ALCOHOL_CREATABLE,4)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),10)
                 .input(Fluids.WATER,100)
                 .output(ModMedicalFluids.ALCOHOL.get(),100)
                 .save(consumer, CasualtiesCubed.resourceLoc("alcohol"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .input(ModItemTags.ALCOHOL_CREATABLE,4)
+                .input(CasualtiesCubedTags.Item.ALCOHOL_CREATABLE,4)
                 .input(Fluids.WATER,100)
                 .processingTime(6000)
                 .output(ModMedicalFluids.ALCOHOL.get(),100)
                 .save(consumer, CasualtiesCubed.resourceLoc("alcohol_slow"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputM(ModMedicalFluidTags.DISINFECTING,100)
-                .input(ModItemTags.DRESSINGS,1)
+                .inputM(CasualtiesCubedTags.MedicalFluid.DISINFECTING,100)
+                .input(CasualtiesCubedTags.Item.DRESSINGS,1)
                 .processingTime(200)
                 .output(ModItems.STERILIZED_DRESSING.get(),1)
                 .save(consumer, CasualtiesCubed.resourceLoc("sterilized_dressing"));
@@ -253,7 +252,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.SUGAR,2)
-                .inputM(ModMedicalFluidTags.OPIOIDS,25)
+                .inputM(CasualtiesCubedTags.MedicalFluid.OPIOIDS,25)
                 .output(ModMedicalFluids.PAINKILLERS.get(), 50)
                 .save(consumer, CasualtiesCubed.resourceLoc("painkillers"));
 
@@ -273,7 +272,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("antiseptic"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputM(ModMedicalFluidTags.OPIOIDS,10)
+                .inputM(CasualtiesCubedTags.MedicalFluid.OPIOIDS,10)
                 .input(Items.SLIME_BALL,1)
                 .input(Fluids.WATER,100)
                 .output(ModMedicalFluids.RELIEF_CREAM.get(), 100)
@@ -331,21 +330,21 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("streptokinase"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputM(ModMedicalFluidTags.OPIOIDS,50)
+                .inputM(CasualtiesCubedTags.MedicalFluid.OPIOIDS,50)
                 .input(Items.GLISTERING_MELON_SLICE,2)
                 .output(ModMedicalFluids.NALOXONE.get(),25)
                 .save(consumer, CasualtiesCubed.resourceLoc("naloxone"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputM(ModMedicalFluidTags.OPIOIDS,25)
+                .inputM(CasualtiesCubedTags.MedicalFluid.OPIOIDS,25)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),25)
-                .input(ModItemTags.DRESSINGS,1)
+                .input(CasualtiesCubedTags.Item.DRESSINGS,1)
                 .input(Items.STRING,1)
                 .output(ModItems.BRUISE_KIT.get(), 1)
                 .save(consumer, CasualtiesCubed.resourceLoc("bruise_kit"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputM(ModMedicalFluidTags.OPIOIDS,50)
+                .inputM(CasualtiesCubedTags.MedicalFluid.OPIOIDS,50)
                 .input(ItemTags.WOOL,1)
                 .input(Items.STRING,2)
                 .output(ModItems.MEDICAL_GAUZE.get(), 1)
@@ -353,13 +352,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(ItemTags.WOOL,2)
-                .inputM(ModMedicalFluidTags.DISINFECTING,20)
+                .inputM(CasualtiesCubedTags.MedicalFluid.DISINFECTING,20)
                 .output(ModItems.ALGINATE_DRESSING.get(), 1)
                 .save(consumer, CasualtiesCubed.resourceLoc("alganate_dressing"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputM(ModMedicalFluidTags.DISINFECTING,25)
-                .inputM(ModMedicalFluidTags.OPIOIDS,25)
+                .inputM(CasualtiesCubedTags.MedicalFluid.DISINFECTING,25)
+                .inputM(CasualtiesCubedTags.MedicalFluid.OPIOIDS,25)
                 .input(ModMedicalFluids.REACTION_LIQUID.get(),25)
                 .output(ModMedicalFluids.LRD_SERUM.get(), 25)
                 .save(consumer, CasualtiesCubed.resourceLoc("lrd_serum"));
@@ -397,7 +396,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("med_mixer"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC,Items.GLASS_BOTTLE)
-                .requires(ModItemTags.VIAL_ITEMS)
+                .requires(CasualtiesCubedTags.Item.VIAL_ITEMS)
                 .unlockedBy("has_poppy", has(Items.AIR))
                 .save(consumer, CasualtiesCubed.resourceLoc("all_to_bottle"));
 

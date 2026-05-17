@@ -24,7 +24,7 @@ public class IcePackItem extends Item implements ISimpleMedicalUsable, IAllowInM
     }
 
     @Override
-    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 35);
             data.setLimbDislocation(limb, data.getLimbDislocated(limb) * 0.4f);

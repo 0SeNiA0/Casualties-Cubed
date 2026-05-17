@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = CasualtiesCubed.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModMedicalRegistry {
-    
+
     public static final ResourceLocation UPGRADE_TYPES_NAME = CasualtiesCubed.resourceLoc("medical_fluids");
     public static final ResourceKey<Registry<MedicalFluid>> MEDICAL_FLUIDS_KEY =
             ResourceKey.createRegistryKey(UPGRADE_TYPES_NAME);

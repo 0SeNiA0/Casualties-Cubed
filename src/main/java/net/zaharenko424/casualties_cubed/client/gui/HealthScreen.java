@@ -1,8 +1,8 @@
 package net.zaharenko424.casualties_cubed.client.gui;
 
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
-import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodleVisual;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
@@ -12,14 +12,11 @@ import net.zaharenko424.casualties_cubed.item.api.IBandage;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 
 import net.zaharenko424.casualties_cubed.limbs.Limb;
-import net.zaharenko424.casualties_cubed.network.*;
-import net.zaharenko424.casualties_cubed.network.packet.*;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundCauterizeActionPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseMedItemPacket;
-import net.zaharenko424.casualties_cubed.tags.ModItemTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -478,7 +475,7 @@ public class HealthScreen extends Screen {
                     helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
                 }
 
-                if (itemstack.is(ModItemTags.CAUTERIZE)) {
+                if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {
                     ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
                 }
 
@@ -497,7 +494,7 @@ public class HealthScreen extends Screen {
                     helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.LEFT, minecraft.player));
                 }
 
-                if (itemstack.is(ModItemTags.CAUTERIZE)) {
+                if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {
                     ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
                 }
 

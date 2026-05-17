@@ -26,7 +26,7 @@ public class AdhesiveBandage extends Item implements ISimpleMedicalUsable, IAllo
     }
 
     @Override
-    public void onMedicalUse(Limb limb, ServerPlayer source, ServerPlayer target, ItemStack stack) {
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) + 3);
             data.addDelayedChange(((0.1f) / 20f) / 60f, 100, limb);
