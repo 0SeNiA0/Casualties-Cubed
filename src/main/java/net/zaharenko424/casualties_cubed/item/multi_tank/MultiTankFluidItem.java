@@ -98,16 +98,24 @@ public class MultiTankFluidItem extends Item {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
     }
 
-    public void setupDefault(ItemStack pStack) {
-
+    public ItemStack withDefFluid() {
+        return new ItemStack(this);
     }
 
-    public ItemStack withMedicalFluid(RegistryObject<? extends MedicalFluid> fluid, int ml) {
-        ItemStack stack = new ItemStack(this);
+    public void addMedicalFluid(ItemStack stack, RegistryObject<? extends MedicalFluid> fluid, int ml) {
         MultiTankHelper.addMedicalFluid(stack,
                 ml,
                 fluid.getId().toString(),
                 new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
+    }
+
+    public ItemStack withMedicalFluid(RegistryObject<? extends MedicalFluid> fluid) {
+        return withMedicalFluid(fluid, getCapacity());
+    }
+
+    public ItemStack withMedicalFluid(RegistryObject<? extends MedicalFluid> fluid, int ml) {
+        ItemStack stack = new ItemStack(this);
+        addMedicalFluid(stack, fluid, ml);
         return stack;
     }
 

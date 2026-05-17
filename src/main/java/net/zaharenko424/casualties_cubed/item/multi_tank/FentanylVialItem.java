@@ -1,22 +1,14 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
-import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
-import net.zaharenko424.casualties_cubed.fluid_system.ModFluids;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
 
 public class FentanylVialItem extends MedicineVialItem {
 
     @Override
-    public void setupDefault(ItemStack pStack) {
-        MultiTankHelper.addMedicalFluid(pStack,
-                10,
-                ModMedicalFluids.FENTANYL.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
-        MultiTankHelper.addMedicalFluid(pStack,
-                90,
-                ModMedicalFluids.CLEAN_WATER.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
+    public ItemStack withDefFluid() {
+        ItemStack stack = withMedicalFluid(ModMedicalFluids.FENTANYL, 10);
+        addMedicalFluid(stack, ModMedicalFluids.CLEAN_WATER, 90);
+        return stack;
     }
 }

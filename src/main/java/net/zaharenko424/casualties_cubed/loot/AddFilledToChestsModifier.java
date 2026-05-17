@@ -48,13 +48,13 @@ public class AddFilledToChestsModifier extends LootModifier {
 
         // --- At this point, we know it's a chest loot table ---
 
-        ItemStack stack = new ItemStack(this.item);
+        ItemStack stack;
 
         // (Optional) Random NBT data example
 
-        if (stack.getItem() instanceof MultiTankFluidItem vial) {
-            vial.setupDefault(stack);
-        }
+        if (item instanceof MultiTankFluidItem vial) {
+            stack = vial.withDefFluid();
+        } else stack = new ItemStack(item);
 
         generated.add(stack);
         return generated;
