@@ -1,16 +1,17 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
-import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
-import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
-import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
+import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
 public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable, IAllowInMedicBags {
 
@@ -25,8 +26,9 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
 
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
-        if (MultiTankHelper.getAmountOfFluid(stack, ModMedicalFluids.LRD_SERUM.get().getAsStack(1)) >= 25) {
-            if (!source.isCreative()) MultiTankHelper.drainSpecificFluid(stack, 25, ModMedicalFluids.LRD_SERUM.get().getAsStack(1));
+        if (MultiTankHelper.getAmountOfFluid(stack, new FluidStack(ModFluids.LRD_SERUM.get(), 1)) >= 25) {
+            if (!source.isCreative()) MultiTankHelper.drainSpecificFluid(stack, 25, new FluidStack(ModFluids.LRD_SERUM.get(), 1));
+
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 50f);
                 data.setLimbInfection(limb, data.getLimbInfection(limb) - 10);

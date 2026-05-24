@@ -4,7 +4,6 @@ package net.zaharenko424.casualties_cubed.datagen;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.datagen.lang.ENLanguageProvider;
 import net.zaharenko424.casualties_cubed.datagen.worldgen.ModWorldGenProvider;
+import net.zaharenko424.casualties_cubed.fluid_system.FluidTagProvider;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -33,16 +33,7 @@ public class DataGenerators {
                 new ModBlockTagGenerator(output, lookupProvider, existingFileHelper));
         generator.addProvider(event.includeServer(), new ModItemTagProvider(output, lookupProvider, blockTagGenerator.contentsGetter(), existingFileHelper));
 
-        if (event.includeServer()) {
-            event.getGenerator().addProvider(
-                    true,
-                    new ModMedicalFluidTagProvider(
-                            output,
-                            lookupProvider,
-                            CompletableFuture.completedFuture(TagsProvider.TagLookup.empty())
-                    )
-            );
-        }
+        generator.addProvider(event.includeServer(), new FluidTagProvider(output, lookupProvider, existingFileHelper));
 
         generator.addProvider(event.includeServer(), new ModRecipeProvider(output));
 

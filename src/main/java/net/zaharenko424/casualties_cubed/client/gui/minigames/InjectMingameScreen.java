@@ -98,7 +98,7 @@ public class InjectMingameScreen extends Screen {
         if (parent instanceof HealthScreen hp) {
             hp.BGmode = true;
         }
-        syringeObject = new SyringeObject(this.width / 2, 0, 1f, this.height / 6);
+        syringeObject = new SyringeObject(this.width / 2, 0, 1f, this.height / 6, hand, (byte) slot);
         syringeObject.setFullness(syringeStack);
         syringeObject.setColor(syringeStack);
     }

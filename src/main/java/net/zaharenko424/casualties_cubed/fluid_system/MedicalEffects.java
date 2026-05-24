@@ -1,12 +1,24 @@
 package net.zaharenko424.casualties_cubed.fluid_system;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.ForgeMod;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 public class MedicalEffects {
+
+    public static MedicalEffect forFluid(Fluid fluid) {
+        if (fluid instanceof MedicalFluid medFluid) return medFluid.getEffect();
+
+        if (fluid.getFluidType() == ForgeMod.WATER_TYPE.get()) return MedicalEffects.WATER;
+
+        if (fluid.getFluidType() == ForgeMod.LAVA_TYPE.get()) return MedicalEffects.LAVA;
+
+        return ExtraMedFluids.getOrDef(fluid).effect();
+    }
 
     public static final MedicalEffect OPIUM = new MedicalEffect() {
         @Override
@@ -57,10 +69,10 @@ public class MedicalEffects {
     public static final MedicalEffect FENTANYL = new MedicalEffect() {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.addEffect(new MobEffectInstance(MobEffects.WITHER,300,5));
-            player.addEffect(new MobEffectInstance(MobEffects.POISON,300,5));
+            player.addEffect(new MobEffectInstance(MobEffects.WITHER, 300, 5));
+            player.addEffect(new MobEffectInstance(MobEffects.POISON, 300, 5));
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature()-0.005f*ml);
+                h.setTemperature(h.getTemperature() - 0.005f * ml);
             });
         }
 
@@ -77,7 +89,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature()-0.005f*ml);
+                h.setTemperature(h.getTemperature() - 0.005f * ml);
             });
         }
     };
@@ -85,15 +97,15 @@ public class MedicalEffects {
     public static final MedicalEffect PAINKILLERS = new MedicalEffect() {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setPendingOpioids(h.getPendingOpioids()+(1.4f*ml));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setPendingOpioids(h.getPendingOpioids() + (1.4f * ml));
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setPendingOpioids(h.getPendingOpioids()+(0.1f*ml));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setPendingOpioids(h.getPendingOpioids() + (0.1f * ml));
             });
         }
     };
@@ -101,12 +113,12 @@ public class MedicalEffects {
     public static final MedicalEffect STREPTOKINASE = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                for (Limb limb1 : Limb.values()){
-                    h.setLimbBleedRate(limb1, h.getLimbBleedRate(limb1)*(1f+ml*0.014f));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                for (Limb limb1 : Limb.values()) {
+                    h.setLimbBleedRate(limb1, h.getLimbBleedRate(limb1) * (1f + ml * 0.014f));
                 }
-                h.setInternalBleeding(h.getInternalBleeding()*(1f+ml*0.0147f));
-                h.setBloodViscosity(h.getBloodViscosity()-1.5f*ml);
+                h.setInternalBleeding(h.getInternalBleeding() * (1f + ml * 0.0147f));
+                h.setBloodViscosity(h.getBloodViscosity() - 1.5f * ml);
             });
         }
     };
@@ -114,12 +126,12 @@ public class MedicalEffects {
     public static final MedicalEffect PROCOAGULANT = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                for (Limb limb1 : Limb.values()){
-                    h.setLimbBleedRate(limb1, h.getLimbBleedRate(limb1)*(1f-ml*0.016f));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                for (Limb limb1 : Limb.values()) {
+                    h.setLimbBleedRate(limb1, h.getLimbBleedRate(limb1) * (1f - ml * 0.016f));
                 }
-                h.setInternalBleeding(h.getInternalBleeding()*(1f-ml*0.017f));
-                h.setBloodViscosity(h.getBloodViscosity()+0.6f*ml);
+                h.setInternalBleeding(h.getInternalBleeding() * (1f - ml * 0.017f));
+                h.setBloodViscosity(h.getBloodViscosity() + 0.6f * ml);
             });
         }
     };
@@ -127,9 +139,9 @@ public class MedicalEffects {
     public static final MedicalEffect NALOXONE = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setOpioids(h.getOpioids()-(4f*ml));
-                h.setPendingOpioids(h.getPendingOpioids()-(4f*ml));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setOpioids(h.getOpioids() - (4f * ml));
+                h.setPendingOpioids(h.getPendingOpioids() - (4f * ml));
             });
         }
     };
@@ -137,18 +149,18 @@ public class MedicalEffects {
     public static final MedicalEffect ALCOHOL = new MedicalEffect() {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, (int) (1*ml),1));
-            player.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (1*ml),2));
+            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, (int) (1 * ml), 1));
+            player.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (1 * ml), 2));
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature()-0.005f*ml);
+                h.setTemperature(h.getTemperature() - 0.005f * ml);
             });
         }
 
         @Override
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbPain(limb, h.getLimbPain(limb)+0.1f*ml);
-                h.setLimbDisinfected(limb,Math.max(h.getLimbDisinfected(limb),700*ml));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbPain(limb, h.getLimbPain(limb) + 0.1f * ml);
+                h.setLimbDisinfected(limb, Math.max(h.getLimbDisinfected(limb), 700 * ml));
             });
         }
     };
@@ -156,17 +168,17 @@ public class MedicalEffects {
     public static final MedicalEffect BRAINGROW = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD)+10*ml);
-                h.setBrainHealth(h.getBrainHealth()-ml/2);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD) + 10 * ml);
+                h.setBrainHealth(h.getBrainHealth() - ml / 2);
             });
         }
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-               h.setBrainHealth(h.getBrainHealth()+ml);
-                h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD)+5*ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setBrainHealth(h.getBrainHealth() + ml);
+                h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD) + 5 * ml);
             });
         }
     };
@@ -174,23 +186,23 @@ public class MedicalEffects {
     public static final MedicalEffect ANTISEPTIC = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbPain(limb, h.getLimbPain(limb)+5*ml);
-                h.setLimbDisinfected(limb,h.getLimbDisinfected(limb)+300*ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbPain(limb, h.getLimbPain(limb) + 5 * ml);
+                h.setLimbDisinfected(limb, h.getLimbDisinfected(limb) + 300 * ml);
             });
         }
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, (int) (1*ml),2));
-            player.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (1*ml),3));
+            player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, (int) (1 * ml), 2));
+            player.addEffect(new MobEffectInstance(MobEffects.POISON, (int) (1 * ml), 3));
         }
 
         @Override
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbPain(limb, h.getLimbPain(limb)+3.5f*ml);
-                h.setLimbDisinfected(limb,Math.max(h.getLimbDisinfected(limb),1200*ml));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbPain(limb, h.getLimbPain(limb) + 3.5f * ml);
+                h.setLimbDisinfected(limb, Math.max(h.getLimbDisinfected(limb), 1200 * ml));
             });
         }
     };
@@ -198,9 +210,9 @@ public class MedicalEffects {
     public static final MedicalEffect RELIEF_CREAM = new MedicalEffect() {
         @Override
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbDisinfected(limb,Math.max(h.getLimbDisinfected(limb),636*ml));
-                h.setLimbPain(limb, h.getLimbPain(limb)*0.01f);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbDisinfected(limb, Math.max(h.getLimbDisinfected(limb), 636 * ml));
+                h.setLimbPain(limb, h.getLimbPain(limb) * 0.01f);
             });
         }
     };
@@ -208,9 +220,9 @@ public class MedicalEffects {
     public static final MedicalEffect SALINE = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setBloodViscosity(h.getBloodViscosity()+0.01f*ml);
-                h.setBloodVolume(h.getBloodVolume()+ml*0.001f);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setBloodViscosity(h.getBloodViscosity() + 0.01f * ml);
+                h.setBloodVolume(h.getBloodVolume() + ml * 0.001f);
             });
         }
     };
@@ -218,8 +230,8 @@ public class MedicalEffects {
     public static final MedicalEffect ANTIBIOTICS = new MedicalEffect() {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setAntibiotic_timer(Math.max(h.getAntibiotic_timer(),4000));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setAntibiotic_timer(Math.max(h.getAntibiotic_timer(), 4000));
             });
         }
     };
@@ -227,10 +239,10 @@ public class MedicalEffects {
     public static final MedicalEffect ANTISERUM = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setAntibiotic_timer(Math.max(h.getAntibiotic_timer(),6000));
-                h.setLimbDisinfected(limb,h.getLimbDisinfected(limb)+70*ml);
-                h.setBloodVolume(h.getBloodVolume()+0.001f*ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setAntibiotic_timer(Math.max(h.getAntibiotic_timer(), 6000));
+                h.setLimbDisinfected(limb, h.getLimbDisinfected(limb) + 70 * ml);
+                h.setBloodVolume(h.getBloodVolume() + 0.001f * ml);
             });
         }
     };
@@ -238,42 +250,42 @@ public class MedicalEffects {
     public static final MedicalEffect CEFTRAIAXONE = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setAntibiotic_timer(h.getAntibiotic_timer()+225*ml);
-                h.setLimbPain(Limb.CHEST, h.getLimbPain(Limb.CHEST)+1.5f*ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setAntibiotic_timer(h.getAntibiotic_timer() + 225 * ml);
+                h.setLimbPain(Limb.CHEST, h.getLimbPain(Limb.CHEST) + 1.5f * ml);
             });
         }
     };
 
-    public static final MedicalEffect VANILLA_LAVA = new MedicalEffect() {
+    public static final MedicalEffect LAVA = new MedicalEffect() {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbSkinHealth(Limb.HEAD, h.getLimbSkinHealth(Limb.HEAD)-15*ml);
-                h.applyPain(Limb.HEAD,ml*2f);
-                h.setLimbMuscleHealth(Limb.HEAD, h.getLimbMuscleHealth(Limb.HEAD)-15*ml);
-                h.setTemperature(h.getTemperature()+0.5f*ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbSkinHealth(Limb.HEAD, h.getLimbSkinHealth(Limb.HEAD) - 15 * ml);
+                h.applyPain(Limb.HEAD, ml * 2f);
+                h.setLimbMuscleHealth(Limb.HEAD, h.getLimbMuscleHealth(Limb.HEAD) - 15 * ml);
+                h.setTemperature(h.getTemperature() + 0.5f * ml);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb)-10f*ml);
-                h.applyPain(limb,ml*2f);
-                h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb)-20f*ml);
-                h.setTemperature(h.getTemperature()+0.5f*ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) - 10f * ml);
+                h.applyPain(limb, ml * 2f);
+                h.setLimbMuscleHealth(limb, h.getLimbMuscleHealth(limb) - 20f * ml);
+                h.setTemperature(h.getTemperature() + 0.5f * ml);
             });
         }
 
         @Override
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
-            player.setSecondsOnFire((int)(0.1*ml));
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setLimbSkinHealth(Limb.HEAD, h.getLimbSkinHealth(Limb.HEAD)-20*ml);
-                h.applyPain(Limb.HEAD,ml*2.5f);
-                h.setLimbMuscleHealth(Limb.HEAD, h.getLimbMuscleHealth(Limb.HEAD)-10*ml);
-                h.setTemperature(h.getTemperature()+0.5f*ml);
+            player.setSecondsOnFire((int) (0.1 * ml));
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setLimbSkinHealth(Limb.HEAD, h.getLimbSkinHealth(Limb.HEAD) - 20 * ml);
+                h.applyPain(Limb.HEAD, ml * 2.5f);
+                h.setLimbMuscleHealth(Limb.HEAD, h.getLimbMuscleHealth(Limb.HEAD) - 10 * ml);
+                h.setTemperature(h.getTemperature() + 0.5f * ml);
             });
         }
     };
@@ -282,7 +294,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature()-0.01f*ml);
+                h.setTemperature(h.getTemperature() - 0.01f * ml);
             });
         }
     };

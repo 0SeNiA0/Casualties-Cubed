@@ -31,7 +31,6 @@ public class CasualtiesCubed {
         IEventBus modEventBus = context.getModEventBus();
 
         ModFluids.register(modEventBus);
-        ModMedicalFluids.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);

@@ -46,8 +46,8 @@ public class ModCreativeTab {
                         output.accept(BONE_WELDER.get());
                         output.accept(MAKESHIFT_LRD.get());
                         output.accept(LRD.get());
-                        output.accept(MAKESHIFT_LRD.get().withMedicalFluid(ModMedicalFluids.LRD_SERUM));
-                        output.accept(LRD.get().withMedicalFluid(ModMedicalFluids.LRD_SERUM));
+                        output.accept(MAKESHIFT_LRD.get().withFluid(ModFluids.LRD_SERUM));
+                        output.accept(LRD.get().withFluid(ModFluids.LRD_SERUM));
                         output.accept(AUTO_PUMP.get());
 
                         output.accept(SPLINT.get());
@@ -99,7 +99,7 @@ public class ModCreativeTab {
                         output.accept(MORPHINE_VIAL.get().withDefFluid());
                         output.accept(FENTANYL_VIAL.get().withDefFluid());
                         output.accept(NALOXONE_VIAL.get().withDefFluid());
-                        output.accept(MEDICINE_VIAL.get().withMedicalFluid(ModMedicalFluids.REACTION_LIQUID));
+                        output.accept(MEDICINE_VIAL.get().withFluid(ModFluids.REACTION_LIQUID));
 
                         output.accept(PROCOAGULANT_INJECTOR.get().withDefFluid());
                         output.accept(STREPTOKINASE_INJECTOR.get().withDefFluid());

@@ -1,16 +1,5 @@
 package net.zaharenko424.casualties_cubed.network;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
-import net.zaharenko424.casualties_cubed.item.api.IBag;
-import net.zaharenko424.casualties_cubed.item.api.IBandage;
-import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
-import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import net.zaharenko424.casualties_cubed.network.packet.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +11,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.item.api.IBag;
+import net.zaharenko424.casualties_cubed.item.api.IBandage;
+import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
+import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.network.packet.*;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -121,14 +122,30 @@ public class ServerPacketHandler {
             if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
-            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+            if (data.isAmputated(Limb.getFromHand(packet.usedHand(), sender))) return;// Cant use amputated limb
 
-            for (int i = 0; i < packet.ids().length; i++) {
-                MedicalFluid fluid = MedicalFluid.getFromId(packet.ids()[i]);
-                float amount = packet.amounts()[i];
-                if (fluid != null && !Float.isNaN(amount)) {
-                    fluid.getMedicalEffect().applyInjected(target, amount, packet.limb());
-                }
+            PlayerHealthData targetData = sender == target ? data : target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
+            if (targetData.isAmputated(packet.limb())) return;// Cant treat missing limb
+
+            ItemStack stack = sender.getItemInHand(packet.usedHand());
+            Item item = stack.getItem();
+            if (item instanceof IBag bag) {
+                int bagSlot = packet.bagSlot();
+                if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
+
+                stack = bag.getItem(stack, bagSlot);
+            }
+
+            if (!(stack.getItem() instanceof MultiTankFluidItem fluidItem)) return;
+
+            MultiFluidTankHandler handler = fluidItem.getHandler(stack);
+
+            List<FluidStack> fluids = handler.getTank().getFluids();
+            int count = Math.min(packet.amounts().length, fluids.size());
+            for (int i = 0; i < count; i++) {
+                if (Float.isNaN(packet.amounts()[i])) continue;
+
+                MedicalEffects.forFluid(fluids.get(i).getFluid()).applyInjected(target, packet.amounts()[i], packet.limb());
             }
         });
         ctx.get().setPacketHandled(true);

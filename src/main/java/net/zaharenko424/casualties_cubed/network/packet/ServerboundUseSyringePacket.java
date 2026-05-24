@@ -1,22 +1,13 @@
 package net.zaharenko424.casualties_cubed.network.packet;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 
-///FIXME DONT LISTEN TO SOME RANDOM CLIENT DATA, TAKE DATA FROM ITEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-public record ServerboundUseSyringePacket(int targetId, Limb limb, String[] ids, float[] amounts) {
+public record ServerboundUseSyringePacket(int targetId, Limb limb, InteractionHand usedHand, byte bagSlot, float[] amounts) {
 
     public ServerboundUseSyringePacket(FriendlyByteBuf buf){
-        this(buf.readVarInt(), buf.readEnum(Limb.class), readStrAr(buf), readFloatAr(buf));
-    }
-
-    private static String[] readStrAr(FriendlyByteBuf buf) {
-        int idCount = buf.readVarInt();
-        String[] ids = new String[idCount];
-        for (int i = 0; i < idCount; i++) {
-            ids[i] = buf.readUtf();
-        }
-        return ids;
+        this(buf.readVarInt(), buf.readEnum(Limb.class), buf.readEnum(InteractionHand.class), buf.readByte(), readFloatAr(buf));
     }
 
     private static float[] readFloatAr(FriendlyByteBuf buf) {
@@ -31,11 +22,8 @@ public record ServerboundUseSyringePacket(int targetId, Limb limb, String[] ids,
     public void encode(FriendlyByteBuf buf){
         buf.writeVarInt(targetId);
         buf.writeEnum(limb);
-
-        buf.writeVarInt(this.ids.length);
-        for (String id : this.ids){
-            buf.writeUtf(id);
-        }
+        buf.writeEnum(usedHand);
+        buf.writeByte(bagSlot);
 
         buf.writeVarInt(this.amounts.length);
         for (Float amount : this.amounts){

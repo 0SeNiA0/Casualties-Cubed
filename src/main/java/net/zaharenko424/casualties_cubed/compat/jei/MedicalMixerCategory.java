@@ -10,15 +10,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
-import net.zaharenko424.casualties_cubed.Util;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.registry.ModFluids;
-import net.zaharenko424.casualties_cubed.registry.ModItems;
-import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +21,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
+import net.zaharenko424.casualties_cubed.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -87,27 +84,14 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
         for (int i = 0; i < medicalMixerRecipe.getFluidInputs().size(); i++) {
             FluidIngredient ingredient = medicalMixerRecipe.getFluidInputs().get(i);
             if (ingredient.isTagged()){
-                if (ingredient.isMedical()){
-                    TagKey<MedicalFluid> tagKey = ingredient.getMedicalTag();
-                    int amount = ingredient.getAmount();
-                    Set<MedicalFluid> fluidSet = ModMedicalRegistry.REGISTRY.get().tags().getTag(tagKey).stream().collect(Collectors.toSet());
-                    IRecipeSlotBuilder slotbuilder = builder.addSlot(RecipeIngredientRole.INPUT, xStartInput + i * spacing, yInput);
-                    for (MedicalFluid fluid: fluidSet){
-                        FluidStack stack = new FluidStack(ModFluids.SRC_MEDICAL.get(),amount);
-                        stack.getOrCreateTag().putString("MedicalId",fluid.getRegistryId().toString());
-                        slotbuilder.addFluidStack(stack.getFluid(), amount, stack.getTag());
-                    }
-                    slotbuilder.setFluidRenderer(capacity, false, width, height);
-                }else {
-                    TagKey<Fluid> tagKey = ingredient.getFluidTag();
-                    int amount = ingredient.getAmount();
-                    Set<Fluid> fluidSet = ForgeRegistries.FLUIDS.tags().getTag(tagKey).stream().collect(Collectors.toSet());
-                    IRecipeSlotBuilder slotbuilder = builder.addSlot(RecipeIngredientRole.INPUT, xStartInput + i * spacing, yInput);
-                    for (Fluid fluid: fluidSet){
-                        slotbuilder.addFluidStack(fluid, amount, new CompoundTag());
-                    }
-                    slotbuilder.setFluidRenderer(capacity, false, width, height);
+                TagKey<Fluid> tagKey = ingredient.getFluidTag();
+                int amount = ingredient.getAmount();
+                Set<Fluid> fluidSet = ForgeRegistries.FLUIDS.tags().getTag(tagKey).stream().collect(Collectors.toSet());
+                IRecipeSlotBuilder slotbuilder = builder.addSlot(RecipeIngredientRole.INPUT, xStartInput + i * spacing, yInput);
+                for (Fluid fluid: fluidSet){
+                    slotbuilder.addFluidStack(fluid, amount, new CompoundTag());
                 }
+                slotbuilder.setFluidRenderer(capacity, false, width, height);
             }else {
                 FluidStack stack = ingredient.getAsFluidStack();
                 builder.addSlot(RecipeIngredientRole.INPUT, xStartInput + i * spacing, yInput)

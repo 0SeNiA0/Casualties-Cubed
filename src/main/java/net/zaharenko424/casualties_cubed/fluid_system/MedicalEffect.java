@@ -1,7 +1,7 @@
 package net.zaharenko424.casualties_cubed.fluid_system;
 
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.server.level.ServerPlayer;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 public interface MedicalEffect {
 

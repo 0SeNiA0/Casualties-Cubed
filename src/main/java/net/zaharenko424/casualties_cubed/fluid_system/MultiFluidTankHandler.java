@@ -1,9 +1,12 @@
 package net.zaharenko424.casualties_cubed.fluid_system;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
@@ -103,9 +106,19 @@ public class MultiFluidTankHandler implements IFluidHandlerItem {
         for (Tag element : list) {
             CompoundTag fsTag = (CompoundTag) element;
             FluidStack stack = FluidStack.loadFluidStackFromNBT(fsTag);
-            if (!stack.isEmpty()) {
-                tank.getFluids().add(stack);
+            if (stack.isEmpty()) continue;
+
+            if (stack.hasTag()) {
+                CompoundTag itemTag = stack.getTag();
+                if (itemTag.contains("MedicalId", Tag.TAG_STRING)) {//TODO remove in the update after this one
+                    ResourceLocation loc = ResourceLocation.parse(itemTag.getString("MedicalId"));
+
+                    Fluid newFluid = BuiltInRegistries.FLUID.getOptional(loc).orElse(null);
+                    if (newFluid != null) stack = new FluidStack(newFluid, stack.getAmount());
+                }
             }
+
+            tank.getFluids().add(stack);
         }
     }
 

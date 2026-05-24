@@ -2,8 +2,6 @@ package net.zaharenko424.casualties_cubed.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
 import net.zaharenko424.casualties_cubed.registry.ModRecipes;
@@ -67,13 +65,6 @@ public class MedicalMixerRecipeBuilder {
         return this;
     }
 
-    public MedicalMixerRecipeBuilder input(MedicalFluid fluid, int amount) {
-        FluidStack stack = new FluidStack(ModFluids.SRC_MEDICAL.get(),amount);
-        stack.getOrCreateTag().putString("MedicalId",fluid.getRegistryId().toString());
-        this.fluidInputs.add(new FluidIngredient(stack.getFluid(), stack.getAmount(),stack.getTag()));
-        return this;
-    }
-
     public MedicalMixerRecipeBuilder input(TagKey<Item> tagKey, int amount){
         this.itemInputs.add(new ItemIngredient(tagKey,amount));
         return this;
@@ -82,13 +73,8 @@ public class MedicalMixerRecipeBuilder {
         this.fluidInputs.add(new FluidIngredient(tagKey,amount,null));
         return this;
     }
-    public MedicalMixerRecipeBuilder inputM(TagKey<MedicalFluid> tagKey,int amount){
-        this.fluidInputs.add(new FluidIngredient(tagKey,amount));
-        return this;
-    }
 
-
-    public MedicalMixerRecipeBuilder input(net.minecraft.world.level.material.Fluid fluid, int amount) {
+    public MedicalMixerRecipeBuilder input(Fluid fluid, int amount) {
         this.fluidInputs.add(new FluidIngredient(fluid, amount, null));
         return this;
     }
@@ -110,10 +96,8 @@ public class MedicalMixerRecipeBuilder {
         return this;
     }
 
-    public MedicalMixerRecipeBuilder output(MedicalFluid fluid, int amount) {
-        FluidStack stack = new FluidStack(ModFluids.SRC_MEDICAL.get(),amount);
-        stack.getOrCreateTag().putString("MedicalId",fluid.getRegistryId().toString());
-        this.fluidOutputs.add(stack);
+    public MedicalMixerRecipeBuilder output(Fluid fluid, int ml) {
+        this.fluidOutputs.add(new FluidStack(fluid, ml));
         return this;
     }
 

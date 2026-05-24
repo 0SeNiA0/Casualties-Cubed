@@ -5,7 +5,6 @@ import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -227,15 +226,15 @@ public class MultiTankHelper {
         handler.saveToNBT();
     }
 
-    public static Map<Integer,Float> getColorRatios(ItemStack stack, Level level){
+    public static Map<Integer, Float> getColorRatios(ItemStack stack) {
         MultiFluidTankHandler handler = getHandler(stack);
-        Map<Integer,Float> colors = new HashMap<>();
-        if (handler == null) return colors;
-        for (FluidStack fs : handler.getTank().getFluids()){
-            int color = Util.getColorFromFluid(fs,level);
-            if (color==0xFFFFFF)continue;
-            colors.put(color,getFluidRatio(stack,fs,getFilledTotal(stack)));
+        if (handler == null) return Map.of();
+
+        Map<Integer, Float> colors = new HashMap<>();
+        for (FluidStack fs : handler.getTank().getFluids()) {
+            colors.put(MedicalFluidType.getColor(fs.getFluid()), getFluidRatio(stack, fs, getFilledTotal(stack)));
         }
+
         return colors;
     }
 

@@ -7,11 +7,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -19,10 +21,9 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.Util;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -76,7 +77,7 @@ public class MultiTankFluidItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
         appendDescription(stack, level, tooltip, flag);
-        appendFluidText(stack, level, tooltip);
+        appendFluidText(stack, tooltip);
     }
 
     @Override
@@ -102,24 +103,21 @@ public class MultiTankFluidItem extends Item {
         return new ItemStack(this);
     }
 
-    public void addMedicalFluid(ItemStack stack, RegistryObject<? extends MedicalFluid> fluid, int ml) {
-        MultiTankHelper.addMedicalFluid(stack,
-                ml,
-                fluid.getId().toString(),
-                new FluidStack(ModFluids.SRC_MEDICAL.get().getSource(), 1));
+    public void addFluid(ItemStack stack, RegistryObject<? extends Fluid> fluid, int ml) {
+        MultiTankHelper.addFluid(stack, ml, new FluidStack(fluid.get(), ml));
     }
 
-    public ItemStack withMedicalFluid(RegistryObject<? extends MedicalFluid> fluid) {
-        return withMedicalFluid(fluid, getCapacity());
+    public ItemStack withFluid(RegistryObject<? extends Fluid> fluid) {
+        return withFluid(fluid, getCapacity());
     }
 
-    public ItemStack withMedicalFluid(RegistryObject<? extends MedicalFluid> fluid, int ml) {
+    public ItemStack withFluid(RegistryObject<? extends Fluid> fluid, int ml) {
         ItemStack stack = new ItemStack(this);
-        addMedicalFluid(stack, fluid, ml);
+        MultiTankHelper.addFluid(stack, ml, new FluidStack(fluid.get(), ml));
         return stack;
     }
 
-    public void appendFluidText(ItemStack stack, Level level, List<Component> tooltip) {
+    public void appendFluidText(ItemStack stack, List<Component> tooltip) {
         CompoundTag tag = stack.getTagElement("MultiFluidTank");
         boolean hasSpecial = false;
         if (tag == null) {
@@ -132,25 +130,20 @@ public class MultiTankFluidItem extends Item {
         }
 
         tooltip.add(Component.literal("Contents:"));
+        int color;
+        FluidStack fs;
+        Component desc;
         for (Tag t : list) {
-            FluidStack fs = FluidStack.loadFluidStackFromNBT((CompoundTag) t);
-            int color;
-            if (fs.hasTag()) {
-                MedicalFluid Mfluid = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
-                if (Mfluid != null) {
-                    if (!Mfluid.showInTooltip(stack)) continue;
-                    hasSpecial = true;
-                    color = Mfluid.getColor();
-                    tooltip.add(Component.literal(fs.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(color)).append("(" + fs.getAmount() + "mb)"));
-                    if (Screen.hasShiftDown()) {
-                        tooltip.add(Mfluid.getDescription().copy().withStyle(Style.EMPTY.withColor(color)));
-                    }
-                    continue;
-                }
-            }
+            fs = FluidStack.loadFluidStackFromNBT((CompoundTag) t);
+            color = MedicalFluidType.getColor(fs.getFluid());
 
-            color = Util.getColorFromFluid(fs, level);
+            desc = MedicalFluidType.getDescription(fs.getFluid());
+            hasSpecial = !desc.getContents().equals(ComponentContents.EMPTY);
+
             tooltip.add(Component.literal(fs.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(color)).append("(" + fs.getAmount() + "mb)"));
+            if (hasSpecial && Screen.hasShiftDown()) {
+                tooltip.add(desc.copy().withStyle(Style.EMPTY.withColor(color)));
+            }
         }
 
         if (hasSpecial && !Screen.hasShiftDown()) {

@@ -5,7 +5,6 @@ import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,16 +14,16 @@ import net.minecraftforge.fml.common.Mod;
 public class ColorsEvent {
 
     @SubscribeEvent
-    public static void onItemColors(RegisterColorHandlersEvent.Item event){
+    public static void onItemColors(RegisterColorHandlersEvent.Item event) {
         event.register(
-                (stack,tintIndex)->{
+                (stack, tintIndex) -> {
 
                     if (tintIndex == 1) { // only tint the syringe liquid part
                         if (stack.getItem() instanceof MultiTankFluidItem) {
-                            if (MultiTankHelper.getFilledTotal(stack) <=0){
+                            if (MultiTankHelper.getFilledTotal(stack) <= 0) {
                                 return 0x00FFFFFF;
                             }
-                            return Util.mixColors(MultiTankHelper.getColorRatios(stack, Minecraft.getInstance().level)); // return full ARGB or RGB color
+                            return Util.mixColors(MultiTankHelper.getColorRatios(stack)); // return full ARGB or RGB color
                         }
                     }
                     return 0xFFFFFFFF; // white = no tint

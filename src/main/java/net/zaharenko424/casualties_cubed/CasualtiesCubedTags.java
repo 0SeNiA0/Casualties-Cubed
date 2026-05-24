@@ -3,7 +3,6 @@ package net.zaharenko424.casualties_cubed;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
 
 public class CasualtiesCubedTags {
 
@@ -22,13 +21,13 @@ public class CasualtiesCubedTags {
         }
     }
 
-    public static class MedicalFluid {
+    public static class Fluid {
 
-        public static final TagKey<net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid> OPIOIDS = tag("opioids");
-        public static final TagKey<net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid> DISINFECTING = tag("disinfect");
+        public static final TagKey<net.minecraft.world.level.material.Fluid> OPIOIDS = tag("opioids");
+        public static final TagKey<net.minecraft.world.level.material.Fluid> DISINFECTING = tag("disinfect");
 
-        private static TagKey<net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid> tag(String name) {
-            return TagKey.create(ModMedicalRegistry.MEDICAL_FLUIDS_KEY, CasualtiesCubed.resourceLoc(name));
+        private static TagKey<net.minecraft.world.level.material.Fluid> tag(String name) {
+            return TagKey.create(Registries.FLUID, CasualtiesCubed.resourceLoc(name));
         }
     }
 

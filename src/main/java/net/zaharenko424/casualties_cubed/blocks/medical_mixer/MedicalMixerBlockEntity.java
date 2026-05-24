@@ -1,16 +1,5 @@
 package net.zaharenko424.casualties_cubed.blocks.medical_mixer;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.registry.ModFluids;
-import net.zaharenko424.casualties_cubed.menu.MedicalMixerMenu;
-import net.zaharenko424.casualties_cubed.network.ModNetwork;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundFluidSyncPacket;
-import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
-import net.zaharenko424.casualties_cubed.registry.ModBlockEntities;
-import net.zaharenko424.casualties_cubed.registry.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -39,6 +28,15 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.PacketDistributor;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.menu.MedicalMixerMenu;
+import net.zaharenko424.casualties_cubed.network.ModNetwork;
+import net.zaharenko424.casualties_cubed.network.packet.ClientboundFluidSyncPacket;
+import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
+import net.zaharenko424.casualties_cubed.registry.ModBlockEntities;
+import net.zaharenko424.casualties_cubed.registry.ModRecipes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -597,18 +595,6 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
         // Forge fluid tags
         for (FluidIngredient ingredient : cashedRecipe.getFluidInputs()) {
             if (ingredient.getFluidTag() != null && other.getFluid().is(ingredient.getFluidTag())) return true;
-
-            // MedicalFluid tag
-            if (ingredient.getMedicalTag() != null
-                    && other.getFluid().isSame(ModFluids.SRC_MEDICAL.get())
-                    && other.hasTag()
-            ) {
-                String id = other.getTag().getString("MedicalId");
-                if (!id.isEmpty()) {
-                    MedicalFluid medical = MedicalFluid.getFromId(id);
-                    if (medical != null && medical.is(ingredient.getMedicalTag())) return true;
-                }
-            }
         }
 
         return false;

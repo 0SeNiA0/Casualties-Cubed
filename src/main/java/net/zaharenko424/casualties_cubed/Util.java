@@ -1,15 +1,11 @@
 package net.zaharenko424.casualties_cubed;
 
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.registry.ModMedicalFluids;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Map;
 
 public class Util {
+
     public static int mixColors(Map<Integer, Float> colorRatios) {
         float total = 0f;
         float r = 0f, g = 0f, b = 0f;
@@ -42,9 +38,9 @@ public class Util {
         // clamp between 0 and 1
         value = Math.max(0f, Math.min(1f, value));
 
-        int red   = (int)((1 - value) * 255);
-        int green = (int)(value * 255);
-        int blue  = 0;
+        int red = (int) ((1 - value) * 255);
+        int green = (int) (value * 255);
+        int blue = 0;
         int alpha = 255;
 
         return (alpha << 24) | (red << 16) | (green << 8) | blue;
@@ -63,10 +59,10 @@ public class Util {
         int gB = (colorB >> 8) & 0xFF;
         int bB = colorB & 0xFF;
 
-        int a = (int)(aA + (aB - aA) * t);
-        int r = (int)(rA + (rB - rA) * t);
-        int g = (int)(gA + (gB - gA) * t);
-        int b = (int)(bA + (bB - bA) * t);
+        int a = (int) (aA + (aB - aA) * t);
+        int r = (int) (rA + (rB - rA) * t);
+        int g = (int) (gA + (gB - gA) * t);
+        int b = (int) (bA + (bB - bA) * t);
 
         return (a << 24) | (r << 16) | (g << 8) | b;
     }
@@ -76,31 +72,6 @@ public class Util {
         int g = (int) (((color >> 8) & 0xFF) * factor);
         int b = (int) ((color & 0xFF) * factor);
         return (r << 16) | (g << 8) | b;
-    }
-
-    public static int getColorFromFluid(FluidStack fluid, Level level){
-        int color = 0xFFFFFF;
-        MedicalFluid mF = getFallback(fluid.getFluid());
-        if (fluid.hasTag()){
-            if (fluid.getTag().contains("MedicalId")){
-                mF =  MedicalFluid.getFromId(fluid.getTag().getString("MedicalId"));
-                if (mF==null){
-                    return color;
-                }
-                color = mF.getColor();
-            }
-        }
-        return mF.getColor();
-    }
-
-
-    public static MedicalFluid getFallback(Fluid fs){
-        String name = fs.getFluidType().toString();
-        if (name.contains("lava"))return ModMedicalFluids.VANILLA_LAVA.get();
-        if (name.contains("water"))return ModMedicalFluids.VANILLA_WATER.get();
-        if (name.contains("molten")||name.contains("metal")||name.contains("iron")||name.contains("steel"))return ModMedicalFluids.GENERIC_HOT.get();
-        if (name.contains("toxic")||name.contains("poison"))return ModMedicalFluids.GENERIC_TOXIC.get();
-        return ModMedicalFluids.GENERIC_BAD.get();
     }
 
     public static String formatDuration(int totalSeconds) {
@@ -122,6 +93,4 @@ public class Util {
         if (a == null || b == null) return false;
         return a.equals(b);
     }
-
-
 }

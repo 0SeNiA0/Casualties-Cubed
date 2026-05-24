@@ -1,25 +1,23 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.client.ticksounds.SyringeTickSound;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseSyringePacket;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SyringeObject extends GrabObject{
@@ -43,17 +41,22 @@ public class SyringeObject extends GrabObject{
     private Map<FluidStack, Float> precisefluidMap = null;
     private Map<FluidStack,Float> ratiomap = null;
 
-    public SyringeObject(int x, int y, float scale, int minstickY) {
+    private final InteractionHand usedHand;
+    private final byte bagSlot;
+
+    public SyringeObject(int x, int y, float scale, int minstickY, InteractionHand usedHand, byte bagSlot) {
         super(x,y,4,21,24,79,
                 CasualtiesCubed.resourceLoc("textures/gui/limbs/syringe.png"),32,160, scale);
         this.minstickY = minstickY;
         originalHitX = this.hitX;
         originalHW = this.hitWidth;
+        this.usedHand = usedHand;
+        this.bagSlot = bagSlot;
     }
 
     public void setColor(ItemStack stack) {
         if (stack.getItem() instanceof MultiTankFluidItem syringeItem){
-           int newcol = Util.mixColors(MultiTankHelper.getColorRatios(stack,Minecraft.getInstance().level));
+           int newcol = Util.mixColors(MultiTankHelper.getColorRatios(stack));
            this.color = (200<<24)|newcol;
         }
     }
@@ -85,25 +88,13 @@ public class SyringeObject extends GrabObject{
             }
             precisefluidMap = tempMap;
 
-            List<String> ids = new ArrayList<>();
-            List<Float> amounts = new ArrayList<>();
-
+            float[] array = new float[drainmap.size()];
+            int i = 0;
             for (Map.Entry<FluidStack, Float> entry: drainmap.entrySet()){
-                FluidStack fs = entry.getKey();
-                float amount = entry.getValue();
-                MedicalFluid MF = Util.getFallback(fs.getFluid());
-                if (fs.hasTag()&&fs.getTag().contains("MedicalId")){
-                    MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
-                }
-                ids.add(MF.getRegistryId().toString());
-                amounts.add(amount);
+                array[i++] = entry.getValue();
             }
 
-            float[] array = new float[amounts.size()];
-            for (int i = 0; i < amounts.size(); i++) {
-                array[i] = amounts.get(i);
-            }
-            ModNetwork.CHANNEL.sendToServer(new ServerboundUseSyringePacket(player.getId(), limb, ids.toArray(String[]::new),array));
+            ModNetwork.CHANNEL.sendToServer(new ServerboundUseSyringePacket(player.getId(), limb, usedHand, bagSlot, array));
             MultiTankHelper.setFluidsDirect(stack,precisefluidMap);
         }
 

@@ -2,12 +2,12 @@ package net.zaharenko424.casualties_cubed.compat.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.registration.IGuiHandlerRegistration;
-import mezz.jei.api.registration.IRecipeCatalystRegistration;
-import mezz.jei.api.registration.IRecipeCategoryRegistration;
-import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.*;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.MedicalMixerScreen;
+import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
 import net.zaharenko424.casualties_cubed.registry.ModRecipes;
@@ -26,6 +26,11 @@ public class JeiCompatPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
+    }
+
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.useNbtForSubtypes(ModItems.ITEMS.getEntries().stream().map(RegistryObject::get).filter(item -> item instanceof MultiTankFluidItem).toArray(Item[]::new));
     }
 
     @Override

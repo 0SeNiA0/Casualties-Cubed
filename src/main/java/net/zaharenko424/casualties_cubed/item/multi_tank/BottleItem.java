@@ -1,10 +1,5 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
-import net.zaharenko424.casualties_cubed.Util;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
-import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -24,6 +19,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 import java.util.List;
 
@@ -41,18 +40,13 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!(pLivingEntity instanceof ServerPlayer player)) return pStack;
+
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getDrinkingAmount());
         List<FluidStack> drained = MultiTankHelper.drain(pStack, max, player.isCreative());
         for (FluidStack fs : drained) {
-            MedicalFluid MF;
-            MF = Util.getFallback(fs.getFluid());
-            if (fs.hasTag()) {
-                if (fs.getTag().contains("MedicalId")) {
-                    MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
-                }
-            }
-            MF.getMedicalEffect().applyIngested(player, fs.getAmount());
+            MedicalEffects.forFluid(fs.getFluid()).applyIngested(player, fs.getAmount());
         }
+
         return pStack;
     }
 
@@ -83,15 +77,8 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getOnSkinAmount());
         List<FluidStack> drained = MultiTankHelper.drain(stack, max, source.isCreative());
-        MedicalFluid MF;
         for (FluidStack fs : drained) {
-            MF = Util.getFallback(fs.getFluid());
-            if (fs.hasTag()) {
-                if (fs.getTag().contains("MedicalId")) {
-                    MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
-                }
-            }
-            MF.getMedicalEffect().applyOnSkin(target, fs.getAmount(), limb);
+            MedicalEffects.forFluid(fs.getFluid()).applyOnSkin(target, fs.getAmount(), limb);
         }
     }
 

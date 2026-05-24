@@ -2,10 +2,6 @@ package net.zaharenko424.casualties_cubed.recipe;
 
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,6 +14,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -132,11 +130,6 @@ public class MedicalMixerRecipeSerializer implements RecipeSerializer<MedicalMix
                     int amount = buf.readInt();
                     fluidInputs.add(new FluidIngredient(tag,amount,null));
                 }
-                case 2->{
-                    TagKey<MedicalFluid> tag = TagKey.create(ModMedicalRegistry.MEDICAL_FLUIDS_KEY,buf.readResourceLocation());
-                    int amount = buf.readInt();
-                    fluidInputs.add(new FluidIngredient(tag,amount));
-                }
             }
         }
 
@@ -183,14 +176,9 @@ public class MedicalMixerRecipeSerializer implements RecipeSerializer<MedicalMix
 
         for (FluidIngredient ing : fluidInputs) {
             if (ing.isTagged()) {
-                if (ing.isNormal()) {
-                    buf.writeInt(1); // vanilla fluid tag
-                    buf.writeResourceLocation(ing.getFluidTag().location());
-                } else {
-                    // assume MedicalFluid tag
-                    buf.writeInt(2);
-                    buf.writeResourceLocation(ing.getMedicalTag().location());
-                }
+                buf.writeInt(1); // vanilla fluid tag
+                buf.writeResourceLocation(ing.getFluidTag().location());
+
                 buf.writeInt(ing.getAmount());
             } else {
                 // plain fluid

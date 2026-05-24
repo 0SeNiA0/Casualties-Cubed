@@ -1,9 +1,5 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
-import net.zaharenko424.casualties_cubed.registry.ModSounds;
-import net.zaharenko424.casualties_cubed.Util;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,6 +9,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 
 import java.util.List;
 
@@ -34,18 +33,13 @@ public class PillContainerItem extends MultiTankFluidItem {
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!(pLivingEntity instanceof ServerPlayer player)) return pStack;
+
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getUseAmount());
         List<FluidStack> drained = MultiTankHelper.drain(pStack, max, player.isCreative());
         for (FluidStack fs : drained) {
-            MedicalFluid MF;
-            MF = Util.getFallback(fs.getFluid());
-            if (fs.hasTag()) {
-                if (fs.getTag().contains("MedicalId")) {
-                    MF = MedicalFluid.getFromId(fs.getTag().getString("MedicalId"));
-                }
-            }
-            MF.getMedicalEffect().applyIngested(player, fs.getAmount());
+            MedicalEffects.forFluid(fs.getFluid()).applyIngested(player, fs.getAmount());
         }
+
         return pStack;
     }
 

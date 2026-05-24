@@ -2,9 +2,6 @@ package net.zaharenko424.casualties_cubed.recipe.ingridients;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.zaharenko424.casualties_cubed.registry.ModMedicalRegistry;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluid;
-import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
@@ -26,9 +23,6 @@ public class FluidIngredient {
     @Nullable
     private final TagKey<Fluid> fluidTag;
 
-    @Nullable
-    private final TagKey<MedicalFluid> medicalTag;
-
     private final int amount;
 
     @Nullable
@@ -42,7 +36,6 @@ public class FluidIngredient {
     public FluidIngredient(Fluid fluid, int amount, @Nullable CompoundTag nbt) {
         this.fluid = fluid;
         this.fluidTag = null;
-        this.medicalTag = null;
         this.amount = amount;
         this.nbt = nbt;
     }
@@ -51,18 +44,8 @@ public class FluidIngredient {
     public FluidIngredient(TagKey<Fluid> tag, int amount, @Nullable CompoundTag nbt) {
         this.fluid = null;
         this.fluidTag = tag;
-        this.medicalTag = null;
         this.amount = amount;
         this.nbt = nbt;
-    }
-
-    // Medical fluid tag
-    public FluidIngredient(TagKey<MedicalFluid> medicalTag, int amount) {
-        this.fluid = ModFluids.SRC_MEDICAL.get();
-        this.fluidTag = null;
-        this.medicalTag = medicalTag;
-        this.amount = amount;
-        this.nbt = null;
     }
 
 
@@ -72,15 +55,7 @@ public class FluidIngredient {
     /* ------------------------------------------------------------ */
 
     public boolean isTagged() {
-        return fluidTag != null || medicalTag != null;
-    }
-
-    public boolean isNormal(){
         return fluidTag != null;
-    }
-
-    public boolean isMedical() {
-        return medicalTag != null;
     }
 
     @Nullable
@@ -102,10 +77,6 @@ public class FluidIngredient {
         return nbt;
     }
 
-    @Nullable
-    public TagKey<MedicalFluid> getMedicalTag() {
-        return medicalTag;
-    }
     /* ------------------------------------------------------------ */
     /* Matching */
     /* ------------------------------------------------------------ */
@@ -113,18 +84,6 @@ public class FluidIngredient {
     public boolean matches(FluidStack stack) {
         if (stack.isEmpty()) return false;
         if (stack.getAmount() < amount) return false;
-
-        /* ---------- Medical fluid ---------- */
-        if (medicalTag != null) {
-            if (!stack.getFluid().isSame(ModFluids.SRC_MEDICAL.get())) return false;
-            if (!stack.hasTag()) return false;
-
-            String id = stack.getTag().getString("MedicalId");
-            if (id.isEmpty()) return false;
-
-            MedicalFluid medical = MedicalFluid.getFromId(id);
-            return medical != null && medical.is(medicalTag);
-        }
 
         /* ---------- Forge fluid tag ---------- */
         if (fluidTag != null) {
@@ -169,16 +128,12 @@ public class FluidIngredient {
         JsonObject json = new JsonObject();
         json.addProperty("amount", amount);
 
-        if (medicalTag != null) {
-            json.addProperty("medical_tag", medicalTag.location().toString());
-        } else if (fluidTag != null) {
+        if (fluidTag != null) {
             json.addProperty("tag", fluidTag.location().toString());
         } else if (fluid != null) {
             json.addProperty("fluid",
                     ForgeRegistries.FLUIDS.getKey(fluid).toString());
         }
-
-
 
         if (nbt != null) {
             json.add("nbt", JsonParser.parseString(nbt.toString()));
@@ -204,12 +159,7 @@ public class FluidIngredient {
         } else if (obj.has("tag")) {
             TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(GsonHelper.getAsString(obj, "tag")));
             return new FluidIngredient(tag, amount, null);
-        } else if (obj.has("medical_tag")) {
-            TagKey<MedicalFluid> tag = TagKey.create(ModMedicalRegistry.MEDICAL_FLUIDS_KEY, ResourceLocation.parse(GsonHelper.getAsString(obj, "medical_tag")));
-            return new FluidIngredient(tag, amount);
-        }
-
-        throw new IllegalArgumentException("Invalid fluid ingredient JSON: " + obj);
+        } else throw new IllegalArgumentException("Invalid fluid ingredient JSON: " + obj);
     }
 
 }
