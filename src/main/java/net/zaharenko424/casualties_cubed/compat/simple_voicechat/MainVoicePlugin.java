@@ -21,23 +21,23 @@ public class MainVoicePlugin implements VoicechatPlugin {
 
     @Override
     public String getPluginId() {
-        return CasualtiesCubed.MOD_ID + "main";
+        return CasualtiesCubed.MOD_ID + ":main";
     }
 
     @Override
     public void registerEvents(EventRegistration registration) {
-        registration.registerEvent(ClientSoundEvent.class,this::onClientSound);
+        registration.registerEvent(ClientSoundEvent.class, this::onClientSound);
 
-        registration.registerEvent(ClientReceiveSoundEvent.EntitySound.class,this::onClientReceiveEntitySound);
-        registration.registerEvent(ClientReceiveSoundEvent.LocationalSound.class,this::onClientReceiveLocationalSound);
-        registration.registerEvent(ClientReceiveSoundEvent.StaticSound.class,this::onClientReceiveStaticSound);
+        registration.registerEvent(ClientReceiveSoundEvent.EntitySound.class, this::onClientReceiveEntitySound);
+        registration.registerEvent(ClientReceiveSoundEvent.LocationalSound.class, this::onClientReceiveLocationalSound);
+        registration.registerEvent(ClientReceiveSoundEvent.StaticSound.class, this::onClientReceiveStaticSound);
     }
 
     private void onClientSound(ClientSoundEvent event) {
-       short [] in = event.getRawAudio();
+        short[] in = event.getRawAudio();
 
-       short[] out = applyAllOutMods(in);
-       event.setRawAudio(out);
+        short[] out = applyAllOutMods(in);
+        event.setRawAudio(out);
     }
 
     private void onClientReceiveEntitySound(ClientReceiveSoundEvent.EntitySound event) {
@@ -61,42 +61,43 @@ public class MainVoicePlugin implements VoicechatPlugin {
         event.setRawAudio(out);
     }
 
-    private float getCons(Player player){
+    private float getCons(Player player) {
         return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
     }
 
-    private short[] applyAllInMods(short[] in){
+    private short[] applyAllInMods(short[] in) {
         short[] out;
         Player player = Minecraft.getInstance().player;
         float cons = getCons(player);
         float hearingloss = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getHearingLoss).orElse(0f);
-        float hearing_scale = Math.max((100f-cons)/100f,hearingloss);
-        out = applyMuffle(in,hearing_scale);
+        float hearing_scale = Math.max((100f - cons) / 100f, hearingloss);
+        out = applyMuffle(in, hearing_scale);
         return out;
     }
-    private short[] applyAllOutMods(short[] in){
+
+    private short[] applyAllOutMods(short[] in) {
         Player player = Minecraft.getInstance().player;
         short[] out = in;
-        if (sendDistorted(player)){
-            out = applyMuffle(out,0.4f);
+        if (sendDistorted(player)) {
+            out = applyMuffle(out, 0.4f);
             out = applyVolumeVariation(out);
-            out = applyEcho(out,0.3f,850);
+            out = applyEcho(out, 0.3f, 850);
         }
         ModNetwork.CHANNEL.sendToServer(new ServerboundTalkPacket());
-        boolean isBrainDamaged = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getBrainHealth()<60).orElse(false);
-        if (getCons(player)<10||isBrainDamaged) {
-            for (int i=0;i<out.length;i++){
+        boolean isBrainDamaged = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getBrainHealth() < 60).orElse(false);
+        if (getCons(player) < 10 || isBrainDamaged) {
+            for (int i = 0; i < out.length; i++) {
                 out[i] *= 0;
             }
         }
         return out;
     }
 
-    private boolean sendDistorted(Player player){
-        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getLimbDislocated(Limb.HEAD)>0||h.isMouthRemoved()).orElse(false);
+    private boolean sendDistorted(Player player) {
+        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(Limb.HEAD).getDislocation() > 0 || data.isMouthRemoved()).orElse(false);
     }
 
-    private short[] applyEcho(short[] in, float power, int delay){
+    private short[] applyEcho(short[] in, float power, int delay) {
         short[] out = in;
         for (int i = delay; i < out.length; i++) {
             out[i] += (short) (out[i - delay] * power);
@@ -104,7 +105,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
         return out;
     }
 
-    private short[] applyDistortion(short[] in){
+    private short[] applyDistortion(short[] in) {
         Random r = new Random();
         short[] out = in;
         for (int i = 0; i < out.length; i++) {
@@ -123,15 +124,15 @@ public class MainVoicePlugin implements VoicechatPlugin {
         final float sampleRate = 48000f;
 
         // Use an exponential curve so small changes near 1 have bigger effect
-        float curved = (float)Math.pow(amount, 2.5f);  // try 2.0–3.0 for more or less compression
+        float curved = (float) Math.pow(amount, 2.5f);  // try 2.0–3.0 for more or less compression
 
         float minCutoff = 25f;
         float maxCutoff = 8000f;
 
 // exponential curve: 0→maxCutoff, 1→minCutoff, smooth perception
-        float cutoff = (float)(maxCutoff * Math.pow(minCutoff / maxCutoff, amount));
+        float cutoff = (float) (maxCutoff * Math.pow(minCutoff / maxCutoff, amount));
 
-        float rc = 1f / (2f * (float)Math.PI * cutoff);
+        float rc = 1f / (2f * (float) Math.PI * cutoff);
         float dt = 1f / sampleRate;
         float alpha = dt / (rc + dt);
 
@@ -143,14 +144,14 @@ public class MainVoicePlugin implements VoicechatPlugin {
 
         for (int i = 0; i < in.length; i++) {
             prev = prev + alpha * (in[i] - prev);
-            out[i] = (short)(prev * volumeScale);
+            out[i] = (short) (prev * volumeScale);
         }
 
         lastSample = prev;
         return out;
     }
 
-    public static short[] applyVolumeVariation(short[] samples){
+    public static short[] applyVolumeVariation(short[] samples) {
         Random r = new Random();
         for (int i = 0; i < samples.length; i++) {
             float variation = 0.8f + r.nextFloat() * 0.4f; // 0.8x – 1.2x volume

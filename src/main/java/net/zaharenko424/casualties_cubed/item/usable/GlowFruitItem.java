@@ -16,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -38,13 +39,17 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) - 1);
-            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) - 4);
-            data.setLimbDisinfected(limb, Math.max(data.getLimbDisinfected(limb), 4400));
+            LimbStatistics stats = data.getLimb(limb);
+
+            stats.addSkinHealth(-1);
+            stats.addMuscleHealth(-4);
+            stats.setDisinfectionTimerAtLeast(4400);
+
             List<Limb> conected = limb.getConnectedLimbs();
             for (Limb limb1 : conected) {
-                data.setLimbMuscleHealth(limb1, data.getLimbMuscleHealth(limb1) - 3);
-                data.setLimbDisinfected(limb1, Math.max(data.getLimbDisinfected(limb1), 2200));
+                stats = data.getLimb(limb1);
+                stats.addMuscleHealth(-3);
+                stats.setDisinfectionTimerAtLeast(2200);
             }
 
             if (!source.isCreative()) stack.shrink(1);

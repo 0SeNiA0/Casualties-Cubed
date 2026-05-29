@@ -21,6 +21,7 @@ import net.zaharenko424.casualties_cubed.item.api.IBandage;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.packet.*;
 
@@ -42,7 +43,7 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData ->
-                    targetData.setLimbShrapnel(packet.limb(), packet.amount()));
+                    targetData.getLimb(packet.limb()).setShrapnel(packet.amount()));
         });
         ctx.get().setPacketHandled(true);
     }
@@ -56,12 +57,14 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
-                Limb limb = packet.limb();
+                LimbStatistics stats = targetData.getLimb(packet.limb());
                 RandomSource random = sender.getRandom();
-                targetData.setLimbPain(limb, targetData.getLimbPain(limb) + (random.nextFloat() + 1) * 6);
-                targetData.setLimbMuscleHealth(limb,targetData.getLimbMuscleHealth(limb) - (random.nextFloat() + 0.5f) * 2.5f);
-                targetData.setLimbSkinHealth(limb,targetData.getLimbSkinHealth(limb) - (random.nextFloat() + 0.5f) * 3.5f);
-                targetData.applyBleedDamage(limb,(random.nextFloat() + 0.5f) / 5,null);
+
+                stats.addPain((random.nextFloat() + 1) * 6);
+                stats.addMuscleHealth(- (random.nextFloat() + 0.5f) * 2.5f);
+                stats.addSkinHealth(- (random.nextFloat() + 0.5f) * 3.5f);
+
+                targetData.applyBleedDamage(packet.limb(),(random.nextFloat() + 0.5f) / 5,null);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -79,12 +82,13 @@ public class ServerPacketHandler {
             if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
+                LimbStatistics stats = targetData.getLimb(packet.limb());
                 RandomSource random = sender.getRandom();
-                Limb limb = packet.limb();
-                targetData.setLimbPain(limb,targetData.getLimbPain(limb) + (random.nextFloat() + 1) * 80);
-                targetData.setLimbBleedRate(limb,targetData.getLimbBleedRate(limb) * 0.4f);
-                targetData.setLimbMuscleHealth(limb, targetData.getLimbMuscleHealth(limb) - (random.nextFloat() + 1) * 15);
-                targetData.setLimbSkinHealth(limb, targetData.getLimbSkinHealth(limb) - (random.nextFloat() + 1) * 25);
+
+                stats.addPain((random.nextFloat() + 1) * 80);
+                stats.setBleedRate(stats.getBleedRate() * 0.4f);
+                stats.addMuscleHealth(- (random.nextFloat() + 1) * 15);
+                stats.addSkinHealth(- (random.nextFloat() + 1) * 25);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -102,11 +106,11 @@ public class ServerPacketHandler {
             if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
-                Limb limb = packet.limb();
-                if (targetData.getLimbDislocated(limb) == 0) return;
+                LimbStatistics stats = targetData.getLimb(packet.limb());
+                if (stats.getDislocation() == 0) return;
 
-                targetData.setLimbDislocation(limb, packet.dislocationValue());
-                targetData.setLimbPain(limb, targetData.getLimbPain(limb) + (sender.getRandom().nextFloat() * 20) + 20);
+                stats.setDislocation(packet.dislocationValue());
+                stats.addPain((sender.getRandom().nextFloat() * 20) + 20);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -151,6 +155,7 @@ public class ServerPacketHandler {
         ctx.get().setPacketHandled(true);
     }
 
+//TODO at least make sure that sender actually has a syringe
     public static void handleSyringeFail(ServerboundSyringeFailPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
@@ -164,9 +169,10 @@ public class ServerPacketHandler {
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
-                Limb limb = packet.limb();
-                targetData.setLimbPain(limb, targetData.getLimbPain(limb) + ((random.nextFloat() + 0.5f) * 20));
-                targetData.setLimbShrapnel(limb,targetData.hasLimbShrapnel(limb) + 1);
+                LimbStatistics stats = targetData.getLimb(packet.limb());
+
+                stats.addPain(((random.nextFloat() + 0.5f) * 20));
+                stats.addShrapnel(1);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -280,46 +286,49 @@ public class ServerPacketHandler {
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
+                LimbStatistics chest = targetData.getLimb(Limb.CHEST);
 
                 switch (packet.success()) {
                     case LOW -> {
-                        if (targetData.getLimbMuscleHealth(Limb.CHEST) <= 5)
+                        if (chest.getMuscleHealth() <= 5)
                             targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 3));
                         else
                             targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
 
-                        targetData.setLimbPain(Limb.CHEST, targetData.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 30);
+                        chest.addPain((random.nextFloat() + 0.5f) * 30);
                         if (random.nextInt(8) == 0) {
-                            targetData.setLimbFracture(Limb.CHEST, targetData.getLimbFracture(Limb.CHEST) + 10);
+                            chest.addFracture(10);
                         }
                         if (random.nextInt(2) == 0) {
-                            targetData.setLimbMuscleHealth(Limb.CHEST, targetData.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 8);
+                            chest.addMuscleHealth(- (random.nextFloat() + 0.5f) * 8);
                         }
                     }
                     case MEDIUM -> {
-                        if (targetData.getLimbMuscleHealth(Limb.CHEST) <= 5)
+                        if (chest.getMuscleHealth() <= 5)
                             targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 4));
                         else
                             targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 8));
-                        targetData.setLimbPain(Limb.CHEST, targetData.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 20);
+
+                        chest.addPain((random.nextFloat() + 0.5f) * 20);
                         if (random.nextInt(6) == 0) {
-                            targetData.setLimbFracture(Limb.CHEST, targetData.getLimbFracture(Limb.CHEST) + 10);
+                            chest.addFracture(10);
                         }
                         if (random.nextInt(4) == 0) {
-                            targetData.setLimbMuscleHealth(Limb.CHEST, targetData.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 5);
+                            chest.addMuscleHealth(- (random.nextFloat() + 0.5f) * 5);
                         }
                     }
                     case HIGH -> {
-                        if (targetData.getLimbMuscleHealth(Limb.CHEST) <= 5)
+                        if (chest.getMuscleHealth() <= 5)
                             targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
                         else
                             targetData.setOxygen(Math.max(targetData.getOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 12));
-                        targetData.setLimbPain(Limb.CHEST, targetData.getLimbPain(Limb.CHEST) + (random.nextFloat() + 0.5f) * 10);
+
+                        chest.addPain((random.nextFloat() + 0.5f) * 10);
                         if (random.nextInt(4) == 0) {
-                            targetData.setLimbFracture(Limb.CHEST, targetData.getLimbFracture(Limb.CHEST) + 10);
+                            chest.addFracture(10);
                         }
                         if (random.nextInt(8) == 0) {
-                            targetData.setLimbMuscleHealth(Limb.CHEST, targetData.getLimbMuscleHealth(Limb.CHEST) - (random.nextFloat() + 0.5f) * 1);
+                            chest.addMuscleHealth(- (random.nextFloat() + 0.5f) * 1);
                         }
                     }
                 }
@@ -349,12 +358,12 @@ public class ServerPacketHandler {
             if (sender == null) return;
 
             Entity entity = sender.level().getEntity(packet.targetId());
-            if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
+            if (!(entity instanceof ServerPlayer target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             if (packet.enable()) {
-                SyncTracker.add(sender.getUUID(), target.getUUID());
+                SyncTracker.add(target, sender);
             } else {
-                SyncTracker.remove(sender);
+                SyncTracker.removeViewer(sender);
             }
         });
         ctx.get().setPacketHandled(true);
@@ -366,9 +375,8 @@ public class ServerPacketHandler {
             if (player == null) return;
 
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                if (data.getLimbDislocated(Limb.HEAD) > 0) {
-                    data.setLimbPain(Limb.HEAD, data.getLimbPain(Limb.HEAD) + 0.3f);
-                }
+                LimbStatistics stats = data.getLimb(Limb.HEAD);
+                if (stats.getDislocation() > 0) stats.addPain(0.3f);
             });
         });
         ctx.get().setPacketHandled(true);

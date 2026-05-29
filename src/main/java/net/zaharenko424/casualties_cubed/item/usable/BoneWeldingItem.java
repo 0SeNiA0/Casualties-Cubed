@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,12 +29,14 @@ public class BoneWeldingItem extends Item implements ISimpleMedicalUsable, IAllo
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) - 25);
-            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) - 26);
-            data.setLimbFracture(limb, data.getLimbFracture(limb) * 0.15f);
-            data.setLimbBleedRate(limb, data.getLimbBleedRate(limb) + ((0.09f) / 20f / 60f));
-            data.setLimbPain(limb, data.getLimbPain(limb) + 30);
             data.setBloodViscosity(data.getBloodViscosity() + 2);
+            LimbStatistics stats = data.getLimb(limb);
+
+            stats.addSkinHealth(-25);
+            stats.addMuscleHealth(-26);
+            stats.setFracture(stats.getFracture() * 0.15f);
+            stats.addBleedRate(0.09f / 20f / 60f);
+            stats.addPain(30);
         });
 
         if (!source.isCreative()) subNbtDurability(stack, 50);

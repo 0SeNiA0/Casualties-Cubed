@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,9 +27,11 @@ public class HeatPackItem extends Item implements ISimpleMedicalUsable, IAllowIn
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 10);
-            data.setLimbMuscleHeal(limb, true);
             data.setTemperature(data.getTemperature() + .5f);
+            LimbStatistics stats = data.getLimb(limb);
+
+            stats.addMuscleHealth(10);
+            stats.setMuscleHeal(true);
         });
 
         if (!source.isCreative()) subNbtDurability(stack, 20);

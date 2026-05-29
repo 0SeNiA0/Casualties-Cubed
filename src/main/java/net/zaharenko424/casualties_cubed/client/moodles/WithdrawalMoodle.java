@@ -12,11 +12,11 @@ import net.minecraft.world.entity.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WiwdrawalMoodle extends AbstractMoodleVisual {
+public class WithdrawalMoodle extends AbstractMoodleVisual {
     
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        float lung = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getNetOpiodids).orElse(0f);
+        float lung = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getNetOpioids).orElse(0f);
         boolean hasOP = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getPendingOpioids).orElse(0f)>0;
         if (hasOP)
             return MoodleStatus.NONE;

@@ -12,6 +12,7 @@ import net.zaharenko424.casualties_cubed.item.api.IBandage;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundCauterizeActionPacket;
@@ -302,20 +303,21 @@ public class HealthScreen extends Screen {
         if (!BGmode)
             UpdateButtons(lastClicked);
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(health -> {
-            healthbox.setSkin(health.getLimbSkinHealth(lastHovered.getLimb()));
-            healthbox.setMuscle(health.getLimbMuscleHealth(lastHovered.getLimb()));
+            LimbStatistics hovered = health.getLimb(lastHovered.getLimb());
+            healthbox.setSkin(hovered.getSkinHealth());
+            healthbox.setMuscle(hovered.getMuscleHealth());
             healthbox.setLimbname(lastHovered.getLimb());
-            healthbox.setPain2(health.getLimbPain(lastHovered.getLimb()));
-            healthbox.setBleed2(health.getLimbBleedRate(lastHovered.getLimb()));
+            healthbox.setPain2(hovered.getPain());
+            healthbox.setBleed2(hovered.getBleedRate());
             healthbox.setPain((float) health.getTotalPain());
             healthbox.setContiousness(health.getConsciousness());
             healthbox.setBlood(health.getBloodVolume());
             healthbox.setBleed(health.getCombinedBleed());
-            healthbox.setInfection(health.getLimbInfection(lastHovered.getLimb()));
-            healthbox.setOpiates(health.getNetOpiodids());
+            healthbox.setInfection(hovered.getInfection());
+            healthbox.setOpiates(health.getNetOpioids());
             healthbox.setOxygen(health.getOxygen());
-            healthbox.setDislocated(health.getLimbDislocated(lastHovered.getLimb()));
-            healthbox.setFracture(health.getLimbFracture(lastHovered.getLimb()));
+            healthbox.setDislocated(hovered.getDislocation());
+            healthbox.setFracture(hovered.getFracture());
             healthbox.setBrain(health.getBrainHealth());
             healthbox.setTemp(health.getTemperature());
             healthbox.setImmunity(health.getImmunity());
@@ -385,7 +387,9 @@ public class HealthScreen extends Screen {
             }
         }
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(health -> {
+            LimbStatistics stats;
             for (Limb limb : Limb.values()) {
+                stats = health.getLimb(limb);
                 LimbWidget widget = switch (limb) {
                     case HEAD -> Head;
                     case CHEST -> Chest;
@@ -398,11 +402,12 @@ public class HealthScreen extends Screen {
                     case LEFT_FOOT -> L_Foot;
                     case RIGHT_FOOT -> R_Foot;
                 };
-                if (health.isAmputated(limb)) {
+                if (stats.isAmputated()) {
                     widget.visible = false;
                     widget.setAmputated(true);
                     continue;
                 }
+
                 widget.setAmputated(false);
                 if (limb == Limb.HEAD) {
                     widget.setLeftEyeGone(health.isLeftEyeBlind());
@@ -410,19 +415,19 @@ public class HealthScreen extends Screen {
                     widget.setRightEyeGone(health.isRightEyeBlind());
                 }
                 // collect values once
-                float bleed = health.getLimbBleedRate(limb);
-                boolean isBleeding = bleed > 0 && !health.getTourniquet(limb) && !health.isOppositeToChestUnderTourniquet(limb);
-                float pain = health.getLimbPain(limb);
-                float skin = health.getLimbSkinHealth(limb);
-                float muscle = health.getLimbMuscleHealth(limb);
+                float bleed = stats.getBleedRate();
+                boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !health.isOppositeToChestUnderTourniquet(limb);
+                float pain = stats.getPain();
+                float skin = stats.getSkinHealth();
+                float muscle = stats.getMuscleHealth();
 
-                boolean infection = health.getLimbInfection(limb) > 25;
-                boolean dislocated = health.isLimbDislocated(limb) > 0;
-                boolean splint = health.hasLimbSplint(limb);
-                boolean shrapnel = health.hasLimbShrapnel(limb) > 0;
-                boolean fractured = health.getLimbFracture(limb) > 0;
-                boolean desinfection = health.getLimbDisinfected(limb) > 0;
-                boolean tourniquet = health.getTourniquet(limb);
+                boolean infection = stats.getInfection() > 25;
+                boolean dislocated = stats.getDislocation() > 0;
+                boolean splint = stats.hasSplint();
+                boolean shrapnel = stats.getShrapnel() > 0;
+                boolean fractured = stats.getFracture() > 0;
+                boolean desinfection = stats.getDisinfectionTimer() > 0;
+                boolean tourniquet = stats.isTourniquet();
 
                 // ---- apply to the widget ----
                 widget.setShake(pain / 100f);

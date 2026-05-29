@@ -7,7 +7,7 @@ public class ServerConfig {
     public static final ForgeConfigSpec SPEC;
 
     public static final ForgeConfigSpec.DoubleValue DISINFECTION_SCALE;
-    public static final ForgeConfigSpec.DoubleValue WUND_ANTIBLEED_RATE;
+    public static final ForgeConfigSpec.DoubleValue WOUND_ANTIBLEED_RATE;
     public static final ForgeConfigSpec.DoubleValue INFECTION_CHANCE;
     public static final ForgeConfigSpec.DoubleValue INFECTION_MUSCLE_DRAIN;
     public static final ForgeConfigSpec.DoubleValue HEMOTHORAX_HEAL_RATE;
@@ -34,9 +34,6 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue BOOSTED_LIMB_HEAL_RATE;   // % per second
     public static final ForgeConfigSpec.DoubleValue MAGICAL_HEAL_RATE;
 
-    public static final ForgeConfigSpec.DoubleValue MANUAL_SHRAPNEL_SUCCESS_CHANCE;
-    public static final ForgeConfigSpec.DoubleValue DISLOCATION_FIX_CHANCE;
-
     // Tourniquet behavior
     public static final ForgeConfigSpec.DoubleValue TOURNIQUET_PAIN_PER_TICK;
     public static final ForgeConfigSpec.IntValue TOURNIQUET_SAFE_TICKS;             // 60s before muscle damage starts
@@ -48,14 +45,17 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec.DoubleValue HELMET_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue CHESTPLATE_ARMOR_SCALE;
-    public static final ForgeConfigSpec.DoubleValue LEGS_ARMOR_SCALE;
+    public static final ForgeConfigSpec.DoubleValue LEG_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue BOOTS_ARMOR_SCALE;
-    public static final ForgeConfigSpec.BooleanValue PERMANENT_DAMAGE;
-    public static final ForgeConfigSpec.BooleanValue LIMB_REGROWTH;
     public static final ForgeConfigSpec.DoubleValue BRAIN_DRAIN;
     public static final ForgeConfigSpec.DoubleValue BRAIN_HEALTH_REGEN;
     public static final ForgeConfigSpec.DoubleValue IMMUNITY_SCALE;
-    public static final ForgeConfigSpec.BooleanValue DO_TEMP_SCALE;
+    public static final ForgeConfigSpec.BooleanValue DO_TEMP_CHANGE;
+
+    public static final ForgeConfigSpec.BooleanValue PERMANENT_DAMAGE;
+    public static final ForgeConfigSpec.BooleanValue LIMB_REGROWTH;
+    public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_MIN_REGEN;
+    public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_DURATION;
 
     public static final ForgeConfigSpec.BooleanValue PHYS_INTEGRATION;
 
@@ -68,7 +68,7 @@ public class ServerConfig {
                 .comment("The scale of strength of Disinfectants")
                         .defineInRange("disinfectionScale",1d,0,100);
 
-        WUND_ANTIBLEED_RATE = BUILDER
+        WOUND_ANTIBLEED_RATE = BUILDER
                 .comment("The rate at which internal Bleeding heals (L/min)")
                         .defineInRange("wundAntiBleed",0.000025,0,10);
 
@@ -123,12 +123,6 @@ public class ServerConfig {
         TOURNIQUET_MUSCLE_DAMAGE=BUILDER
                 .comment("Damage to the muscle health of the limb with a tourniquet after safe ticks have passed (s)")
                         .defineInRange("tourniquetMuscleDamage",1.5,0,100);
-        MANUAL_SHRAPNEL_SUCCESS_CHANCE=BUILDER
-                .comment("Chance for removing Shrapnel from Limb without use of Tweezers")
-                        .defineInRange("manualShrapnelRemoveChance",0.3,0,1);
-        DISLOCATION_FIX_CHANCE= BUILDER
-                .comment("Chance for Manually fixing a dislocation")
-                        .defineInRange("manualDislocationFixChance",0.7,0,1);
         MAGICAL_HEAL_RATE = BUILDER
                 .comment("the Heal Scalar of magical healing(potions, regeneration)")
                 .defineInRange("magicalHealRate",0.5,0,Double.MAX_VALUE);
@@ -147,7 +141,7 @@ public class ServerConfig {
                 .comment("Scaling of Armor values")
                         .defineInRange("helmetArmorScale",3,0,Double.MAX_VALUE);
         CHESTPLATE_ARMOR_SCALE = BUILDER.defineInRange("chestplateArmorScale",1.1,0,Double.MAX_VALUE);
-        LEGS_ARMOR_SCALE = BUILDER.defineInRange("leggingsArmorScale",1.5,0,Double.MAX_VALUE);
+        LEG_ARMOR_SCALE = BUILDER.defineInRange("leggingsArmorScale",1.5,0,Double.MAX_VALUE);
         BOOTS_ARMOR_SCALE = BUILDER.defineInRange("bootsArmorScale",2.5,0,Double.MAX_VALUE);
 /*
         INSTANT_DEATH_MIN_DAMAGE = BUILDER
@@ -160,11 +154,22 @@ public class ServerConfig {
  */
         PERMANENT_DAMAGE = BUILDER
                 .comment("True/False Permanent Damage(until death)")
-                        .define("permanentDamage",true);
+                .define("permanentDamage",true);
 
+        BUILDER.push("LimbRegrowth");
         LIMB_REGROWTH = BUILDER
                 .comment("Lets players regrow missing limbs with long enough regeneration 2+ effect")
-                        .define("limbRegrowth", false);
+                .define("enabled", false);
+
+        LIMB_REGROWTH_MIN_REGEN = BUILDER
+                .comment("Minimum amplifier of regeneration effect to regrow limbs (lvl 1 = amplifier 0). Keep in mind that the next option is for regeneration level specified here. Higher regeneration will take less time")
+                .defineInRange("minRegen", 1, 0, 255);
+
+        LIMB_REGROWTH_DURATION = BUILDER
+                .comment("Duration in ticks for a limb to regrow")
+                .defineInRange("duration", 60 * 20, 0, Integer.MAX_VALUE);
+        BUILDER.pop();
+
 
         BRAIN_DRAIN = BUILDER
                 .comment("How much the Brain health is drain per s when dying")
@@ -186,7 +191,7 @@ public class ServerConfig {
                 .defineInRange("dislocationRegen",0.05,0,Double.MAX_VALUE);
 
 
-        DO_TEMP_SCALE = BUILDER
+        DO_TEMP_CHANGE = BUILDER
                 .comment("on/off temperature")
                         .define("doTempChange",true);
 

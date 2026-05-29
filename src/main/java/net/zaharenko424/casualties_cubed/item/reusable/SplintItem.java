@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,8 +27,9 @@ public class SplintItem extends Item implements ISimpleMedicalUsable, IAllowInMe
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         if (limb != Limb.CHEST) {
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                if (!data.hasLimbSplint(limb)) {
-                    data.setLimbSplint(limb, true);
+                LimbStatistics stats = data.getLimb(limb);
+                if (!stats.hasSplint()) {
+                    stats.setHasSplint(true);
 
                     if (!source.isCreative()) stack.shrink(1);
                     source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

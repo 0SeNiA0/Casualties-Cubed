@@ -33,7 +33,7 @@ public class PlayerHealthProvider implements ICapabilityProvider, INBTSerializab
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        createPlayerHealthData().serializeNBT(nbt);
+        createPlayerHealthData().serializeNBT(nbt, true);
         return nbt;
     }
 

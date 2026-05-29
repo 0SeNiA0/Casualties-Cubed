@@ -38,7 +38,7 @@ public class MoodleController {
         registerMoodle(new ConsiousnessMoodle());
         registerMoodle(new ShockMoodle());
         registerMoodle(new TemperatureMoodle());
-        registerMoodle(new WiwdrawalMoodle());
+        registerMoodle(new WithdrawalMoodle());
         registerMoodle(new DirtynessMoodle());
         registerMoodle(new BrainHealthMoodle());
         registerMoodle(new HemothoraxMoodle());

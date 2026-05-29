@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,9 +29,10 @@ public class MedicalSutureItem extends Item implements ISimpleMedicalUsable, IAl
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) + 25);
-            data.setLimbBleedRate(limb, data.getLimbBleedRate(limb) - ((0.81f) / 20f / 60f));
-            data.setLimbPain(limb, data.getLimbPain(limb) + 10);
+            LimbStatistics stats = data.getLimb(limb);
+            stats.addSkinHealth(25);
+            stats.addBleedRate(- 0.81f / 20f / 60f);
+            stats.addPain(10);
         });
 
         if (!source.isCreative()) subNbtDurability(stack, 50);

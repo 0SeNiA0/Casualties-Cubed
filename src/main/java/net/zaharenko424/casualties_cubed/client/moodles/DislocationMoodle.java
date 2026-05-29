@@ -14,42 +14,32 @@ import java.util.List;
 import java.util.Optional;
 
 public class DislocationMoodle extends AbstractMoodleVisual {
-    
-    public static List<Limb> checkList = new ArrayList<>();
-    
-    static {
-        checkList.add(Limb.LEFT_ARM);
-        checkList.add(Limb.RIGHT_FOOT);
-        checkList.add(Limb.RIGHT_LEG);
-        checkList.add(Limb.RIGHT_ARM);
-        checkList.add(Limb.RIGHT_HAND);
-        checkList.add(Limb.LEFT_FOOT);
-        checkList.add(Limb.LEFT_LEG);
-        checkList.add(Limb.LEFT_HAND);
-    }
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/dislocation_moodle.png");
+    private static final List<Limb> checkList = List.of(Limb.LEFT_ARM, Limb.RIGHT_FOOT, Limb.RIGHT_LEG, Limb.RIGHT_ARM,
+            Limb.RIGHT_HAND, Limb.LEFT_FOOT, Limb.LEFT_LEG, Limb.LEFT_HAND);
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        Optional<Boolean> dislocated = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            for (Limb limb: checkList){
-                if (h.getLimbDislocated(limb)>0){
+        Optional<Boolean> dislocated = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> {
+            for (Limb limb : checkList) {
+                if (data.getLimb(limb).getDislocation() > 0) {
                     return true;
                 }
             }
             return false;
         });
 
-        if (dislocated.orElse(false)){
+        if (dislocated.orElse(false)) {
             return MoodleStatus.HEAVY;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/dislocation_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

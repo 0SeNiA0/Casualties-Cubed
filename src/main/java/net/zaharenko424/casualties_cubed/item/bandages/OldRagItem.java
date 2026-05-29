@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,14 +30,17 @@ public class OldRagItem extends Item implements IBandage, IAllowInMedicBags {
 
     @Override
     public void useBandageAction(float scalableAmount, Player target, @Nullable Limb limb) {
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            h.addDelayedChange(((0.003f * scalableAmount) / 20f) / 60f, 200, limb);
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            data.addDelayedChange(((0.003f * scalableAmount) / 20f) / 60f, 200, limb);
+            LimbStatistics stats = data.getLimb(limb);
+
             float painRed = Math.max(0f, 1f - 0.02f * scalableAmount);
-            h.setLimbPain(limb, h.getLimbPain(limb) * painRed);
-            h.setLimbSkinHealth(limb, h.getLimbSkinHealth(limb) + 0.12f * scalableAmount);
+            stats.setPain(stats.getPain() * painRed);
+            stats.addSkinHealth(0.12f * scalableAmount);
+
             float fractRed = Math.max(0f, 1f - 0.0002f * scalableAmount);
-            h.setLimbFracture(limb, h.getLimbFracture(limb) * fractRed);
-            h.setLimbDislocation(limb, h.getLimbDislocated(limb) * fractRed);
+            stats.setFracture(stats.getFracture() * fractRed);
+            stats.setDislocation(stats.getDislocation() * fractRed);
         });
     }
 

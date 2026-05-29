@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,12 +27,13 @@ public class TourniquetItem extends Item implements ISimpleMedicalUsable, IAllow
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         if (limb == Limb.CHEST) return;
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (!data.getTourniquet(limb)) {
-                data.setTourniquet(limb, true);
+            LimbStatistics stats = data.getLimb(limb);
+            if (stats.isTourniquet()) return;
 
-                if (!source.isCreative()) stack.shrink(1);
-                source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
-            }
+            stats.setTourniquet(true);
+
+            if (!source.isCreative()) stack.shrink(1);
+            source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
         });
     }
 

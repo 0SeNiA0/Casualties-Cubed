@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,9 +29,11 @@ public class AdhesiveBandage extends Item implements ISimpleMedicalUsable, IAllo
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setLimbSkinHealth(limb, data.getLimbSkinHealth(limb) + 3);
             data.addDelayedChange(((0.1f) / 20f) / 60f, 100, limb);
-            data.setLimbPain(limb, data.getLimbPain(limb) * 0.90f);
+            LimbStatistics stas = data.getLimb(limb);
+
+            stas.addSkinHealth(3);
+            stas.setPain(stas.getPain() * .90f);
 
             if (!source.isCreative()) subNbtDurability(stack, 20);
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

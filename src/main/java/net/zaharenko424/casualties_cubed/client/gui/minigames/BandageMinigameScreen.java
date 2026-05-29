@@ -115,7 +115,7 @@ public class BandageMinigameScreen extends Screen {
     @Override
     public void tick() {
         Optional<Float> BD = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
-                data.getLimbBleedRate(limb));
+                data.getLimb(limb).getBleedRate());
         bleedRate = BD.orElse(0f);
         parent.tick();
         handObject.update(lastpMouseX, lastpMouseY);

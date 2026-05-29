@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,13 +30,16 @@ public class BruiseKitItem extends Item implements IBandage, IAllowInMedicBags {
 
     @Override
     public void useBandageAction(float scalableAmount, Player target, @Nullable Limb limb) {
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data->{
+            LimbStatistics stats = data.getLimb(limb);
+
             float painRed = Math.max(0f, 1f - 0.01f * scalableAmount);
-            h.setLimbPain(limb,h.getLimbPain(limb)*painRed);
-            h.setLimbSkinHealth(limb,h.getLimbSkinHealth(limb)+0.24f*scalableAmount);
-            h.setLimbMuscleHealth(limb,h.getLimbMuscleHealth(limb)+1.20f*scalableAmount);
+            stats.setPain(stats.getPain() * painRed);
+            stats.addSkinHealth(0.24f * scalableAmount);
+            stats.addMuscleHealth(1.2f * scalableAmount);
+
             float fractRed = Math.max(0f, 1f - 0.024f * scalableAmount);
-            h.setLimbDislocation(limb,h.getLimbDislocated(limb)*fractRed);
+            stats.setDislocation(stats.getDislocation() * fractRed);
         });
     }
 

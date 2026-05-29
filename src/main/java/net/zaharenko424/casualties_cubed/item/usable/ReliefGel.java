@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -27,10 +28,12 @@ public class ReliefGel extends Item implements ISimpleMedicalUsable, IAllowInMed
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setPendingOpioids(data.getPendingOpioids() + 1);
-            data.setLimbPain(limb, data.getLimbPain(limb) - 5);
-            data.setLimbDisinfected(limb, 300);
-            data.setLimbMuscleHeal(limb, true);
-            data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 10);
+            LimbStatistics stats = data.getLimb(limb);
+
+            stats.addPain(-5);
+            stats.setDisinfectionTimerAtLeast(300);
+            stats.setMuscleHeal(true);
+            stats.addMuscleHealth(10);
         });
 
         if (!source.isCreative()) subNbtDurability(stack, 20);

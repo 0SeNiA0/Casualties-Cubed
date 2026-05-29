@@ -14,21 +14,22 @@ import java.util.List;
 import java.util.Optional;
 
 public class LungFaliureMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/lungfaliure_moodle.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        Optional<Float> lung = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->(h.getLimbMuscleHealth(Limb.CHEST)));
-        if (lung.orElse(100f)<=4){
+        Optional<Float> lung = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(Limb.CHEST).getMuscleHealth());
+        if (lung.orElse(100f) <= 4) {
             return MoodleStatus.CRITICAL;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/lungfaliure_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

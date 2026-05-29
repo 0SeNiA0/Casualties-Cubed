@@ -2,7 +2,6 @@ package net.zaharenko424.casualties_cubed.event;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -24,7 +23,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -35,21 +33,19 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.MissingMappingsEvent;
-import net.minecraftforge.server.ServerLifecycleHooks;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.FoodAndDrinkCompat;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
-import net.zaharenko424.casualties_cubed.network.SyncTracker;
 import net.zaharenko424.casualties_cubed.network.packet.ClientboundAmputateRestrictionSyncPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ClientboundBlindnessViewSyncPacket;
 import net.zaharenko424.casualties_cubed.registry.ModBlocks;
 import net.zaharenko424.casualties_cubed.registry.ModGameRules;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,17 +87,17 @@ public class CommonEvent {
     @SubscribeEvent
     public static void onAttachCap(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
-            if (!event.getObject().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).isPresent()){
-                event.addCapability(CasualtiesCubed.resourceLoc("properties"),new PlayerHealthProvider());
+            if (!event.getObject().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).isPresent()) {
+                event.addCapability(CasualtiesCubed.resourceLoc("properties"), new PlayerHealthProvider());
             }
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerCloned(PlayerEvent.Clone event){
-        if (event.isWasDeath()){
-            event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(oldStore ->{
-                event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(newStore ->{
+    public static void onPlayerCloned(PlayerEvent.Clone event) {
+        if (event.isWasDeath()) {
+            event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(oldStore -> {
+                event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
             });
@@ -132,28 +128,27 @@ public class CommonEvent {
     }
 
     @SubscribeEvent
-    public static void onRegisterCap(RegisterCapabilitiesEvent event){
+    public static void onRegisterCap(RegisterCapabilitiesEvent event) {
         event.register(PlayerHealthData.class);
     }
 
 
-
     @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent event){
-        if(event.side == LogicalSide.SERVER){
-            if (event.phase!= TickEvent.Phase.START)return;
+    public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+        if (event.side == LogicalSide.SERVER) {
+            if (event.phase != TickEvent.Phase.START) return;
             if (event.player instanceof ServerPlayer player) {
-                if (player.gameMode.isCreative())return;
+                if (player.gameMode.isCreative()) return;
                 ServerLevel level = player.serverLevel();
                 ProfilerFiller profiler = level.getProfiler();
 
                 profiler.push("casualties_cubed:player_health_system");
-                event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(playerHealthData -> {
-                    playerHealthData.tickUpdate(player);
+                event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                    data.tickUpdate(player);
                     boolean usingArm = player.isUsingItem();
-                    if (usingArm){
+                    if (usingArm) {
                         InteractionHand hand = player.getUsedItemHand();
-                        playerHealthData.onArmUse(hand,player);
+                        data.onArmUse(hand, player);
                     }
                 });
                 profiler.pop();
@@ -186,26 +181,12 @@ public class CommonEvent {
         ItemStack stack = event.getItem();
         FoodAndDrinkCompat.FoodEntry data = FoodAndDrinkCompat.get(stack.getItem());
         if (data != null)
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.setTemperature(h.getTemperature()+ data.temperature);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                h.setTemperature(h.getTemperature() + data.temperature);
                 //TODO thirst
                 //TODO sickness
 
             });
-    }
-
-
-    @SubscribeEvent
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        ProfilerFiller profiler = server.getProfiler();
-        profiler.push("casualties_cubed:sync_tracker");
-        if (event.phase == TickEvent.Phase.END) {
-            SyncTracker.tick(server);
-            SyncTracker.tickEveryone(server);
-            SyncTracker.tickEveryoneReducedBroadcast(server);
-        }
-        profiler.pop();
     }
 
     private static int blindnessRangePrev = 48;
@@ -217,83 +198,77 @@ public class CommonEvent {
             int blindnessRange = serverLevel.getGameRules().getInt(ModGameRules.BLIDNESS_VIEW);
             boolean amputationRestriction = serverLevel.getGameRules().getBoolean(ModGameRules.AMPUTATION_RESTRICTION);
 
-            if (blindnessRange!=blindnessRangePrev){
-                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new ClientboundBlindnessViewSyncPacket(blindnessRange));
+            if (blindnessRange != blindnessRangePrev) {
+                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundBlindnessViewSyncPacket(blindnessRange));
                 blindnessRangePrev = blindnessRange;
             }
-            if (amputationRestriction!=amputationRestrictionPrev){
-                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(),new ClientboundAmputateRestrictionSyncPacket(amputationRestriction));
+            if (amputationRestriction != amputationRestrictionPrev) {
+                ModNetwork.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientboundAmputateRestrictionSyncPacket(amputationRestriction));
                 amputationRestrictionPrev = amputationRestriction;
             }
         }
     }
 
     @SubscribeEvent
-    public static void onItemUse(LivingEntityUseItemEvent.Stop event){
-        if (event.getEntity() instanceof Player player) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                Item item = event.getItem().getItem();
-                if (h.getLimbFracture(Limb.HEAD)>0){
-                    h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD)+3);
+    public static void onItemUse(LivingEntityUseItemEvent.Stop event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            Item item = event.getItem().getItem();
+            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+
+            if (head.getFracture() > 0) {
+                head.addPain(3);
+            }
+
+            if (chest.getDislocation() > 0 || chest.getFracture() > 0) {
+                chest.addPain(4);
+            }
+
+            if (item.isEdible()) {
+                if (head.getDislocation() > 0) {
+                    head.addDislocation(25);
                 }
-                if (h.getLimbDislocated(Limb.CHEST)>0||h.getLimbFracture(Limb.CHEST)>0){
-                    h.setLimbPain(Limb.CHEST, h.getLimbPain(Limb.CHEST)+4);
-                }
-                if (item.isEdible()){
-                    if (h.getLimbDislocated(Limb.HEAD)>0){
-                        h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD)+25);
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
     @SubscribeEvent
-    public static void onAttack(LivingAttackEvent event){
-        if (event.getEntity() instanceof Player player) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                if (h.getLimbFracture(Limb.HEAD)>0){
-                    h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD)+3);
-                }
-                if (h.getLimbDislocated(Limb.CHEST)>0||h.getLimbFracture(Limb.CHEST)>0){
-                    h.setLimbPain(Limb.CHEST, h.getLimbPain(Limb.CHEST)+4);
-                }
-            });
-        }
+    public static void onAttack(LivingAttackEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+
+            if (head.getFracture() > 0) head.addPain(3);
+
+            if (chest.getFracture() > 0 || chest.getDislocation() > 0) {
+                chest.addPain(4);
+            }//TODO also add pain to used arm if direct attack?
+        });
     }
 
-    @SubscribeEvent
-    public static void onJump(LivingEvent.LivingJumpEvent event){
-        if (event.getEntity() instanceof Player player) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                if (h.getLimbFracture(Limb.HEAD)>0){
-                    h.setLimbPain(Limb.HEAD, h.getLimbPain(Limb.HEAD)+10);
-                }
-                if (h.getLimbDislocated(Limb.CHEST)>0){
-                    h.setLimbPain(Limb.CHEST, h.getLimbPain(Limb.HEAD)+10);
-                }
-                List<Limb> templist= new ArrayList<>();
-                templist.add(Limb.LEFT_LEG);
-                templist.add(Limb.RIGHT_LEG);
-                templist.add(Limb.LEFT_FOOT);
-                templist.add(Limb.RIGHT_FOOT);
-                for (Limb limb :templist){
-                    if (h.getLimbDislocated(limb)>0||h.getLimbFracture(limb)>0){
-                        h.setLimbPain(limb, h.getLimbPain(limb)+10);
-                    }
-                }
-            });
-        }
-    }
+    private static final List<Limb> LEG_PARTS = List.of(Limb.RIGHT_LEG, Limb.RIGHT_FOOT, Limb.LEFT_LEG, Limb.LEFT_FOOT);
 
     @SubscribeEvent
-    public static void onJoin(EntityJoinLevelEvent event){
-        if(event.getEntity() instanceof ServerPlayer player){
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-                h.isReducedDirty = true;
-            });
-            SyncTracker.onJoin(player,ServerLifecycleHooks.getCurrentServer());
-        }
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+
+            if (head.getFracture() > 0) head.addPain(10);
+
+            if (chest.getDislocation() > 0) {
+                chest.addPain(10);
+            }
+
+            LimbStatistics stats;
+            for (Limb limb : LEG_PARTS) {
+                stats = data.getLimb(limb);
+                if (stats.getDislocation() > 0 || stats.getFracture() > 0) stats.addPain(10);
+            }
+        });
     }
 
     public static Player getLookedAtPlayer(Player viewer, double maxDistance) {
@@ -378,8 +353,9 @@ public class CommonEvent {
 
     /**
      * Checks if a player has a direct line of sight to a target position.
-     * @param level The world
-     * @param player The player
+     *
+     * @param level     The world
+     * @param player    The player
      * @param targetPos The position of the explosion
      * @return true if there is a clear line of sight, false otherwise
      */

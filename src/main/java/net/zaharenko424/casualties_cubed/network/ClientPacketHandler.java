@@ -42,14 +42,8 @@ public class ClientPacketHandler {
             Entity entity = player.level().getEntity(packet.targetId());
             if (!(entity instanceof Player target) || player.distanceToSqr(entity) > TOO_FAR) return;
 
-            // If we're syncing our own data, make sure to update player capability too
-            if (target == player) {
-                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap ->
-                        cap.deserializeNBT(packet.data()));
-            } else {
-                target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap ->
-                        cap.deserializeNBT(packet.data()));
-            }
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap ->
+                    cap.deserializeNBT(packet.data()));
         });
         ctx.get().setPacketHandled(true);
     }

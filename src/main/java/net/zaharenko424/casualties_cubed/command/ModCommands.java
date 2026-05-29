@@ -25,6 +25,7 @@ import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
@@ -85,7 +86,7 @@ public class ModCommands {
 
                                                     target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                                                         ctx.getSource().sendSuccess(
-                                                                () -> h.getLimbDataText(limb),
+                                                                () -> Component.literal(h.getLimb(limb).toString()),
                                                                 false
                                                         );
                                                     });
@@ -135,23 +136,25 @@ public class ModCommands {
                                                                     ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
 
                                                                     String finalRaw = raw;
-                                                                    target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+                                                                    target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                                                                        LimbStatistics stats = data.getLimb(limb);
                                                                         switch (finalRaw) {
                                                                             case "skinhealth" ->
-                                                                                    h.setLimbSkinHealth(limb, value);
+                                                                                    stats.setSkinHealth(value);
                                                                             case "musclehealth" ->
-                                                                                    h.setLimbMuscleHealth(limb, value);
-                                                                            case "pain" -> h.setLimbPain(limb, value);
+                                                                                    stats.setMuscleHealth(value);
+                                                                            case "pain" ->
+                                                                                    stats.setPain(value);
                                                                             case "infection" ->
-                                                                                    h.setLimbInfection(limb, value);
+                                                                                    stats.setInfection(value);
                                                                             case "fracturetimer" ->
-                                                                                    h.setLimbFracture(limb, value);
+                                                                                    stats.setFracture(value);
                                                                             case "dislocatedtimer" ->
-                                                                                    h.setLimbDislocation(limb, value);
+                                                                                    stats.setDislocation(value);
                                                                             case "desinfectiontimer" ->
-                                                                                    h.setLimbDisinfected(limb, value);
+                                                                                    stats.setDisinfectionTimer(value);
                                                                             case "bleedrate" ->
-                                                                                    h.setLimbBleedRate(limb, value);
+                                                                                    stats.setBleedRate(value);
                                                                             default ->
                                                                                     ctx.getSource().sendFailure(Component.literal("Unknown field: " + finalRaw));
                                                                         }
@@ -213,8 +216,8 @@ public class ModCommands {
                                                                     case "opioids" -> h.setPendingOpioids(value);
                                                                     case "bloodviscosity" -> h.setBloodViscosity(value);
                                                                     case "brainhealth" -> h.setBrainHealth(value);
-                                                                    case "drug_addiction" -> h.setDrug_addition(value);
-                                                                    case "dirtyness" -> h.setDirtyness(value);
+                                                                    case "drug_addiction" -> h.setDrugAddition(value);
+                                                                    case "dirtyness" -> h.setDirtiness(value);
                                                                     case "painshock" -> h.setShock(value);
                                                                     case "temperature" -> h.setTemperature(value);
                                                                     case "lefteyeblind" -> h.setLeftEyeBlind(value > 0);

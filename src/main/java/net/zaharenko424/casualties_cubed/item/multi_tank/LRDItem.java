@@ -11,6 +11,7 @@ import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
 public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable, IAllowInMedicBags {
@@ -30,18 +31,23 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
             if (!source.isCreative()) MultiTankHelper.drainSpecificFluid(stack, 25, new FluidStack(ModFluids.LRD_SERUM.get(), 1));
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setLimbMuscleHealth(limb, data.getLimbMuscleHealth(limb) + 50f);
-                data.setLimbInfection(limb, data.getLimbInfection(limb) - 10);
-                data.setLimbDisinfected(limb, Math.max(data.getLimbDisinfected(limb), 12000));
-                data.setLimbBleedRate(limb, data.getLimbBleedRate(limb) * 0.7f);
+                LimbStatistics stats = data.getLimb(limb);
+
+                stats.addMuscleHealth(50);
+                stats.addInfection(-10);
+                stats.setDisinfectionTimerAtLeast(12000);
+                stats.setBleedRate(stats.getBleedRate() * 0.7f);
+
                 data.setInternalBleeding(data.getInternalBleeding() * 0.45f);
                 data.setPendingOpioids(data.getPendingOpioids() + 20);
 
                 for (Limb limb1 : limb.getConnectedLimbs()) {
-                    data.setLimbMuscleHealth(limb1, data.getLimbMuscleHealth(limb1) + 40f);
-                    data.setLimbInfection(limb1, data.getLimbInfection(limb1) - 5);
-                    data.setLimbDisinfected(limb1, Math.max(data.getLimbDisinfected(limb1), 6000));
-                    data.setLimbBleedRate(limb1, data.getLimbBleedRate(limb1) * 0.75f);
+                    stats = data.getLimb(limb1);
+
+                    stats.addMuscleHealth(40);
+                    stats.addInfection(-5);
+                    stats.setDisinfectionTimerAtLeast(6000);
+                    stats.setBleedRate(stats.getBleedRate() * 0.75f);
                 }
             });
 

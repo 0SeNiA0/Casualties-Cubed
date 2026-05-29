@@ -11,7 +11,7 @@ import net.minecraftforge.fml.ModList;
 
 public class PhysicsUtil {
 
-    public static boolean isPhysicsLoaded(){
+    public static boolean isPhysicsLoaded() {
         return ModList.get().isLoaded("prototype_physics");
     }
 
@@ -23,17 +23,17 @@ public class PhysicsUtil {
         return false;
     }
 
-    public static void setPhysics(boolean state, ServerPlayer player,float randomRot,float randomVel) {
-        if (!isPhysicsLoaded() && isPhysicsActivated(player)) return;
+    public static void setPhysics(boolean state, ServerPlayer player, float randomRot, float randomVel) {
+        if (!isPhysicsLoaded() || !isPhysicsActivated(player)) return;
 
         JbulletWorld world = JbulletWorld.get(player.serverLevel());
         PlayerPhysics physics = world.getPlayerPhys(player);
-        PlayerPhysics.Mode current =  physics.getMode();
-        PlayerPhysics.Mode newmode = state? PlayerPhysics.Mode.PRECISE: PlayerPhysics.Mode.SILENT;
-        if (current != newmode){
+        PlayerPhysics.Mode current = physics.getMode();
+        PlayerPhysics.Mode newmode = state ? PlayerPhysics.Mode.PRECISE : PlayerPhysics.Mode.SILENT;
+        if (current != newmode) {
             physics.setMode(newmode);
-            physics.applyRandomTorque(randomRot,randomRot,randomRot);
-            physics.applyRandomVelocity(randomVel,randomVel,randomRot);
+            physics.applyRandomTorque(randomRot, randomRot, randomRot);
+            physics.applyRandomVelocity(randomVel, randomVel, randomVel);
         }
     }
 
@@ -47,14 +47,14 @@ public class PhysicsUtil {
             }
             return vel;
         }
-        return  new Vec3(0, 0, 0);
+        return new Vec3(0, 0, 0);
     }
 
-    public static void applyRandomRot(ServerPlayer player){
+    public static void applyRandomRot(ServerPlayer player) {
         JbulletWorld world = JbulletWorld.get(player.serverLevel());
         PlayerPhysics physics = world.getPlayerPhys(player);
-        if (physics.getMode()==PlayerPhysics.Mode.PRECISE) {
-            physics.applyRandomTorque(50,50,50);
+        if (physics.getMode() == PlayerPhysics.Mode.PRECISE) {
+            physics.applyRandomTorque(50, 50, 50);
         }
     }
 }

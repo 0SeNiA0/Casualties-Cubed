@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(value = Dist.CLIENT,bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlayerLimbHider {
+
     private static final List<Limb> limbsToSearch = List.of(
             Limb.LEFT_ARM,
             Limb.RIGHT_ARM,
@@ -35,37 +36,34 @@ public class PlayerLimbHider {
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             Map<Limb, Boolean> prev = new HashMap<>();
+            boolean isVisible;
             for (Limb limb : limbsToSearch) {
-                switch (limb){
+                isVisible = !data.isAmputated(limb);
+                switch (limb) {
                     case RIGHT_LEG -> {
-                        boolean isVisible = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.isAmputated(limb)).orElse(false);
-                        prev.put(limb,model.rightLeg.visible);
-                        model.rightLeg.visible = !isVisible;
-                        model.rightPants.visible = !isVisible;
+                        prev.put(limb, model.rightLeg.visible);
+                        model.rightLeg.visible = isVisible;
+                        model.rightPants.visible = isVisible;
                     }
                     case RIGHT_ARM -> {
-                        boolean isVisible = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.isAmputated(limb)).orElse(false);
-                        prev.put(limb,model.rightArm.visible);
-                        model.rightArm.visible = !isVisible;
-                        model.rightSleeve.visible = !isVisible;
+                        prev.put(limb, model.rightArm.visible);
+                        model.rightArm.visible = isVisible;
+                        model.rightSleeve.visible = isVisible;
                     }
                     case LEFT_ARM -> {
-                        boolean isVisible = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.isAmputated(limb)).orElse(false);
-                        prev.put(limb,model.leftArm.visible);
-                        model.leftArm.visible = !isVisible;
-                        model.leftSleeve.visible = !isVisible;
+                        prev.put(limb, model.leftArm.visible);
+                        model.leftArm.visible = isVisible;
+                        model.leftSleeve.visible = isVisible;
                     }
                     case LEFT_LEG -> {
-                        boolean isVisible = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.isAmputated(limb)).orElse(false);
-                        prev.put(limb,model.leftLeg.visible);
-                        model.leftLeg.visible = !isVisible;
-                        model.leftPants.visible = !isVisible;
+                        prev.put(limb, model.leftLeg.visible);
+                        model.leftLeg.visible = isVisible;
+                        model.leftPants.visible = isVisible;
                     }
-                    case HEAD ->{
-                        boolean isVisible = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.isAmputated(limb)).orElse(false);
-                        prev.put(limb,model.head.visible);
-                        model.head.visible = !isVisible;
-                        model.hat.visible = !isVisible;
+                    case HEAD -> {
+                        prev.put(limb, model.head.visible);
+                        model.head.visible = isVisible;
+                        model.hat.visible = isVisible;
                     }
                 }
             }
@@ -82,7 +80,7 @@ public class PlayerLimbHider {
         Map<Limb, Boolean> prev = previousVisibility.remove(player);
         if (prev != null) {
             for (Map.Entry<Limb, Boolean> entry : prev.entrySet()) {
-                switch (entry.getKey()){
+                switch (entry.getKey()) {
                     case RIGHT_LEG -> {
                         model.rightLeg.visible = entry.getValue();
                         model.rightPants.visible = entry.getValue();
@@ -99,7 +97,7 @@ public class PlayerLimbHider {
                         model.leftLeg.visible = entry.getValue();
                         model.leftPants.visible = entry.getValue();
                     }
-                    case HEAD ->{
+                    case HEAD -> {
                         model.head.visible = entry.getValue();
                         model.hat.visible = entry.getValue();
                     }

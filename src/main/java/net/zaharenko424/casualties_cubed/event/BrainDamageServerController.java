@@ -19,20 +19,22 @@ public class BrainDamageServerController {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChat(ServerChatEvent event) {
         ServerPlayer player = event.getPlayer();
-        float brain= player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
-        float dislocatedJaw= player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->h.getLimbDislocated(Limb.HEAD)).orElse(0f);
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float dislocatedJaw = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getLimb(Limb.HEAD).getDislocation()).orElse(0f);
         boolean JawMissing = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isMouthRemoved).orElse(false);
+
         if (brain < 30f) { // unconscious
             event.setCanceled(true);
             return;
         }
+
         String msg = event.getMessage().getString();
-        float clarity = Mth.clamp(brain / 100f,0,1);
+        float clarity = Mth.clamp(brain / 100f, 0, 1);
 
         msg = distortScaled(msg, clarity);
-        if (dislocatedJaw>0){
+        if (dislocatedJaw > 0) {
             msg = DislocatedJaw(msg);
-        }else if (JawMissing){
+        } else if (JawMissing) {
             msg = MissingJaw(msg);
         }
         event.setMessage(Component.literal(msg));
@@ -43,9 +45,9 @@ public class BrainDamageServerController {
 
         // The lower the clarity, the higher the error chance
         float dropChance = (1f - clarity) * 0.35f;      // up to 25% dropped letters
-        float dupChance  = (1f - clarity) * 0.25f;      // up to 15% doubles
+        float dupChance = (1f - clarity) * 0.25f;      // up to 15% doubles
         float caseChance = (1f - clarity) * 0.45f;       // up to 10% random case
-        float gibChance  = (1f - clarity) * 0.3f;       // up to 20% gibberish
+        float gibChance = (1f - clarity) * 0.3f;       // up to 20% gibberish
 
         String[] gib = {"rrh", "h", "mn", "zz", "thh", "nn"};
 
@@ -68,63 +70,64 @@ public class BrainDamageServerController {
         return sb.toString();
     }
 
-    private static String MissingJaw(String input){
+    private static String MissingJaw(String input) {
         StringBuilder sb = new StringBuilder();
         for (char c : input.toCharArray()) {
-            boolean drop = isSame(c,'b')||
-                    isSame(c,'p')||
-                    isSame(c,'m')||
-                    isSame(c,'f')||
-                    isSame(c,'t')||
-                    isSame(c,'h')||
-                    isSame(c,'v');
-            if (isSame(c,'t')){
+            boolean drop = isSame(c, 'b') ||
+                    isSame(c, 'p') ||
+                    isSame(c, 'm') ||
+                    isSame(c, 'f') ||
+                    isSame(c, 't') ||
+                    isSame(c, 'h') ||
+                    isSame(c, 'v');
+            if (isSame(c, 't')) {
                 sb.append("tgh");
             }
-            if (isSame(c,'d')){
+            if (isSame(c, 'd')) {
                 sb.append("dgh");
             }
-            if (isSame(c,'n')){
+            if (isSame(c, 'n')) {
                 sb.append("ngh");
             }
-            if (isSame(c,'l')){
+            if (isSame(c, 'l')) {
                 sb.append("lh");
             }
-            if (isSame(c,'s')){
+            if (isSame(c, 's')) {
                 sb.append("h");
             }
-            if (isSame(c,'z')){
+            if (isSame(c, 'z')) {
                 sb.append("zh");
             }
-            if (drop){
+            if (drop) {
                 sb.append("_");
-            }else{
+            } else {
                 sb.append(c);
             }
         }
         return sb.toString();
     }
-    private static String DislocatedJaw(String input){
+
+    private static String DislocatedJaw(String input) {
         StringBuilder sb = new StringBuilder();
         for (char c : input.toCharArray()) {
-            boolean drop = isSame(c,'b')||
-                    isSame(c,'p')||
-                    isSame(c,'m')||
-                    isSame(c,'f')||
-                    isSame(c,'v');
+            boolean drop = isSame(c, 'b') ||
+                    isSame(c, 'p') ||
+                    isSame(c, 'm') ||
+                    isSame(c, 'f') ||
+                    isSame(c, 'v');
 
-            if (isSame(c,'s')){
+            if (isSame(c, 's')) {
                 sb.append("th");
             }
-            if (isSame(c,'z')){
+            if (isSame(c, 'z')) {
                 sb.append("ey");
             }
-            if (isSame(c,'t')||isSame(c,'d')){
+            if (isSame(c, 't') || isSame(c, 'd')) {
                 sb.append("h");
             }
-            if (drop){
+            if (drop) {
                 sb.append("_");
-            }else{
+            } else {
                 sb.append(c);
             }
 
@@ -132,8 +135,7 @@ public class BrainDamageServerController {
         return sb.toString();
     }
 
-    public static boolean isSame(char a, char b){
-        return Character.toLowerCase(a)==Character.toLowerCase(b);
+    public static boolean isSame(char a, char b) {
+        return Character.toLowerCase(a) == Character.toLowerCase(b);
     }
-
 }
