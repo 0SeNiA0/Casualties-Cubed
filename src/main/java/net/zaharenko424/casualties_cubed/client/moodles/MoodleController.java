@@ -6,114 +6,113 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoodleController {
 
-    private static final List<AbstractMoodleVisual> Moodles = new ArrayList<>();
-    private static final int MOODLE_SIZE = 16;
-    private static final int PADDING = 4;
-
-    public static void registerMoodle(AbstractMoodleVisual overlay) {
-        Moodles.add(overlay);
-    }
+    public static final int MOODLE_SIZE = 16;
+    public static final int PADDING = 4;
 
     private static final OverflowMoodle overflowMoodle = new OverflowMoodle();
 
-    static {
-        registerMoodle(new BleedMoodle());
-        registerMoodle(new BleedInternalMoodle());
-        registerMoodle(new LowBloodMoodle());
-        registerMoodle(new HighBloodMoodle());
-        registerMoodle(new PainMoodle());
-        registerMoodle(new OxygenMoodle());
-        registerMoodle(new LungFaliureMoodle());
-        registerMoodle(new NotBreathMoodle());
-        registerMoodle(new OpiateMoodle());
-        registerMoodle(new InfectionMoodle());
-        registerMoodle(new FractureMoodle());
-        registerMoodle(new DislocationMoodle());
-        registerMoodle(new ConsiousnessMoodle());
-        registerMoodle(new ShockMoodle());
-        registerMoodle(new TemperatureMoodle());
-        registerMoodle(new WithdrawalMoodle());
-        registerMoodle(new DirtynessMoodle());
-        registerMoodle(new BrainHealthMoodle());
-        registerMoodle(new HemothoraxMoodle());
-        registerMoodle(new LifeSupportMoodle());
-        registerMoodle(new AdrenalineMoodle());
-        registerMoodle(new AmputatedMoodle());
-        registerMoodle(new FractureChestMoodle());
-        registerMoodle(new FractureHeadMoodle());
-        registerMoodle(new DislocationChestMoodle());
-        registerMoodle(new DislocationHeadMoodle());
-        registerMoodle(new BlindMoodle());
-        registerMoodle(new DisfiguredMoodle());
-        registerMoodle(new HearingLossMoodle());
+    private static final List<AbstractMoodleVisual> moodles;
+    private static final List<AbstractMoodleVisual> toRender = new ArrayList<>();
+
+    /**
+     * Collects all visible moodles for given player
+     */
+    public static List<AbstractMoodleVisual> updateAndGetToRender(Player player, boolean healthPanel) {
+        toRender.clear();
+
+        for (AbstractMoodleVisual moodle : moodles) {
+            if (moodle.isSideMoodle() && !healthPanel) continue;
+
+            moodle.update(player);
+            if (moodle.shouldRender()) toRender.add(moodle);
+        }
+
+        return toRender;
     }
 
-    /** Render moodles as overlay (left-bottom, respecting hotbar) */
+    static {
+        List<AbstractMoodleVisual> tmp = new ArrayList<>();
+
+        //Positive
+        tmp.add(new LifeSupportMoodle());
+            //Side
+        tmp.add(new AdrenalineMoodle());
+
+        //Negative
+        tmp.add(new BrainHealthMoodle());
+        tmp.add(new LowBloodMoodle());
+        tmp.add(new HighBloodMoodle());
+        tmp.add(new RespiratoryArrestMoodle());
+        tmp.add(new LungFaliureMoodle());
+        tmp.add(new HemothoraxMoodle());
+        tmp.add(new OxygenMoodle());//TODO Split off cardiac arrest
+        tmp.add(new PainMoodle());
+        tmp.add(new ShockMoodle());
+        tmp.add(new OpiateMoodle());
+        tmp.add(new WithdrawalMoodle());
+        tmp.add(new ConsiousnessMoodle());
+        tmp.add(new BleedInternalMoodle());
+        tmp.add(new BleedMoodle());
+        tmp.add(new FractureMoodle());
+        tmp.add(new DislocationMoodle());
+        tmp.add(new FracturedNeckMoodle());
+        tmp.add(new FracturedRibsMoodle());
+        tmp.add(new DislocatedJawMoodle());
+        tmp.add(new DislocatedSpineMoodle());
+        tmp.add(new InfectionMoodle());
+        tmp.add(new TemperatureMoodle());
+        tmp.add(new HearingLossMoodle());
+        tmp.add(new DirtynessMoodle());
+            //Side
+        tmp.add(new DisfiguredMoodle());
+        tmp.add(new AmputatedMoodle());
+        tmp.add(new BlindMoodle());
+
+        moodles = List.copyOf(tmp);
+    }
+
+    /**
+     * Render moodles as overlay (left-bottom, respecting hotbar)
+     */
     public static void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
         Minecraft minecraft = gui.getMinecraft();
-        if (minecraft.player == null) return;
+        if (minecraft.screen instanceof HealthScreen) return;//draw moodles inside health screen instead
+
+        Player player = minecraft.player;
+        if (player == null) return;
 
         ProfilerFiller profiler = minecraft.getProfiler();
-        profiler.push("casualties_cubed:moodles");
+        profiler.push(CasualtiesCubed.MOD_ID + ":moodles");
+
+        List<AbstractMoodleVisual> visible = updateAndGetToRender(minecraft.player, false);
 
         PoseStack stack = graphics.pose();
         stack.pushPose();
         stack.translate(0, 0, 150);
 
         int hotbarLeft = (width / 2) - 91;
-        int y = height - MOODLE_SIZE - 4;
-
-        Player player = minecraft.player;
-        List<AbstractMoodleVisual> visible = getVisibleMoodles(player);
         int x = 4;
+        int y = height - MOODLE_SIZE - 4;
 
         for (int i = 0; i < visible.size(); i++) {
             if (x + MOODLE_SIZE + 16 > hotbarLeft) {
                 overflowMoodle.setLeftover(visible.size() - i);
-                overflowMoodle.render(player, graphics, partialTick, x, y);
+                overflowMoodle.render(graphics, partialTick, x, y);
                 break;
             }
-            visible.get(i).render(player, graphics, partialTick, x, y);
+            visible.get(i).render(graphics, partialTick, x, y);
             x += MOODLE_SIZE + PADDING;
         }
 
         stack.popPose();
         profiler.pop();
-    }
-
-    /** Collects all visible moodles for given player */
-    public static int UPDATE_THROTLE = 0;
-    public static List<AbstractMoodleVisual> getVisibleMoodles(Player player) {
-        List<AbstractMoodleVisual> visible = new ArrayList<>();
-        UPDATE_THROTLE++;
-
-        boolean doUpdate = UPDATE_THROTLE > 20;
-        if (doUpdate) UPDATE_THROTLE = 0;
-
-        for (AbstractMoodleVisual base : Moodles) {
-            // Clone to isolate GUI vs screen moodles
-            AbstractMoodleVisual moodle = base.clone();
-
-            // Always calculate for the given player, so the clone has the right state
-            MoodleStatus status = moodle.calculateStatus(player);
-
-            // Only update the stored status periodically, but still use it for rendering
-            if (doUpdate || moodle.getMoodleStatus() == null) {
-                moodle.setMoodleStatus(status);
-            }
-
-            // Respect shouldRender() based on that updated status
-            if (moodle.shouldRender()) {
-                visible.add(moodle);
-            }
-        }
-
-        return visible;
     }
 }

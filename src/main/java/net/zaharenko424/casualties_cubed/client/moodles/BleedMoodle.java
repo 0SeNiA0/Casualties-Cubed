@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class BleedMoodle extends AbstractMoodleVisual {
 
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/blood_moodle.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         AtomicReference<MoodleStatus> status = new AtomicReference<>(this.getMoodleStatus());
@@ -40,8 +42,7 @@ public class BleedMoodle extends AbstractMoodleVisual {
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/blood_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

@@ -163,7 +163,7 @@ public class InjectMingameScreen extends Screen {
     }
 
     public void handleFail() {
-        ModNetwork.CHANNEL.sendToServer(new ServerboundSyringeFailPacket(target.getId(), limb));
+        ModNetwork.CHANNEL.sendToServer(new ServerboundSyringeFailPacket(target.getId(), limb, hand));
         onClose();
     }
 

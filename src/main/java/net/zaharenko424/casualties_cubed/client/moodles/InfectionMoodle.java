@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,34 +15,40 @@ import java.util.List;
 import java.util.Optional;
 
 public class InfectionMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/infection_moodle.png");
+
+    @Override
+    public boolean shouldBeDisplayed(ChipState state) {
+        return state.isActive() || getMoodleStatus() != MoodleStatus.LIGHT;
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Double> infection = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getMaxInfection);
 
-        if (infection.orElse(0d)>80){
+        if (infection.orElse(0d) > 80) {
             return MoodleStatus.CRITICAL;
-        }else if (infection.orElse(0d)>60){
+        } else if (infection.orElse(0d) > 60) {
             return MoodleStatus.HEAVY;
-        }else if (infection.orElse(0d)>40){
+        } else if (infection.orElse(0d) > 40) {
             return MoodleStatus.NORMAL;
-        }else if (infection.orElse(0d)>25){
+        } else if (infection.orElse(0d) > 25) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/infection_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.description1").withStyle(ChatFormatting.GRAY));

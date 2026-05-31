@@ -2,7 +2,6 @@ package net.zaharenko424.casualties_cubed.client.event;
 
 import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.gui.*;
-import net.zaharenko424.casualties_cubed.client.gui.*;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
 import net.zaharenko424.casualties_cubed.client.overlays.OverlayController;
 import net.zaharenko424.casualties_cubed.item.usable.ThermometerItem;

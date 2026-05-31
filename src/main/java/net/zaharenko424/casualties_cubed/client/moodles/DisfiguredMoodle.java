@@ -13,21 +13,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DisfiguredMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/mouth_gone_moodle.png");
+
+    @Override
+    public boolean isSideMoodle() {
+        return true;
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         boolean r = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isMouthRemoved).orElse(false);
-        if (r){
+        if (r) {
             return MoodleStatus.HEAVY;
-        }else{
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/mouth_gone_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

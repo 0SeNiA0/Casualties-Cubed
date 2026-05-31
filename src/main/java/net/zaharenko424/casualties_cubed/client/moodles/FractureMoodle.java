@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +19,11 @@ public class FractureMoodle extends AbstractMoodleVisual {
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/fracture_moodle.png");
     private static final List<Limb> checkList = List.of(Limb.LEFT_ARM, Limb.RIGHT_FOOT, Limb.RIGHT_LEG, Limb.RIGHT_ARM,
             Limb.RIGHT_HAND, Limb.LEFT_FOOT, Limb.LEFT_LEG, Limb.LEFT_HAND);
+
+    @Override
+    public boolean shouldBeDisplayed(ChipState state) {
+        return state.isActive();
+    }
 
     @Override
     public MoodleStatus calculateStatus(Player player) {

@@ -13,11 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AmputatedMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/amputated_moodle.png");
+
+    @Override
+    public boolean isSideMoodle() {
+        return true;
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        boolean amputated = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-            for (Limb limb:Limb.values()){
+        boolean amputated = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
+            for (Limb limb : Limb.values()) {
                 if (h.isAmputated(limb))
                     return true;
             }
@@ -25,15 +32,14 @@ public class AmputatedMoodle extends AbstractMoodleVisual {
         }).orElse(false);
         if (amputated) {
             return MoodleStatus.HEAVY;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/amputated_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

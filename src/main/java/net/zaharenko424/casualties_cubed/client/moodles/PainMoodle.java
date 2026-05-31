@@ -14,33 +14,34 @@ import java.util.List;
 import java.util.Optional;
 
 public class PainMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/pain_moodle.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        Optional<Double> pain= player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
-        if (pain.orElse(0d)>80){
+        Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
+        if (pain.orElse(0d) > 80) {
             return MoodleStatus.CRITICAL;
-        } else if (pain.orElse(0d)>60) {
+        } else if (pain.orElse(0d) > 60) {
             return MoodleStatus.HEAVY;
-        }else if (pain.orElse(0d)>30) {
+        } else if (pain.orElse(0d) > 30) {
             return MoodleStatus.NORMAL;
-        }else if (pain.orElse(0d)>10) {
+        } else if (pain.orElse(0d) > 10) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/pain_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.pain.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.pain.description1").withStyle(ChatFormatting.GRAY));

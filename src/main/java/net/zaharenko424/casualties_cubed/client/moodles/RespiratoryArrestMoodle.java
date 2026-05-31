@@ -13,22 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class NotBreathMoodle extends AbstractMoodleVisual {
-    
+public class RespiratoryArrestMoodle extends AbstractMoodleVisual {
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/notbreath_moodle.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Boolean> isbreathing = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isRespiratoryArrest);
-        if (isbreathing.orElse(false)){
+        if (isbreathing.orElse(false)) {
             return MoodleStatus.CRITICAL;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/notbreath_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

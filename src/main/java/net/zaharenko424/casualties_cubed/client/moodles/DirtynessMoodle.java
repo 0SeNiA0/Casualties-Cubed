@@ -13,29 +13,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DirtynessMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/dirty.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         float dirt = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getDirtiness).orElse(0f);
-        if (dirt>80){
+        if (dirt > 80) {
             return MoodleStatus.NORMAL;
-        }else if (dirt>50){
+        } else if (dirt > 50) {
             return MoodleStatus.LIGHT;
-        }else{
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/dirty.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.dirty.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.dirty.description1").withStyle(ChatFormatting.GRAY));

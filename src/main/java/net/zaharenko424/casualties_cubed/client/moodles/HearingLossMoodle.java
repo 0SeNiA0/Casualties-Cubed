@@ -14,31 +14,31 @@ import java.util.List;
 
 public class HearingLossMoodle extends AbstractMoodleVisual {
 
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/sound_loss_moodle.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
-       float status  = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getHearingLoss).orElse(0f);
-       if (status>0.7){
+        float status = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getHearingLoss).orElse(0f);
+        if (status > 0.7) {
             return MoodleStatus.HEAVY;
-       }else if (status>0.4){
-           return MoodleStatus.NORMAL;
-       }else if (status>0.15){
-           return MoodleStatus.LIGHT;
-       }else{
-           return MoodleStatus.NONE;
-       }
-
+        } else if (status > 0.4) {
+            return MoodleStatus.NORMAL;
+        } else if (status > 0.15) {
+            return MoodleStatus.LIGHT;
+        } else {
+            return MoodleStatus.NONE;
+        }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/sound_loss_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.description1").withStyle(ChatFormatting.GRAY));

@@ -13,30 +13,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlindMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/eye_gone_moodle.png");
+
+    @Override
+    public boolean isSideMoodle() {
+        return true;
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         boolean r = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isRightEyeBlind).orElse(false);
         boolean l = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isLeftEyeBlind).orElse(false);
-        if (r&l){
+        if (r & l) {
             return MoodleStatus.HEAVY;
-        }else if (r||l){
+        } else if (r || l) {
             return MoodleStatus.NORMAL;
-        }else{
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/eye_gone_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case NORMAL -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.eye_gone.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.eye_gone.description1").withStyle(ChatFormatting.GRAY));

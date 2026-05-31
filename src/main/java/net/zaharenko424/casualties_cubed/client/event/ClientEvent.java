@@ -100,9 +100,9 @@ public class ClientEvent {
 
 
                 if (self) {
-                    Minecraft.getInstance().setScreen(new HealthScreen(player.getUUID()));
+                    Minecraft.getInstance().setScreen(new HealthScreen(player));
                 } else {
-                    Minecraft.getInstance().setScreen(new HealthScreen(target.getUUID()));
+                    Minecraft.getInstance().setScreen(new HealthScreen(target));
                 }
 
             } else {

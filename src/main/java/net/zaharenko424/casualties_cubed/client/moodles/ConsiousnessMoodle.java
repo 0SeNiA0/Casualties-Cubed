@@ -23,23 +23,22 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
-        if (cons.orElse(100f)<10) {
+        if (cons.orElse(100f) < 10) {
             fullyUNC = true;
             return MoodleStatus.CRITICAL;
-        }
-        else if (cons.orElse(100f)<30){
+        } else if (cons.orElse(100f) < 30) {
             fullyUNC = false;
             return MoodleStatus.CRITICAL;
-        }else if (cons.orElse(100f)<55){
+        } else if (cons.orElse(100f) < 55) {
             fullyUNC = false;
             return MoodleStatus.HEAVY;
-        }else if (cons.orElse(100f)<75){
+        } else if (cons.orElse(100f) < 75) {
             fullyUNC = false;
             return MoodleStatus.NORMAL;
-        }else if (cons.orElse(100f)<90){
+        } else if (cons.orElse(100f) < 90) {
             fullyUNC = false;
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             fullyUNC = false;
             return MoodleStatus.NONE;
         }
@@ -54,7 +53,7 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description1").withStyle(ChatFormatting.GRAY));
@@ -68,10 +67,10 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description3").withStyle(ChatFormatting.GRAY));
             }
             case CRITICAL -> {
-                if (fullyUNC){
+                if (fullyUNC) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title5").withStyle(ChatFormatting.RED));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description5").withStyle(ChatFormatting.GRAY));
-                }else{
+                } else {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title4").withStyle(ChatFormatting.RED));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description4").withStyle(ChatFormatting.GRAY));
                 }

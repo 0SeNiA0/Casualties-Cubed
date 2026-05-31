@@ -1,11 +1,5 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
-import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,6 +7,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
+import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
+import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.Optional;
 
@@ -194,9 +195,12 @@ public class BandageMinigameScreen extends Screen {
             guiGraphics.blit(StatusSprites.BLEED.tex, (int) (width / 2 - sizePx / 2), (int) (height / 2 - sizePx / 2 + 10), 0, 0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
         }
         guiGraphics.renderItem(bandageObject.lastStack, this.width / 10 - 10, this.height / 10 + 5);
-        guiGraphics.drawString(mc.font, Component.empty().append(bandageObject.lastStack.getHoverName()), this.width / 10 + 16, this.height / 10 + 5, 0xFFFFFF);
+
+        Component comp = INbtDrivenDurability.appendDurability((bandageObject.lastDurability - bandageObject.durabilitySincePacket) / bandageObject.maxDurability, Component.translatable(bandageObject.lastStack.getDescriptionId()));
+        guiGraphics.drawString(mc.font, comp, this.width / 10 + 16, this.height / 10 + 5, 0xFFFFFF);
 
         handObject.render(guiGraphics, partialTicks);
+
     }
 
     @Override

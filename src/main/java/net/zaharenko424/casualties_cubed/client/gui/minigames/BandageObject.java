@@ -31,10 +31,10 @@ public class BandageObject extends GrabObject {
 
     private boolean EndCondition = false;
 
-    private float maxDurability;
-    private float lastDurability;
+    float maxDurability;
+    float lastDurability;
     ItemStack lastStack;
-    private float durabilitySincePacket = 0;
+    float durabilitySincePacket = 0;
 
     int bagSlot;
     InteractionHand usedHand;

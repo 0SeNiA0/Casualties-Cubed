@@ -1,7 +1,8 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,16 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DislocationHeadMoodle extends AbstractMoodleVisual {
+public class FracturedRibsMoodle extends AbstractMoodleVisual {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/mouth_dislocated_moodle.png");
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/broken_ribs_moodle.png");
+
+    @Override
+    public boolean shouldBeDisplayed(ChipState state) {
+        return state.isActive();
+    }
 
     @Override
     public MoodleStatus calculateStatus(Player player) {
-        Optional<Boolean> dislocated = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
-                data.getLimb(Limb.HEAD).getDislocation() > 0);
+        Optional<Boolean> fractured = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
+                data.getLimb(Limb.CHEST).getFracture() > 0);
 
-        if (dislocated.orElse(false)) {
+        if (fractured.orElse(false)) {
             return MoodleStatus.HEAVY;
         } else {
             return MoodleStatus.NONE;
@@ -37,8 +43,8 @@ public class DislocationHeadMoodle extends AbstractMoodleVisual {
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        componentList.add(Component.translatable("casualties_cubed.gui.moodle.dislocation_head.title3").withStyle(ChatFormatting.GOLD));
-        componentList.add(Component.translatable("casualties_cubed.gui.moodle.dislocation_head.description3").withStyle(ChatFormatting.GRAY));
+        componentList.add(Component.translatable("casualties_cubed.gui.moodle.fracture_chest.title3").withStyle(ChatFormatting.GOLD));
+        componentList.add(Component.translatable("casualties_cubed.gui.moodle.fracture_chest.description3").withStyle(ChatFormatting.GRAY));
         return componentList;
     }
 }

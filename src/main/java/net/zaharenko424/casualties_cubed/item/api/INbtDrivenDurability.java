@@ -52,10 +52,13 @@ public interface INbtDrivenDurability {
     }
 
     default Component appendDurability(ItemStack stack, MutableComponent component) {
-        float delta = getNbtDurability(stack) / getMaxNbtDurability(stack);
+        return appendDurability(getNbtDurability(stack) / getMaxNbtDurability(stack), component);
+    }
+
+    static Component appendDurability(float durabilityScale, MutableComponent component) {
         return component
                 .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal((int) (delta * 100) + "%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(delta))))
+                .append(Component.literal((int) (durabilityScale * 100) + "%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(durabilityScale))))
                 .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
     }
 }

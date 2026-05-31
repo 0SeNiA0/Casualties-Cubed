@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,24 +15,35 @@ import java.util.List;
 import java.util.Optional;
 
 public class AdrenalineMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/adrenaline_moodle.png");
+
+    @Override
+    public boolean isSideMoodle() {
+        return true;
+    }
+
+    @Override
+    public boolean shouldBeDisplayed(ChipState state) {
+        return state.isActive();
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Float> blood = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getAdrenaline);
         float blood2 = blood.orElse(0f);
-        if (blood2>65) {
+        if (blood2 > 65) {
             return MoodleStatus.NORMAL;
-        } else if (blood2>20) {
+        } else if (blood2 > 20) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/adrenaline_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

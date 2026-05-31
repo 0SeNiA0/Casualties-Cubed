@@ -20,6 +20,7 @@ import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.IBandage;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
+import net.zaharenko424.casualties_cubed.item.multi_tank.SyringeItem;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
@@ -155,7 +156,6 @@ public class ServerPacketHandler {
         ctx.get().setPacketHandled(true);
     }
 
-//TODO at least make sure that sender actually has a syringe
     public static void handleSyringeFail(ServerboundSyringeFailPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
@@ -165,7 +165,9 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
-            if (data.isAmputated(Limb.RIGHT_HAND) && data.isAmputated(Limb.LEFT_HAND)) return;// Cant use syringe without a hand
+            if (data.isAmputated(Limb.getFromHand(packet.usedHand(), sender))) return;// Cant use syringe without a hand
+
+            if (!(sender.getItemInHand(packet.usedHand()).getItem() instanceof SyringeItem)) return;
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
@@ -351,7 +353,6 @@ public class ServerPacketHandler {
         ctx.get().setPacketHandled(true);
     }
 
-//TODO use as mentioned above session tracker?
     public static void handleGuiSyncToggle(ServerboundGuiSyncTogglePacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();

@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,33 +14,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BrainHealthMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/brainhealth.png");
+
+    @Override
+    public boolean shouldBeDisplayed(ChipState state) {
+        return state.isActive();
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
-        if (brain<=30){
+        if (brain <= 30) {
             return MoodleStatus.CRITICAL;
-        }else if (brain<=60){
+        } else if (brain <= 60) {
             return MoodleStatus.HEAVY;
-        }else if (brain<=80){
+        } else if (brain <= 80) {
             return MoodleStatus.NORMAL;
-        }else if (brain<=95){
+        } else if (brain <= 95) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/brainhealth.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.brain_health.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.brain_health.description1").withStyle(ChatFormatting.GRAY));

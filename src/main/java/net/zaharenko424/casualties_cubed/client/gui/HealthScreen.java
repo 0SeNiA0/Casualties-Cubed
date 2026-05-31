@@ -48,7 +48,8 @@ public class HealthScreen extends Screen {
     private List<ItemWidget> LeftItemsubWidgets = new ArrayList<>();
     private HealthInfoBoxWidget healthbox;
     private CPRButton cprButton;
-    private Player target;
+    private final Player target;
+    private final Player localPlayer;
 
     private List<CustomButton> buttonList = new ArrayList<>();
     private int listStartX = 5;
@@ -64,10 +65,10 @@ public class HealthScreen extends Screen {
     public boolean BGmode = false;
 
 
-    public HealthScreen(UUID target) {
+    public HealthScreen(Player target) {
         super(Component.empty());
-        this.target = Minecraft.getInstance().player.level().getPlayerByUUID(target);
-
+        this.target = target;
+        this.localPlayer = Minecraft.getInstance().player;
     }
 
     @Override
@@ -236,37 +237,36 @@ public class HealthScreen extends Screen {
         healthbox.setBGMode(BGmode);
         LeftItem.setBGMode(BGmode);
         RightItem.setBGMode(BGmode);
+
         for (ItemWidget itemWidget : LeftItemsubWidgets) {
             itemWidget.setBGMode(BGmode);
         }
+
         for (ItemWidget itemWidget : RightItemsubWidgets) {
             itemWidget.setBGMode(BGmode);
         }
 
-        // render moodles for this target (ignoring hotbar constraints!)
-        if (target != null) {
-            List<AbstractMoodleVisual> visible = MoodleController.getVisibleMoodles(target);
+        // render moodles for self (ignoring hotbar constraints!)
+        List<AbstractMoodleVisual> visible = MoodleController.updateAndGetToRender(localPlayer, true);
 
-            int startX = this.width / 2 - ((visible.size() * 20) / 2) + 68; // center moodles
-            int y = this.height - 40; // fixed height above bottom
+        int x = 4; // center moodles
+        int y = this.height - MoodleController.MOODLE_SIZE - MoodleController.PADDING; // fixed height above bottom
 
-            int x = startX;
-            AbstractMoodleVisual hovered = null;
+        AbstractMoodleVisual hovered = null;
+        for (AbstractMoodleVisual moodle : visible) {
+            moodle.render(pGuiGraphics, pPartialTick, x, y);
 
-            for (AbstractMoodleVisual moodle : visible) {
-                moodle.render(target, pGuiGraphics, pPartialTick, x, y);
-
-                if (moodle.isMouseOver(pMouseX, pMouseY, x, y)) {
-                    hovered = moodle;
-                }
-
-                x += 20;
+            if (moodle.isMouseOver(pMouseX, pMouseY, x, y)) {
+                hovered = moodle;
             }
 
-            if (hovered != null) {
-                pGuiGraphics.renderTooltip(minecraft.font, hovered.getTooltip(minecraft.player), Optional.empty(), pMouseX, pMouseY);
-            }
+            x += MoodleController.MOODLE_SIZE + MoodleController.PADDING;
         }
+
+        if (hovered != null) {
+            pGuiGraphics.renderTooltip(minecraft.font, hovered.getTooltip(localPlayer), Optional.empty(), pMouseX, pMouseY);
+        }
+
         LimbWidget h = getHoveringWidget(pMouseX, pMouseY);
 
         if (h != null) {
@@ -286,7 +286,8 @@ public class HealthScreen extends Screen {
             });
             heartBeatSound.tick();
         }
-        if (target == null || !target.isAlive()) {
+
+        if (!target.isAlive()) {
             onClose(); // target gone
             return;
         }
@@ -463,7 +464,6 @@ public class HealthScreen extends Screen {
     public void renderBackground(GuiGraphics gui) {
         super.renderBackground(gui);
         gui.fill(0, 0, this.width, this.height, 0x000000FF);
-
     }
 
     @Override

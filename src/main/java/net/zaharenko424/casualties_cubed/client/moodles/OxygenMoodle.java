@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -14,37 +15,41 @@ import java.util.List;
 import java.util.Optional;
 
 public class OxygenMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/oxygen_moodle.png");
+    private static final ResourceLocation TEX_CRIT = CasualtiesCubed.resourceLoc("textures/gui/moodles/heartstop_moodle.png");;
+
+    @Override
+    public boolean shouldBeDisplayed(ChipState state) {
+        return state.isActive();
+    }
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Float> oxygen = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getOxygen);
         float ox = oxygen.orElse(100f);
-        if (ox<5){
+        if (ox < 5) {
             return MoodleStatus.CRITICAL;
-        } else if (ox<30) {
+        } else if (ox < 30) {
             return MoodleStatus.HEAVY;
-        } else if (ox<60) {
+        } else if (ox < 60) {
             return MoodleStatus.NORMAL;
-        } else if (ox<90) {
+        } else if (ox < 90) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/oxygen_moodle.png");
-        if (this.getMoodleStatus()==MoodleStatus.CRITICAL){
-            tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/heartstop_moodle.png");
-        }
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(getMoodleStatus() == MoodleStatus.CRITICAL ? TEX_CRIT : TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.description1").withStyle(ChatFormatting.GRAY));

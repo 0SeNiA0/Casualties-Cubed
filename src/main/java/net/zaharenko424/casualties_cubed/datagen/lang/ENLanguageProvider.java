@@ -133,6 +133,8 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("shrapnel_instruction", "Slowly extract shrapnel from thie limb. Use tweezers to ignore the speed restriction");
         addGuiO("cpr_instruction1", "Preform chest compressions to the rythm of the timer.");
         addGuiO("cpr_instruction2", "Don't mess up.");
+        addGuiO("bandage_instruction1", "Wrap the bandage around the limb to stop the bleeding.");
+        addGuiO("bandage_instruction2", " You dont have to use the entire bandage.");
 
         addDeathMessage(ModDamageTypes.GIVE_UP.location().getPath(), "%1$s gave up", null, "%1$s gave up, with some encouragement from %2$s");
         addDeathMessage(ModDamageTypes.BLEED.location().getPath(), "%1$s lost too much blood", null, "%1$s bled out thanks to %2$s");

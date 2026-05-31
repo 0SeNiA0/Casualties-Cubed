@@ -13,49 +13,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TemperatureMoodle extends AbstractMoodleVisual {
-    
-    boolean low= false;
-    
+
+    private static final ResourceLocation TEX_HIGH = CasualtiesCubed.resourceLoc("textures/gui/moodles/temphigh.png");
+    private static final ResourceLocation TEX_LOW = CasualtiesCubed.resourceLoc("textures/gui/moodles/templow.png");
+
+    boolean low = false;
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         float temp = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTemperature).orElse(36.6f);
-        if (temp<36.6){
+        if (temp < 36.6) {
             low = true;
-        }else{
+        } else {
             low = false;
         }
-        if (temp<=28||temp>=41.5){
+        if (temp <= 28 || temp >= 41.5) {
             return MoodleStatus.CRITICAL;
-        }else if (temp<=32.5||temp>=40.25){
+        } else if (temp <= 32.5 || temp >= 40.25) {
             return MoodleStatus.HEAVY;
-        }else if (temp<=34||temp>=39){
+        } else if (temp <= 34 || temp >= 39) {
             return MoodleStatus.NORMAL;
-        }else if (temp<=35.5||temp>=38){
+        } else if (temp <= 35.5 || temp >= 38) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/temphigh.png");
-        if (low){
-            tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/templow.png");
-        }
-
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(low ? TEX_LOW : TEX_HIGH, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title1"));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description1").withStyle(ChatFormatting.GRAY));
-                }else{
+                } else {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.title1"));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description1").withStyle(ChatFormatting.GRAY));
                 }
@@ -64,7 +62,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title2").withStyle(ChatFormatting.YELLOW));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description2").withStyle(ChatFormatting.GRAY));
-                }else{
+                } else {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.title2").withStyle(ChatFormatting.YELLOW));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description2").withStyle(ChatFormatting.GRAY));
                 }
@@ -73,7 +71,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title3").withStyle(ChatFormatting.GOLD));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description3").withStyle(ChatFormatting.GRAY));
-                }else{
+                } else {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.title3").withStyle(ChatFormatting.GOLD));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description3").withStyle(ChatFormatting.GRAY));
                 }
@@ -82,7 +80,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title4").withStyle(ChatFormatting.RED));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description4").withStyle(ChatFormatting.GRAY));
-                }else{
+                } else {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.title4").withStyle(ChatFormatting.RED));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description4").withStyle(ChatFormatting.GRAY));
                 }

@@ -14,34 +14,35 @@ import java.util.List;
 import java.util.Optional;
 
 public class LowBloodMoodle extends AbstractMoodleVisual {
-    
+
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/lowblood_moodle.png");
+
     @Override
     public MoodleStatus calculateStatus(Player player) {
         Optional<Float> blood = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBloodVolume);
         float blood2 = blood.orElse(5f);
-        if (blood2<3.125){
+        if (blood2 < 3.125) {
             return MoodleStatus.CRITICAL;
-        } else if (blood2<3.75) {
+        } else if (blood2 < 3.75) {
             return MoodleStatus.HEAVY;
-        } else if (blood2<4.375) {
+        } else if (blood2 < 4.375) {
             return MoodleStatus.NORMAL;
-        } else if (blood2<4.75) {
+        } else if (blood2 < 4.75) {
             return MoodleStatus.LIGHT;
-        }else {
+        } else {
             return MoodleStatus.NONE;
         }
     }
 
     @Override
     public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = CasualtiesCubed.resourceLoc("textures/gui/moodles/lowblood_moodle.png");
-        ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
-        switch (getMoodleStatus()){
+        switch (getMoodleStatus()) {
             case LIGHT -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_blood.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_blood.description1").withStyle(ChatFormatting.GRAY));

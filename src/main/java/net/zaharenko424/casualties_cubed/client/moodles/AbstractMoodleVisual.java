@@ -7,11 +7,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractMoodleVisual implements Cloneable {
+public abstract class AbstractMoodleVisual {
 
     private static final ResourceLocation RING_TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_ring.png");
 
@@ -22,6 +23,15 @@ public abstract class AbstractMoodleVisual implements Cloneable {
     private long lastJumpTime = -1;
     private static final long animationDuration = 300; // ms
     private static final float jumpHeight = -7;        // pixels up
+
+    /// Side moodles only appear in health panel
+    public boolean isSideMoodle() {
+        return false;
+    }
+
+    public boolean shouldBeDisplayed(ChipState state) {
+        return true;
+    }
 
     public void triggerJump() {
         lastJumpTime = System.currentTimeMillis();
@@ -36,17 +46,15 @@ public abstract class AbstractMoodleVisual implements Cloneable {
                 mouseY >= y && mouseY < y + 16;
     }
 
-    public void render(Player target,GuiGraphics ms, float partialTicks, int x, int y) {
+    public void render(GuiGraphics ms, float partialTicks, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
 
         float time = (mc.level.getGameTime() + partialTicks) / 20f;
 
-        setMoodleStatus(calculateStatus(target));
-
-        if (lastStatus != getMoodleStatus()){
-            if (sinceChange++ > 5){
-                sinceChange=0;
+        if (lastStatus != getMoodleStatus()) {
+            if (sinceChange++ > 5) {
+                sinceChange = 0;
                 lastStatus = getMoodleStatus();
                 triggerJump();
             }
@@ -65,56 +73,49 @@ public abstract class AbstractMoodleVisual implements Cloneable {
 
         int finaly = y + (int) animatedOffset;
 
-        if (moodleStatus == MoodleStatus.CRITICAL){
+        if (moodleStatus == MoodleStatus.CRITICAL) {
             int color = getCriticalColor();
-            int endcolor = getCrilticalEndColor();
+            int endcolor = getCriticalEndColor();
             float pulse = Mth.sin(time * Mth.PI);
 
-            ms.fillGradient(x+1, (int) (finaly-20+(10*pulse)),x+15, finaly+3,endcolor,color);
+            ms.fillGradient(x + 1, (int) (finaly - 20 + (10 * pulse)), x + 15, finaly + 3, endcolor, color);
         }
 
-        renderBackground(ms,partialTicks,x,finaly);
-        renderIcon(ms,partialTicks,x,finaly);
+        renderBackground(ms, partialTicks, x, finaly);
+        renderIcon(ms, partialTicks, x, finaly);
     }
 
     public boolean shouldRender() {
         return moodleStatus != MoodleStatus.NONE;
     }
 
-    public int getCriticalColor(){
+    public int getCriticalColor() {
         return 0x66991d1d;
     }
-    public int getCrilticalEndColor(){
+
+    public int getCriticalEndColor() {
         return 0x00991d1d;
     }
 
-    public abstract MoodleStatus calculateStatus(Player player);
-
-    public MoodleStatus getMoodleStatus() {
-        return moodleStatus;
-    }
-
-    public void setMoodleStatus(MoodleStatus moodleStatus) {
+    public void update(Player player) {
+        MoodleStatus moodleStatus = calculateStatus(player);
         if (this.moodleStatus != moodleStatus && moodleStatus != null) {
             this.moodleStatus = moodleStatus;
         }
     }
 
-    public void renderBackground(GuiGraphics guiGraphics, float partialTicks, int x, int y){
+    protected abstract MoodleStatus calculateStatus(Player player);
+
+    public MoodleStatus getMoodleStatus() {
+        return moodleStatus;
+    }
+
+    public void renderBackground(GuiGraphics guiGraphics, float partialTicks, int x, int y) {
         if (moodleStatus == null) return;
 
-        guiGraphics.blit(moodleStatus.tex,x,y,0,0,16,16,16,16);
-        guiGraphics.blit(RING_TEX,x,y,0,0,16,16,16,16);
+        guiGraphics.blit(moodleStatus.tex, x, y, 0, 0, 16, 16, 16, 16);
+        guiGraphics.blit(RING_TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     abstract public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y);
-
-    @Override
-    public AbstractMoodleVisual clone() {
-        try {
-            return (AbstractMoodleVisual) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
-        }
-    }
 }
