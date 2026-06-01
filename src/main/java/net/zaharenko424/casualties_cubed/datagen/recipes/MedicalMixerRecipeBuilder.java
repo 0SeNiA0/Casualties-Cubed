@@ -1,9 +1,10 @@
-package net.zaharenko424.casualties_cubed.recipe;
+package net.zaharenko424.casualties_cubed.datagen.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.world.level.ItemLike;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.CountIngredient;
 import net.zaharenko424.casualties_cubed.registry.ModRecipes;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 
 public class MedicalMixerRecipeBuilder {
 
-    private final List<ItemIngredient> itemInputs = new ArrayList<>();
+    private final List<CountIngredient> itemInputs = new ArrayList<>();
     private final List<FluidIngredient> fluidInputs = new ArrayList<>();
     private final List<ItemStack> itemOutputs = new ArrayList<>();
     private final List<FluidStack> fluidOutputs = new ArrayList<>();
@@ -35,46 +36,37 @@ public class MedicalMixerRecipeBuilder {
 
     /* ------------------- INPUTS ------------------- */
 
-    public MedicalMixerRecipeBuilder input(ItemIngredient ingredient) {
-        this.itemInputs.add(ingredient);
-        return this;
+    public MedicalMixerRecipeBuilder input(ItemLike item) {
+        return input(item, 1);
     }
 
-    public MedicalMixerRecipeBuilder input(ItemStack stack) {
-        this.itemInputs.add(new ItemIngredient(stack, stack.getCount()));
-        return this;
-    }
-
-    public MedicalMixerRecipeBuilder input(Item item, int count) {
-        this.itemInputs.add(new ItemIngredient(new ItemStack(item), count));
+    public MedicalMixerRecipeBuilder input(ItemLike item, int count) {
+        this.itemInputs.add(new CountIngredient(Ingredient.of(item), count));
         return this;
     }
 
     public MedicalMixerRecipeBuilder input(Ingredient ingredient, int count) {
-        this.itemInputs.add(new ItemIngredient(ingredient.getItems()[0], count));
+        this.itemInputs.add(new CountIngredient(ingredient, count));
         return this;
     }
 
-    public MedicalMixerRecipeBuilder input(FluidIngredient ingredient) {
-        this.fluidInputs.add(ingredient);
+    public MedicalMixerRecipeBuilder input(TagKey<Item> tag, int amount) {
+        this.itemInputs.add(new CountIngredient(Ingredient.of(tag), amount));
         return this;
     }
 
-    public MedicalMixerRecipeBuilder input(FluidStack fluidStack) {
+    public MedicalMixerRecipeBuilder inputFluid(FluidStack fluidStack) {
         this.fluidInputs.add(new FluidIngredient(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getTag()));
         return this;
     }
 
-    public MedicalMixerRecipeBuilder input(TagKey<Item> tagKey, int amount){
-        this.itemInputs.add(new ItemIngredient(tagKey,amount));
-        return this;
-    }
-    public MedicalMixerRecipeBuilder inputF(TagKey<Fluid> tagKey, int amount){
-        this.fluidInputs.add(new FluidIngredient(tagKey,amount,null));
+
+    public MedicalMixerRecipeBuilder inputFluid(TagKey<Fluid> tagKey, int amount) {
+        this.fluidInputs.add(new FluidIngredient(tagKey, amount, null));
         return this;
     }
 
-    public MedicalMixerRecipeBuilder input(Fluid fluid, int amount) {
+    public MedicalMixerRecipeBuilder inputFluid(Fluid fluid, int amount) {
         this.fluidInputs.add(new FluidIngredient(fluid, amount, null));
         return this;
     }
@@ -91,12 +83,7 @@ public class MedicalMixerRecipeBuilder {
         return this;
     }
 
-    public MedicalMixerRecipeBuilder output(FluidStack stack) {
-        this.fluidOutputs.add(stack);
-        return this;
-    }
-
-    public MedicalMixerRecipeBuilder output(Fluid fluid, int ml) {
+    public MedicalMixerRecipeBuilder outputFluid(Fluid fluid, int ml) {
         this.fluidOutputs.add(new FluidStack(fluid, ml));
         return this;
     }
@@ -116,7 +103,7 @@ public class MedicalMixerRecipeBuilder {
             public void serializeRecipeData(JsonObject json) {
                 // Item inputs
                 JsonArray itemInputArray = new JsonArray();
-                for (ItemIngredient ing : itemInputs) {
+                for (CountIngredient ing : itemInputs) {
                     itemInputArray.add(ing.toJson());
                 }
                 json.add("item_inputs", itemInputArray);

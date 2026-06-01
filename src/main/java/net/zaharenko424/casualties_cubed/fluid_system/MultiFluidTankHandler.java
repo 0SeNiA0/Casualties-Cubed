@@ -112,7 +112,7 @@ public class MultiFluidTankHandler implements IFluidHandlerItem {
         }
     }
 
-    private void dataFix(CompoundTag fluidTag) {
+    public static void dataFix(CompoundTag fluidTag) {
         String fluidName = fluidTag.getString("FluidName");
         if (fluidName.equals("casualties_cubed:medical_fluid")) {
             CompoundTag tag = fluidTag.getCompound("Tag");

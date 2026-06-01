@@ -480,7 +480,7 @@ public class HealthScreen extends Screen {
                     helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
                 }
 
-                if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {
+                if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {//TODO merge with useMedItem and check whether its cauterize on server
                     ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
                 }
 

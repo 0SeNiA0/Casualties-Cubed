@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -40,7 +41,7 @@ public class FluidIngredient {
         this.nbt = nbt;
     }
 
-    // Forge fluid tag
+    // Fluid tag
     public FluidIngredient(TagKey<Fluid> tag, int amount, @Nullable CompoundTag nbt) {
         this.fluid = null;
         this.fluidTag = tag;
@@ -121,7 +122,7 @@ public class FluidIngredient {
     }
 
     /* ------------------------------------------------------------ */
-    /* JSON */
+    /* Serialization */
     /* ------------------------------------------------------------ */
 
     public JsonObject toJson() {
@@ -162,4 +163,27 @@ public class FluidIngredient {
         } else throw new IllegalArgumentException("Invalid fluid ingredient JSON: " + obj);
     }
 
+    public void toNetwork(FriendlyByteBuf buf) {
+        if (isTagged()) {
+            buf.writeBoolean(true); // vanilla fluid tag
+            buf.writeResourceLocation(getFluidTag().location());
+
+            buf.writeInt(getAmount());
+        } else {
+            // plain fluid
+            buf.writeBoolean(false);
+            buf.writeFluidStack(getAsFluidStack());
+        }
+    }
+
+    public static FluidIngredient fromNetwork(FriendlyByteBuf buf) {
+        if (buf.readBoolean()) {
+            FluidStack stack = buf.readFluidStack();
+            return new FluidIngredient(stack.getFluid(), stack.getAmount(), stack.getTag());
+        }
+
+        TagKey<Fluid> tag = TagKey.create(Registries.FLUID, buf.readResourceLocation());
+        int amount = buf.readInt();
+        return new FluidIngredient(tag, amount, null);
+    }
 }

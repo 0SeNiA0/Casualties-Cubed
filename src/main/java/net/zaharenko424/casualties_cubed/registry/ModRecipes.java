@@ -2,7 +2,6 @@ package net.zaharenko424.casualties_cubed.registry;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
-import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -18,7 +17,7 @@ public class ModRecipes {
     public static final RegistryObject<RecipeType<MedicalMixerRecipe>> MEDICAL_MIXER_RECIPE =
             TYPES.register("medical_mixer_recipe", () -> RecipeType.simple(CasualtiesCubed.resourceLoc("medical_mixer_recipe")));
     public static final RegistryObject<RecipeSerializer<MedicalMixerRecipe>> MEDICAL_MIXER_RECIPE_SERIALIZER =
-            SERIALIZERS.register("medical_mixer_recipe", MedicalMixerRecipeSerializer::new);
+            SERIALIZERS.register("medical_mixer_recipe", MedicalMixerRecipe.Serializer::new);
 
     public static void register(IEventBus bus) {
         SERIALIZERS.register(bus);

@@ -352,6 +352,11 @@ public class PlayerHealthData {
     }
 
 
+    public ChipState getChip() {
+        return ChipState.ACTIVE;
+    }
+
+
     public float getMAX_BLEED_RATE() {
         return (float) (ServerConfig.MAX_BLEED_RATE.get() / 20f);
     }

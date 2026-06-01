@@ -8,6 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,9 @@ public class MoodleController {
     public static List<AbstractMoodleVisual> updateAndGetToRender(Player player, boolean healthPanel) {
         toRender.clear();
 
+        ChipState state = PlayerHealthData.nonNullOf(player).getChip();
         for (AbstractMoodleVisual moodle : moodles) {
+            if (!moodle.shouldBeDisplayed(state)) continue;
             if (moodle.isSideMoodle() && !healthPanel) continue;
 
             moodle.update(player);

@@ -16,7 +16,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,8 +23,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
+import net.zaharenko424.casualties_cubed.recipe.ingridients.CountIngredient;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
-import net.zaharenko424.casualties_cubed.recipe.ingridients.ItemIngredient;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,21 +32,20 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe> {
-    
+
     public static final ResourceLocation UID = CasualtiesCubed.resourceLoc("medical_mixer_recipe");
     private static final ResourceLocation TEX =
             CasualtiesCubed.resourceLoc("textures/gui/medical_mixer_gui.png");
 
     public static final RecipeType<MedicalMixerRecipe> MEDICAL_MIXER_RECIPE_TYPE =
-            new RecipeType<>(UID,MedicalMixerRecipe.class);
-
+            new RecipeType<>(UID, MedicalMixerRecipe.class);
 
     private final IDrawable background;
     private final IDrawable icon;
 
     public MedicalMixerCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(TEX,5,5,206,86);
-        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK,new ItemStack(ModItems.MEDICAL_MIXER.get()));
+        this.background = helper.createDrawable(TEX, 5, 5, 206, 86);
+        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.MEDICAL_MIXER.get()));
         CasualtiesCubed.LOGGER.info("MADE RECIPE TYPE");
     }
 
@@ -83,16 +81,16 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
 
         for (int i = 0; i < medicalMixerRecipe.getFluidInputs().size(); i++) {
             FluidIngredient ingredient = medicalMixerRecipe.getFluidInputs().get(i);
-            if (ingredient.isTagged()){
+            if (ingredient.isTagged()) {
                 TagKey<Fluid> tagKey = ingredient.getFluidTag();
                 int amount = ingredient.getAmount();
                 Set<Fluid> fluidSet = ForgeRegistries.FLUIDS.tags().getTag(tagKey).stream().collect(Collectors.toSet());
                 IRecipeSlotBuilder slotbuilder = builder.addSlot(RecipeIngredientRole.INPUT, xStartInput + i * spacing, yInput);
-                for (Fluid fluid: fluidSet){
+                for (Fluid fluid : fluidSet) {
                     slotbuilder.addFluidStack(fluid, amount, new CompoundTag());
                 }
                 slotbuilder.setFluidRenderer(capacity, false, width, height);
-            }else {
+            } else {
                 FluidStack stack = ingredient.getAsFluidStack();
                 builder.addSlot(RecipeIngredientRole.INPUT, xStartInput + i * spacing, yInput)
                         .addFluidStack(stack.getFluid(), stack.getAmount(), stack.getTag())
@@ -114,18 +112,12 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
         int[] inputX = {77, 95, 113, 86, 104};
         int[] inputY = {3, 3, 3, 21, 21};
         for (int i = 0; i < medicalMixerRecipe.getItemInputs().size() && i < 5; i++) {
-            ItemIngredient ingredient = medicalMixerRecipe.getItemInputs().get(i);
-            if (ingredient.isTagged()){
-                IRecipeSlotBuilder slotbuilder = builder.addSlot(RecipeIngredientRole.INPUT, inputX[i], inputY[i]);
-                Set<Item> items = ForgeRegistries.ITEMS.tags().getTag(ingredient.getTag()).stream().collect(Collectors.toSet());
-                for (Item item : items){
-                    ItemStack stack = new ItemStack(item,ingredient.getCount());
-                    slotbuilder.addItemStack(stack);
-                }
+            IRecipeSlotBuilder slotbuilder = builder.addSlot(RecipeIngredientRole.INPUT, inputX[i], inputY[i]);
 
-            }else{
-                builder.addSlot(RecipeIngredientRole.INPUT, inputX[i], inputY[i])
-                        .addItemStack(new ItemStack(medicalMixerRecipe.getItemInputs().get(i).getItem().getItem(),medicalMixerRecipe.getItemInputs().get(i).getCount()));
+            CountIngredient ingredient = medicalMixerRecipe.getItemInputs().get(i);
+            ItemStack[] items = ingredient.getIngredient().getItems();
+            for (ItemStack stack : items) {
+                slotbuilder.addItemStack(stack.copyWithCount(ingredient.getCount()));
             }
         }
 
@@ -143,9 +135,9 @@ public class MedicalMixerCategory implements IRecipeCategory<MedicalMixerRecipe>
         int xStartOutput = 147;
         int yOutput = 9;
 
-        int totalSeconds = recipe.getProcessingTime()/20;
+        int totalSeconds = recipe.getProcessingTime() / 20;
 
-        guiGraphics.drawString(Minecraft.getInstance().font, Util.formatDuration(totalSeconds),xStartOutput,yOutput,0xFFFFFF);
+        guiGraphics.drawString(Minecraft.getInstance().font, Util.formatDuration(totalSeconds), xStartOutput, yOutput, 0xFFFFFF);
 
         IRecipeCategory.super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY);
     }

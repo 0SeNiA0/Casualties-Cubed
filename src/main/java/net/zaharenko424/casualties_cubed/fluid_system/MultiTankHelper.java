@@ -77,18 +77,6 @@ public class MultiTankHelper {
         return getAmountOfFluid(stack, fluid) / totalFluids;
     }
 
-
-    public static void addMedicalFluid(ItemStack stack, float ml, String medicalId, FluidStack baseFluid) {
-        if (baseFluid.isEmpty() || medicalId == null || medicalId.isEmpty()) return;
-
-        FluidStack fs = new FluidStack(baseFluid.getFluid(), (int) ml);
-        CompoundTag tag = fs.getOrCreateTag();
-        tag.putString("MedicalId", medicalId);
-        fs.setTag(tag);
-
-        addFluid(stack, ml, fs);
-    }
-
     private static MultiFluidTankHandler getHandler(ItemStack stack) {
         if (stack.getItem() instanceof MultiTankFluidItem) {
             // Access capability directly
