@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -73,6 +74,8 @@ public class SyncTracker {
         Packet<?> partial, full;
         CompoundTag tag;
         for (ServerPlayer holder : server.getPlayerList().getPlayers()) {
+            if (holder.isDeadOrDying()) continue;
+
             data = PlayerHealthData.nonNullOf(holder);
 
             partial = ModNetwork.CHANNEL.toVanillaPacket(new ClientboundSyncHealthPacket(holder.getId(), data.serializeNBT(new CompoundTag(), false)), NetworkDirection.PLAY_TO_CLIENT);
@@ -83,7 +86,7 @@ public class SyncTracker {
 
             full = null;
             for (ServerPlayer viewer : SyncTracker.holdersToViewers.get(holder)) {
-                if (viewer == holder) continue; //self sync handled already
+                if (viewer == holder || viewer.isDeadOrDying()) continue; //self sync handled already
 
                 if (pendingFullSync.remove(holder, viewer)) {
                     if (full == null) full = ModNetwork.CHANNEL.toVanillaPacket(new ClientboundSyncHealthPacket(holder.getId(), data.serializeNBT(new CompoundTag(), true)), NetworkDirection.PLAY_TO_CLIENT);
@@ -110,6 +113,13 @@ public class SyncTracker {
 
         PlayerHealthData data = PlayerHealthData.nonNullOf(player);
         ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new ClientboundSyncHealthPacket(player.getId(), data.serializeReducedNbt(true)));
+    }
+
+    @SubscribeEvent
+    public static void onDeath(LivingDeathEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            remove(player);
+        }
     }
 
     @SubscribeEvent

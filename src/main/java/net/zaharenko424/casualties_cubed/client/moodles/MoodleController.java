@@ -30,7 +30,7 @@ public class MoodleController {
     public static List<AbstractMoodleVisual> updateAndGetToRender(Player player, boolean healthPanel) {
         toRender.clear();
 
-        ChipState state = PlayerHealthData.nonNullOf(player).getChip();
+        ChipState state = PlayerHealthData.of(player).map(PlayerHealthData::getChip).orElse(ChipState.UNCHIPPED);
         for (AbstractMoodleVisual moodle : moodles) {
             if (!moodle.shouldBeDisplayed(state)) continue;
             if (moodle.isSideMoodle() && !healthPanel) continue;

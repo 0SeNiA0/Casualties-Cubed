@@ -1,8 +1,5 @@
 package net.zaharenko424.casualties_cubed.item.usable;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.Util;
-import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +15,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -32,6 +32,8 @@ public class ThermometerItem extends Item {
 
     @Override
     public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
+        super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
+
         if (slotIndex != selectedIndex) return;
         if (ticker++ > 10) {
             if (level.isClientSide()) return;

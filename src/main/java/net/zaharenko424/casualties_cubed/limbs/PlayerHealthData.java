@@ -105,6 +105,10 @@ public class PlayerHealthData {
     private int hungerLevel = 20;
     private boolean isUnderwater = false;
 
+    public static Optional<PlayerHealthData> of(Player player) {
+        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).resolve();
+    }
+
     public static PlayerHealthData nonNullOf(Player player) {
         return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElseThrow(() -> new IllegalStateException("No health capability found for player " + player + " (This should never happen)"));
     }
@@ -720,6 +724,8 @@ public class PlayerHealthData {
                 stats.setBleedRate(stats.getBleedRate() * 0.2f);
             }
 
+            setOpioids(0);
+            setPendingOpioids(0);
             drugAddition = 0;
             brainHealth = newBrain;
             consciousness = 20;

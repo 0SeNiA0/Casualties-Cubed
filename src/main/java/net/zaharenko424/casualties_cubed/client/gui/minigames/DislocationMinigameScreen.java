@@ -51,7 +51,7 @@ public class DislocationMinigameScreen extends Screen {
 
         guiGraphics.blit(BONE_TEX, this.width / 2 - 160, this.height / 2 - 40, 0, 0, 160, 80, 160, 80);
         guiGraphics.setColor(0.5f, 0.5f, 0.5f, 0.1f);
-        guiGraphics.blit(BONE_TEX, this.width / 2, this.height / 2 - 40, 0, 0, 160, 80, 160, 80);
+        guiGraphics.blit(BONE_TEX, this.width / 2, this.height / 2 - 40, 160, 0, -160, 80, 160, 80);
         guiGraphics.setColor(1, 1, 1, 1f);
         boneObject.render(guiGraphics);
 
