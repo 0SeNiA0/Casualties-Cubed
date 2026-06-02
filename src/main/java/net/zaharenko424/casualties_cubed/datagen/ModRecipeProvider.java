@@ -6,6 +6,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -27,6 +28,34 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SYRINGE.get())
+                .pattern("P")
+                .pattern("P")
+                .pattern("I")
+                .define('P', Ingredient.of(Tags.Items.GLASS_PANES))
+                .define('I', Ingredient.of(Tags.Items.NUGGETS_IRON))
+                .unlockedBy(getHasName(Blocks.GLASS), has(Tags.Items.GLASS))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.HEROIN_SYRINGE.get())
+                .pattern("P")
+                .pattern("B")
+                .pattern("I")
+                .define('P', Ingredient.of(Tags.Items.GLASS_PANES))
+                .define('B', Ingredient.of(Items.GLASS_BOTTLE))
+                .define('I', Ingredient.of(Tags.Items.NUGGETS_IRON))
+                .unlockedBy(getHasName(Blocks.GLASS), has(Tags.Items.GLASS))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SALINE_SYRINGE.get())
+                .pattern("B")
+                .pattern("B")
+                .pattern("I")
+                .define('B', Ingredient.of(Items.GLASS_BOTTLE))
+                .define('I', Ingredient.of(Tags.Items.NUGGETS_IRON))
+                .unlockedBy(getHasName(Blocks.GLASS), has(Tags.Items.GLASS))
+                .save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.EXPIE_PLUSHY.get())
                 .pattern("OYO")

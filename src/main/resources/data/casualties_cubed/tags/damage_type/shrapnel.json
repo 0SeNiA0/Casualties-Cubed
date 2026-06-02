@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "createbigcannons:shrapnel",
-    "createbigcannons:flak",
-    "createbigcannons:grapeshot",
-    "createbigcannons:traffic_cone"
-  ]
-}

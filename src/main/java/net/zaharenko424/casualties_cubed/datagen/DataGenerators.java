@@ -35,6 +35,8 @@ public class DataGenerators {
 
         generator.addProvider(event.includeServer(), new FluidTagProvider(output, lookupProvider, existingFileHelper));
 
+        generator.addProvider(event.includeServer(), new DamageTypeTagProvider(output, lookupProvider, existingFileHelper));
+
         generator.addProvider(event.includeServer(), new ModRecipeProvider(output));
 
         generator.addProvider(event.includeClient(), new BlockStateProvider(output, existingFileHelper));
