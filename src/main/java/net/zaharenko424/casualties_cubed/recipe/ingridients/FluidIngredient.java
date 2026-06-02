@@ -177,7 +177,7 @@ public class FluidIngredient {
     }
 
     public static FluidIngredient fromNetwork(FriendlyByteBuf buf) {
-        if (buf.readBoolean()) {
+        if (!buf.readBoolean()) {
             FluidStack stack = buf.readFluidStack();
             return new FluidIngredient(stack.getFluid(), stack.getAmount(), stack.getTag());
         }
