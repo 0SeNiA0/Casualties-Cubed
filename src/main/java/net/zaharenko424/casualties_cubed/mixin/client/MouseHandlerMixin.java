@@ -7,6 +7,7 @@ import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,5 +33,11 @@ public abstract class MouseHandlerMixin {
             method = "turnPlayer")
     private <T> T modifySensitivity(T original) {
         return (T)(Object)((Double)original * BrainDamageClientController.sensitivityScale);
+    }
+
+    @ModifyExpressionValue(at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/Options;smoothCamera:Z"),
+            method = "turnPlayer")
+    private boolean smoothCamera(boolean original) {
+        return BrainDamageClientController.smoothCamera || original;
     }
 }

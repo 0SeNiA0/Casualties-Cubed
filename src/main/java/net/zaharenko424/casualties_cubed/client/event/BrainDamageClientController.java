@@ -1,7 +1,10 @@
 package net.zaharenko424.casualties_cubed.client.event;
 
+import it.unimi.dsi.fastutil.ints.Int2BooleanFunction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -86,31 +89,60 @@ public class BrainDamageClientController {
     }
 
     public static float sensitivityScale = 1;
+    public static boolean smoothCamera = false;
 
     @SubscribeEvent
-    public static void onclientTick(TickEvent.ClientTickEvent event) {
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
 
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
         if (player == null) return;
 
+        float consciousness = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
         float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
 
-        if (brain < 80) {
-            sensitivityScale = 1 + Mth.sin(minecraft.level.getGameTime() * 0.1f) * 0.05f; // ±5%
+        if (brain < 100) {
+            sensitivityScale = 1 + Mth.sin(minecraft.level.getGameTime() * 0.1f) * 0.5f * (1 - brain / 100); // ±25%
         } else {
             sensitivityScale = 1;
         }
+
+        smoothCamera = consciousness <= 60;
     }
 
     @SubscribeEvent
     public static void onTooltip(RenderTooltipEvent.GatherComponents event) {
         Player player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null || event.getItemStack().isEmpty()) return;
 
-        if (player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f) < 60) {
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+
+        if (brain <= 25) {
             event.getTooltipElements().clear();
+            return;
+        }
+
+        if (brain < 90) {
+            var list = event.getTooltipElements();
+            list.removeIf(either -> either.left().isEmpty());
+
+            if (brain <= 50) {
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    if (i % 3 == 0) list.remove(i);
+                }
+            }
+
+            Int2BooleanFunction s;
+            if (brain <= 50) {
+                s = i -> (i + event.getItemStack().hashCode() % 2) % 3 != 2;
+            } else if(brain <= 75) {
+                s = i -> (i + event.getItemStack().hashCode() % 2) % 2 == 0;
+            } else s = i -> (i + event.getItemStack().hashCode() % 2) % 3 == 0;
+
+            for (int i = 0; i < list.size(); i++) {
+                if (s.test(i)) list.set(i, list.get(i).mapLeft(text -> Component.empty().setStyle(Style.EMPTY.withObfuscated(true)).append((Component) text)));
+            }
         }
     }
 }

@@ -95,7 +95,8 @@ public class HitboxEvents {
         DamageSource src = (ctx != null && ctx.source != null) ? ctx.source : event.getSource();
 
         if (src.is(CasualtiesCubedTags.DamageType.IGNORE)) return;
-        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount) || damageamount == Float.POSITIVE_INFINITY) return;
+        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount)
+                || (ctx != null && ctx.preArmorAmount == Float.MAX_VALUE)) return;
 
         PlayerHealthData data = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).resolve().orElse(null);
         if (data == null) return;

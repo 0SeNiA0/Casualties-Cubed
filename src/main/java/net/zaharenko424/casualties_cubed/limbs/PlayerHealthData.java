@@ -1797,13 +1797,13 @@ public class PlayerHealthData {
                 player.getInventory().add(new ItemStack(ModItems.SPLINT.get()));
             }
         }
+
         player.setHealth(0.1f);
-        player.hurt(src, 5.0F);
-        if (player.isAlive()) {
+        player.hurt(src, Float.MAX_VALUE);
+        if (player.isAlive()) {//Totem?
             player.setHealth(0.1f);
-            player.hurt(src, 5.0F);
+            player.hurt(src, Float.MAX_VALUE);
         }
-        player.kill();
     }
 
 
