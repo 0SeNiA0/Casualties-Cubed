@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
@@ -71,30 +72,6 @@ public class ServerPacketHandler {
         ctx.get().setPacketHandled(true);
     }
 
-    public static void handleCauterize(ServerboundCauterizeActionPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer sender = ctx.get().getSender();
-            if (sender == null) return;
-
-            Entity entity = sender.level().getEntity(packet.targetId());
-            if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
-
-            PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
-            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
-
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
-                LimbStatistics stats = targetData.getLimb(packet.limb());
-                RandomSource random = sender.getRandom();
-
-                stats.addPain((random.nextFloat() + 1) * 80);
-                stats.setBleedRate(stats.getBleedRate() * 0.4f);
-                stats.addMuscleHealth(- (random.nextFloat() + 1) * 15);
-                stats.addSkinHealth(- (random.nextFloat() + 1) * 25);
-            });
-        });
-        ctx.get().setPacketHandled(true);
-    }
-
     public static void handleDislocationFix(ServerboundDislocationTryPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
@@ -141,7 +118,7 @@ public class ServerPacketHandler {
                 stack = bag.getItem(stack, bagSlot);
             }
 
-            if (!(stack.getItem() instanceof MultiTankFluidItem fluidItem)) return;
+            if (!(stack.getItem() instanceof MultiTankFluidItem fluidItem)) return;// Not syringe?
 
             MultiFluidTankHandler handler = fluidItem.getHandler(stack);
 
@@ -244,10 +221,20 @@ public class ServerPacketHandler {
                 ItemStack stackInBag = bag.getItem(stack, bagSlot);
                 item = stackInBag.getItem();
 
+                if (stack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {
+                    cauterize(sender, target, packet.limb());
+                    return;
+                }
+
                 if (!(item instanceof ISimpleMedicalUsable usable)) return;
 
                 usable.onMedicalUse(sender, target, packet.limb(), stackInBag);
                 bag.setItem(stack, bagSlot, stackInBag);
+                return;
+            }
+
+            if (stack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {
+                cauterize(sender, target, packet.limb());
                 return;
             }
 
@@ -256,6 +243,18 @@ public class ServerPacketHandler {
             }
         });
         context.setPacketHandled(true);
+    }
+
+    private static void cauterize(ServerPlayer sender, ServerPlayer target, Limb limb) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
+            LimbStatistics stats = targetData.getLimb(limb);
+            RandomSource random = sender.getRandom();
+
+            stats.addPain((random.nextFloat() + 1) * 80);
+            stats.setBleedRate(stats.getBleedRate() * 0.4f);
+            stats.addMuscleHealth(- (random.nextFloat() + 1) * 15);
+            stats.addSkinHealth(- (random.nextFloat() + 1) * 25);
+        });
     }
 
     public static void handleMedicalAction(ServerboundMedicalActionPacket packet, Supplier<NetworkEvent.Context> ctx) {

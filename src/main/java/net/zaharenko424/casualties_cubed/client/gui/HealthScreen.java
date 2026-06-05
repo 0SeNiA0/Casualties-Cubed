@@ -1,5 +1,14 @@
 package net.zaharenko424.casualties_cubed.client.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
@@ -10,25 +19,17 @@ import net.zaharenko424.casualties_cubed.client.ticksounds.HeartBeatSound;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.IBandage;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
-
+import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
-import net.zaharenko424.casualties_cubed.network.packet.ServerboundCauterizeActionPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseMedItemPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class HealthScreen extends Screen {
 
@@ -43,9 +44,9 @@ public class HealthScreen extends Screen {
     private LimbWidget Chest;
     private LimbWidget Head;
     private ItemWidget RightItem;
-    private List<ItemWidget> RightItemsubWidgets = new ArrayList<>();
+    private final List<ItemWidget> RightItemsubWidgets = new ArrayList<>();
     private ItemWidget LeftItem;
-    private List<ItemWidget> LeftItemsubWidgets = new ArrayList<>();
+    private final List<ItemWidget> LeftItemsubWidgets = new ArrayList<>();
     private HealthInfoBoxWidget healthbox;
     private CPRButton cprButton;
     private final Player target;
@@ -57,8 +58,6 @@ public class HealthScreen extends Screen {
 
     private LimbWidget lastClicked;
     private LimbWidget lastHovered;
-
-    private boolean lastHandOffHand = false;
 
     private HeartBeatSound heartBeatSound;
 
@@ -468,78 +467,18 @@ public class HealthScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-        if (RightItem.isDragging()) {
-            LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
-            if (widget != null && !widget.isAmputated()) {
-                Limb limb = widget.getLimb();
-                ItemStack itemstack = getItemstackForHand(HumanoidArm.RIGHT, minecraft.player);
-
-                if (itemstack.getItem() instanceof IBandage) {
-                    MinigameOpener.OpenBandageMinigame(target, itemstack, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
-                } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
-                    helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
-                }
-
-                if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {//TODO merge with useMedItem and check whether its cauterize on server
-                    ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
-                }
-
-                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.RIGHT, minecraft.player)));
+        LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
+        if (widget != null && !widget.isAmputated()) {
+            if (RightItem.isDragging()) {
+                useMedItem(widget, HumanoidArm.RIGHT);
+            } else if (LeftItem.isDragging()) {
+                useMedItem(widget, HumanoidArm.LEFT);
             }
-        } else if (LeftItem.isDragging()) {
-            LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
-            if (widget != null && !widget.isAmputated()) {
-                Limb limb = widget.getLimb();
-                ItemStack itemstack = getItemstackForHand(HumanoidArm.LEFT, minecraft.player);
 
-                if (itemstack.getItem() instanceof IBandage) {
-                    MinigameOpener.OpenBandageMinigame(target, itemstack, limb, getHand(HumanoidArm.LEFT, minecraft.player));
-                } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
-
-                    helper.openMinigameScreen(target, itemstack, limb, getHand(HumanoidArm.LEFT, minecraft.player));
-                }
-
-                if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE)) {
-                    ModNetwork.CHANNEL.sendToServer(new ServerboundCauterizeActionPacket(target.getId(), limb));
-                }
-
-                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.LEFT, minecraft.player)));
-            }
+            useMedItemFromBag(widget, RightItemsubWidgets, HumanoidArm.RIGHT);
+            useMedItemFromBag(widget, LeftItemsubWidgets, HumanoidArm.LEFT);
         }
-        for (int i = 0; i < RightItemsubWidgets.size(); i++) {
-            if (!RightItemsubWidgets.get(i).isDragging()) continue;
-            LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
-            if (widget != null && !widget.isAmputated()) {
-                Limb limb = widget.getLimb();
-                ItemStack itemstack = RightItemsubWidgets.get(i).getStack();
-                ItemStack bagstack = getItemstackForHand(HumanoidArm.RIGHT, minecraft.player);
 
-                if (itemstack.getItem() instanceof IBandage) {
-                    MinigameOpener.OpenBandageMinigame(target, itemstack, i, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
-                } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
-                    helper.openMinigameBagScreen(target, itemstack, bagstack, i, limb, getHand(HumanoidArm.RIGHT, minecraft.player));
-                }
-
-                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.RIGHT, minecraft.player), (byte) i));
-            }
-        }
-        for (int i = 0; i < LeftItemsubWidgets.size(); i++) {
-            if (!LeftItemsubWidgets.get(i).isDragging()) continue;
-            LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
-            if (widget != null && !widget.isAmputated()) {
-                Limb limb = widget.getLimb();
-                ItemStack itemstack = LeftItemsubWidgets.get(i).getStack();
-                ItemStack bagstack = getItemstackForHand(HumanoidArm.LEFT, minecraft.player);
-
-                if (itemstack.getItem() instanceof IBandage) {
-                    MinigameOpener.OpenBandageMinigame(target, itemstack, i, limb, getHand(HumanoidArm.LEFT, minecraft.player));
-                } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
-                    helper.openMinigameBagScreen(target, itemstack, bagstack, i, limb, getHand(HumanoidArm.LEFT, minecraft.player));
-                }
-
-                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, getHand(HumanoidArm.LEFT, minecraft.player), (byte) i));
-            }
-        }
         RightItem.onRelease(pMouseX, pMouseY);
         LeftItem.onRelease(pMouseX, pMouseY);
         for (ItemWidget itemWidget : RightItemsubWidgets) {
@@ -551,15 +490,46 @@ public class HealthScreen extends Screen {
         return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
-    private ItemStack getItemstackForHand(HumanoidArm arm, Player player) {
-        HumanoidArm mainArm = player.getMainArm();
+    private void useMedItem(LimbWidget widget, HumanoidArm arm) {
+        InteractionHand hand = getHand(arm, minecraft.player);
+        Limb limb = widget.getLimb();
+        ItemStack itemstack = minecraft.player.getItemInHand(hand);
 
-        // If we're asking for the player's dominant arm → MAIN_HAND
-        if (arm == mainArm) {
-            return player.getItemInHand(InteractionHand.MAIN_HAND);
-        } else {
-            // Otherwise it's the opposite → OFF_HAND
-            return player.getItemInHand(InteractionHand.OFF_HAND);
+        if (itemstack.getItem() instanceof IBandage) {
+            MinigameOpener.OpenBandageMinigame(target, itemstack, limb, hand);
+        } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+            helper.openMinigameScreen(target, itemstack, limb, hand);
+        }
+
+        if (!itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE) || !(itemstack.getItem() instanceof ISimpleMedicalUsable)) {
+            return;
+        }
+
+        ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, hand));
+    }
+
+    private void useMedItemFromBag(LimbWidget widget, List<ItemWidget> widgets, HumanoidArm arm) {
+        InteractionHand hand = getHand(arm, minecraft.player);
+        Limb limb;
+        ItemStack itemstack, bagstack = minecraft.player.getItemInHand(hand);
+        for (int slot = 0; slot < widgets.size(); slot++) {
+            if (!widgets.get(slot).isDragging()) continue;
+
+            limb = widget.getLimb();
+            itemstack = widgets.get(slot).getStack();
+
+            if (itemstack.getItem() instanceof IBandage) {
+                MinigameOpener.OpenBandageMinigame(target, itemstack, slot, limb, hand);
+                return;
+            } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
+                helper.openMinigameBagScreen(target, itemstack, bagstack, slot, limb, hand);
+                return;
+            }
+
+            if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE) || itemstack.getItem() instanceof ISimpleMedicalUsable) {
+                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, hand, (byte) slot));
+                return;
+            }
         }
     }
 
@@ -584,7 +554,7 @@ public class HealthScreen extends Screen {
         return null;
     }
 
-    private CustomButton getHoveringWidgetCusomButton(double pMouseX, double pMouseY) {
+    private CustomButton getHoveringWidgetCustomButton(double pMouseX, double pMouseY) {
         for (GuiEventListener child : this.children()) {
             if (child instanceof CustomButton limbwidget) {
                 if (limbwidget.isMouseOver(pMouseX, pMouseY)) return limbwidget;
@@ -602,7 +572,7 @@ public class HealthScreen extends Screen {
             }
         }
 
-        CustomButton button = getHoveringWidgetCusomButton(pMouseX, pMouseY);
+        CustomButton button = getHoveringWidgetCustomButton(pMouseX, pMouseY);
         if (button != null) {
             if (!BGmode)
                 UpdateButtons(lastClicked);
