@@ -271,8 +271,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("heroin"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .input(Items.GLISTERING_MELON_SLICE,4)
                 .input(Items.FERMENTED_SPIDER_EYE,1)
+                .input(Items.GLISTERING_MELON_SLICE,4)
                 .inputFluid(ModFluids.MORPHINE.get(),40)
                 .inputFluid(ModFluids.REACTION_LIQUID.get(),10)
                 .outputFluid(ModFluids.FENTANYL.get(),5)

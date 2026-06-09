@@ -74,7 +74,7 @@ public class SyncTracker {
         Packet<?> partial, full;
         CompoundTag tag;
         for (ServerPlayer holder : server.getPlayerList().getPlayers()) {
-            if (holder.isDeadOrDying()) continue;
+            if (holder.isDeadOrDying() || holder.isRemoved()) continue;
 
             data = PlayerHealthData.nonNullOf(holder);
 
