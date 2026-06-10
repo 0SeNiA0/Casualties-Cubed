@@ -3,13 +3,15 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 public class OverflowMoodle extends AbstractMoodleVisual {
 
     public int leftover = 0;
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
         return MoodleStatus.LIGHT;
     }
 
@@ -18,7 +20,7 @@ public class OverflowMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         ms.pose().pushPose();
         ms.pose().scale(0.8f,0.8f,0.8f);

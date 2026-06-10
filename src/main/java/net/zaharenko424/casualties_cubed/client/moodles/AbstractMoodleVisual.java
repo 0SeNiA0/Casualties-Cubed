@@ -8,6 +8,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.limbs.ChipState;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -97,14 +99,11 @@ public abstract class AbstractMoodleVisual {
         return 0x00991d1d;
     }
 
-    public void update(Player player) {
-        MoodleStatus moodleStatus = calculateStatus(player);
-        if (this.moodleStatus != moodleStatus && moodleStatus != null) {
-            this.moodleStatus = moodleStatus;
-        }
+    public void update(Player player, PlayerHealthData data) {
+        moodleStatus = calculateStatus(player, data);
     }
 
-    protected abstract MoodleStatus calculateStatus(Player player);
+    protected abstract @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data);
 
     public MoodleStatus getMoodleStatus() {
         return moodleStatus;
@@ -117,5 +116,5 @@ public abstract class AbstractMoodleVisual {
         guiGraphics.blit(RING_TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
-    abstract public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y);
+    protected abstract void renderIcon(GuiGraphics ms, float partialTicks, int x, int y);
 }

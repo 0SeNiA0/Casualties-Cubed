@@ -1,47 +1,40 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class BleedMoodle extends AbstractMoodleVisual {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/blood_moodle.png");
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        AtomicReference<MoodleStatus> status = new AtomicReference<>(this.getMoodleStatus());
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            float bleed = h.getCombinedBleed();
-            if (bleed > 0.6f / 20 / 60) {
-                status.set(MoodleStatus.CRITICAL);
-            } else if (bleed > 0.3f / 20 / 60) {
-                status.set(MoodleStatus.HEAVY);
-            } else if (bleed > 0.15f / 20 / 60) {
-                status.set(MoodleStatus.NORMAL);
-            } else if (bleed > 0.05f / 20 / 60) {
-                status.set(MoodleStatus.LIGHT);
-            } else {
-                status.set(MoodleStatus.NONE);
-            }
-        });
-        if (status.get()!=null){
-            return status.get();
-        }
-        return this.getMoodleStatus();
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        float bleed = data.getCombinedBleed();
 
+        if (bleed > 0.6f / 20 / 60) {
+            return MoodleStatus.CRITICAL;
+        } else if (bleed > 0.3f / 20 / 60) {
+            return MoodleStatus.HEAVY;
+        } else if (bleed > 0.15f / 20 / 60) {
+            return MoodleStatus.NORMAL;
+        } else if (bleed > 0.05f / 20 / 60) {
+            return MoodleStatus.LIGHT;
+        }
+
+        return MoodleStatus.NONE;
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 

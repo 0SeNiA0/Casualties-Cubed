@@ -1,17 +1,16 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ConsiousnessMoodle extends AbstractMoodleVisual {
 
@@ -21,21 +20,22 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
     public boolean fullyUNC = false;
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
-        if (cons.orElse(100f) < 10) {
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        float consciousness = data.getConsciousness();
+
+        if (consciousness < 10) {
             fullyUNC = true;
             return MoodleStatus.CRITICAL;
-        } else if (cons.orElse(100f) < 30) {
+        } else if (consciousness < 30) {
             fullyUNC = false;
             return MoodleStatus.CRITICAL;
-        } else if (cons.orElse(100f) < 55) {
+        } else if (consciousness < 55) {
             fullyUNC = false;
             return MoodleStatus.HEAVY;
-        } else if (cons.orElse(100f) < 75) {
+        } else if (consciousness < 75) {
             fullyUNC = false;
             return MoodleStatus.NORMAL;
-        } else if (cons.orElse(100f) < 90) {
+        } else if (consciousness < 90) {
             fullyUNC = false;
             return MoodleStatus.LIGHT;
         } else {
@@ -45,7 +45,7 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ResourceLocation tex = fullyUNC ? UNC_TEX : TEX;
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }

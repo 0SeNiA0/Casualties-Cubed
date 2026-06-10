@@ -1,26 +1,25 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class LowBloodMoodle extends AbstractMoodleVisual {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/lowblood_moodle.png");
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        Optional<Float> blood = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBloodVolume);
-        float blood2 = blood.orElse(5f);
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        float blood2 = data.getBloodVolume();
+
         if (blood2 < 3.125) {
             return MoodleStatus.CRITICAL;
         } else if (blood2 < 3.75) {
@@ -29,13 +28,13 @@ public class LowBloodMoodle extends AbstractMoodleVisual {
             return MoodleStatus.NORMAL;
         } else if (blood2 < 4.75) {
             return MoodleStatus.LIGHT;
-        } else {
-            return MoodleStatus.NONE;
         }
+
+        return MoodleStatus.NONE;
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 

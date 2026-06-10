@@ -1,13 +1,13 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,9 @@ public class DirtynessMoodle extends AbstractMoodleVisual {
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/dirty.png");
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        float dirt = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getDirtiness).orElse(0f);
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        float dirt = data.getDirtiness();
+
         if (dirt > 80) {
             return MoodleStatus.NORMAL;
         } else if (dirt > 50) {
@@ -29,7 +30,7 @@ public class DirtynessMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 

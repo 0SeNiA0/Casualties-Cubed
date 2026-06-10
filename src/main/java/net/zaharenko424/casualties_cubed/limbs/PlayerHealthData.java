@@ -1584,28 +1584,43 @@ public class PlayerHealthData {
     }
 
     public void handleFireDamage(float damage, Player player) {
-        setAdrenaline(Math.max(getAdrenaline(), damage * 1));
+        setAdrenaline(Math.max(getAdrenaline(), damage));
         int i = 0;
+        Limb randLimb;
+        LimbStatistics stats;
         while (damage > 0) {
             i++;
-            Limb randLimb = Limb.weigtedRandomLimb();
+            randLimb = Limb.weigtedRandomLimb();
+            stats = getLimb(randLimb);
 
             float damage_pass = (float) (Math.random() * 4);
             if (damage_pass > damage) damage_pass = damage;
             float passDamage = applyLocationalArmor(randLimb, Math.min(2, damage_pass), player, true, false, false, false);
             applyPain(randLimb, passDamage * 5);
             applyConcussion(randLimb, damage_pass);
-            limbStats.get(randLimb).addMuscleHealth(-passDamage * 3);
-            applySkinDamage(randLimb, passDamage * 3);
+
+            damageSkinOrMuscle(randLimb, stats, passDamage);
+
             if (Math.random() < i * 0.2) {
                 applyPain(randLimb, passDamage * 5);
-                limbStats.get(randLimb).addMuscleHealth(-passDamage * 5);
-                applySkinDamage(randLimb, passDamage * 1.5f);
-                applyBleedDamage(randLimb, passDamage * 2.5f, player);
+                damageSkinOrMuscle(randLimb, stats, passDamage * 0.75f);
+                applyBleedDamage(randLimb, passDamage * .5f, player);
+
                 damage -= 1;
             }
+
+            stats.setBleedRate(stats.getBleedRate() * 0.4f);
             damage -= damage_pass;
             hurtArmor(randLimb, player, damage_pass);
+        }
+    }
+
+    private void damageSkinOrMuscle(Limb limb, LimbStatistics stats, float passDamage) {
+        if (stats.getSkinHealth() == 0) {
+            stats.addMuscleHealth(-passDamage * 5);
+        } else {
+            stats.addMuscleHealth(-passDamage * 3.5f);
+            applySkinDamage(limb, passDamage * 5);
         }
     }
 

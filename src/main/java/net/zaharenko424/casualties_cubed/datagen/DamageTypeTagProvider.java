@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
@@ -25,6 +26,10 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(DamageTypeTags.BYPASSES_ARMOR).addTag(CasualtiesCubedTags.DamageType.IGNORE);
+        tag(DamageTypeTags.BYPASSES_RESISTANCE).addTag(CasualtiesCubedTags.DamageType.IGNORE);
+        tag(DamageTypeTags.BYPASSES_INVULNERABILITY).addTag(CasualtiesCubedTags.DamageType.IGNORE);
+
         tag(CasualtiesCubedTags.DamageType.ABSTRACT_PROJECTILE)
                 .addOptional(createBigCannons("shrapnel"))
                 .addOptional(createBigCannons("big_cannon_projectile"))

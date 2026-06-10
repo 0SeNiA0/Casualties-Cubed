@@ -1,18 +1,17 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class InfectionMoodle extends AbstractMoodleVisual {
 
@@ -24,16 +23,16 @@ public class InfectionMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        Optional<Double> infection = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getMaxInfection);
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        double maxInfection = data.getMaxInfection();
 
-        if (infection.orElse(0d) > 80) {
+        if (maxInfection > 80) {
             return MoodleStatus.CRITICAL;
-        } else if (infection.orElse(0d) > 60) {
+        } else if (maxInfection > 60) {
             return MoodleStatus.HEAVY;
-        } else if (infection.orElse(0d) > 40) {
+        } else if (maxInfection > 40) {
             return MoodleStatus.NORMAL;
-        } else if (infection.orElse(0d) > 25) {
+        } else if (maxInfection > 25) {
             return MoodleStatus.LIGHT;
         } else {
             return MoodleStatus.NONE;
@@ -41,7 +40,7 @@ public class InfectionMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 

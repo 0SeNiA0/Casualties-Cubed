@@ -6,7 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.common.MinecraftForge;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.client.event.RegisterMoodlesEvent;
 import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
 import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
@@ -25,17 +27,21 @@ public class MoodleController {
     private static final List<AbstractMoodleVisual> toRender = new ArrayList<>();
 
     /**
-     * Collects all visible moodles for given player
+     * Collects all visible moodles for given player. Returned list is reused.
      */
+    @SuppressWarnings("SameReturnValue")
     public static List<AbstractMoodleVisual> updateAndGetToRender(Player player, boolean healthPanel) {
         toRender.clear();
 
-        ChipState state = PlayerHealthData.of(player).map(PlayerHealthData::getChip).orElse(ChipState.UNCHIPPED);
+        PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
+        if (data == null) return toRender;
+
+        ChipState state = data.getChip();
         for (AbstractMoodleVisual moodle : moodles) {
             if (!moodle.shouldBeDisplayed(state)) continue;
             if (moodle.isSideMoodle() && !healthPanel) continue;
 
-            moodle.update(player);
+            moodle.update(player, data);
             if (moodle.shouldRender()) toRender.add(moodle);
         }
 
@@ -79,6 +85,8 @@ public class MoodleController {
         tmp.add(new DisfiguredMoodle());
         tmp.add(new AmputatedMoodle());
         tmp.add(new BlindMoodle());
+
+        MinecraftForge.EVENT_BUS.post(new RegisterMoodlesEvent(tmp));
 
         moodles = List.copyOf(tmp);
     }

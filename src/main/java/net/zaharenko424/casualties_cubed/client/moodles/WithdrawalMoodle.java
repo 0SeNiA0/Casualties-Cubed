@@ -1,14 +1,14 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.ChipState;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +23,27 @@ public class WithdrawalMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        float lung = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getNetOpioids).orElse(0f);
-        boolean hasOP = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getPendingOpioids).orElse(0f) > 0;
-        if (hasOP)
-            return MoodleStatus.NONE;
-        if (lung <= -42) {
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        float netOpioids = data.getNetOpioids();
+        boolean hasOP = data.getPendingOpioids() > 0;
+
+        if (hasOP) return MoodleStatus.NONE;
+
+        if (netOpioids <= -42) {
             return MoodleStatus.CRITICAL;
-        } else if (lung <= -25) {
+        } else if (netOpioids <= -25) {
             return MoodleStatus.HEAVY;
-        } else if (lung <= -15) {
+        } else if (netOpioids <= -15) {
             return MoodleStatus.NORMAL;
-        } else if (lung <= -5) {
+        } else if (netOpioids <= -5) {
             return MoodleStatus.LIGHT;
-        } else {
-            return MoodleStatus.NONE;
         }
+
+        return MoodleStatus.NONE;
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 

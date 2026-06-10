@@ -1,13 +1,13 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,9 @@ public class HearingLossMoodle extends AbstractMoodleVisual {
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/sound_loss_moodle.png");
 
     @Override
-    public MoodleStatus calculateStatus(Player player) {
-        float status = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getHearingLoss).orElse(0f);
+    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+        float status = data.getHearingLoss();
+
         if (status > 0.7) {
             return MoodleStatus.HEAVY;
         } else if (status > 0.4) {
@@ -31,7 +32,7 @@ public class HearingLossMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    public void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
+    protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
