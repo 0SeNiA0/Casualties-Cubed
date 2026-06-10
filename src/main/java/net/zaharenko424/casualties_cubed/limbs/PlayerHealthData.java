@@ -210,7 +210,7 @@ public class PlayerHealthData {
     }
 
     public void setBrainHealth(float brainHealth) {
-        this.brainHealth = brainHealth;
+        this.brainHealth = Mth.clamp(brainHealth, 0, 100);
     }
 
     public float getImmunity() {
@@ -242,7 +242,7 @@ public class PlayerHealthData {
     }
 
     public void setHearingLoss(float hearingLoss) {
-        this.hearingLoss = hearingLoss;
+        this.hearingLoss = Mth.clamp(hearingLoss, 0, 1);
     }
 
     public float getInternalBleeding() {
@@ -274,11 +274,11 @@ public class PlayerHealthData {
     }
 
     public void setConsciousness(float value) {
-        consciousness = value;
+        consciousness = Mth.clamp(value, 0, consciousnessCap);
     }
 
     public void setConsciousnessCap(float value) {
-        consciousnessCap = value;
+        consciousnessCap = Mth.clamp(value, 0, 100);
     }
 
     public float getPendingOpioids() {
@@ -329,6 +329,13 @@ public class PlayerHealthData {
         return bloodViscosity;
     }
 
+    public float getConsciousnessCap() {
+        return consciousnessCap;
+    }
+
+    public float getOxygenCap() {
+        return OxygenCap;
+    }
 
     public boolean isBreathing() {
         return isBreathing;
@@ -773,7 +780,6 @@ public class PlayerHealthData {
         PendingOpioids = Math.max(PendingOpioids, 0);
         isUnderwater = player.isUnderWater();
         hungerLevel = player.getFoodData().getFoodLevel();
-        isBreathing = true;
 
         if (breathTick++ > 20) {
             breathTick = 0;
@@ -890,9 +896,8 @@ public class PlayerHealthData {
         OxygenCap = Math.max(0, OxygenCap);
 
         // Breathing & oxygen change
-        if ((isUnderwater && player.getEffect(MobEffects.WATER_BREATHING) == null) || respiratoryArrest) {
-            isBreathing = false;
-        }
+        isBreathing = (!isUnderwater || player.getEffect(MobEffects.WATER_BREATHING) != null) && !respiratoryArrest && !player.isInWall();
+
         if (Oxygen > OxygenCap || (!isBreathing && !isUnderwater) || (getAirLossRate(player) > 0 && isUnderwater) || respiratoryArrest) {
             Oxygen = Math.max(0, Oxygen - (ServerConfig.OXYGEN_DRAIN.get().floatValue() / 20f));
         }
@@ -1391,12 +1396,22 @@ public class PlayerHealthData {
         }
     }
 
-    public float getConsciousnessCap() {
-        return consciousnessCap;
-    }
+    public void handleSonicDamage(float damage, Player player) {
+        setAdrenaline(Math.max(10 * damage, adrenaline));
 
-    public float getOxygenCap() {
-        return OxygenCap;
+        RandomSource random = player.getRandom();
+        LimbStatistics stats;
+        for (Limb limb : Limb.values()) {
+            stats = getLimb(limb);
+
+            stats.addPain((limb == Limb.HEAD ? 10 : 4) * damage);
+            stats.addMuscleHealth(-(2 + 1 * random.nextFloat()) * damage);
+        }
+
+        setBrainHealth(brainHealth - .5f * damage);//200 sonic boom damage will insta kill
+        setHearingLoss(Math.max(.06f * damage, hearingLoss));
+        setConsciousness(consciousness - 6.9f * damage);
+        setInternalBleeding(internalBleeding + (0.0171f + 0.00855f * random.nextFloat()) * damage);
     }
 
     private static final float[][] FALL_DAMAGE_STAGES = {

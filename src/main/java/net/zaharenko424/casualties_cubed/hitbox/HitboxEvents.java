@@ -26,12 +26,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber
@@ -98,8 +96,49 @@ public class HitboxEvents {
         if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount)
                 || (ctx != null && ctx.preArmorAmount == Float.MAX_VALUE)) return;
 
+        if (src.is(DamageTypeTags.IS_DROWNING) || src.is(DamageTypes.IN_WALL)) {//Handled in PlayerHealthData
+            event.setAmount(0);
+            return;
+        }
+
         PlayerHealthData data = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).resolve().orElse(null);
         if (data == null) return;
+
+        if (src.is(DamageTypes.STARVE)) {
+            for (Limb limb : Limb.values()) {
+                data.getLimb(limb).addMuscleHealth(-5);
+            }
+            event.setAmount(0);
+            return;
+        }
+
+        if (src.is(DamageTypes.CRAMMING)) {
+            List<Limb> nonAmputated = new ArrayList<>();
+            for (Limb limb : Limb.values()) {
+                if (!data.isAmputated(limb)) nonAmputated.add(limb);
+            }
+
+            float dmg = damageamount / nonAmputated.size();
+            for (Limb limb : nonAmputated) {
+                data.applyMuscleDamage(limb, dmg, player);
+            }
+
+            event.setAmount(0);
+            return;
+        }
+
+        if (src.is(DamageTypes.FLY_INTO_WALL)) {
+            data.handleBluntDamage(damageamount, player, Limb.HEAD);
+            data.setBrainHealth(data.getBrainHealth() - damageamount);
+            event.setAmount(0);
+            return;
+        }
+
+        if (src.is(DamageTypes.SONIC_BOOM)) {
+            data.handleSonicDamage(damageamount, player);
+            event.setAmount(0);
+            return;
+        }
 
         if (src.is(DamageTypes.FREEZE)) {
             data.setTemperature(data.getTemperature() - damageamount * 1.8f);
