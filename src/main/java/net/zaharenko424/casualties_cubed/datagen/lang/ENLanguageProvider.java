@@ -43,7 +43,7 @@ public class ENLanguageProvider extends LanguageProvider {
         add("item.casualties_cubed.aid_gel.description", "A crudely made gel for aiding sore limbs.");
 
         addItemWDesc(DRESSING, "Bandage", "Basic bandage for covering and protecting wounds.");
-        addItemWDesc(PLASTIC_DRESSING, "Occlusive Dressing", "Stronger bandage that protects wounds more effectively.");
+        addItemFromIdWDesc(PLASTIC_DRESSING, "Stronger bandage that protects wounds more effectively.");
         addItemFromIdWDesc(STERILIZED_DRESSING, "Cleans and covers wounds, preventing infection.");
         addItemFromIdWDesc(BOTTLE, "A plastic bottle that can hold 0.25L of liquid.");
         addItemFromIdWDesc(ALCOHOL_BOTTLE, "A glass bottle that can hold 0.5L of liquid.");
