@@ -128,9 +128,7 @@ public class ClientEvent {
         profiler.pop();
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            float contiousness = (100 - h.getConsciousness()) / 100;
-
-            if (contiousness <= 10) {
+            if (h.getConsciousness() <= 10) {
                 mc.player.setYRot(mc.player.yRotO); // reset yaw
                 mc.player.setXRot(mc.player.xRotO); // reset pitch
             }
