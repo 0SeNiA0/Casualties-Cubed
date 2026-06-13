@@ -138,7 +138,11 @@ public class CommonEvent {
         if (event.side == LogicalSide.SERVER) {
             if (event.phase != TickEvent.Phase.START) return;
             if (event.player instanceof ServerPlayer player) {
-                if (player.gameMode.isCreative()) return;
+                if (player.gameMode.isCreative()) {
+                    event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
+                            data.clearAttributePenalties(player));
+                    return;
+                }
                 ServerLevel level = player.serverLevel();
                 ProfilerFiller profiler = level.getProfiler();
 

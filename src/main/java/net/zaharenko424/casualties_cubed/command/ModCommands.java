@@ -62,7 +62,8 @@ public class ModCommands {
                                             Collection<ServerPlayer> targets = EntityArgument.getPlayers(ctx, "targets");
 
                                             for (ServerPlayer player : targets) {
-                                                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(PlayerHealthData::resetToDefaults);
+                                                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
+                                                        data.resetToDefaults(player));
                                             }
 
                                             ctx.getSource().sendSuccess(() ->
