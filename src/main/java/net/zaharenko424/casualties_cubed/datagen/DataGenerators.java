@@ -9,7 +9,6 @@ import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.datagen.lang.ENLanguageProvider;
 import net.zaharenko424.casualties_cubed.datagen.worldgen.ModWorldGenProvider;
 import net.zaharenko424.casualties_cubed.fluid_system.FluidTagProvider;
 
@@ -41,6 +40,5 @@ public class DataGenerators {
 
         generator.addProvider(event.includeClient(), new BlockStateProvider(output, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelProvider(output, existingFileHelper));
-        generator.addProvider(event.includeClient(), new ENLanguageProvider(output));
     }
 }
