@@ -36,7 +36,7 @@ public class InjectMingameScreen extends Screen {
     private HandObject handObject;
 
     public InjectMingameScreen(Screen parent, Player target, ItemStack syringeStack, Limb limb, InteractionHand hand) {
-        super(Component.literal("Inject screen"));
+        super(Component.translatable("casualties_cubed.gui.minigame.inject"));
         this.parent = parent;
         this.target = target;
         this.syringeStack = syringeStack;
@@ -47,7 +47,7 @@ public class InjectMingameScreen extends Screen {
     }
 
     public InjectMingameScreen(Screen parent, Player target, ItemStack syringeStack, ItemStack bagstack, int slot, Limb limb, InteractionHand hand) {
-        super(Component.literal("Inject screen"));
+        super(Component.translatable("casualties_cubed.gui.minigame.inject"));
         this.parent = parent;
         this.target = target;
         this.syringeStack = syringeStack;

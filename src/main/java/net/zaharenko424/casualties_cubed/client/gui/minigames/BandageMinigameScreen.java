@@ -34,7 +34,7 @@ public class BandageMinigameScreen extends Screen {
     private float maxBleed = 0;
 
     public BandageMinigameScreen(Screen parent, Player target, ItemStack stack, Limb limb, InteractionHand hand) {
-        super(Component.literal("BandageMinigame"));
+        super(Component.translatable("casualties_cubed.gui.minigame.bandage"));
         this.parent = parent;
         this.target = target;
         this.stack = stack;
@@ -44,7 +44,7 @@ public class BandageMinigameScreen extends Screen {
     }
 
     public BandageMinigameScreen(Screen parent, Player target, ItemStack stack, int slot, Limb limb, InteractionHand hand) {
-        super(Component.literal("BandageMinigame"));
+        super(Component.translatable("casualties_cubed.gui.minigame.bandage"));
         this.parent = parent;
         this.target = target;
         this.stack = stack;

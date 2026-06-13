@@ -30,7 +30,7 @@ public class DislocationMinigameScreen extends Screen {
     private BoneObject boneObject;
 
     public DislocationMinigameScreen(Screen parent, Player target, Limb limb) {
-        super(Component.literal("DislocationMinigame"));
+        super(Component.translatable("casualties_cubed.gui.minigame.dislocation"));
         this.parent = parent;
         this.target = target;
         this.limb = limb;

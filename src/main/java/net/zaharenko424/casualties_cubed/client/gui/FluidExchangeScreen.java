@@ -30,12 +30,12 @@ public class FluidExchangeScreen extends Screen {
     private float MaxSlider;
 
     public FluidExchangeScreen(AbstractContainerScreen<?> screen, ItemStack toItem, ItemStack fromItem, int toSlot) {
-        super(Component.literal("Fluid Exchange"));
+        super(Component.translatable("casualties_cubed.gui.fluid_exchange"));
         this.screen = screen;
         this.toItem = toItem;
         this.fromItem = fromItem;
         this.toSlot = toSlot;
-        button = Button.builder(Component.literal("Transfer"), b -> confirmTransfer()).bounds(width / 2 - 40, height / 2 + 30, 80, 20).build();
+        button = Button.builder(Component.translatable("casualties_cubed.gui.transfer"), b -> confirmTransfer()).bounds(width / 2 - 40, height / 2 + 30, 80, 20).build();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FluidExchangeScreen extends Screen {
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         renderBackground(pGuiGraphics);
-        pGuiGraphics.drawCenteredString(font, "Fluid Transfer", width / 2, height / 2 - 60, 0xFFFFFF);
+        pGuiGraphics.drawCenteredString(font, Component.translatable("casualties_cubed.gui.fluid_transfer"), width / 2, height / 2 - 60, 0xFFFFFF);
 
         int barWidth = 120;
         int barX = width / 2 - barWidth / 2;
@@ -71,7 +71,7 @@ public class FluidExchangeScreen extends Screen {
         pGuiGraphics.fill(barX, barY, barX + barWidth, barY + 8, 0xFF444444);
         pGuiGraphics.fill(barX, barY, barX + (int) (barWidth * sliderValue), barY + 8, (255 << 24) | color);
 
-        pGuiGraphics.drawCenteredString(font, (int) (sliderValue * MaxSlider) + "ml", width / 2, barY + 12, 0xAAAAAA);
+        pGuiGraphics.drawCenteredString(font, Component.translatable("casualties_cubed.gui.fluid_amount", (int) (sliderValue * MaxSlider)), width / 2, barY + 12, 0xAAAAAA);
     }
 
     @Override

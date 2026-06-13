@@ -86,7 +86,7 @@ public class MultiTankFluidItem extends Item {
         Component finalcomp = super.getName(pStack);
         finalcomp = Component.empty().append(finalcomp)
                 .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal((int) ((scale) * 100) + "%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(scale))))
+                .append(Component.translatable("casualties_cubed.tooltip.percent", (int) (scale * 100)).withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(scale))))
                 .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
         return finalcomp;
     }
@@ -129,7 +129,7 @@ public class MultiTankFluidItem extends Item {
             return;
         }
 
-        tooltip.add(Component.literal("Contents:"));
+        tooltip.add(Component.translatable("casualties_cubed.tooltip.contents"));
         int color;
         FluidStack fs;
         Component desc;
@@ -140,7 +140,12 @@ public class MultiTankFluidItem extends Item {
             desc = MedicalFluidType.getDescription(fs.getFluid());
             hasSpecial = !desc.getContents().equals(ComponentContents.EMPTY);
 
-            tooltip.add(Component.literal(fs.getDisplayName().getString()).withStyle(Style.EMPTY.withColor(color)).append("(" + fs.getAmount() + "mb)"));
+            tooltip.add(Component.empty()
+                    .append(fs.getDisplayName())
+                    .withStyle(Style.EMPTY.withColor(color))
+                    .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
+                    .append(Component.translatable("casualties_cubed.tooltip.liquid.amount", fs.getAmount()).withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(")").withStyle(ChatFormatting.GRAY)));
             if (hasSpecial && Screen.hasShiftDown()) {
                 tooltip.add(desc.copy().withStyle(Style.EMPTY.withColor(color)));
             }

@@ -258,9 +258,9 @@ public class ClientEvent {
 
         int argb = (alpha << 24) | (0x00FFFF & 0xFFFFFF);
 
-        gui.drawString(mc.font,"O₂ " + (int)Oxygen + "%", x, y,0xFFFFFF);
+        gui.drawString(mc.font, Component.translatable("casualties_cubed.gui.hud.oxygen", (int) Oxygen), x, y,0xFFFFFF);
         gui.blit(pain_tex,x + 50,y - 2,0,0,10,10,10,10);
-        gui.drawString(mc.font, (int) Pain + "%",x + 60,y,0xFFFFFF);
+        gui.drawString(mc.font, Component.translatable("casualties_cubed.gui.hud.pain", (int) Pain),x + 60,y,0xFFFFFF);
         gui.fill(x + (90 - size / 2),y - 20,x + 90 + (size / 2),y - 22, argb);
         event.setCanceled(true);
     }

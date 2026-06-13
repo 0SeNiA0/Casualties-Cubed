@@ -24,7 +24,7 @@ public class AmputationMinigameScreen extends Screen {
     private SawHandObject handObject;
 
     public AmputationMinigameScreen(Screen parent, Player target, Limb limb, boolean ignorevel) {
-        super(Component.literal("AmputationMinigame"));
+        super(Component.translatable("casualties_cubed.gui.minigame.amputation"));
         this.parent = parent;
         this.target = target;
         this.limb = limb;
@@ -95,7 +95,7 @@ public class AmputationMinigameScreen extends Screen {
 
         RenderSystem.disableScissor();
 
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.shrapnel_instruction"),this.width/2,10,0xFFFFFF);
+        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.amputation_instruction"),this.width/2,10,0xFFFFFF);
         pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.minigame_exit"),this.width/2,clipY+30,0xFFFFFF);
 
         handObject.render(pGuiGraphics,pPartialTick);
