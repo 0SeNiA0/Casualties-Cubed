@@ -6,7 +6,11 @@
   "refmap": "casualties_cubed.refmap.json",
   "plugin": "net.zaharenko424.casualties_cubed.mixin.MixingConfig",
   "mixins": [
-    "PlayerMixin"
+    "PlayerMixin",
+    "command.EmoteCommandMixin",
+    "command.MsgCommandMixin",
+    "command.SayCommandMixin",
+    "command.TeamMsgCommandMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",

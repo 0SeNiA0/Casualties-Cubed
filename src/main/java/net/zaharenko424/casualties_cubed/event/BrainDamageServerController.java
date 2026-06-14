@@ -1,8 +1,5 @@
 package net.zaharenko424.casualties_cubed.event;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -10,6 +7,8 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.Random;
 
@@ -18,26 +17,35 @@ public class BrainDamageServerController {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onChat(ServerChatEvent event) {
-        ServerPlayer player = event.getPlayer();
-        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
-        float dislocatedJaw = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getLimb(Limb.HEAD).getDislocation()).orElse(0f);
-        boolean JawMissing = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isMouthRemoved).orElse(false);
-
-        if (brain < 30f) { // unconscious
+        String msg = modifyMessage(event.getPlayer(), event.getMessage().getString());
+        if (msg == null) {
             event.setCanceled(true);
             return;
         }
 
-        String msg = event.getMessage().getString();
+        event.setMessage(Component.literal(msg));
+    }
+
+    public static String modifyMessage(ServerPlayer player, String message) {
+        PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
+        if (data == null) return message;
+
+        float brain = data.getBrainHealth();
+        if (brain < 30) return null; // unconscious
+
+        float dislocatedJaw = data.getLimb(Limb.HEAD).getDislocation();
+        boolean JawMissing = data.isMouthRemoved();
+
         float clarity = Mth.clamp(brain / 100f, 0, 1);
 
-        msg = distortScaled(msg, clarity);
+        message = distortScaled(message, clarity);
         if (dislocatedJaw > 0) {
-            msg = DislocatedJaw(msg);
+            message = DislocatedJaw(message);
         } else if (JawMissing) {
-            msg = MissingJaw(msg);
+            message = MissingJaw(message);
         }
-        event.setMessage(Component.literal(msg));
+
+        return message;
     }
 
     private static String distortScaled(String input, float clarity) {
