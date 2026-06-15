@@ -15,7 +15,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -53,8 +52,11 @@ import java.util.*;
 public class PlayerHealthData {
 
     private static final String MOVE_SPEED_MODIFIER = "custom_move_speed";
+    private static final UUID MOVE_SPEED_MODIFIER_UUID = UUID.nameUUIDFromBytes(MOVE_SPEED_MODIFIER.getBytes());
     private static final String ATTACK_DAMAGE_MODIFIER = "custom_attack_damage";
+    private static final UUID ATTACK_DAMAGE_MODIFIER_UUID = UUID.nameUUIDFromBytes(ATTACK_DAMAGE_MODIFIER.getBytes());
     private static final String ATTACK_SPEED_MODIFIER = "custom_attack_speed";
+    private static final UUID ATTACK_SPEED_MODIFIER_UUID = UUID.nameUUIDFromBytes(ATTACK_SPEED_MODIFIER.getBytes());
 
     private final Map<Limb, LimbStatistics> limbStats = new EnumMap<>(Limb.class);
     private final List<DelayedChangeEntry> changeEntries = new ArrayList<>();
@@ -598,6 +600,11 @@ public class PlayerHealthData {
     float tempspeedup = 0f;
 
     public void tickUpdate(ServerPlayer player) {
+        if (player.isCreative()) {
+            applyPenalties(player);
+            return;
+        }
+
         isRagdolled = false;
 
         canBreakOutOffRagdoll = false;
@@ -963,15 +970,15 @@ public class PlayerHealthData {
             moveMultiplier -= 0.05f;
         }
 // --- Apply modifiers safely ---
-        applyAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER,
+        applyAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER, MOVE_SPEED_MODIFIER_UUID,
                 (baseMoveSpeed * Math.max(0.0, moveMultiplier)) - baseMoveSpeed,
                 AttributeModifier.Operation.ADDITION);
 
-        applyAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER,
+        applyAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, ATTACK_DAMAGE_MODIFIER_UUID,
                 (baseAttackDamage * (1 - attackMultiplier)) - baseAttackDamage,
                 AttributeModifier.Operation.ADDITION);
 
-        applyAttributeModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER,
+        applyAttributeModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, ATTACK_SPEED_MODIFIER_UUID,
                 (baseAttackSpeed * (1 - attackMultiplier)) - baseAttackSpeed,
                 AttributeModifier.Operation.ADDITION);
 
@@ -1003,34 +1010,29 @@ public class PlayerHealthData {
         }
     }
 
-    private static void applyAttributeModifier(LivingEntity player, Attribute attribute, String name, double amount, AttributeModifier.Operation operation) {
+    private static void applyAttributeModifier(Player player, Attribute attribute, String name, UUID uuid, double amount, AttributeModifier.Operation operation) {
         var instance = player.getAttribute(attribute);
         if (instance == null) return;
 
-        removeAttributeModifier(player, attribute, name);
+        instance.removeModifier(uuid);
 
         // Skip adding modifier if multiplier = 0 (no change)
         if (amount == 0.0) return;
 
-        AttributeModifier modifier = new AttributeModifier(modifierId(name), name, amount, operation);
-        instance.addPermanentModifier(modifier);
+        instance.addTransientModifier(new AttributeModifier(uuid, name, amount, operation));
     }
 
-    private static void removeAttributeModifier(LivingEntity player, Attribute attribute, String name) {
+    private static void removeAttributeModifier(Player player, Attribute attribute, UUID uuid) {
         var instance = player.getAttribute(attribute);
         if (instance == null) return;
 
-        instance.removeModifier(modifierId(name));
+        instance.removeModifier(uuid);
     }
 
-    private static UUID modifierId(String name) {
-        return UUID.nameUUIDFromBytes(name.getBytes());
-    }
-
-    public void clearAttributePenalties(LivingEntity player) {
-        removeAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER);
-        removeAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER);
-        removeAttributeModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER);
+    public void clearAttributePenalties(Player player) {
+        removeAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER_UUID);
+        removeAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER_UUID);
+        removeAttributeModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER_UUID);
     }
 
     public CompoundTag serializeNBT(CompoundTag nbt, boolean full) {

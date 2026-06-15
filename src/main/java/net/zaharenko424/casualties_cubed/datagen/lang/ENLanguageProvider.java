@@ -87,14 +87,10 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromId(SimpleEarProtection);
         addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10mb.");
         addItemFromIdWDesc(AUTO_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
-        add("item.casualties_cubed.glow_fruit", "Glow Fruit");
-        add("item.casualties_cubed.brown_cap", "Brown Cap");
-        add(GLOW_FRUIT.getId().toLanguageKey("item", "description"), "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.");
+        addItemFromIdWDesc(GLOW_FRUIT, "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.");
         add(BROWN_CAP.getId().toLanguageKey("item", "description"), "You have no idea what is this fungus. For all you know it can cure cancer or kill you on the spot");
         addItemFromIdWDesc(BROWN_CAP_MUSH, "Probably a bad idea to eat this...");
         addItemFromId(EXPERIMENTAL_TREATMENT);
-        add("item.casualties_cubed.expie_plushy", "Expie Plushy");
-        add("item.casualties_cubed.medical_mixer", "Medical Mixer");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description1"), "The label says:");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description2"), "EXPERIMENTAL TREATMENT EX-8UN, For authorized Study participants only. Effects may include:");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description3"), "Mild dizziness ;Permanent dizziness ;Energy ;Lethargy ;Metallic taste ;Sudden bleeding ;Cardiac arrest;Minor brain damage ;Major brain damage ; Respiratory arrest; Deja vu; Paranoia; Loss of limbs; Grow of limbs; Hunger; Vomiting; Deja vu; Memory loss...");
@@ -354,14 +350,14 @@ public class ENLanguageProvider extends LanguageProvider {
 
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
 
-        add("command.casualties_cubed.heal.success", "Healed %1$s player(s).");
-        add("command.casualties_cubed.error.unknown_field", "Unknown field: %1$s");
-        add("command.casualties_cubed.setlimb.success", "Applied value %1$s to %2$s | %3$s for %4$s");
-        add("command.casualties_cubed.setbody.success", "Applied value %1$s to %2$s for %3$s");
-        add("command.casualties_cubed.amputate.success", "Amputated %1$s");
-        add("command.casualties_cubed.fillfluid.error.player_only", "Can only be run by a player");
-        add("command.casualties_cubed.fillfluid.error.invalid_fluid", "Invalid fluid");
-        add("command.casualties_cubed.fillfluid.error.no_item", "No compatible item found in main hand");
-        add("command.casualties_cubed.fillfluid.success", "Added %1$smb of %2$s to item");
+        addCommand("heal.success", "Healed %1$s player(s).");
+        addCommand("error.unknown_field", "Unknown field: %1$s");
+        addCommand("setlimb.success", "Applied value %1$s to %2$s | %3$s for %4$s");
+        addCommand("setbody.success", "Applied value %1$s to %2$s for %3$s");
+        addCommand("amputate.success", "Amputated %1$s");
+        addCommand("fillfluid.error.player_only", "Can only be run by a player");
+        addCommand("fillfluid.error.invalid_fluid", "Invalid fluid");
+        addCommand("fillfluid.error.no_item", "No compatible item found in main hand");
+        addCommand("fillfluid.success", "Added %1$smb of %2$s to item");
     }
 }

@@ -360,13 +360,13 @@
   "casualties_cubed.tooltip.percent": "%1$s%%",
   "item.casualties_cubed.experimental_treatment.extra_note": "底部有一行小字写着：“如拾获请归还给 Ry** 医生”，其余部分无法辨认。",
   "item.casualties_cubed.experimental_treatment.doom": "你突然感到一股不祥的预感",
-  "command.casualties_cubed.heal.success": "已治疗 %1$s 名玩家。",
-  "command.casualties_cubed.error.unknown_field": "未知字段：%1$s",
-  "command.casualties_cubed.setlimb.success": "已将 %1$s 应用于 %4$s 的 %2$s | %3$s",
-  "command.casualties_cubed.setbody.success": "已将 %1$s 应用于 %3$s 的 %2$s",
-  "command.casualties_cubed.amputate.success": "已截除 %1$s",
-  "command.casualties_cubed.fillfluid.error.player_only": "只能由玩家执行此命令",
-  "command.casualties_cubed.fillfluid.error.invalid_fluid": "无效的液体",
-  "command.casualties_cubed.fillfluid.error.no_item": "主手未找到兼容物品",
-  "command.casualties_cubed.fillfluid.success": "已向物品加入 %1$smb 的 %2$s"
+  "commands.casualties_cubed.heal.success": "已治疗 %1$s 名玩家。",
+  "commands.casualties_cubed.error.unknown_field": "未知字段：%1$s",
+  "commands.casualties_cubed.setlimb.success": "已将 %1$s 应用于 %4$s 的 %2$s | %3$s",
+  "commands.casualties_cubed.setbody.success": "已将 %1$s 应用于 %3$s 的 %2$s",
+  "commands.casualties_cubed.amputate.success": "已截除 %1$s",
+  "commands.casualties_cubed.fillfluid.error.player_only": "只能由玩家执行此命令",
+  "commands.casualties_cubed.fillfluid.error.invalid_fluid": "无效的液体",
+  "commands.casualties_cubed.fillfluid.error.no_item": "主手未找到兼容物品",
+  "commands.casualties_cubed.fillfluid.success": "已向物品加入 %1$smb 的 %2$s"
 }

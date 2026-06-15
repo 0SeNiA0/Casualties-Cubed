@@ -14,6 +14,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
@@ -132,51 +133,35 @@ public class CommonEvent {
         event.register(PlayerHealthData.class);
     }
 
+    @SubscribeEvent
+    public static void onChangeGameMode(PlayerEvent.PlayerChangeGameModeEvent event) {
+        Player player = event.getEntity();
+        if (player.level().isClientSide || event.getNewGameMode() != GameType.SPECTATOR) return;
+
+        PlayerHealthData data = PlayerHealthData.of(event.getEntity()).orElse(null);
+        if (data != null) data.clearAttributePenalties(player);
+    }
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.side == LogicalSide.SERVER) {
-            if (event.phase != TickEvent.Phase.START) return;
-            if (event.player instanceof ServerPlayer player) {
-                if (player.gameMode.isCreative()) {
-                    event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                            data.clearAttributePenalties(player));
-                    return;
-                }
-                ServerLevel level = player.serverLevel();
-                ProfilerFiller profiler = level.getProfiler();
+        if (event.side != LogicalSide.SERVER || event.phase != TickEvent.Phase.START) return;
+        if (event.player instanceof ServerPlayer player) {
+            if (player.isSpectator()) return;
 
-                profiler.push("casualties_cubed:player_health_system");
-                event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                    data.tickUpdate(player);
-                    boolean usingArm = player.isUsingItem();
-                    if (usingArm) {
-                        InteractionHand hand = player.getUsedItemHand();
-                        data.onArmUse(hand, player);
-                    }
-                });
-                profiler.pop();
-            }
+            ServerLevel level = player.serverLevel();
+            ProfilerFiller profiler = level.getProfiler();
+
+            profiler.push("casualties_cubed:player_health_system");
+            event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.tickUpdate(player);
+                boolean usingArm = player.isUsingItem();
+                if (usingArm) {
+                    InteractionHand hand = player.getUsedItemHand();
+                    data.onArmUse(hand, player);
+                }
+            });
+            profiler.pop();
         }
-        /*
-            if (event.player instanceof Player) {
-                if (Keybinds.OPEN_PAIN_GUI.isDown()) {
-                    Keybinds.OPEN_PAIN_GUI.consumeClick();
-
-                    Player target = getLookedAtPlayer(event.player, 2);
-                    boolean self = target==null||event.player.isShiftKeyDown();
-                    if (event.side == LogicalSide.CLIENT) {
-                        if (self){
-                            Minecraft.getInstance().setScreen(new HealthScreen(event.player));
-                        }else {
-                            Minecraft.getInstance().setScreen(new HealthScreen(target));
-                        }
-                    }
-                }
-            }
-            //Doesnt work IG.
-         */
-
     }
 
     @SubscribeEvent

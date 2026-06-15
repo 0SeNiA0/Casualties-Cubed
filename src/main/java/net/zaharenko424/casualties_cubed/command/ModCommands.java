@@ -67,7 +67,7 @@ public class ModCommands {
                                             }
 
                                             ctx.getSource().sendSuccess(() ->
-                                                    Component.translatable("command.casualties_cubed.heal.success", targets.size()), true);
+                                                    Component.translatable("commands.casualties_cubed.heal.success", targets.size()), true);
 
                                             return targets.size();
                                         })
@@ -157,11 +157,11 @@ public class ModCommands {
                                                                             case "bleedrate" ->
                                                                                     stats.setBleedRate(value);
                                                                             default ->
-                                                                                    ctx.getSource().sendFailure(Component.translatable("command.casualties_cubed.error.unknown_field", finalRaw));
+                                                                                    ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", finalRaw));
                                                                         }
                                                                     });
                                                                     ctx.getSource().sendSuccess(() ->
-                                                                                    Component.translatable("command.casualties_cubed.setlimb.success", value, limb, finalRaw, target.getName()),
+                                                                                    Component.translatable("commands.casualties_cubed.setlimb.success", value, limb, finalRaw, target.getName()),
                                                                             false);
                                                                     return 1;
                                                                 })
@@ -226,12 +226,12 @@ public class ModCommands {
                                                                             h.setRightEyeBlind(value > 0);
                                                                     case "mouthremoved" -> h.setMouthRemoved(value > 0);
                                                                     default ->
-                                                                            ctx.getSource().sendFailure(Component.translatable("command.casualties_cubed.error.unknown_field", field));
+                                                                            ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", field));
                                                                 }
                                                             });
 
                                                             ctx.getSource().sendSuccess(() ->
-                                                                            Component.translatable("command.casualties_cubed.setbody.success", value, field, target.getName()),
+                                                                            Component.translatable("commands.casualties_cubed.setbody.success", value, field, target.getName()),
                                                                     false);
                                                             return 1;
                                                         })
@@ -253,7 +253,7 @@ public class ModCommands {
 
                                                     target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                                                         h.dismember(limb);
-                                                        ctx.getSource().sendSuccess(() -> Component.translatable("command.casualties_cubed.amputate.success", raw), true);
+                                                        ctx.getSource().sendSuccess(() -> Component.translatable("commands.casualties_cubed.amputate.success", raw), true);
                                                     });
 
                                                     return 1;
@@ -271,26 +271,26 @@ public class ModCommands {
                                                     ResourceLocation id = ResourceLocationArgument.getId(ctx, "fluid");
                                                     ServerPlayer serverplayer = ctx.getSource().getPlayer();
                                                     if (serverplayer == null) {
-                                                        ctx.getSource().sendFailure(Component.translatable("command.casualties_cubed.fillfluid.error.player_only"));
+                                                        ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.fillfluid.error.player_only"));
                                                         return 1;
                                                     }
 
                                                     Optional<Fluid> fluid = BuiltInRegistries.FLUID.getOptional(id);
                                                     if (fluid.isEmpty()) {
-                                                        ctx.getSource().sendFailure(Component.translatable("command.casualties_cubed.fillfluid.error.invalid_fluid"));
+                                                        ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.fillfluid.error.invalid_fluid"));
                                                         return 1;
                                                     }
 
                                                     ItemStack itemStack = serverplayer.getItemInHand(InteractionHand.MAIN_HAND);
                                                     if (itemStack.isEmpty() || !(itemStack.getItem() instanceof MultiTankFluidItem)) {
-                                                        ctx.getSource().sendFailure(Component.translatable("command.casualties_cubed.fillfluid.error.no_item"));
+                                                        ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.fillfluid.error.no_item"));
                                                         return 1;
                                                     }
 
                                                     int amount = IntegerArgumentType.getInteger(ctx, "amount");
                                                     MultiTankHelper.addFluid(itemStack, amount, new FluidStack(fluid.get(), amount));
                                                     ctx.getSource().sendSuccess(() ->
-                                                            Component.translatable("command.casualties_cubed.fillfluid.success", amount, id), true);
+                                                            Component.translatable("commands.casualties_cubed.fillfluid.success", amount, id), true);
                                                     return 1;
                                                 })
                                         )

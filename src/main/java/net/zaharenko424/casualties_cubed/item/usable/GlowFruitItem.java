@@ -62,4 +62,9 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pTooltipComponents.add(Component.translatable("item.casualties_cubed.glow_fruit.description").withStyle(ChatFormatting.GRAY));
     }
+
+    @Override
+    public String getDescriptionId() {
+        return getOrCreateDescriptionId();
+    }
 }
