@@ -47,7 +47,6 @@ import net.zaharenko424.casualties_cubed.network.packet.ClientboundTriggerLastSt
 import net.zaharenko424.casualties_cubed.registry.ModGameRules;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
-import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.*;
 
@@ -117,7 +116,7 @@ public class PlayerHealthData {
 
     public PlayerHealthData() {
         for (Limb limb : Limb.values()) {
-            limbStats.put(limb, new LimbStatistics());
+            limbStats.put(limb, new LimbStatistics(this));
         }
     }
 
@@ -377,7 +376,7 @@ public class PlayerHealthData {
     }
 
     public LimbStatistics getLimb(Limb limb) {
-        return limbStats.computeIfAbsent(limb, l -> new LimbStatistics());
+        return limbStats.computeIfAbsent(limb, l -> new LimbStatistics(this));
     }
 
     public boolean isAmputated(Limb limb) {
@@ -511,104 +510,6 @@ public class PlayerHealthData {
     public double getMaxInfection() {
         double infection = limbStats.values().stream().mapToDouble(LimbStatistics::getInfection).max().orElse(0d);
         return Math.max(infection, 0);
-    }
-
-    private void UpdateLimb(Limb limb) {
-        LimbStatistics stats = limbStats.get(limb); // store once, reuse
-        if (stats.isAmputated()) return;
-
-
-        //MinpainCalculation
-
-        stats.setMinPain(((stats.getInfection() / 100) * 10) + (((stats.getSkinHealth() - 100) / -100) * 15));
-
-        //Healing
-        if (stats.isSkinHeal() && stats.getShrapnel() <= 0) {
-            stats.addSkinHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f));
-        } else {
-            stats.addSkinHealth((ServerConfig.NORMAL_LIMB_HEAL_RATE.get().floatValue() / 20f));
-        }
-
-        if (stats.isMuscleHeal() && stats.getShrapnel() <= 0 && stats.getInfection() <= 0) {
-            stats.addMuscleHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f));
-        } else if (stats.getShrapnel() <= 0 && stats.getInfection() <= 0) {
-            stats.addMuscleHealth((ServerConfig.NORMAL_LIMB_HEAL_RATE.get().floatValue() / 20f));
-        }
-
-        // Pain Adjustment
-        float x = stats.getPain() / 100f;
-        float decay = 0.05f + 0.1f * (float) Math.pow(x, 1.2f);
-        if (stats.isTourniquet()) {
-            if (stats.getPain() > 60) {
-                stats.addPain(-decay * (1 + (getNetOpioids() > 0 ? (getNetOpioids() / 40) : 0)));
-            }
-        } else {
-            stats.addPain(-decay * (1 + (getNetOpioids() > 0 ? (getNetOpioids() / 40) : 0)));
-        }
-
-        // Infection Adjustment
-        calculateInfectionAndSpread(limb, stats);
-        if (stats.getSkinHealth() < 100 && stats.getInfection() <= 0) {
-            float chance = ((100 - stats.getSkinHealth()) / 100f) * (ServerConfig.INFECTION_CHANCE.get().floatValue() / 20f);
-            if (Math.random() < chance) {
-                stats.addInfection(1);
-            }
-        }
-
-        // Bleed Adjustment
-        stats.setBleedRate(Math.max(0, Math.min(stats.getBleedRate(), getMAX_BLEED_RATE() * (Math.abs((stats.getSkinHealth() - 100) / 100)))));
-
-        //Fract/Disl calculation
-        if (stats.getFracture() > 0 || stats.getDislocation() > 0) {
-            stats.setMuscleHealth(Math.min(stats.getMuscleHealth(), 50));
-        }
-
-        if (stats.getFracture() > 0) {
-            float reduction = (ServerConfig.FRACTURE_HEAL_RATE.get().floatValue() / 20) * (1 + BooleanUtils.toInteger(stats.hasSplint()));
-            stats.setFracture(Mth.clamp(stats.getFracture() - reduction, 0, 100));
-        }
-        if (stats.getDislocation() > 0) {
-            float reduction = (ServerConfig.DISLOCATION_HEAL_RATE.get().floatValue() / 20) * (1 + BooleanUtils.toInteger(stats.hasSplint()));
-            stats.setDislocation(Mth.clamp(stats.getDislocation() - reduction, 0, 100));
-        }
-
-
-        if (stats.getInfection() >= 75) {
-            stats.addMuscleHealth(-(ServerConfig.INFECTION_MUSCLE_DRAIN.get().floatValue() / 20f));
-        }
-
-
-        if (stats.getInfection() <= 0 && limb == Limb.HEAD && stats.getMuscleHealth() < 15) {
-            stats.addMuscleHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f) * 3);
-        }
-
-        if (stats.isTourniquet()) {
-            // Pain ramps up towards 40
-            if (stats.getPain() < 60) {
-                stats.addPain(ServerConfig.TOURNIQUET_PAIN_PER_TICK.get().floatValue());
-            }
-
-            // Timer ticks up
-            stats.addTourniquetTimer(1);
-            if (stats.getTourniquetTimer() > ServerConfig.TOURNIQUET_SAFE_TICKS.get()) {
-                float tourniquetMuscleDamage = (ServerConfig.TOURNIQUET_MUSCLE_DAMAGE.get().floatValue() / 20f);
-                stats.addMuscleHealth(-tourniquetMuscleDamage);
-                switch (limb) {
-                    case LEFT_ARM ->
-                            limbStats.get(Limb.LEFT_HAND).addMuscleHealth(-tourniquetMuscleDamage);
-                    case RIGHT_ARM ->
-                            limbStats.get(Limb.RIGHT_HAND).addMuscleHealth(-tourniquetMuscleDamage);
-                    case LEFT_LEG ->
-                            limbStats.get(Limb.LEFT_FOOT).addMuscleHealth(-tourniquetMuscleDamage);
-                    case RIGHT_LEG ->
-                            limbStats.get(Limb.RIGHT_FOOT).addMuscleHealth(-tourniquetMuscleDamage);
-                }
-            }
-        } else {
-            // Reset timer when removed
-            stats.setTourniquetTimer(0);
-        }
-        stats.setFinalPain(stats.getPain());
     }
 
     public float painFromDamage(float damage) {
@@ -805,7 +706,7 @@ public class PlayerHealthData {
 
         // Update each limb
         for (Limb limb : limbStats.keySet()) {
-            UpdateLimb(limb);
+            getLimb(limb).tick(limb);
         }
 
         if (ServerConfig.LIMB_REGROWTH.get() && player.hasEffect(MobEffects.REGENERATION)) {
@@ -828,6 +729,7 @@ public class PlayerHealthData {
             Shock -= 0.003f;
         }
         Shock = Mth.clamp(Shock, 0, 1);
+
         // Bleeding — internal
         if (internalBleeding > 0) {
             internalBleeding = (float) Math.max(0, internalBleeding - (ServerConfig.WOUND_ANTIBLEED_RATE.get() / 20 / 60));
@@ -953,6 +855,7 @@ public class PlayerHealthData {
             player.xRotO = 0;
 
         }
+
         if (PhysicsUtil.isPhysicsActivated(player) && PhysicsUtil.isPhysicsLoaded()) {
             Stability = calculateStability(player);
             Vec3 vel = PhysicsUtil.getVel(RagdollPart.TORSO, player);
@@ -970,6 +873,7 @@ public class PlayerHealthData {
         } else {
             Stability = 100;
         }
+
         blood = Math.max(0, blood);
     }
 
@@ -1241,13 +1145,11 @@ public class PlayerHealthData {
 
             // ✅ Get existing stats or create if missing
             limbStats.computeIfAbsent(Limb.valueOf(limbTag.getString("LimbName")),
-                    k -> new LimbStatistics()).load(limbTag);
+                    k -> new LimbStatistics(this)).load(limbTag);
         }
     }
 
     public CompoundTag serializeReducedNbt(boolean full) {
-
-
         ListTag limbList = new ListTag();
         for (Map.Entry<Limb, LimbStatistics> entry : limbStats.entrySet()) {
             if (!full && !entry.getValue().softSync()) continue;
@@ -1273,7 +1175,7 @@ public class PlayerHealthData {
         for (Tag tag : list) {
             limbTag = (CompoundTag) tag;
             limbStats.computeIfAbsent(Limb.valueOf(limbTag.getString("LimbName")),
-                    k -> new LimbStatistics()).setAmputated(limbTag.getBoolean("Amputated"));
+                    k -> new LimbStatistics(this)).setAmputated(limbTag.getBoolean("Amputated"));
         }
     }
 
@@ -1313,22 +1215,18 @@ public class PlayerHealthData {
             this.changeEntries.add(new DelayedChangeEntry(entry.getAmount_per_tick(), entry.getTicks(), entry.getLimb()));
         }
 
-        // Assuming you have a Map<Limb, LimbStatistics> limbStats, copy each limb:
-        this.limbStats.clear();
         for (Map.Entry<Limb, LimbStatistics> entry : other.limbStats.entrySet()) {
             Limb limb = entry.getKey();
             LimbStatistics originalStats = entry.getValue();
-            limbStats.computeIfAbsent(limb, k -> new LimbStatistics()).copyFrom(originalStats);
+            limbStats.computeIfAbsent(limb, k -> new LimbStatistics(this)).copyFrom(originalStats);
         }
-
-        limbStats.entrySet().removeIf(entry -> !other.limbStats.containsKey(entry.getKey()));
     }
 
     public void resetToDefaults() {
         // clear & repopulate limb stats with fresh defaults
         limbStats.clear();
         for (Limb limb : Limb.values()) {
-            limbStats.put(limb, new LimbStatistics());
+            limbStats.put(limb, new LimbStatistics(this));
         }
 
         // clear delayed changes
@@ -1616,6 +1514,8 @@ public class PlayerHealthData {
 
             damageSkinOrMuscle(randLimb, stats, passDamage);
 
+            stats.addBurn(passDamage * 2.5f);
+
             if (Math.random() < i * 0.2) {
                 applyPain(randLimb, passDamage * 5);
                 damageSkinOrMuscle(randLimb, stats, passDamage * 0.75f);
@@ -1818,22 +1718,19 @@ public class PlayerHealthData {
             src = ModDamageTypes.opioids(player.serverLevel());
 
         }
+
+        LimbStatistics stats;
         for (Limb limb : limbStats.keySet()) {
-            LimbStatistics lstat = limbStats.get(limb);
-            if (lstat.isTourniquet()) {
-                player.getInventory().add(new ItemStack(ModItems.TOURNIQUET.get()));
+            stats = limbStats.get(limb);
+            if (stats.isTourniquet()) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.TOURNIQUET.get()));
             }
-            if (lstat.hasSplint()) {
-                player.getInventory().add(new ItemStack(ModItems.SPLINT.get()));
+            if (stats.hasSplint()) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.SPLINT.get()));
             }
         }
 
-        player.setHealth(0.1f);
         player.hurt(src, Float.MAX_VALUE);
-        if (player.isAlive()) {//Totem?
-            player.setHealth(0.1f);
-            player.hurt(src, Float.MAX_VALUE);
-        }
     }
 
 
@@ -2015,27 +1912,6 @@ public class PlayerHealthData {
         float hunder_bonus = hungerLevel - 10;
         antibioticTimer = Math.max(antibioticTimer - 1, 0);
         immunity = 100 + temp_bonus + blood_bonus + dirtiness_bonus + antibiotics_bonus + hunder_bonus;
-    }
-
-    private void calculateInfectionAndSpread(Limb limb, LimbStatistics stats) {
-        float infection_progress = (float) ((immunity * ServerConfig.IMMUNITY_SCALE.get()) * -0.001188f + 0.18f);
-        if (stats.getDisinfectionTimer() > 0) {
-            infection_progress -= (0.125f * 20) * (ServerConfig.DISINFECTION_SCALE.get().floatValue() / 20f);
-            stats.addDisinfectionTimer(-1);
-        }
-
-        if (stats.getInfection() <= 0) return;
-
-        stats.addInfection(infection_progress / 20);
-        if (stats.getInfection() < 75) return;
-
-        float chance = (stats.getInfection() - 75);
-        if (Math.random() > chance) {
-            LimbStatistics connectedLimb = getLimb(limb.randomFromConectedLimb());
-            if (connectedLimb.getInfection() <= 0) {
-                connectedLimb.addInfection(1);
-            }
-        }
     }
 
     public void updateDirtyness(Player player) {

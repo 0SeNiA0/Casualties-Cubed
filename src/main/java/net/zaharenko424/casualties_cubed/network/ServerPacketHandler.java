@@ -254,6 +254,7 @@ public class ServerPacketHandler {
             stats.setBleedRate(stats.getBleedRate() * 0.4f);
             stats.addMuscleHealth(- (random.nextFloat() + 1) * 15);
             stats.addSkinHealth(- (random.nextFloat() + 1) * 25);
+            stats.addBurn(5 + random.nextFloat() * 5);
         });
     }
 
