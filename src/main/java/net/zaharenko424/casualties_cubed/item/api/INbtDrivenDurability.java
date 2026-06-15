@@ -58,7 +58,7 @@ public interface INbtDrivenDurability {
     static Component appendDurability(float durabilityScale, MutableComponent component) {
         return component
                 .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal((int) (durabilityScale * 100) + "%").withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(durabilityScale))))
+                .append(Component.translatable("casualties_cubed.tooltip.percent", (int) (durabilityScale * 100)).withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(durabilityScale))))
                 .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
     }
 }

@@ -52,6 +52,10 @@ import java.util.*;
 
 public class PlayerHealthData {
 
+    private static final String MOVE_SPEED_MODIFIER = "custom_move_speed";
+    private static final String ATTACK_DAMAGE_MODIFIER = "custom_attack_damage";
+    private static final String ATTACK_SPEED_MODIFIER = "custom_attack_speed";
+
     private final Map<Limb, LimbStatistics> limbStats = new EnumMap<>(Limb.class);
     private final List<DelayedChangeEntry> changeEntries = new ArrayList<>();
 
@@ -959,15 +963,15 @@ public class PlayerHealthData {
             moveMultiplier -= 0.05f;
         }
 // --- Apply modifiers safely ---
-        applyAttributeModifier(player, Attributes.MOVEMENT_SPEED, "custom_move_speed",
+        applyAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER,
                 (baseMoveSpeed * Math.max(0.0, moveMultiplier)) - baseMoveSpeed,
                 AttributeModifier.Operation.ADDITION);
 
-        applyAttributeModifier(player, Attributes.ATTACK_DAMAGE, "custom_attack_damage",
+        applyAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER,
                 (baseAttackDamage * (1 - attackMultiplier)) - baseAttackDamage,
                 AttributeModifier.Operation.ADDITION);
 
-        applyAttributeModifier(player, Attributes.ATTACK_SPEED, "custom_attack_speed",
+        applyAttributeModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER,
                 (baseAttackSpeed * (1 - attackMultiplier)) - baseAttackSpeed,
                 AttributeModifier.Operation.ADDITION);
 
@@ -1003,15 +1007,30 @@ public class PlayerHealthData {
         var instance = player.getAttribute(attribute);
         if (instance == null) return;
 
-        UUID id = UUID.nameUUIDFromBytes(name.getBytes());
-        // Remove old modifier if it exists
-        instance.removeModifier(id);
+        removeAttributeModifier(player, attribute, name);
 
         // Skip adding modifier if multiplier = 0 (no change)
         if (amount == 0.0) return;
 
-        AttributeModifier modifier = new AttributeModifier(id, name, amount, operation);
+        AttributeModifier modifier = new AttributeModifier(modifierId(name), name, amount, operation);
         instance.addPermanentModifier(modifier);
+    }
+
+    private static void removeAttributeModifier(LivingEntity player, Attribute attribute, String name) {
+        var instance = player.getAttribute(attribute);
+        if (instance == null) return;
+
+        instance.removeModifier(modifierId(name));
+    }
+
+    private static UUID modifierId(String name) {
+        return UUID.nameUUIDFromBytes(name.getBytes());
+    }
+
+    public void clearAttributePenalties(LivingEntity player) {
+        removeAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER);
+        removeAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER);
+        removeAttributeModifier(player, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER);
     }
 
     public CompoundTag serializeNBT(CompoundTag nbt, boolean full) {
@@ -1272,6 +1291,11 @@ public class PlayerHealthData {
         // derived values
         recalcTotalPain();
         recalculateConsciousness();
+    }
+
+    public void resetToDefaults(ServerPlayer player) {
+        resetToDefaults();
+        clearAttributePenalties(player);
     }
 
     public void medicalAction(MedicalAction action, Limb limb, Player source) {

@@ -26,7 +26,7 @@ public class CPRMinigameScreen extends Screen {
     private int CorrX= 0;
     private int CorrY=0;
     public CPRMinigameScreen(Screen parent, Player target) {
-        super(Component.literal("CPRMinigame"));
+        super(Component.translatable("casualties_cubed.gui.minigame.cpr"));
         this.parent = parent;
         this.target = target;
     }

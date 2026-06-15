@@ -166,21 +166,21 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         if (contiousness < 40) {
             if (blink) {
                 guiGraphics.drawCenteredString(mc.font, (int) contiousness + "%", 7 + 32, 22, colorRed);
-                guiGraphics.drawString(mc.font, "CONSCIOUS", 7 + 32 + 15, 22, colorWhite);
+                guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.conscious"), 7 + 32 + 15, 22, colorWhite);
             }
         } else {
             guiGraphics.drawCenteredString(mc.font, (int) contiousness + "%", 7 + 32, 22, colorWhite);
-            guiGraphics.drawString(mc.font, "CONSCIOUS", 7 + 32 + 15, 22, colorWhite);
+            guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.conscious"), 7 + 32 + 15, 22, colorWhite);
         }
 
         guiGraphics.blit(pain_tex, 7, 32, 0, 0, 16, 16, 16, 16);
 
         if (pain > 60) {
             if (blink) {
-                guiGraphics.drawCenteredString(mc.font, (int) pain + "% PAIN", 7 + 32 + 15, 36, colorRed);
+                guiGraphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.health.pain_percent", (int) pain), 7 + 32 + 15, 36, colorRed);
             }
         } else {
-            guiGraphics.drawCenteredString(mc.font, (int) pain + "% PAIN", 7 + 32 + 15, 36, colorWhite);
+            guiGraphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.health.pain_percent", (int) pain), 7 + 32 + 15, 36, colorWhite);
         }
 
         if (blood >= 5) {
@@ -208,21 +208,21 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         }
         guiGraphics.blit(bloodBag_tex, 5, 50, 0, (blitV - 1) * 32, 32, 32, 32, 320);
 
-        guiGraphics.drawString(mc.font, String.format("%.2f", blood) + "L", 40, 52, colorWhite);
+        guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.blood_volume", String.format("%.2f", blood)), 40, 52, colorWhite);
 
 
         if (bleed > 0.2f / 20f / 60f) {
             if (blink) {
-                guiGraphics.drawString(mc.font, String.format("%.2f", bleed * 20 * 60) + "L/m", 40, 66, colorRed);
+                guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.bleed_rate", String.format("%.2f", bleed * 20 * 60)), 40, 66, colorRed);
                 guiGraphics.setColor(1, 0, 0, 1);
                 guiGraphics.blit(blood_tex, 76, 64, 0, 0, 16, 16, 16, 16);
                 guiGraphics.setColor(1, 1, 1, 1);
             }
         } else if (bleed > 0f) {
-            guiGraphics.drawString(mc.font, String.format("%.2f", bleed * 20 * 60) + "L/m", 40, 66, colorWhite);
+            guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.bleed_rate", String.format("%.2f", bleed * 20 * 60)), 40, 66, colorWhite);
             guiGraphics.blit(blood_tex, 76, 64, 0, 0, 10, 10, 10, 10);
         }
-        guiGraphics.drawString(mc.font, "O₂ " + (int) (oxygen) + "%", 5, 85, colorWhite);
+        guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.hud.oxygen", (int) oxygen), 5, 85, colorWhite);
         guiGraphics.drawString(mc.font, "" + (int) (immunity), 17, 104, colorWhite);
 
         if (opiates > 0) {
@@ -239,10 +239,10 @@ public class HealthInfoBoxWidget extends AbstractWidget {
 
         guiGraphics.pose().scale(0.7f, 0.7f, 1);
         guiGraphics.drawString(mc.font, String.valueOf((int) brain), 33, 177, colorWhite);
-        guiGraphics.drawString(mc.font, "SKIN", 7, 224, colorWhite);
-        guiGraphics.drawString(mc.font, "MUSCLE", 7, 235, colorWhite);
-        guiGraphics.drawString(mc.font, "FRACT", 7, 249, colorWhite);
-        guiGraphics.drawString(mc.font, "DISL", 7, 261, colorWhite);
+        guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.skin"), 7, 224, colorWhite);
+        guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.muscle"), 7, 235, colorWhite);
+        guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.fracture_short"), 7, 249, colorWhite);
+        guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.dislocation_short"), 7, 261, colorWhite);
         guiGraphics.blit(pain_tex, 93, 246, 0, 0, 10, 10, 10, 10);
         guiGraphics.blit(infection_tex, 93, 258, 0, 0, 10, 10, 10, 10);
         guiGraphics.blit(blood_tex, 164, 258, 0, 0, 10, 10, 10, 10);
@@ -250,10 +250,10 @@ public class HealthInfoBoxWidget extends AbstractWidget {
 
         if (bleed2 > 0.2f / 20 / 60) {
             if (blink) {
-                guiGraphics.drawString(mc.font, String.format("%.2f", bleed2 * 20 * 60) + "L/m", 126, 260, colorRed);
+                guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.bleed_rate", String.format("%.2f", bleed2 * 20 * 60)), 126, 260, colorRed);
             }
         } else {
-            guiGraphics.drawString(mc.font, String.format("%.2f", bleed2 * 20 * 60) + "L/m", 126, 260, colorWhite);
+            guiGraphics.drawString(mc.font, Component.translatable("casualties_cubed.gui.health.bleed_rate", String.format("%.2f", bleed2 * 20 * 60)), 126, 260, colorWhite);
         }
 
 

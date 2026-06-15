@@ -106,7 +106,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
             data.getLimb(Limb.HEAD).setMuscleHealth(0);
             data.setBrainHealth(29);
         } else if (roll <= .1) {
-            player.sendSystemMessage(Component.literal("You feel a sudden sense of Doom"), true);
+            player.sendSystemMessage(Component.translatable("item.casualties_cubed.experimental_treatment.doom"), true);
             LimbStatistics stats;
             for (Limb limb : Limb.values()) {
                 stats = data.getLimb(limb);
@@ -240,7 +240,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
         pTooltipComponents.add(Component.translatable("item.casualties_cubed.experimental_treatment.description3").withStyle(ChatFormatting.DARK_GRAY));
         pTooltipComponents.add(Component.translatable("item.casualties_cubed.experimental_treatment.description4").withStyle(ChatFormatting.GRAY));
         if (Screen.hasShiftDown() && pIsAdvanced.isAdvanced()) {
-            pTooltipComponents.add(Component.literal("A small Line on the bottom says: \"If found return to Doctor Ry** \" the rest is not readable.").withStyle(ChatFormatting.GRAY));
+            pTooltipComponents.add(Component.translatable("item.casualties_cubed.experimental_treatment.extra_note").withStyle(ChatFormatting.GRAY));
         }
     }
 

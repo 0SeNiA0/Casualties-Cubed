@@ -30,7 +30,7 @@ public class LootPlayerEvent {
                             (ServerPlayer) actor,
                             new SimpleMenuProvider(
                                     (id, inv, p) -> new LootPlayerMenu(id, inv, target),
-                                    Component.literal("Looting " + target.getName().getString())
+                                    Component.translatable("container.casualties_cubed.looting", target.getDisplayName())
                             ),
                             buf -> buf.writeVarInt(target.getId())
                     );

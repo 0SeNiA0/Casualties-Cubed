@@ -34,7 +34,7 @@ public class LargeMedibagItem extends Item implements IBag {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,
                     new SimpleMenuProvider(
                             (id, inv, ply) -> new LargeMedibagMenu(id, inv, itemStack),
-                            Component.literal("Large Medibag")
+                            Component.translatable("item.casualties_cubed.large_medibag")
                     ),
                     buf -> buf.writeBoolean(pUsedHand == InteractionHand.MAIN_HAND)
             );

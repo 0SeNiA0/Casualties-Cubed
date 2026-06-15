@@ -40,7 +40,7 @@ public class ThermometerItem extends Item {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                 float temperatureScale = Mth.clamp((h.getAmbientTemperature(player) - 27) / 15, 0, 1);
                 int color = Util.gradient(temperatureScale, 0x242bff, 0xff3624);
-                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(Component.literal(Math.floor(h.getAmbientTemperature(player) * 10) / 10 + "C").withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(Component.translatable("casualties_cubed.gui.temperature_celsius", Math.floor(h.getAmbientTemperature(player) * 10) / 10).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
                 player.displayClientMessage(colorText, true);
             });
             ticker = 0;

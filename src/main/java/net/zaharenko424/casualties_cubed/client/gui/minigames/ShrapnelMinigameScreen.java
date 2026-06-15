@@ -34,7 +34,7 @@ public class ShrapnelMinigameScreen extends Screen {
     private HandObject handObject;
 
     public ShrapnelMinigameScreen(Screen parent, Player target, Limb limb, boolean ignorevel) {
-        super(Component.literal("ShrapnelMinigame"));
+        super(Component.translatable("casualties_cubed.gui.minigame.shrapnel"));
         this.parent = parent;
         this.target = target;
         this.limb = limb;

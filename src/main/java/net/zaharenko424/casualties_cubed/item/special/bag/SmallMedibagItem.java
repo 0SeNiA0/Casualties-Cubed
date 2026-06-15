@@ -34,7 +34,7 @@ public class SmallMedibagItem extends Item implements IBag {
             NetworkHooks.openScreen((ServerPlayer) pPlayer,
                     new SimpleMenuProvider(
                             (id, inv, ply) -> new SmallMedibagMenu(id, inv, itemStack),
-                            Component.literal("Small Medibag")
+                            Component.translatable("item.casualties_cubed.small_medibag")
                     ),
                     buf -> buf.writeBoolean(pUsedHand == InteractionHand.MAIN_HAND)
             );

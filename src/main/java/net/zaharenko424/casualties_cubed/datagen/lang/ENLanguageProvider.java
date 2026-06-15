@@ -84,16 +84,22 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(HEAT_PACK, "A slightly larger chemical hand warmer. Aids in healing of muscles slightly.");
         addItemFromIdWDesc(AUTO_PUMP, "A very advanced Life support device with internal batteries. Keeps oxygen at stable levels,provides adrenaline and energy. Batteries last about 5min. Usable on Chest");
         addItemFromIdWDesc(THERMOMETER, "A small device that reads the temperature around the user.");
+        addItemFromId(SimpleEarProtection);
         addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10mb.");
         addItemFromIdWDesc(AUTO_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
+        add("item.casualties_cubed.glow_fruit", "Glow Fruit");
+        add("item.casualties_cubed.brown_cap", "Brown Cap");
         add(GLOW_FRUIT.getId().toLanguageKey("item", "description"), "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.");
         add(BROWN_CAP.getId().toLanguageKey("item", "description"), "You have no idea what is this fungus. For all you know it can cure cancer or kill you on the spot");
         addItemFromIdWDesc(BROWN_CAP_MUSH, "Probably a bad idea to eat this...");
         addItemFromId(EXPERIMENTAL_TREATMENT);
+        add("item.casualties_cubed.expie_plushy", "Expie Plushy");
+        add("item.casualties_cubed.medical_mixer", "Medical Mixer");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description1"), "The label says:");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description2"), "EXPERIMENTAL TREATMENT EX-8UN, For authorized Study participants only. Effects may include:");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description3"), "Mild dizziness ;Permanent dizziness ;Energy ;Lethargy ;Metallic taste ;Sudden bleeding ;Cardiac arrest;Minor brain damage ;Major brain damage ; Respiratory arrest; Deja vu; Paranoia; Loss of limbs; Grow of limbs; Hunger; Vomiting; Deja vu; Memory loss...");
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description4"), "The list goes on for another 2 lines.");
+        add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "doom"), "You feel a sudden sense of Doom");
 
         addMedicalFluidFromIdWDesc(ModFluids.OPIUM, "A light opiate, lesser effect when taken orally");
         addMedicalFluidFromIdWDesc(ModFluids.MORPHINE, "A strong opiate, lesser effect when taken orally");
@@ -125,8 +131,11 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("shrapnel_button", "Remove Shrapnel");
         addGuiO("splint_button", "Remove Splint");
         addGuiO("inject", "Inject");
+        addGuiO("transfer", "Transfer");
         addGuiO("give_up", "Press %1$s to Give Up.");
         addGuiO("fluid_screen", "Press %1$s to transfer fluids");
+        addGuiO("fluid_exchange", "Fluid Exchange");
+        addGuiO("fluid_transfer", "Fluid Transfer");
         addGuiO("syringe_instruction", "Push the syringe down to inject. Make sure to check the dosage.");
         addGuiO("minigame_exit", "Press ESC to Exit");
         addGuiO("dislocation_instruction1", "Hit the bone into the correct spot to fix dislocation.");
@@ -135,6 +144,27 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("cpr_instruction2", "Don't mess up.");
         addGuiO("bandage_instruction1", "Wrap the bandage around the limb to stop the bleeding.");
         addGuiO("bandage_instruction2", " You dont have to use the entire bandage.");
+        addGuiO("amputation_instruction", "Saw through the limb to complete the amputation.");
+        addGuiO("minigame.bandage", "Bandage");
+        addGuiO("minigame.cpr", "CPR");
+        addGuiO("minigame.dislocation", "Dislocation");
+        addGuiO("minigame.shrapnel", "Shrapnel");
+        addGuiO("minigame.inject", "Injection");
+        addGuiO("minigame.amputation", "Amputation");
+        addGuiO("fluid_amount", "%1$sml");
+        addGuiO("hud.oxygen", "O₂ %1$s%%");
+        addGuiO("hud.pain", "%1$s%%");
+        addGuiO("health.conscious", "CONSCIOUS");
+        addGuiO("health.pain_percent", "%1$s%% PAIN");
+        addGuiO("health.skin", "SKIN");
+        addGuiO("health.muscle", "MUSCLE");
+        addGuiO("health.fracture_short", "FRACT");
+        addGuiO("health.dislocation_short", "DISL");
+        addGuiO("health.blood_volume", "%1$sL");
+        addGuiO("health.bleed_rate", "%1$sL/m");
+        addGuiO("temperature_celsius", "%1$sC");
+
+        addContainer("looting", "Looting %1$s");
 
         addDeathMessage(ModDamageTypes.GIVE_UP.location().getPath(), "%1$s gave up", null, "%1$s gave up, with some encouragement from %2$s");
         addDeathMessage(ModDamageTypes.BLEED.location().getPath(), "%1$s lost too much blood", null, "%1$s bled out thanks to %2$s");
@@ -317,7 +347,21 @@ public class ENLanguageProvider extends LanguageProvider {
 
         add(modid + ".multi_tank.hint", "Press SHIFT for fluid description");
 
+        addTooltipO("contents", "Contents:");
         addTooltipO("liquid.amount.with.capacity", "%s / %s mb");
         addTooltipO("liquid.amount", "%s mb");
+        addTooltipO("percent", "%1$s%%");
+
+        add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
+
+        add("command.casualties_cubed.heal.success", "Healed %1$s player(s).");
+        add("command.casualties_cubed.error.unknown_field", "Unknown field: %1$s");
+        add("command.casualties_cubed.setlimb.success", "Applied value %1$s to %2$s | %3$s for %4$s");
+        add("command.casualties_cubed.setbody.success", "Applied value %1$s to %2$s for %3$s");
+        add("command.casualties_cubed.amputate.success", "Amputated %1$s");
+        add("command.casualties_cubed.fillfluid.error.player_only", "Can only be run by a player");
+        add("command.casualties_cubed.fillfluid.error.invalid_fluid", "Invalid fluid");
+        add("command.casualties_cubed.fillfluid.error.no_item", "No compatible item found in main hand");
+        add("command.casualties_cubed.fillfluid.success", "Added %1$smb of %2$s to item");
     }
 }
