@@ -21,13 +21,13 @@ public class BleedMoodle extends AbstractMoodleVisual {
         float bleed = data.getCombinedBleed();
 
         if (bleed > 0.6f / 20 / 60) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (bleed > 0.3f / 20 / 60) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (bleed > 0.15f / 20 / 60) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (bleed > 0.05f / 20 / 60) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         }
 
         return MoodleStatus.NONE;
@@ -42,19 +42,19 @@ public class BleedMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()){
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description3").withStyle(ChatFormatting.GRAY));
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.title4").withStyle(ChatFormatting.RED));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.bleeding.description4").withStyle(ChatFormatting.GRAY));
             }

@@ -28,7 +28,7 @@ public class FractureMoodle extends AbstractMoodleVisual {
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
         for (Limb limb : checkList) {
-            if (data.getLimb(limb).getFracture() > 0) return MoodleStatus.HEAVY;
+            if (data.getLimb(limb).getFracture() > 0) return MoodleStatus.HEAVY_NEG;
         }
 
         return MoodleStatus.NONE;

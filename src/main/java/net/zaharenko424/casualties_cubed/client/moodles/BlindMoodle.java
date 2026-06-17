@@ -27,9 +27,9 @@ public class BlindMoodle extends AbstractMoodleVisual {
         boolean l = data.isLeftEyeBlind();
 
         if (r & l) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (r || l) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else {
             return MoodleStatus.NONE;
         }
@@ -44,11 +44,11 @@ public class BlindMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.eye_gone.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.eye_gone.description1").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.eye_gone.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.eye_gone.description2").withStyle(ChatFormatting.GRAY));
             }

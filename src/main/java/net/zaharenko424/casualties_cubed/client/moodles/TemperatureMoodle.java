@@ -25,13 +25,13 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
         low = temp < 36.6;
 
         if (temp <= 28 || temp >= 41.5) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (temp <= 32.5 || temp >= 40.25) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (temp <= 34 || temp >= 39) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (temp <= 35.5 || temp >= 38) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         }
 
         return MoodleStatus.NONE;
@@ -46,7 +46,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title1"));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description1").withStyle(ChatFormatting.GRAY));
@@ -55,7 +55,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description1").withStyle(ChatFormatting.GRAY));
                 }
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title2").withStyle(ChatFormatting.YELLOW));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description2").withStyle(ChatFormatting.GRAY));
@@ -64,7 +64,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description2").withStyle(ChatFormatting.GRAY));
                 }
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title3").withStyle(ChatFormatting.GOLD));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description3").withStyle(ChatFormatting.GRAY));
@@ -73,7 +73,7 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_temp.description3").withStyle(ChatFormatting.GRAY));
                 }
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 if (low) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.title4").withStyle(ChatFormatting.RED));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.low_temp.description4").withStyle(ChatFormatting.GRAY));

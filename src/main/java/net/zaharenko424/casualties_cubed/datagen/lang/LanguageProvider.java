@@ -31,8 +31,12 @@ public abstract class LanguageProvider extends net.minecraftforge.common.data.La
         this.modid = modid;
     }
 
-    protected void addMoodle(String key, String value) {
+    protected void addMoodleO(String key, String value) {
         addGuiO("moodle." + key, value);
+    }
+
+    protected void addMoodle(String key, String value) {
+        addGui("moodle." + key, value);
     }
 
     protected void addAdvancement(String key, String title, String description) {

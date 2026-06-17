@@ -1,5 +1,6 @@
 package net.zaharenko424.casualties_cubed.blocks;
 
+import net.minecraft.world.level.block.*;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -11,10 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -92,8 +89,7 @@ public class GlowFruitBushBlock extends BushBlock implements BonemealableBlock {
         int age = state.getValue(AGE);
         if (age == 3) {
             if (!world.isClientSide) {
-                ItemStack fruit = new ItemStack(ModItems.GLOW_FRUIT.get());
-                popResource(world, pos, fruit);
+                popResource(world, pos, new ItemStack(ModItems.GLOW_FRUIT.get()));
                 world.setBlock(pos, state.setValue(AGE, 1), 2);
             }
             return InteractionResult.sidedSuccess(world.isClientSide);

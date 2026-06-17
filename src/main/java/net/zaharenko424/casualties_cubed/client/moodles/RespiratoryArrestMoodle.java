@@ -18,7 +18,7 @@ public class RespiratoryArrestMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.isRespiratoryArrest() ? MoodleStatus.CRITICAL : MoodleStatus.NONE;
+        return data.isRespiratoryArrest() ? MoodleStatus.CRITICAL_NEG : MoodleStatus.NONE;
     }
 
     @Override

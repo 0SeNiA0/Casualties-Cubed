@@ -25,19 +25,19 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
 
         if (consciousness < 10) {
             fullyUNC = true;
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (consciousness < 30) {
             fullyUNC = false;
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (consciousness < 55) {
             fullyUNC = false;
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (consciousness < 75) {
             fullyUNC = false;
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (consciousness < 90) {
             fullyUNC = false;
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         } else {
             fullyUNC = false;
             return MoodleStatus.NONE;
@@ -54,19 +54,19 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description3").withStyle(ChatFormatting.GRAY));
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 if (fullyUNC) {
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.title5").withStyle(ChatFormatting.RED));
                     componentList.add(Component.translatable("casualties_cubed.gui.moodle.consiousness.description5").withStyle(ChatFormatting.GRAY));

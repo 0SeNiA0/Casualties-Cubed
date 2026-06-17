@@ -21,13 +21,13 @@ public class HighBloodMoodle extends AbstractMoodleVisual {
         float blood = data.getBloodVolume();
 
         if (blood > 5.625) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (blood > 5.5) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (blood > 5.25) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (blood > 5) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         }
 
         return MoodleStatus.NONE;
@@ -42,19 +42,19 @@ public class HighBloodMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.description3").withStyle(ChatFormatting.GRAY));
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.title4").withStyle(ChatFormatting.RED));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.high_blood.description4").withStyle(ChatFormatting.GRAY));
             }

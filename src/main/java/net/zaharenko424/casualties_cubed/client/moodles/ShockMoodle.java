@@ -18,7 +18,7 @@ public class ShockMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getShock() > 0.3 ? MoodleStatus.HEAVY : MoodleStatus.NONE;
+        return data.getShock() > 0.3 ? MoodleStatus.HEAVY_NEG : MoodleStatus.NONE;
     }
 
     @Override

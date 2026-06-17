@@ -31,9 +31,9 @@ public class AdrenalineMoodle extends AbstractMoodleVisual {
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
         float blood2 = data.getAdrenaline();
         if (blood2 > 65) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (blood2 > 20) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         } else {
             return MoodleStatus.NONE;
         }

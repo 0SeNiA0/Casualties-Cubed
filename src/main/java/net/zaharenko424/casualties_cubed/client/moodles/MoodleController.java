@@ -52,8 +52,10 @@ public class MoodleController {
         List<AbstractMoodleVisual> tmp = new ArrayList<>();
 
         //Positive
+        tmp.add(new SleepMoodle());
         tmp.add(new LifeSupportMoodle());
             //Side
+        tmp.add(new ImmunocompetentMoodle());
         tmp.add(new AdrenalineMoodle());
 
         //Negative
@@ -82,6 +84,7 @@ public class MoodleController {
         tmp.add(new HearingLossMoodle());
         tmp.add(new DirtynessMoodle());
             //Side
+        tmp.add(new ImmunocompromisedMoodle());
         tmp.add(new DisfiguredMoodle());
         tmp.add(new AmputatedMoodle());
         tmp.add(new BlindMoodle());

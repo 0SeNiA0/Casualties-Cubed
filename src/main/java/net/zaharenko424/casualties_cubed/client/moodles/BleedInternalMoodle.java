@@ -27,9 +27,9 @@ public class BleedInternalMoodle extends AbstractMoodleVisual {
         float bleed = data.getInternalBleeding();
 
         if (bleed > 0.3 / 20 / 60) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (bleed > 0.03 / 20 / 60) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else {
             return MoodleStatus.NONE;
         }

@@ -19,7 +19,7 @@ public class InfectionMoodle extends AbstractMoodleVisual {
 
     @Override
     public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive() || getMoodleStatus() != MoodleStatus.LIGHT;
+        return state.isActive() || getMoodleStatus() != MoodleStatus.LIGHT_NEG;
     }
 
     @Override
@@ -27,13 +27,13 @@ public class InfectionMoodle extends AbstractMoodleVisual {
         double maxInfection = data.getMaxInfection();
 
         if (maxInfection > 80) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (maxInfection > 60) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (maxInfection > 40) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (maxInfection > 25) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         } else {
             return MoodleStatus.NONE;
         }
@@ -48,19 +48,19 @@ public class InfectionMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.description3").withStyle(ChatFormatting.GRAY));
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.title4").withStyle(ChatFormatting.RED));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.infection.description4").withStyle(ChatFormatting.GRAY));
             }

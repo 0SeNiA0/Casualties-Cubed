@@ -23,7 +23,7 @@ public class DisfiguredMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.isMouthRemoved() ? MoodleStatus.HEAVY : MoodleStatus.NONE;
+        return data.isMouthRemoved() ? MoodleStatus.HEAVY_NEG : MoodleStatus.NONE;
     }
 
     @Override

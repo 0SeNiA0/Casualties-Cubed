@@ -19,7 +19,7 @@ public class LungFaliureMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getLimb(Limb.CHEST).getMuscleHealth() <= 4 ? MoodleStatus.CRITICAL : MoodleStatus.NONE;
+        return data.getLimb(Limb.CHEST).getMuscleHealth() <= 4 ? MoodleStatus.CRITICAL_NEG : MoodleStatus.NONE;
     }
 
     @Override

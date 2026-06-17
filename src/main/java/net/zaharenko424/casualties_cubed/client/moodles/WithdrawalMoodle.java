@@ -30,13 +30,13 @@ public class WithdrawalMoodle extends AbstractMoodleVisual {
         if (hasOP) return MoodleStatus.NONE;
 
         if (netOpioids <= -42) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (netOpioids <= -25) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (netOpioids <= -15) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (netOpioids <= -5) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         }
 
         return MoodleStatus.NONE;
@@ -51,19 +51,19 @@ public class WithdrawalMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.description3").withStyle(ChatFormatting.GRAY));
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.title4").withStyle(ChatFormatting.RED));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.withdrawal.description4").withStyle(ChatFormatting.GRAY));
             }

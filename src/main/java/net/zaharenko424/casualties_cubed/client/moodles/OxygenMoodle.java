@@ -28,13 +28,13 @@ public class OxygenMoodle extends AbstractMoodleVisual {
         float ox = data.getOxygen();
 
         if (ox < 5) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (ox < 30) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (ox < 60) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (ox < 90) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         }
 
         return MoodleStatus.NONE;
@@ -42,26 +42,26 @@ public class OxygenMoodle extends AbstractMoodleVisual {
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ms.blit(getMoodleStatus() == MoodleStatus.CRITICAL ? TEX_CRIT : TEX, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(getMoodleStatus() == MoodleStatus.CRITICAL_NEG ? TEX_CRIT : TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.description3").withStyle(ChatFormatting.GRAY));
             }
-            case CRITICAL -> {
+            case CRITICAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.title4").withStyle(ChatFormatting.RED));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.oxygen.description4").withStyle(ChatFormatting.GRAY));
             }

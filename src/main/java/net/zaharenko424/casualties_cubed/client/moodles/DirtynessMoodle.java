@@ -21,9 +21,9 @@ public class DirtynessMoodle extends AbstractMoodleVisual {
         float dirt = data.getDirtiness();
 
         if (dirt > 80) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (dirt > 50) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         } else {
             return MoodleStatus.NONE;
         }
@@ -38,11 +38,11 @@ public class DirtynessMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.dirty.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.dirty.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.dirty.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.dirty.description2").withStyle(ChatFormatting.GRAY));
             }

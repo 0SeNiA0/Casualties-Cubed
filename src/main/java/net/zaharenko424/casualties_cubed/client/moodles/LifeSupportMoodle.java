@@ -18,7 +18,7 @@ public class LifeSupportMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getLifeSupportTimer() > 0 ? MoodleStatus.LIGHT : MoodleStatus.NONE;
+        return data.getLifeSupportTimer() > 0 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
     }
 
     @Override

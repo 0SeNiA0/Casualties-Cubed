@@ -27,9 +27,9 @@ public class HemothoraxMoodle extends AbstractMoodleVisual {
         float hemothorax = data.getHemothorax();
 
         if (hemothorax > 70) {
-            return MoodleStatus.CRITICAL;
+            return MoodleStatus.CRITICAL_NEG;
         } else if (hemothorax > 40) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         }
 
         return MoodleStatus.NONE;

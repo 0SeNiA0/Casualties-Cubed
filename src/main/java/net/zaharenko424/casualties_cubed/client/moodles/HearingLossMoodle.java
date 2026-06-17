@@ -21,11 +21,11 @@ public class HearingLossMoodle extends AbstractMoodleVisual {
         float status = data.getHearingLoss();
 
         if (status > 0.7) {
-            return MoodleStatus.HEAVY;
+            return MoodleStatus.HEAVY_NEG;
         } else if (status > 0.4) {
-            return MoodleStatus.NORMAL;
+            return MoodleStatus.NORMAL_NEG;
         } else if (status > 0.15) {
-            return MoodleStatus.LIGHT;
+            return MoodleStatus.LIGHT_NEG;
         } else {
             return MoodleStatus.NONE;
         }
@@ -40,15 +40,15 @@ public class HearingLossMoodle extends AbstractMoodleVisual {
     public List<Component> getTooltip(Player player) {
         List<Component> componentList = new ArrayList<>();
         switch (getMoodleStatus()) {
-            case LIGHT -> {
+            case LIGHT_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.title1"));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.description1").withStyle(ChatFormatting.GRAY));
             }
-            case NORMAL -> {
+            case NORMAL_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.title2").withStyle(ChatFormatting.YELLOW));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.description2").withStyle(ChatFormatting.GRAY));
             }
-            case HEAVY -> {
+            case HEAVY_NEG -> {
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.title3").withStyle(ChatFormatting.GOLD));
                 componentList.add(Component.translatable("casualties_cubed.gui.moodle.sound_loss.description3").withStyle(ChatFormatting.GRAY));
             }

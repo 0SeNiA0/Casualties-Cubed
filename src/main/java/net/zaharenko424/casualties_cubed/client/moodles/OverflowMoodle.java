@@ -12,7 +12,7 @@ public class OverflowMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return MoodleStatus.LIGHT;
+        return MoodleStatus.LIGHT_NEG;
     }
 
     public void setLeftover(int leftover) {

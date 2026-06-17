@@ -25,7 +25,7 @@ public class AmputatedMoodle extends AbstractMoodleVisual {
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
         for (Limb limb : Limb.values()) {
-            if (data.isAmputated(limb)) return MoodleStatus.HEAVY;
+            if (data.isAmputated(limb)) return MoodleStatus.HEAVY_NEG;
         }
 
         return MoodleStatus.NONE;

@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class AbstractMoodleVisual {
 
     private static final ResourceLocation RING_TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_ring.png");
+    private static final ResourceLocation SQUARE_TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_square.png");
 
     private MoodleStatus moodleStatus;
     private MoodleStatus lastStatus;
@@ -75,7 +76,7 @@ public abstract class AbstractMoodleVisual {
 
         int finaly = y + (int) animatedOffset;
 
-        if (moodleStatus == MoodleStatus.CRITICAL) {
+        if (moodleStatus == MoodleStatus.CRITICAL_NEG) {
             int color = getCriticalColor();
             int endcolor = getCriticalEndColor();
             float pulse = Mth.sin(time * Mth.PI);
@@ -113,7 +114,7 @@ public abstract class AbstractMoodleVisual {
         if (moodleStatus == null) return;
 
         guiGraphics.blit(moodleStatus.tex, x, y, 0, 0, 16, 16, 16, 16);
-        guiGraphics.blit(RING_TEX, x, y, 0, 0, 16, 16, 16, 16);
+        guiGraphics.blit(moodleStatus.positive ? SQUARE_TEX : RING_TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     protected abstract void renderIcon(GuiGraphics ms, float partialTicks, int x, int y);
