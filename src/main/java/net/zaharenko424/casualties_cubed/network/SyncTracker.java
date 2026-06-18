@@ -116,6 +116,14 @@ public class SyncTracker {
     }
 
     @SubscribeEvent
+    public static void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+        PlayerHealthData data = PlayerHealthData.nonNullOf(player);
+        ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new ClientboundSyncHealthPacket(player.getId(), data.serializeReducedNbt(true)));
+    }
+
+    @SubscribeEvent
     public static void onDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
             remove(player);
