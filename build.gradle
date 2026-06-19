@@ -105,7 +105,7 @@ minecraft {
 
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
-            args '--nogui'
+            //args '--nogui'
         }
 
         // This run config launches GameTestServer and runs all registered gametests, then exits.
@@ -195,8 +195,8 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    implementation fg.deobf("curse.maven:bookshelf-228525:7612389")
-    implementation fg.deobf("curse.maven:botany-pots-353928:7612402")
+    compileOnly fg.deobf("curse.maven:bookshelf-228525:7612389")
+    compileOnly fg.deobf("curse.maven:botany-pots-353928:7612402")
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     compileOnly(fg.deobf("de.maxhenkel.voicechat:voicechat-api:2.5.0"))
@@ -206,14 +206,14 @@ dependencies {
     //implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     //implementation(fg.deobf("maven.modrinth:uwrad:1.1.0+forge"))
     // at runtime, use the full JEI jar for Forge
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
+      //runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
     //compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
     // Use the full Curios API jar at runtime
     //runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     //runtimeOnly( fg.deobf("maven.modrinth:serene-seasons:9.1.0.2"))
     //runtimeOnly(fg.deobf("maven.modrinth:glitchcore:0.0.1.1"))
-    runtimeOnly(fg.deobf("curse.maven:create-328085:7178761"))
+    //runtimeOnly(fg.deobf("curse.maven:create-328085:7178761"))
     //runtimeOnly(fg.deobf("maven.modrinth:figura:4HqSmvZ6"))
     //runtimeOnly(fg.deobf("maven.modrinth:simple-voice-chat:forge-1.20.1-2.5.35"))
 
@@ -221,7 +221,7 @@ dependencies {
     //runtimeOnly(fg.deobf("maven.modrinth:oculus:iQ1SwGc3"))
     //runtimeOnly(fg.deobf("maven.modrinth:distanthorizons:FcSiScgQ"))
 
-    runtimeOnly(fg.deobf("curse.maven:prototype-physics-1380559:7206624"))
+    //runtimeOnly(fg.deobf("curse.maven:prototype-physics-1380559:7206624"))
 
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

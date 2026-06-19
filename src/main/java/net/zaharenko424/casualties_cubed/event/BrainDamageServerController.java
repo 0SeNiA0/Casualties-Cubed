@@ -1,11 +1,7 @@
 package net.zaharenko424.casualties_cubed.event;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
@@ -14,17 +10,6 @@ import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class BrainDamageServerController {
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onChat(ServerChatEvent event) {
-        String msg = modifyMessage(event.getPlayer(), event.getMessage().getString());
-        if (msg == null) {
-            event.setCanceled(true);
-            return;
-        }
-
-        event.setMessage(Component.literal(msg));
-    }
 
     public static String modifyMessage(ServerPlayer player, String message) {
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
