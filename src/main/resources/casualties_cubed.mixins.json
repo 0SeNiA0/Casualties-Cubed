@@ -12,6 +12,7 @@
   ],
   "client": [
     "client.AbstractContainerScreenMixin",
+    "client.MixinItemRenderer",
     "client.MixinSplashManager",
     "client.MouseHandlerMixin"
   ],

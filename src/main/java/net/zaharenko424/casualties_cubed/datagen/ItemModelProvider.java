@@ -1,5 +1,8 @@
 package net.zaharenko424.casualties_cubed.datagen;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -21,21 +24,19 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         basicItem(ANTISEPTIC_SPRAY.get());
         basicItem(AUTO_PUMP.get());
 
-        getBuilder(AUTO_INJECTOR.getId().toString())
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", AUTO_INJECTOR.getId().withPrefix("item/"))
-                .texture("layer1", AUTO_INJECTOR.getId().withPrefix("item/").withSuffix("_fill"));
+        withTintLayer(AUTO_INJECTOR, AUTO_INJECTOR.getId().withPrefix("item/"), AUTO_INJECTOR.getId().withPrefix("item/").withSuffix("_fill"));
 
         withExistingParent(ANTISERUM_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
         basicItem(ADHESIVE_BANDAGE.get());
         withExistingParent(PROCOAGULANT_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
+        basicItem(WOUND_GLUE_SPRAY.get());
         withExistingParent(STREPTOKINASE_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
         basicItem(BONE_WELDER.get());
 
-        getBuilder(BOTTLE.getId().toString())
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", BOTTLE.getId().withPrefix("item/").withSuffix("0"))
-                .texture("layer1", BOTTLE.getId().withPrefix("item/").withSuffix("1"));
+        basicItem(CANTEEN.get());
+
+        withTintLayer(WATER_BOTTLE);
+        withTintLayer(WATER_JUG);
 
         basicItem(BRAIN_GROW_PILLS.get());
         basicItem(BROWN_CAP_MUSH.get());
@@ -51,12 +52,10 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         basicItem(MEDICAL_GAUZE.get());
         basicItem(MEDICAL_SUTURE.get());
 
-        getBuilder(MEDICINE_VIAL.getId().toString())
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", CasualtiesCubed.resourceLoc("item/empty_bottle"))
-                .texture("layer1", CasualtiesCubed.resourceLoc("item/vial_color"));
+        withTintLayer(MEDICINE_VIAL, CasualtiesCubed.resourceLoc("item/empty_vial"), CasualtiesCubed.resourceLoc("item/vial_color"));
 
         withExistingParent(CEFTRIAXONE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
+        basicItem(BLEACH_JUG.get());
         withExistingParent(FENTANYL_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(MORPHINE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(NALOXONE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
@@ -64,20 +63,29 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         basicItem(OLD_RAG.get());
         basicItem(PAINKILLERS_PILLS.get());
 
-        getBuilder(PILL_BOTTLE.getId().toString())
-                .parent(new ModelFile.UncheckedModelFile("item/generated"))
-                .texture("layer0", CasualtiesCubed.resourceLoc("item/generic_pill0"))
-                .texture("layer1", CasualtiesCubed.resourceLoc("item/generic_pill1"));
+        withTintLayer(PILL_BOTTLE, CasualtiesCubed.resourceLoc("item/generic_pill0"), CasualtiesCubed.resourceLoc("item/generic_pill1"));
 
         basicItem(PLASTIC_DRESSING.get());
         basicItem(RELIEF_CREAM_BOTTLE.get());
         basicItem(RIPPED_DRESSING.get());
-        basicItem(SALINE_SYRINGE.get());
+        basicItem(IV_BAG.get());
         basicItem(SPLINT.get());
         basicItem(STERILIZED_DRESSING.get());
         basicItem(SYRINGE.get());
         basicItem(THERMOMETER.get());
         basicItem(TOURNIQUET.get());
         basicItem(TWEEZERS.get());
+    }
+
+    protected void withTintLayer(RegistryObject<? extends Item> item) {
+        ResourceLocation itemLoc = item.getId().withPrefix(ITEM_FOLDER + "/");
+        withTintLayer(item, itemLoc.withSuffix("0"), itemLoc.withSuffix("1"));
+    }
+
+    protected void withTintLayer(RegistryObject<? extends Item> item, ResourceLocation base, ResourceLocation tint) {
+        getBuilder(item.getId().toString())
+                .parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", base)
+                .texture("layer1", tint);
     }
 }

@@ -48,7 +48,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy(getHasName(Blocks.GLASS), has(Tags.Items.GLASS))
                 .save(consumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SALINE_SYRINGE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.IV_BAG.get())
                 .pattern("B")
                 .pattern("B")
                 .pattern("I")
@@ -429,7 +429,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("all_to_bottle"));
 
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.MEDICINE_VIAL.get(),Items.GLASS_BOTTLE);
-        stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.BOTTLE.get(),Items.GLASS_BOTTLE);
+        stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.WATER_BOTTLE.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC, ModItems.PILL_BOTTLE.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.AUTO_INJECTOR.get(),Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer,RecipeCategory.MISC,ModItems.ANTISERUM_INJECTOR.get(),Items.GLASS_BOTTLE);

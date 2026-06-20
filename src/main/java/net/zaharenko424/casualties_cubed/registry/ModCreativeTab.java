@@ -56,11 +56,13 @@ public class ModCreativeTab {
                         output.accept(THERMOMETER.get());
 
                         //Empty
-
-                        output.accept(BOTTLE.get());
+                        output.accept(CANTEEN.get());
+                        output.accept(WATER_BOTTLE.get());
+                        output.accept(WATER_JUG.get());
                         output.accept(ALCOHOL_BOTTLE.get());
                         output.accept(RELIEF_CREAM_BOTTLE.get());
                         output.accept(ANTISEPTIC_SPRAY.get());
+                        output.accept(WOUND_GLUE_SPRAY.get());
 
                         output.accept(BRAIN_GROW_PILLS.get());
                         output.accept(ANTIBIOTICS_PILLS.get());
@@ -81,7 +83,9 @@ public class ModCreativeTab {
 
                         output.accept(SYRINGE.get());
                         output.accept(HEROIN_SYRINGE.get());
-                        output.accept(SALINE_SYRINGE.get());
+                        output.accept(IV_BAG.get());
+
+                        output.accept(BLEACH_JUG.get());
 
                         //Filled
                         output.accept(MEDICAL_MIXER.get());
@@ -89,6 +93,7 @@ public class ModCreativeTab {
                         output.accept(ALCOHOL_BOTTLE.get().withDefFluid());
                         output.accept(RELIEF_CREAM_BOTTLE.get().withDefFluid());
                         output.accept(ANTISEPTIC_SPRAY.get().withDefFluid());
+                        output.accept(WOUND_GLUE_SPRAY.get().withDefFluid());
 
                         output.accept(BRAIN_GROW_PILLS.get().withDefFluid());
                         output.accept(ANTIBIOTICS_PILLS.get().withDefFluid());
@@ -106,7 +111,10 @@ public class ModCreativeTab {
                         output.accept(ANTISERUM_INJECTOR.get().withDefFluid());
 
                         output.accept(HEROIN_SYRINGE.get().withDefFluid());
-                        output.accept(SALINE_SYRINGE.get().withDefFluid());
+                        output.accept(IV_BAG.get().withDefFluid());
+                        output.accept(IV_BAG.get().withFluid(ModFluids.BLOOD));
+
+                        output.accept(BLEACH_JUG.get().withDefFluid());
 
 
                         output.accept(EXPIE_PLUSHY.get());

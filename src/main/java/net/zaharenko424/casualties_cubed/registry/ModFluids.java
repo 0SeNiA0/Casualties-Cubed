@@ -35,6 +35,9 @@ public class ModFluids {
     public static final RegistryObject<FluidType> CEFTRIAXONE_TYPE = FLUID_TYPES.register("ceftriaxone", () -> new MedicalFluidType(FluidType.Properties.create(), 0x184a19));
     public static final RegistryObject<MedicalFluid> CEFTRIAXONE = FLUIDS.register("ceftriaxone", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CEFTRIAXONE_TYPE, ModFluids.CEFTRIAXONE, ModFluids.CEFTRIAXONE), MedicalEffects.CEFTRAIAXONE));
 
+    public static final RegistryObject<FluidType> BLEACH_TYPE = FLUID_TYPES.register("bleach", () -> new MedicalFluidType(FluidType.Properties.create(), 2146230734));
+    public static final RegistryObject<MedicalFluid> BLEACH = FLUIDS.register("bleach", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BLEACH_TYPE, ModFluids.BLEACH, ModFluids.BLEACH), MedicalEffects.BLEACH));
+
 
     public static final RegistryObject<FluidType> OPIUM_TYPE = FLUID_TYPES.register("opium", () -> new MedicalFluidType(FluidType.Properties.create(), 0xeb4034));
     public static final RegistryObject<MedicalFluid> OPIUM = FLUIDS.register("opium", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.OPIUM_TYPE, ModFluids.OPIUM, ModFluids.OPIUM), MedicalEffects.OPIUM));
@@ -62,6 +65,9 @@ public class ModFluids {
     public static final RegistryObject<FluidType> PROCOAGULANT_TYPE = FLUID_TYPES.register("procoagulant", () -> new MedicalFluidType(FluidType.Properties.create(), 0x57172b));
     public static final RegistryObject<MedicalFluid> PROCOAGULANT = FLUIDS.register("procoagulant", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.PROCOAGULANT_TYPE, ModFluids.PROCOAGULANT, ModFluids.PROCOAGULANT), MedicalEffects.PROCOAGULANT));
 
+    public static final RegistryObject<FluidType> WOUND_GLUE_TYPE = FLUID_TYPES.register("wound_glue", () -> new MedicalFluidType(FluidType.Properties.create(), -1130047));
+    public static final RegistryObject<MedicalFluid> WOUND_GLUE = FLUIDS.register("wound_glue", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.WOUND_GLUE_TYPE, ModFluids.WOUND_GLUE, ModFluids.WOUND_GLUE), MedicalEffects.WOUND_GLUE));
+
     public static final RegistryObject<FluidType> STREPTOKINASE_TYPE = FLUID_TYPES.register("streptokinase", () -> new MedicalFluidType(FluidType.Properties.create(), 0x0aecfc));
     public static final RegistryObject<MedicalFluid> STREPTOKINASE = FLUIDS.register("streptokinase", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.STREPTOKINASE_TYPE, ModFluids.STREPTOKINASE, ModFluids.STREPTOKINASE), MedicalEffects.STREPTOKINASE));
 
@@ -77,6 +83,9 @@ public class ModFluids {
 
     public static final RegistryObject<FluidType> SALINE_TYPE = FLUID_TYPES.register("saline", () -> new MedicalFluidType(FluidType.Properties.create(), 0xc9c8c5));
     public static final RegistryObject<MedicalFluid> SALINE = FLUIDS.register("saline", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SALINE_TYPE, ModFluids.SALINE, ModFluids.SALINE), MedicalEffects.SALINE));
+
+    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(FluidType.Properties.create(), -7862264));
+    public static final RegistryObject<MedicalFluid> BLOOD = FLUIDS.register("blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.BLOOD), MedicalEffects.BLOOD));
 
     public static final RegistryObject<FluidType> CHOCOLATE_MILK_TYPE = FLUID_TYPES.register("chocolate_milk", () -> new MedicalFluidType(FluidType.Properties.create(), 0x2e251c));
     public static final RegistryObject<MedicalFluid> CHOCOLATE_MILK = FLUIDS.register("chocolate_milk", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CHOCOLATE_MILK_TYPE, ModFluids.CHOCOLATE_MILK, ModFluids.CHOCOLATE_MILK), MedicalEffects.CHOCOLATE_MILK));

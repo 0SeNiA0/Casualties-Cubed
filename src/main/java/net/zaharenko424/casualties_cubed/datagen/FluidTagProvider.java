@@ -1,4 +1,4 @@
-package net.zaharenko424.casualties_cubed.fluid_system;
+package net.zaharenko424.casualties_cubed.datagen;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +28,6 @@ public class FluidTagProvider extends TagsProvider<Fluid> {
                         PAINKILLERS.getKey(), RELIEF_CREAM.getKey()});
 
         tag(CasualtiesCubedTags.Fluid.DISINFECTING)
-                .add(new ResourceKey[]{ALCOHOL.getKey(), ANTISEPTIC.getKey()});
+                .add(new ResourceKey[]{ALCOHOL.getKey(), ANTISEPTIC.getKey(), BLEACH.getKey()});
     }
 }

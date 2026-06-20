@@ -75,12 +75,14 @@ public class CommonEvent {
                 case "brain_grow" -> mapping.remap(ModItems.BRAIN_GROW_PILLS.get());
                 case "ceftriaxone" -> mapping.remap(ModItems.CEFTRIAXONE_VIAL.get());
                 case "painkillers" -> mapping.remap(ModItems.PAINKILLERS_PILLS.get());
-                case "saline" -> mapping.remap(ModItems.SALINE_SYRINGE.get());
+                case "saline", "saline_bag" -> mapping.remap(ModItems.IV_BAG.get());
                 case "relief_cream" -> mapping.remap(ModItems.RELIEF_CREAM_BOTTLE.get());
                 case "heroin_vial" -> mapping.remap(ModItems.HEROIN_SYRINGE.get());
                 case "alganate_dressing" -> mapping.remap(ModItems.ALGINATE_DRESSING.get());
                 case "reaction_vial" -> mapping.remap(ModItems.MEDICINE_VIAL.get());
                 case "scav_plushie" -> mapping.remap(ModItems.EXPIE_PLUSHY.get());
+
+                case "bottle" -> mapping.remap(ModItems.WATER_BOTTLE.get());
             }
         }
     }

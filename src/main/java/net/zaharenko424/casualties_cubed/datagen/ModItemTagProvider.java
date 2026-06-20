@@ -31,7 +31,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(CasualtiesCubedTags.Item.VIAL_ITEMS)
                 .add(ModItems.MEDICINE_VIAL.get(),
-                        ModItems.BOTTLE.get(),
+                        ModItems.WATER_BOTTLE.get(),
                         ModItems.PILL_BOTTLE.get(),
                         ModItems.AUTO_INJECTOR.get(),
                         ModItems.ANTISERUM_INJECTOR.get(),
