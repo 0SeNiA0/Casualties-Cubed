@@ -17,7 +17,11 @@ public class SepsisMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return MoodleStatus.NONE;
+        float sepsis = data.getSepsis();
+
+        if (sepsis > 80) return MoodleStatus.CRITICAL_NEG;
+        if (sepsis > 50) return MoodleStatus.HEAVY_NEG;
+        return sepsis > 10 ? MoodleStatus.NORMAL_NEG : MoodleStatus.NONE;
     }
 
     @Override

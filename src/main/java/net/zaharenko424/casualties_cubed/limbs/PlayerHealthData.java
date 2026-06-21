@@ -88,6 +88,8 @@ public class PlayerHealthData {
     private float temperature = 36.6f;
     private float hearingLoss = 0;
     private float flashHearingLoss = 0;
+    private float sepsis = 0;
+    private float sickness = 0;
 
     private boolean leftEyeBlind = false;
     private boolean RightEyeBlind = false;
@@ -367,6 +369,21 @@ public class PlayerHealthData {
         return hungerLevel / 20f;
     }
 
+    public float getSepsis() {
+        return sepsis;
+    }
+
+    public void setSepsis(float value) {
+        this.sepsis = Mth.clamp(value, 0, 100);
+    }
+
+    public float getSickness() {
+        return sickness;
+    }
+
+    public void setSickness(float sickness) {
+        this.sickness = Mth.clamp(sickness, 0, 100);
+    }
 
     public ChipState getChip() {
         return ChipState.ACTIVE;
@@ -715,23 +732,30 @@ public class PlayerHealthData {
             }
         }
 
+        float totalInfection = 0;
+
         // Update each limb
+        LimbStatistics stats;
         for (Limb limb : limbStats.keySet()) {
-            getLimb(limb).tick(limb);
+            stats = getLimb(limb);
+            stats.tick(limb);
+            totalInfection += stats.getInfection();
         }
 
-        if (ServerConfig.LIMB_REGROWTH.get() && player.hasEffect(MobEffects.REGENERATION)) {
-            int amplifier = player.getEffect(MobEffects.REGENERATION).getAmplifier();
-            if (amplifier >= ServerConfig.LIMB_REGROWTH_MIN_REGEN.get()) {
-                List<Limb> amputated = new ArrayList<>();
-                for (Limb limb : limbStats.keySet()) {
-                    if (limbStats.get(limb).isAmputated() && !limbStats.get(limb.getConnectedTo()).isAmputated()) amputated.add(limb);
-                }
+        //Sepsis
+        if (totalInfection > 100) {
+            setSepsis(sepsis + 0.0277f / 20 * totalInfection / 100);
+        } else setSepsis(sepsis - 0.07f / 20);
 
-                float regenAmount = (float) amplifier / amputated.size();
-                amputated.forEach(limb -> limbStats.get(limb).progressRegrowth(regenAmount));
-            }
+        //Sickness
+        setSickness(sickness - 2.4f / 60 / 20);
+        if (sickness > 85) {
+            stats = getLimb(Limb.CHEST);
+            if (stats.getInfection() <= 0) stats.addInfection(1);
         }
+
+        //Limb regrowth
+        maybeRegrowLimbs(player);
 
         recalcTotalPain();
         if (totalPain > 75) {
@@ -785,6 +809,8 @@ public class PlayerHealthData {
 
         if (brainHealth < 30) consciousnessCap = 0;
 
+        if (sickness > 50) consciousnessCap = Math.min(consciousnessCap, 100 - (sickness - 50));
+
         if (Opioids > 0) {
             drugAddition += 0.05f / 20f;
         } else {
@@ -796,7 +822,7 @@ public class PlayerHealthData {
         }
 
         // Respiratory arrest condition
-        respiratoryArrest = isFreezing || getNetOpioids() > 100 || blood >= 5.7 || getLimb(Limb.CHEST).getMuscleHealth() < 5 || getLimb(Limb.HEAD).isTourniquet();
+        respiratoryArrest = isFreezing || getNetOpioids() > 100 || blood >= 5.7 || getLimb(Limb.CHEST).getMuscleHealth() < 5 || getLimb(Limb.HEAD).isTourniquet() || sepsis > 99;
 
         // Oxygen cap — based on blood volume and hemothorax
         OxygenCap = 100;
@@ -806,7 +832,7 @@ public class PlayerHealthData {
         }
         OxygenCap += (-2.0f / 3.0f) * hemothorax;
         OxygenCap -= bloodViscosity;
-        OxygenCap = Math.max(0, OxygenCap);
+        OxygenCap = Math.max(0, Math.min(OxygenCap, 100 - sepsis * 0.72f));
 
         // Breathing & oxygen change
         isBreathing = (!isUnderwater || player.getEffect(MobEffects.WATER_BREATHING) != null) && !respiratoryArrest && !player.isInWall();
@@ -886,6 +912,21 @@ public class PlayerHealthData {
         }
 
         blood = Math.max(0, blood);
+    }
+
+    private void maybeRegrowLimbs(ServerPlayer player) {
+        if (ServerConfig.LIMB_REGROWTH.get() && player.hasEffect(MobEffects.REGENERATION)) {
+            int amplifier = player.getEffect(MobEffects.REGENERATION).getAmplifier();
+            if (amplifier >= ServerConfig.LIMB_REGROWTH_MIN_REGEN.get()) {
+                List<Limb> amputated = new ArrayList<>();
+                for (Limb limb : limbStats.keySet()) {
+                    if (limbStats.get(limb).isAmputated() && !limbStats.get(limb.getConnectedTo()).isAmputated()) amputated.add(limb);
+                }
+
+                float regenAmount = (float) amplifier / amputated.size();
+                amputated.forEach(limb -> limbStats.get(limb).progressRegrowth(regenAmount));
+            }
+        }
     }
 
     public void calculateBrain() {
@@ -1063,6 +1104,8 @@ public class PlayerHealthData {
         nbt.putBoolean("MouthMissing", isMouthRemoved);
         nbt.putFloat("HearingLoss", hearingLoss);
         nbt.putFloat("FlashHearing", flashHearingLoss);
+        nbt.putFloat("Sepsis", sepsis);
+        nbt.putFloat("Sickness", sickness);
         nbt.putBoolean("LastStand", LastStand);
         nbt.putFloat("Stability", Stability);
 
@@ -1147,6 +1190,10 @@ public class PlayerHealthData {
             hearingLoss = nbt.getFloat("HearingLoss");
         if (nbt.contains("FlashHearing"))
             flashHearingLoss = nbt.getFloat("FlashHearing");
+        if (nbt.contains("Sepsis"))
+            sepsis = nbt.getFloat("Sepsis");
+        if (nbt.contains("Sickness"))
+            sickness = nbt.getFloat("Sickness");
         if (nbt.contains("LastStand"))
             LastStand = nbt.getBoolean("LastStand");
         if (nbt.contains("Stability"))
@@ -1201,39 +1248,41 @@ public class PlayerHealthData {
     }
 
     public void copyFrom(PlayerHealthData other) {
-        this.blood = other.blood;
-        this.totalPain = other.totalPain;
-        this.consciousness = other.consciousness;
-        this.consciousnessCap = other.consciousnessCap;
-        this.hemothorax = other.hemothorax;
-        this.hemothoraxPain = other.hemothoraxPain;
-        this.internalBleeding = other.internalBleeding;
-        this.Oxygen = other.Oxygen;
-        this.OxygenCap = other.OxygenCap;
-        this.Opioids = other.Opioids;
-        this.BPM = other.BPM;
-        this.isBreathing = other.isBreathing;
-        this.bloodViscosity = other.bloodViscosity;
-        this.brainHealth = other.brainHealth;
-        this.immunity = other.immunity;
-        this.antibioticTimer = other.antibioticTimer;
-        this.drugAddition = other.drugAddition;
-        this.Shock = other.Shock;
-        this.dirtiness = other.dirtiness;
-        this.temperature = other.temperature;
-        this.adrenaline = other.adrenaline;
-        this.lifeSupportTimer = other.lifeSupportTimer;
-        this.isMouthRemoved = other.isMouthRemoved;
-        this.leftEyeBlind = other.leftEyeBlind;
-        this.RightEyeBlind = other.RightEyeBlind;
-        this.hearingLoss = other.hearingLoss;
-        this.flashHearingLoss = other.flashHearingLoss;
-        this.LastStand = other.LastStand;
-        this.Stability = other.Stability;
+        blood = other.blood;
+        totalPain = other.totalPain;
+        consciousness = other.consciousness;
+        consciousnessCap = other.consciousnessCap;
+        hemothorax = other.hemothorax;
+        hemothoraxPain = other.hemothoraxPain;
+        internalBleeding = other.internalBleeding;
+        Oxygen = other.Oxygen;
+        OxygenCap = other.OxygenCap;
+        Opioids = other.Opioids;
+        BPM = other.BPM;
+        isBreathing = other.isBreathing;
+        bloodViscosity = other.bloodViscosity;
+        brainHealth = other.brainHealth;
+        immunity = other.immunity;
+        antibioticTimer = other.antibioticTimer;
+        drugAddition = other.drugAddition;
+        Shock = other.Shock;
+        dirtiness = other.dirtiness;
+        temperature = other.temperature;
+        adrenaline = other.adrenaline;
+        lifeSupportTimer = other.lifeSupportTimer;
+        isMouthRemoved = other.isMouthRemoved;
+        leftEyeBlind = other.leftEyeBlind;
+        RightEyeBlind = other.RightEyeBlind;
+        hearingLoss = other.hearingLoss;
+        flashHearingLoss = other.flashHearingLoss;
+        sepsis = other.sepsis;
+        sickness = other.sickness;
+        LastStand = other.LastStand;
+        Stability = other.Stability;
 
-        this.changeEntries.clear();
+        changeEntries.clear();
         for (DelayedChangeEntry entry : other.changeEntries) {
-            this.changeEntries.add(new DelayedChangeEntry(entry.getAmount_per_tick(), entry.getTicks(), entry.getLimb()));
+            changeEntries.add(new DelayedChangeEntry(entry.getAmount_per_tick(), entry.getTicks(), entry.getLimb()));
         }
 
         for (Map.Entry<Limb, LimbStatistics> entry : other.limbStats.entrySet()) {
@@ -1282,6 +1331,8 @@ public class PlayerHealthData {
         RightEyeBlind = false;
         hearingLoss = 0;
         flashHearingLoss = 0;
+        sepsis = 0;
+        sickness = 0;
         LastStand = false;
         isRagdolled = false;
         Stability = 100;
@@ -1937,7 +1988,7 @@ public class PlayerHealthData {
         float antibiotics_bonus = antibioticTimer > 0 ? 60 : 0;
         float hunder_bonus = hungerLevel - 10;
         antibioticTimer = Math.max(antibioticTimer - 1, 0);
-        immunity = 100 + temp_bonus + blood_bonus + dirtiness_bonus + antibiotics_bonus + hunder_bonus;
+        immunity = 100 + temp_bonus + blood_bonus + dirtiness_bonus + antibiotics_bonus + hunder_bonus - 0.8f * sickness;
     }
 
     public void updateDirtyness(Player player) {

@@ -17,7 +17,13 @@ public class SicknessMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return MoodleStatus.NONE;
+        float sickness = data.getSickness();
+
+        if (sickness > 75) return MoodleStatus.CRITICAL_NEG;
+        if (sickness > 50) return MoodleStatus.HEAVY_NEG;
+        if (sickness > 30) return MoodleStatus.NORMAL_NEG;
+
+        return sickness > 10 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
     }
 
     @Override
