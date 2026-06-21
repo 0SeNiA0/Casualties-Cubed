@@ -80,6 +80,9 @@ public class MoodleController {
         tmp.add(new DislocatedJawMoodle());
         tmp.add(new DislocatedSpineMoodle());
         tmp.add(new InfectionMoodle());
+        tmp.add(new SepsisMoodle());
+        tmp.add(new ToxicosisMoodle());
+        tmp.add(new SicknessMoodle());
         tmp.add(new TemperatureMoodle());
         tmp.add(new HearingLossMoodle());
         tmp.add(new DirtynessMoodle());

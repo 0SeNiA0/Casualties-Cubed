@@ -185,6 +185,31 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("immunocompromised.title", "Immunocompromised");
         addMoodle("immunocompromised.description", "Your immune system is severely weakened, be it due to dirtiness, hunger, thirst or more. Infections are much more dangerous. Take better care of yourself.");
 
+        addMoodle("sepsis.title2", "Sepsis");
+        addMoodle("sepsis.description2", "A widespread infection is causing your body to react badly. You feel confused, with lowered blood pressure and a fever. Lethal if progresses.");
+        addMoodle("sepsis.title3", "Severe sepsis");
+        addMoodle("sepsis.description3", "Increased heart rate, lowered blood pressure, lightheadedness and a strong fever. Signs of organ dysfunction. Likely to soon enter septic shock.");
+        addMoodle("sepsis.title4", "Septic shock");
+        addMoodle("sepsis.description4", "You couldn't stop for death, so death has kindly stopped by for you. Circulatory collapse imminent.");
+
+        addMoodle("toxicosis.title1", "Mild toxicosis");
+        addMoodle("toxicosis.description1", "Slight hemotoxin presence in the bloodstream.");
+        addMoodle("toxicosis.title2", "Toxicosis");
+        addMoodle("toxicosis.description2", "Hemotoxin present in the bloodstream, impairing blood clotting and destroying blood cells. Watch for vital signs.");
+        addMoodle("toxicosis.title3", "Severe toxicosis");
+        addMoodle("toxicosis.description3", "Large amount of hemotoxin present in the bloodstream, clogging your blood and destroying blood cells. Watch for vital signs.");
+        addMoodle("toxicosis.title4", "Toxic crisis");
+        addMoodle("toxicosis.description4", "Your blood more closely resembles marmalade than something that can upkeep life.");
+
+        addMoodle("sickness.title1", "Queasy");
+        addMoodle("sickness.description1", "Feeling discomfort. Minorly sick.");
+        addMoodle("sickness.title2", "Nauseous");
+        addMoodle("sickness.description2", "Confused, uncomfortable around the stomach. Prone to vomiting.");
+        addMoodle("sickness.title3", "Sick");
+        addMoodle("sickness.description3", "Lethargic, tired and in major discomfort. Very prone to vomiting.");
+        addMoodle("sickness.title4", "Grossly sick");
+        addMoodle("sickness.description4", "Dangerously sick. Something is VERY wrong on the inside. Weak, confused and in a world of pain.");
+
         addMoodleO("bleeding.title1", "Minor Bleeding");
         addMoodleO("bleeding.description1", "Blood is slowly escaping. No imidiate danger.");
         addMoodleO("bleeding.title2", "Bleeding");
