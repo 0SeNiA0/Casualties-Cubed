@@ -87,6 +87,11 @@ public class ModFluids {
     public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(FluidType.Properties.create(), -7862264));
     public static final RegistryObject<MedicalFluid> BLOOD = FLUIDS.register("blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.BLOOD), MedicalEffects.BLOOD));
 
+
+    public static final RegistryObject<FluidType> ANTIVENOM_TYPE = FLUID_TYPES.register("antivenom", () -> new MedicalFluidType(FluidType.Properties.create(), -12792486));
+    public static final RegistryObject<MedicalFluid> ANTIVENOM = FLUIDS.register("antivenom", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTIVENOM_TYPE, ModFluids.ANTIVENOM, ModFluids.ANTIVENOM), MedicalEffect.EMPTY));
+
+
     public static final RegistryObject<FluidType> CHOCOLATE_MILK_TYPE = FLUID_TYPES.register("chocolate_milk", () -> new MedicalFluidType(FluidType.Properties.create(), 0x2e251c));
     public static final RegistryObject<MedicalFluid> CHOCOLATE_MILK = FLUIDS.register("chocolate_milk", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CHOCOLATE_MILK_TYPE, ModFluids.CHOCOLATE_MILK, ModFluids.CHOCOLATE_MILK), MedicalEffects.CHOCOLATE_MILK));
 

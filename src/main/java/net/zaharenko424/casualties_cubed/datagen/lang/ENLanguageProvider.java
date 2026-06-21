@@ -124,6 +124,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.REACTION_LIQUID, "Slightly acidic liquid made from glow fruits. Has some reactive properties.");
         addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "Who doesn't like chocolate milk?");
         addMedicalFluidWDesc(ModFluids.LRD_SERUM, "LRD Serum", "Special mixture used by a Localized Resuscitation Device. Does nothing when injected with other means. Unpleasant taste.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");
 
         add("key.casualties_cubed.open_pain_gui", "Open Health Screen");
         add("key.casualties_cubed.give_up", "Give Up");
