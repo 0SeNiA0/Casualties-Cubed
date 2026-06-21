@@ -45,22 +45,22 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemWDesc(DRESSING, "Bandage", "Basic bandage for covering and protecting wounds.");
         addItemFromIdWDesc(PLASTIC_DRESSING, "Stronger bandage that protects wounds more effectively.");
         addItemFromIdWDesc(STERILIZED_DRESSING, "Cleans and covers wounds, preventing infection.");
-        addItemFromIdWDesc(CANTEEN, "Simple, small bottle for holding 300mb of liquid.");
-        addItemFromIdWDesc(WATER_BOTTLE, "A plastic bottle that can hold 0.5B of liquid.");
-        addItemFromIdWDesc(WATER_JUG, "Big, heavy plastic bottle. Stores 3B of liquid.");
-        addItemFromIdWDesc(ALCOHOL_BOTTLE, "A glass bottle that can hold 0.5B of liquid.");
+        addItemFromIdWDesc(CANTEEN, "Simple, small bottle for holding 300ml of liquid.");
+        addItemFromIdWDesc(WATER_BOTTLE, "A plastic bottle that can hold 0.5L of liquid.");
+        addItemFromIdWDesc(WATER_JUG, "Big, heavy plastic bottle. Stores 3L of liquid.");
+        addItemFromIdWDesc(ALCOHOL_BOTTLE, "A glass bottle that can hold 0.5L of liquid.");
         addItemFromIdWDesc(ICE_PACK, "Reduces swelling and eases sore muscles.");
-        addItemWDesc(IV_BAG, "IV Bag", "A 750mb fluid bag with a needle at the end.");
-        addItemWDesc(OPIUM_VIAL, "Poppy Extract Vial", "A 100mb bottle. The overdose label says 200mb.");
-        addItemFromIdWDesc(MORPHINE_VIAL, "A 100mb bottle. The overdose label says 90mb.");
-        addItemFromIdWDesc(HEROIN_SYRINGE, "A 150mb syringe for intravenous injection. The dosage marks are scratched off.");
-        addItemFromIdWDesc(FENTANYL_VIAL, "A 100mb bottle containing diluted fentanyl for pain relief. The overdose label says 20mb.");
-        addItemFromIdWDesc(NALOXONE_VIAL, "A 100mb bottle. The label reads \"Nal...\" — the rest is unreadable.");
-        addItemFromIdWDesc(PAINKILLERS_PILLS, "A 100mb pill bottle. The dosage is 10mb.");
-        addItemFromIdWDesc(ANTIBIOTICS_PILLS, "A 100mb bottle of antibiotic pills. The dose is 10mb.");
-        addItemFromIdWDesc(PROCOAGULANT_INJECTOR, "A 100mb bottle with an autoinjector attached. The dosage is 34mb.");
-        addItemFromIdWDesc(WOUND_GLUE_SPRAY, "A 80mb spray bottle. Sprays 20mb of liquid at a time.");
-        addItemFromIdWDesc(STREPTOKINASE_INJECTOR, "A 100mb bottle with an autoinjector attached. The dosage is 34mb.");
+        addItemWDesc(IV_BAG, "IV Bag", "A 750ml fluid bag with a needle at the end.");
+        addItemWDesc(OPIUM_VIAL, "Poppy Extract Vial", "A 100ml bottle. The overdose label says 200ml.");
+        addItemFromIdWDesc(MORPHINE_VIAL, "A 100ml bottle. The overdose label says 90ml.");
+        addItemFromIdWDesc(HEROIN_SYRINGE, "A 150ml syringe for intravenous injection. The dosage marks are scratched off.");
+        addItemFromIdWDesc(FENTANYL_VIAL, "A 100ml bottle containing diluted fentanyl for pain relief. The overdose label says 20ml.");
+        addItemFromIdWDesc(NALOXONE_VIAL, "A 100ml bottle. The label reads \"Nal...\" — the rest is unreadable.");
+        addItemFromIdWDesc(PAINKILLERS_PILLS, "A 100ml pill bottle. The dosage is 10ml.");
+        addItemFromIdWDesc(ANTIBIOTICS_PILLS, "A 100ml bottle of antibiotic pills. The dose is 10ml.");
+        addItemFromIdWDesc(PROCOAGULANT_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
+        addItemFromIdWDesc(WOUND_GLUE_SPRAY, "A 80ml spray bottle. Sprays 20ml of liquid at a time.");
+        addItemFromIdWDesc(STREPTOKINASE_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
         addItemFromIdWDesc(SPLINT, "Stabilizes broken bones and aids healing.");
         addItemFromIdWDesc(TWEEZERS, "Removes shrapnel, glass, or debris from wounds.");
         addItemFromIdWDesc(TOURNIQUET, "Stops heavy bleeding but limits blood flow.");
@@ -68,29 +68,29 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemWDesc(MEDIUM_MEDIBAG, "Medium Medical Bag", "A balanced pack with room for eight items.");
         addItemWDesc(LARGE_MEDIBAG, "Large Medical Bag", "A spacious medical kit that can hold up to twelve items.");
         addItemFromIdWDesc(ADHESIVE_BANDAGE, "Simple adhesive bandages usually used on small cuts and bruises.");
-        addItemFromIdWDesc(CEFTRIAXONE_VIAL, "A 100mb bottle. The safe dose label says \"may vary.\"");
-        addItemFromIdWDesc(BLEACH_JUG, "A 1.5B jug for storing bleach. Applies 100mb of liquid at a time.");
-        addItemFromIdWDesc(MEDICINE_VIAL, "A 100mb bottle meant for medicine.");
-        addItemFromIdWDesc(ANTISEPTIC_SPRAY, "A 200mb spray bottle. Sprays 10mb of liquid at a time.");
-        addItemFromIdWDesc(RELIEF_CREAM_BOTTLE, "A 200mb bottle. The label warns, \"Do not use more than 10 bottles in one day.\"");
-        addItemFromIdWDesc(ANTISERUM_INJECTOR, "A 100mb bottle with an autoinjector attached. The dosage is 50mb.");
-        addItemWDesc(BRAIN_GROW_PILLS, "BrainGrow Pill Bottle", "A 50mb bottle. The label says, \"Take up to one dose per day.\"");
-        addItemFromIdWDesc(SYRINGE, "A 100mb syringe for intravenous injection.");
+        addItemFromIdWDesc(CEFTRIAXONE_VIAL, "A 100ml bottle. The safe dose label says \"may vary.\"");
+        addItemFromIdWDesc(BLEACH_JUG, "A 1.5L jug for storing bleach. Applies 100ml of liquid at a time.");
+        addItemFromIdWDesc(MEDICINE_VIAL, "A 100ml bottle meant for medicine.");
+        addItemFromIdWDesc(ANTISEPTIC_SPRAY, "A 200ml spray bottle. Sprays 10ml of liquid at a time.");
+        addItemFromIdWDesc(RELIEF_CREAM_BOTTLE, "A 200ml bottle. The label warns, \"Do not use more than 10 bottles in one day.\"");
+        addItemFromIdWDesc(ANTISERUM_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 50ml.");
+        addItemWDesc(BRAIN_GROW_PILLS, "BrainGrow Pill Bottle", "A 50ml bottle. The label says, \"Take up to one dose per day.\"");
+        addItemFromIdWDesc(SYRINGE, "A 100ml syringe for intravenous injection.");
         addItemFromIdWDesc(OLD_RAG, "A worn piece of cloth. Can be used as a makeshift dressing.");
         addItemFromIdWDesc(RIPPED_DRESSING, "A worn piece of what used to be a bandage. Can be used as a makeshift dressing.");
         addItemFromIdWDesc(BRUISE_KIT, "A combination of various medicines, made to aid sore muscles. Cannot stop the bleeding.");
         addItemFromIdWDesc(ALGINATE_DRESSING, "A specially treated piece of a dressing. Slows down bleeding and highly improves skin healing.");
         addItemFromIdWDesc(MEDICAL_GAUZE, "Woven gauze containing painkilling drugs. Decent at slowing bleeding and reducing pain from injuries.");
         addItemWDesc(BONE_WELDER, "Bone Welding Tool", "An experimental piece of technology. Welds the bone structure back together. Causes some damage on the way in.");
-        addItemWDesc(LRD, "L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. Many thank their lives to this piece of machinery. Holds 75mb of fluid. Needs at least 25mb of LRD serum to function");
-        addItemWDesc(MAKESHIFT_LRD, "Makeshift L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. This one seems to be crudely made. Holds 50mb of fluid. Needs at least 25mb of LRD serum to function");
+        addItemWDesc(LRD, "L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. Many thank their lives to this piece of machinery. Holds 75ml of fluid. Needs at least 25ml of LRD serum to function");
+        addItemWDesc(MAKESHIFT_LRD, "Makeshift L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. This one seems to be crudely made. Holds 50ml of fluid. Needs at least 25ml of LRD serum to function");
         addItemFromIdWDesc(MEDICAL_SUTURE, "Used to stitch wounds back together. Instantly stops most of the bleeding.");
         addItemFromIdWDesc(HEAT_PACK, "A slightly larger chemical hand warmer. Aids in healing of muscles slightly.");
         addItemFromIdWDesc(AUTO_PUMP, "A very advanced Life support device with internal batteries. Keeps oxygen at stable levels,provides adrenaline and energy. Batteries last about 5min. Usable on Chest");
         addItemFromIdWDesc(THERMOMETER, "A small device that reads the temperature around the user.");
         addItemFromId(SimpleEarProtection);
-        addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10mb.");
-        addItemFromIdWDesc(AUTO_INJECTOR, "A 100mb bottle with an autoinjector attached. The dosage is 34mb.");
+        addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10ml.");
+        addItemFromIdWDesc(AUTO_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
         addItemFromIdWDesc(GLOW_FRUIT, "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.");
         add(BROWN_CAP.getId().toLanguageKey("item", "description"), "You have no idea what is this fungus. For all you know it can cure cancer or kill you on the spot");
         addItemFromIdWDesc(BROWN_CAP_MUSH, "Probably a bad idea to eat this...");
@@ -106,7 +106,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly dangerous opiate. 100 times stronger than morphine");
         addMedicalFluidFromIdWDesc(ModFluids.HEROIN, "A very strong opiate. Very addicting");
         addMedicalFluidFromIdWDesc(ModFluids.CLEAN_WATER, "Tasteless");
-        addMedicalFluidFromIdWDesc(ModFluids.PAINKILLERS, "Medication for pain relief. Overdose at 80mb");
+        addMedicalFluidFromIdWDesc(ModFluids.PAINKILLERS, "Medication for pain relief. Overdose at 80ml");
         addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special medicine used for heavy concussions and brain trauma. May cause discomfort. Meant to be taken orally");
         addMedicalFluidFromIdWDesc(ModFluids.ALCOHOL, "Highly distilled spirit. Useful for disinfecting wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "A potent disinfecting gel. Stings a lot.");
@@ -155,7 +155,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("minigame.shrapnel", "Shrapnel");
         addGuiO("minigame.inject", "Injection");
         addGuiO("minigame.amputation", "Amputation");
-        addGuiO("fluid_amount", "%1$smb");
+        addGuiO("fluid_amount", "%1$sml");
         addGuiO("hud.oxygen", "O₂ %1$s%%");
         addGuiO("hud.pain", "%1$s%%");
         addGuiO("health.conscious", "CONSCIOUS");
@@ -164,8 +164,8 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("health.muscle", "MUSCLE");
         addGuiO("health.fracture_short", "FRACT");
         addGuiO("health.dislocation_short", "DISL");
-        addGuiO("health.blood_volume", "%1$sB");
-        addGuiO("health.bleed_rate", "%1$sB/m");
+        addGuiO("health.blood_volume", "%1$sL");
+        addGuiO("health.bleed_rate", "%1$sL/m");
         addGuiO("temperature_celsius", "%1$sC");
 
         addContainer("looting", "Looting %1$s");
@@ -386,8 +386,8 @@ public class ENLanguageProvider extends LanguageProvider {
         add(modid + ".multi_tank.hint", "Press SHIFT for fluid description");
 
         addTooltipO("contents", "Contents:");
-        addTooltipO("liquid.amount.with.capacity", "%s / %s mb");
-        addTooltipO("liquid.amount", "%s mb");
+        addTooltipO("liquid.amount.with.capacity", "%s / %s ml");
+        addTooltipO("liquid.amount", "%s ml");
         addTooltipO("percent", "%1$s%%");
 
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
@@ -400,6 +400,6 @@ public class ENLanguageProvider extends LanguageProvider {
         addCommand("fillfluid.error.player_only", "Can only be run by a player");
         addCommand("fillfluid.error.invalid_fluid", "Invalid fluid");
         addCommand("fillfluid.error.no_item", "No compatible item found in main hand");
-        addCommand("fillfluid.success", "Added %1$smb of %2$s to item");
+        addCommand("fillfluid.success", "Added %1$sml of %2$s to item");
     }
 }
