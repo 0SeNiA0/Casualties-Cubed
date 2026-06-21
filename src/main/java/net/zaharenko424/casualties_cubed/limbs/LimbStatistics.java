@@ -103,9 +103,12 @@ public class LimbStatistics {
     }
 
     public void setBurn(float burn) {
-        if (amputated || this.burn == burn) return;
+        if (amputated) return;
 
-        this.burn = Mth.clamp(burn, 0, 100);
+        burn = Mth.clamp(burn, 0, 100);
+        if (this.burn == burn) return;
+
+        this.burn = burn;
         syncNeeded = true;
     }
 

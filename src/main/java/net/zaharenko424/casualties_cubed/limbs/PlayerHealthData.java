@@ -67,7 +67,7 @@ public class PlayerHealthData {
     private float consciousnessCap = 100f;
     private float hemothorax = 0f;
     private float hemothoraxPain = 0f;
-    private float internalBleeding = 0f;
+    private float internalBleeding = 0f;//per minute -> per tick = / 1200
     private float Oxygen = 100f;
     private float OxygenCap = 100;
     private float Opioids = 0;

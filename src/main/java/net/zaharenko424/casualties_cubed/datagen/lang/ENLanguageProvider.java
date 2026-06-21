@@ -45,10 +45,12 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemWDesc(DRESSING, "Bandage", "Basic bandage for covering and protecting wounds.");
         addItemFromIdWDesc(PLASTIC_DRESSING, "Stronger bandage that protects wounds more effectively.");
         addItemFromIdWDesc(STERILIZED_DRESSING, "Cleans and covers wounds, preventing infection.");
-        addItemFromIdWDesc(BOTTLE, "A plastic bottle that can hold 0.25L of liquid.");
+        addItemFromIdWDesc(CANTEEN, "Simple, small bottle for holding 300ml of liquid.");
+        addItemFromIdWDesc(WATER_BOTTLE, "A plastic bottle that can hold 0.5L of liquid.");
+        addItemFromIdWDesc(WATER_JUG, "Big, heavy plastic bottle. Stores 3L of liquid.");
         addItemFromIdWDesc(ALCOHOL_BOTTLE, "A glass bottle that can hold 0.5L of liquid.");
         addItemFromIdWDesc(ICE_PACK, "Reduces swelling and eases sore muscles.");
-        addItemFromIdWDesc(SALINE_SYRINGE, "A 750ml fluid bag with a needle at the end.");
+        addItemWDesc(IV_BAG, "IV Bag", "A 750ml fluid bag with a needle at the end.");
         addItemWDesc(OPIUM_VIAL, "Poppy Extract Vial", "A 100ml bottle. The overdose label says 200ml.");
         addItemFromIdWDesc(MORPHINE_VIAL, "A 100ml bottle. The overdose label says 90ml.");
         addItemFromIdWDesc(HEROIN_SYRINGE, "A 150ml syringe for intravenous injection. The dosage marks are scratched off.");
@@ -57,6 +59,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(PAINKILLERS_PILLS, "A 100ml pill bottle. The dosage is 10ml.");
         addItemFromIdWDesc(ANTIBIOTICS_PILLS, "A 100ml bottle of antibiotic pills. The dose is 10ml.");
         addItemFromIdWDesc(PROCOAGULANT_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
+        addItemFromIdWDesc(WOUND_GLUE_SPRAY, "A 80ml spray bottle. Sprays 20ml of liquid at a time.");
         addItemFromIdWDesc(STREPTOKINASE_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
         addItemFromIdWDesc(SPLINT, "Stabilizes broken bones and aids healing.");
         addItemFromIdWDesc(TWEEZERS, "Removes shrapnel, glass, or debris from wounds.");
@@ -66,6 +69,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemWDesc(LARGE_MEDIBAG, "Large Medical Bag", "A spacious medical kit that can hold up to twelve items.");
         addItemFromIdWDesc(ADHESIVE_BANDAGE, "Simple adhesive bandages usually used on small cuts and bruises.");
         addItemFromIdWDesc(CEFTRIAXONE_VIAL, "A 100ml bottle. The safe dose label says \"may vary.\"");
+        addItemFromIdWDesc(BLEACH_JUG, "A 1.5L jug for storing bleach. Applies 100ml of liquid at a time.");
         addItemFromIdWDesc(MEDICINE_VIAL, "A 100ml bottle meant for medicine.");
         addItemFromIdWDesc(ANTISEPTIC_SPRAY, "A 200ml spray bottle. Sprays 10ml of liquid at a time.");
         addItemFromIdWDesc(RELIEF_CREAM_BOTTLE, "A 100ml bottle. The label warns, \"Do not use more than 10 bottles in one day.\"");
@@ -107,10 +111,13 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.ALCOHOL, "Highly distilled spirit. Useful for disinfecting wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "A potent disinfecting gel. Stings a lot.");
         addMedicalFluidFromIdWDesc(ModFluids.SALINE, "A mix of water, salt, and minerals. Useful for thirst and regaining body liquid.");
+        addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIBIOTICS, "Pills that increase your immunity to infection. For some reason they taste like nickels.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies. Helps when fighting infections. Slightly increases blood volume.");
         addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Very advanced form of injected antibiotic. May cause excruciating chest pain.");
+        addMedicalFluidFromIdWDesc(ModFluids.BLEACH, "Chemical product used to remove color from fiber, or to disinfect. Can be used to disinfect wounds. Drinking is lethal.");
         addMedicalFluidFromIdWDesc(ModFluids.PROCOAGULANT, "A simple blood-clotting agent. Decreases bleeding overall but causes clotting. Dangerous in excess.");
+        addMedicalFluidFromIdWDesc(ModFluids.WOUND_GLUE, "A hemostatic, antibiotic glue-like substance. Fights infection, promotes healing and is very effective at sealing bleeding wounds. Might cause circulation problems - use with care.");
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "A blood thinner. Decreases blood clotting. May cause increased bleeding.");
         addMedicalFluidFromIdWDesc(ModFluids.NALOXONE, "A common opiate antagonist. Used to reverse opioid overdose.");
         addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "A slightly antiseptic cream with soothing properties.");
@@ -177,6 +184,31 @@ public class ENLanguageProvider extends LanguageProvider {
 
         addMoodle("immunocompromised.title", "Immunocompromised");
         addMoodle("immunocompromised.description", "Your immune system is severely weakened, be it due to dirtiness, hunger, thirst or more. Infections are much more dangerous. Take better care of yourself.");
+
+        addMoodle("sepsis.title2", "Sepsis");
+        addMoodle("sepsis.description2", "A widespread infection is causing your body to react badly. You feel confused, with lowered blood pressure and a fever. Lethal if progresses.");
+        addMoodle("sepsis.title3", "Severe sepsis");
+        addMoodle("sepsis.description3", "Increased heart rate, lowered blood pressure, lightheadedness and a strong fever. Signs of organ dysfunction. Likely to soon enter septic shock.");
+        addMoodle("sepsis.title4", "Septic shock");
+        addMoodle("sepsis.description4", "You couldn't stop for death, so death has kindly stopped by for you. Circulatory collapse imminent.");
+
+        addMoodle("toxicosis.title1", "Mild toxicosis");
+        addMoodle("toxicosis.description1", "Slight hemotoxin presence in the bloodstream.");
+        addMoodle("toxicosis.title2", "Toxicosis");
+        addMoodle("toxicosis.description2", "Hemotoxin present in the bloodstream, impairing blood clotting and destroying blood cells. Watch for vital signs.");
+        addMoodle("toxicosis.title3", "Severe toxicosis");
+        addMoodle("toxicosis.description3", "Large amount of hemotoxin present in the bloodstream, clogging your blood and destroying blood cells. Watch for vital signs.");
+        addMoodle("toxicosis.title4", "Toxic crisis");
+        addMoodle("toxicosis.description4", "Your blood more closely resembles marmalade than something that can upkeep life.");
+
+        addMoodle("sickness.title1", "Queasy");
+        addMoodle("sickness.description1", "Feeling discomfort. Minorly sick.");
+        addMoodle("sickness.title2", "Nauseous");
+        addMoodle("sickness.description2", "Confused, uncomfortable around the stomach. Prone to vomiting.");
+        addMoodle("sickness.title3", "Sick");
+        addMoodle("sickness.description3", "Lethargic, tired and in major discomfort. Very prone to vomiting.");
+        addMoodle("sickness.title4", "Grossly sick");
+        addMoodle("sickness.description4", "Dangerously sick. Something is VERY wrong on the inside. Weak, confused and in a world of pain.");
 
         addMoodleO("bleeding.title1", "Minor Bleeding");
         addMoodleO("bleeding.description1", "Blood is slowly escaping. No imidiate danger.");

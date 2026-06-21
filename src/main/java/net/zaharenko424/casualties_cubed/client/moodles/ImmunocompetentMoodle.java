@@ -1,5 +1,6 @@
 package net.zaharenko424.casualties_cubed.client.moodles;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +38,8 @@ public class ImmunocompetentMoodle extends AbstractMoodleVisual {
 
     @Override
     public List<Component> getTooltip(Player player) {
-        return List.of(Component.translatable("gui.casualties_cubed.moodle.immunocompetent.title"),
-                Component.translatable("gui.casualties_cubed.moodle.immunocompetent.description"));
+        return List.of(
+                Component.translatable("gui.casualties_cubed.moodle.immunocompetent.title"),
+                Component.translatable("gui.casualties_cubed.moodle.immunocompetent.description").withStyle(ChatFormatting.GRAY));
     }
 }

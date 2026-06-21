@@ -143,6 +143,30 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect WOUND_GLUE = new MedicalEffect() {
+        @Override
+        public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                LimbStatistics stats = data.getLimb(limb);
+                stats.addSkinHealth(0.5f * ml);
+                stats.addMuscleHealth(0.25f * ml);
+                stats.addInfection(-0.25f * ml);
+                stats.addDisinfectionTimer(300 * ml);
+                stats.addPain(-stats.getPain() * 0.9f * 1/20 * ml);
+                data.setBloodViscosity(data.getBloodViscosity() + 0.75f * ml);
+                //0.1125 sickness
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.setBloodViscosity(data.getBloodViscosity() + 0.075f * ml);
+                //0.263 sickness
+            });
+        }
+    };
+
     public static final MedicalEffect NALOXONE = new MedicalEffect() {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
@@ -241,6 +265,15 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect BLOOD = new MedicalEffect() {
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.setBloodVolume(data.getBloodVolume() + ml * 0.001f);
+            });
+        }
+    };
+
     public static final MedicalEffect ANTIBIOTICS = new MedicalEffect() {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
@@ -255,7 +288,7 @@ public class MedicalEffects {
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.setAntibioticTimer(Math.max(data.getAntibioticTimer(), 6000));
-                data.getLimb(limb).addDisinfectionTimer(70 * ml);
+                data.getLimb(limb).addDisinfectionTimer(72 * ml);
                 data.setBloodVolume(data.getBloodVolume() + 0.001f * ml);
             });
         }
@@ -267,6 +300,43 @@ public class MedicalEffects {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.setAntibioticTimer(data.getAntibioticTimer() + 225 * ml);
                 data.getLimb(Limb.CHEST).addPain(1.5f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect BLEACH = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+                head.addSkinHealth(-0.3f * ml);
+                if (head.getPain() < 50) head.addPain(Math.min(1.5f * ml, 50 - head.getPain()));
+
+                chest.addMuscleHealth(-0.675f * ml);
+                if (chest.getPain() < 50) chest.addPain(Math.min(1.5f * ml, 50 - chest.getPain()));
+
+                data.setInternalBleeding(data.getInternalBleeding() + 0.01f * ml);
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.setBloodViscosity(data.getBloodViscosity() + 0.5f * ml);
+                //1.75 sickness
+            });
+        }
+
+        @Override
+        public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                LimbStatistics stats = data.getLimb(limb);
+                stats.addSkinHealth(-0.2f * ml);
+                stats.addMuscleHealth(-0.15f * ml);
+                stats.addPain(0.25f * ml);
+                stats.addInfection(-0.05f * ml);
+                stats.addDisinfectionTimer(80 * ml);
             });
         }
     };

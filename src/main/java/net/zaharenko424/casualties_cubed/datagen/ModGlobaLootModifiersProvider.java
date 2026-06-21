@@ -160,7 +160,7 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.07f * sanityScale).build()
                 },
-                ModItems.SALINE_SYRINGE.get()
+                ModItems.IV_BAG.get()
         ));
 
         add("add_painkillers", new AddFilledToChestsModifier(
@@ -287,7 +287,7 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(.1f*sanityScale).build()
                 },       // no extra conditions
-                ModItems.BOTTLE.get()
+                ModItems.WATER_BOTTLE.get()
         ));
         add("add_random_pill",new AddRandomFillToChestsModifier(
                 new LootItemCondition[] {
