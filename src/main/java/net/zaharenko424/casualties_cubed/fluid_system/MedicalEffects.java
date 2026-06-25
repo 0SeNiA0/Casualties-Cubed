@@ -308,6 +308,23 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect ANTIVENOM = new MedicalEffect() {
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addVenom(-0.8f * ml);
+            });
+        }
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.setSickness(data.getSickness() + 0.24f * ml);
+            });
+        }
+    };
+
     public static final MedicalEffect ANTISERUM = new MedicalEffect() {
 
         @Override

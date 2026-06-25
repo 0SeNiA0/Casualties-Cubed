@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.limbs;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import org.apache.commons.lang3.BooleanUtils;
 
@@ -211,7 +212,10 @@ public class LimbStatistics {
     }
 
     public void setBleedRate(float bleedRate) {
-        if (amputated || this.bleedRate == bleedRate) return;
+        if (amputated) return;
+
+        bleedRate = Mth.clamp(bleedRate, 0, data.getMAX_BLEED_RATE() * (100 - getSkinHealth()) / 100);
+        if (this.bleedRate == bleedRate) return;
 
         this.bleedRate = bleedRate;
         syncNeeded = true;
@@ -367,9 +371,10 @@ public class LimbStatistics {
     void tick(Limb limb) {
         if (isAmputated()) return;
 
-        //MinpainCalculation
-
-        setMinPain(((getInfection() / 100) * 10) + (((getSkinHealth() - 100) / -100) * 15));
+        if (burn >= 100 && ServerConfig.PERMANENT_DAMAGE.get()) {
+            data.dismember(limb);
+            return;
+        }
 
         //Healing
         if (burn < 25) {
@@ -386,12 +391,10 @@ public class LimbStatistics {
             }
         }
 
-        if (burn >= 100 && ServerConfig.PERMANENT_DAMAGE.get()) {
-            data.dismember(limb);
-            return;
-        }
-
         burn -= .05f;// 1/s
+
+        //MinpainCalculation
+        setMinPain(((getInfection() / 100) * 10) + (((getSkinHealth() - 100) / -100) * 15));
 
         // Pain Adjustment
         float x = getPain() / 100f;
@@ -413,8 +416,18 @@ public class LimbStatistics {
             }
         }
 
-        // Bleed Adjustment
-        setBleedRate(Math.max(0, Math.min(getBleedRate(), data.getMAX_BLEED_RATE() * (Math.abs((getSkinHealth() - 100) / 100)))));
+        if (getInfection() >= 75) {
+            addMuscleHealth(-(ServerConfig.INFECTION_MUSCLE_DRAIN.get().floatValue() / 20f));
+        }
+
+        if (getInfection() <= 0 && limb == Limb.HEAD && getMuscleHealth() < 15) {
+            addMuscleHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f) * 3);
+        }
+
+        // Bleed
+        if (shrapnel == 0 && bleedRate > 0 && data.getVenom() < 20) {
+            addBleedRate(-0.027f * Util.TICK_TO_MIN * (1 - data.getVenom() / 20) * (1 + data.getBloodViscosity() / 100));
+        }
 
         //Fract/Disl calculation
         if (getFracture() > 0 || getDislocation() > 0) {
@@ -428,16 +441,6 @@ public class LimbStatistics {
         if (getDislocation() > 0) {
             float reduction = (ServerConfig.DISLOCATION_HEAL_RATE.get().floatValue() / 20) * (1 + BooleanUtils.toInteger(hasSplint()));
             setDislocation(Mth.clamp(getDislocation() - reduction, 0, 100));
-        }
-
-
-        if (getInfection() >= 75) {
-            addMuscleHealth(-(ServerConfig.INFECTION_MUSCLE_DRAIN.get().floatValue() / 20f));
-        }
-
-
-        if (getInfection() <= 0 && limb == Limb.HEAD && getMuscleHealth() < 15) {
-            addMuscleHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f) * 3);
         }
 
         if (isTourniquet()) {

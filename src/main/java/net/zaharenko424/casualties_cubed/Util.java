@@ -6,6 +6,9 @@ import java.util.Map;
 
 public class Util {
 
+    public static final float TICK_TO_SEC = 1 / 20f;
+    public static final float TICK_TO_MIN = TICK_TO_SEC / 60;
+
     public static int mixColors(Map<Integer, Float> colorRatios) {
         float total = 0f;
         float r = 0f, g = 0f, b = 0f;

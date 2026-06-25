@@ -89,10 +89,10 @@ public class ServerConfig {
                         .defineInRange("oxygenDrain",5d,0,100);
         BLOOD_REGEN_RATE = BUILDER
                 .comment("The rate at which Blood balances itself around 5L at full hunger (L/s)")
-                        .defineInRange("bloodRegen",0.001,0,10);
+                        .defineInRange("bloodRegen",0.000875,0,10);
         MAX_BLEED_RATE = BUILDER
                 .comment("The Maximum Rate of Bleeding from one Limb (L/s)")
-                        .defineInRange("maxBleedRate",0.016,0,10);
+                        .defineInRange("maxBleedRate",0.03,0,10);
         BLOOD_VISCOSITY_REGEN = BUILDER
                 .comment("The rate at which Blood viscosity returns to 0 (pts/s)")
                         .defineInRange("bloodViscosityRegen",0.2,0,100);

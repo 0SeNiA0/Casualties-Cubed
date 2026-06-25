@@ -23,7 +23,13 @@ public class ToxicosisMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return MoodleStatus.NONE;
+        float venom = data.getVenom();
+
+        if (venom > 80) return MoodleStatus.CRITICAL_NEG;
+        if (venom > 55) return MoodleStatus.HEAVY_NEG;
+        if (venom > 25) return MoodleStatus.NORMAL_NEG;
+
+        return venom > 2 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
     }
 
     @Override

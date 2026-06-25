@@ -6,6 +6,7 @@
   "refmap": "casualties_cubed.refmap.json",
   "plugin": "net.zaharenko424.casualties_cubed.mixin.MixingConfig",
   "mixins": [
+    "FoodDataMixin",
     "MessageArgumentMixin",
     "PlayerMixin",
     "ServerPacketListenerMixin"

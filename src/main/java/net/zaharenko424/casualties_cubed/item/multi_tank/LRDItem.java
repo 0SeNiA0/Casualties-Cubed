@@ -49,6 +49,8 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
                     stats.setDisinfectionTimerAtLeast(6000);
                     stats.setBleedRate(stats.getBleedRate() * 0.75f);
                 }
+
+                data.addVenom(-12);
             });
 
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

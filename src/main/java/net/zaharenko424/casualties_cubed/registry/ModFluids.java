@@ -89,7 +89,7 @@ public class ModFluids {
 
 
     public static final RegistryObject<FluidType> ANTIVENOM_TYPE = FLUID_TYPES.register("antivenom", () -> new MedicalFluidType(FluidType.Properties.create(), -12792486));
-    public static final RegistryObject<MedicalFluid> ANTIVENOM = FLUIDS.register("antivenom", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTIVENOM_TYPE, ModFluids.ANTIVENOM, ModFluids.ANTIVENOM), MedicalEffect.EMPTY));
+    public static final RegistryObject<MedicalFluid> ANTIVENOM = FLUIDS.register("antivenom", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTIVENOM_TYPE, ModFluids.ANTIVENOM, ModFluids.ANTIVENOM), MedicalEffects.ANTIVENOM));
 
 
     public static final RegistryObject<FluidType> CHOCOLATE_MILK_TYPE = FLUID_TYPES.register("chocolate_milk", () -> new MedicalFluidType(FluidType.Properties.create(), 0x2e251c));
