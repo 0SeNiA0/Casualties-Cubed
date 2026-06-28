@@ -3,6 +3,7 @@ package net.zaharenko424.casualties_cubed.datagen.recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.CountIngredient;
 import net.zaharenko424.casualties_cubed.registry.ModRecipes;
@@ -55,20 +56,19 @@ public class MedicalMixerRecipeBuilder {
         return this;
     }
 
-    public MedicalMixerRecipeBuilder inputFluid(FluidStack fluidStack) {
-        this.fluidInputs.add(new FluidIngredient(fluidStack.getFluid(), fluidStack.getAmount(), fluidStack.getTag()));
+
+    public MedicalMixerRecipeBuilder inputFluid(TagKey<Fluid> tagKey, int ml) {
+        this.fluidInputs.add(new FluidIngredient(tagKey, ml, null));
         return this;
     }
 
-
-    public MedicalMixerRecipeBuilder inputFluid(TagKey<Fluid> tagKey, int amount) {
-        this.fluidInputs.add(new FluidIngredient(tagKey, amount, null));
+    public MedicalMixerRecipeBuilder inputFluid(Fluid fluid, int ml) {
+        this.fluidInputs.add(new FluidIngredient(fluid, ml, null));
         return this;
     }
 
-    public MedicalMixerRecipeBuilder inputFluid(Fluid fluid, int amount) {
-        this.fluidInputs.add(new FluidIngredient(fluid, amount, null));
-        return this;
+    public MedicalMixerRecipeBuilder inputFluid(RegistryObject<? extends Fluid> fluid, int ml) {
+        return inputFluid(fluid.get(), ml);
     }
 
     /* ------------------- OUTPUTS ------------------- */
@@ -86,6 +86,10 @@ public class MedicalMixerRecipeBuilder {
     public MedicalMixerRecipeBuilder outputFluid(Fluid fluid, int ml) {
         this.fluidOutputs.add(new FluidStack(fluid, ml));
         return this;
+    }
+
+    public MedicalMixerRecipeBuilder outputFluid(RegistryObject<? extends Fluid> fluid, int ml) {
+        return outputFluid(fluid.get(), ml);
     }
 
     /* ------------------- PROCESSING TIME ------------------- */

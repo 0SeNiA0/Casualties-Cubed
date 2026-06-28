@@ -121,7 +121,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "A blood thinner. Decreases blood clotting. May cause increased bleeding.");
         addMedicalFluidFromIdWDesc(ModFluids.NALOXONE, "A common opiate antagonist. Used to reverse opioid overdose.");
         addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "A slightly antiseptic cream with soothing properties.");
-        addMedicalFluidFromIdWDesc(ModFluids.REACTION_LIQUID, "Slightly acidic liquid made from glow fruits. Has some reactive properties.");
+        addMedicalFluidWDesc(ModFluids.BIO_CHEM, "Bio-chem Fluid", "Advanced chemical compound that greatly promotes chemical reactions and is able to mend certain materials together, or even melt them. Very commonly used in crafting.");
         addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "Who doesn't like chocolate milk?");
         addMedicalFluidWDesc(ModFluids.LRD_SERUM, "LRD Serum", "Special mixture used by a Localized Resuscitation Device. Does nothing when injected with other means. Unpleasant taste.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");

@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -52,7 +53,7 @@ public class ModCommands {
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        dispatcher.register(
+        LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
                 Commands.literal("casualties_cubed")
                         .requires(source -> source.hasPermission(0))
                         .then(Commands.literal("heal")
@@ -297,5 +298,6 @@ public class ModCommands {
                                 )
                         )
         );
+        dispatcher.register(Commands.literal("ccu").redirect(node));
     }
 }

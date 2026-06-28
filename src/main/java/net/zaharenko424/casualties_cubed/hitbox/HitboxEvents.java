@@ -1,5 +1,6 @@
 package net.zaharenko424.casualties_cubed.hitbox;
 
+import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -81,6 +82,17 @@ public class HitboxEvents {
         // But prefer to do the full authoritative calculation in LivingDamageEvent.
     }
 
+    private static final List<HitSector> CBC_CHANCES = List.of(
+            HitSector.HEAD,
+            HitSector.TORSO, HitSector.TORSO, HitSector.TORSO,
+            HitSector.RIGHT_ARM, HitSector.LEFT_ARM,
+            HitSector.LEGS, HitSector.LEGS
+    );
+
+    private static HitSector randomCBCSector(Player player) {
+        return Util.getRandom(CBC_CHANCES, player.getRandom());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingDamage(LivingDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
@@ -153,7 +165,7 @@ public class HitboxEvents {
         }
 
         if (src.is(CBCmg) || src.is(CBCmgwat)) {
-            data.handleProjectileDamage(HitSector.getCBCChances(), damageamount, player);
+            data.handleProjectileDamage(randomCBCSector(player), damageamount, player);
             event.setAmount(0);
             return;
         }
@@ -161,14 +173,9 @@ public class HitboxEvents {
         if (src.is(CBCproj) || src.is(CBCprojbig) || src.is(CBCtraff)) {
             if (damageamount < 5) {
                 float finalDamage = damageamount * 15;
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
-                data.handleProjectileDamage(HitSector.getCBCChances(), finalDamage, player);
+                for (int i = 0; i < 8; i++) {
+                    data.handleProjectileDamage(randomCBCSector(player), finalDamage, player);
+                }
             } else {
                 data.handleExplosionDamage(damageamount, true, player);
             }

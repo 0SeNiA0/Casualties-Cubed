@@ -218,7 +218,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         MedicalMixerRecipeBuilder.mixer()
                 .inputFluid(Fluids.WATER,10)
                 .input(ModItems.GLOW_FRUIT.get())
-                .outputFluid(ModFluids.REACTION_LIQUID.get(),10)
+                .outputFluid(ModFluids.BIO_CHEM.get(),10)
                 .save(consumer, CasualtiesCubed.resourceLoc("reaction_liquid"));
 
         MedicalMixerRecipeBuilder.mixer()
@@ -237,7 +237,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(CasualtiesCubedTags.Item.ALCOHOL_CREATABLE,4)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),10)
+                .inputFluid(ModFluids.BIO_CHEM.get(),10)
                 .inputFluid(Fluids.WATER,100)
                 .outputFluid(ModFluids.ALCOHOL.get(),100)
                 .save(consumer, CasualtiesCubed.resourceLoc("alcohol"));
@@ -274,7 +274,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .input(Items.FERMENTED_SPIDER_EYE,1)
                 .input(Items.GLISTERING_MELON_SLICE,4)
                 .inputFluid(ModFluids.MORPHINE.get(),40)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),10)
+                .inputFluid(ModFluids.BIO_CHEM.get(),10)
                 .outputFluid(ModFluids.FENTANYL.get(),5)
                 .save(consumer, CasualtiesCubed.resourceLoc("fentanyl"));
 
@@ -295,7 +295,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         MedicalMixerRecipeBuilder.mixer()
                 .inputFluid(ModFluids.ALCOHOL.get(),100)
                 .input(Items.GUNPOWDER,1)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),10)
+                .inputFluid(ModFluids.BIO_CHEM.get(),10)
                 .outputFluid(ModFluids.ANTISEPTIC.get(),50)
                 .save(consumer, CasualtiesCubed.resourceLoc("antiseptic"));
 
@@ -323,7 +323,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .inputFluid(ModFluids.ANTIBIOTICS.get(),50)
                 .inputFluid(Fluids.WATER,50)
                 .input(Items.FERMENTED_SPIDER_EYE,1)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),10)
+                .inputFluid(ModFluids.BIO_CHEM.get(),10)
                 .outputFluid(ModFluids.ANTISERUM.get(), 25)
                 .save(consumer, CasualtiesCubed.resourceLoc("antiserum"));
 
@@ -337,7 +337,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         MedicalMixerRecipeBuilder.mixer()
                 .processingTime(200)
                 .inputFluid(Fluids.WATER,10)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),50)
+                .inputFluid(ModFluids.BIO_CHEM.get(),50)
                 .input(Items.GUNPOWDER,1)
                 .outputFluid(ModFluids.CEFTRIAXONE.get(), 20)
                 .save(consumer, CasualtiesCubed.resourceLoc("ceftriaxone"));
@@ -365,7 +365,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputFluid(CasualtiesCubedTags.Fluid.OPIOIDS,25)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),25)
+                .inputFluid(ModFluids.BIO_CHEM.get(),25)
                 .input(CasualtiesCubedTags.Item.DRESSINGS,1)
                 .input(Items.STRING,1)
                 .output(ModItems.BRUISE_KIT.get(), 1)
@@ -387,9 +387,17 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         MedicalMixerRecipeBuilder.mixer()
                 .inputFluid(CasualtiesCubedTags.Fluid.DISINFECTING,25)
                 .inputFluid(CasualtiesCubedTags.Fluid.OPIOIDS,25)
-                .inputFluid(ModFluids.REACTION_LIQUID.get(),25)
+                .inputFluid(ModFluids.BIO_CHEM,25)
                 .outputFluid(ModFluids.LRD_SERUM.get(), 25)
                 .save(consumer, CasualtiesCubed.resourceLoc("lrd_serum"));
+
+        MedicalMixerRecipeBuilder.mixer()
+                .inputFluid(ModFluids.BIO_CHEM, 5)
+                .inputFluid(ModFluids.BLOOD, 25)
+                .inputFluid(CasualtiesCubedTags.Fluid.DISINFECTING, 10)
+                .input(Items.SPIDER_EYE)
+                .outputFluid(ModFluids.ANTIVENOM, 50)
+                .save(consumer, CasualtiesCubed.resourceLoc("antivenom"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC,ModItems.MAKESHIFT_LRD.get())
                 .pattern(" I ")

@@ -17,6 +17,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -30,9 +31,11 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.MissingMappingsEvent;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
@@ -44,6 +47,7 @@ import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.packet.ClientboundAmputateRestrictionSyncPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ClientboundBlindnessViewSyncPacket;
 import net.zaharenko424.casualties_cubed.registry.ModBlocks;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.registry.ModGameRules;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 
@@ -83,6 +87,20 @@ public class CommonEvent {
                 case "scav_plushie" -> mapping.remap(ModItems.EXPIE_PLUSHY.get());
 
                 case "bottle" -> mapping.remap(ModItems.WATER_BOTTLE.get());
+            }
+        }
+
+        List<MissingMappingsEvent.Mapping<FluidType>> fluidsTypes = event.getMappings(ForgeRegistries.FLUID_TYPES.get().getRegistryKey(), CasualtiesCubed.MOD_ID);
+        for (MissingMappingsEvent.Mapping<FluidType> mapping : fluidsTypes) {
+            switch (mapping.getKey().getPath()) {
+                case "reaction_liquid" -> mapping.remap(ModFluids.BIO_CHEM_TYPE.get());
+            }
+        }
+
+        List<MissingMappingsEvent.Mapping<Fluid>> fluids = event.getMappings(Registries.FLUID, CasualtiesCubed.MOD_ID);
+        for (MissingMappingsEvent.Mapping<Fluid> mapping : fluids) {
+            switch (mapping.getKey().getPath()) {
+                case "reaction_liquid" -> mapping.remap(ModFluids.BIO_CHEM.get());
             }
         }
     }

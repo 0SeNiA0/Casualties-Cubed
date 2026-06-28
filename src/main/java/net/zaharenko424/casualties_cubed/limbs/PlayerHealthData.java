@@ -383,6 +383,10 @@ public class PlayerHealthData {
         return sickness;
     }
 
+    public void addSickness(float sickness) {
+        setSickness(this.sickness + sickness);
+    }
+
     public void setSickness(float sickness) {
         this.sickness = Mth.clamp(sickness, 0, 100);
     }
@@ -392,7 +396,7 @@ public class PlayerHealthData {
     }
 
     public void addVenom(float value) {
-        venomTotal = Mth.clamp(value, 0, 100);
+        venomTotal = Math.max(0, venomTotal + value);
     }
 
     public ChipState getChip() {
@@ -733,7 +737,7 @@ public class PlayerHealthData {
         if (venomCurrent < venomTotal) venomCurrent += Mth.clamp(venomTotal - venomCurrent, -Util.TICK_TO_SEC, Util.TICK_TO_SEC);
         if (venomCurrent > venomTotal) venomCurrent = venomTotal;
 
-        if (venomTotal > 0) setBloodVolume(blood - 0.05f * Util.TICK_TO_SEC * venomCurrent);
+        if (venomTotal > 0) setBloodVolume(blood - 0.05f * Util.ML_TO_L * Util.TICK_TO_SEC * venomCurrent);
 
         // Blood viscosity
         //TODO lower blood viscosity based on venomCurrent
@@ -1706,7 +1710,7 @@ public class PlayerHealthData {
     public void handleProjectileDamage(HitSector hitSector, float damage, Player player) {
         setAdrenaline(Math.max(getAdrenaline(), damage * 2));
         RandomSource random = player.getRandom();
-        List<Limb> limbList = hitSector.getLimbsPerSector();
+        List<Limb> limbList = hitSector.limbs;
         Limb randomLimb = limbList.get(random.nextInt(limbList.size()));
         LimbStatistics stats = getLimb(randomLimb);
         damage = applyLocationalArmor(randomLimb, damage, player, false, true, false, false);

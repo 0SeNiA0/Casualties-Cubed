@@ -1,0 +1,26 @@
+package net.zaharenko424.casualties_cubed.mixin.entity;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Husk;
+import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(Husk.class)
+public class HuskMixin {
+
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z"),
+            method = "doHurtTarget")
+    private boolean replaceHunger(LivingEntity instance, MobEffectInstance effect, Entity pEntity, Operation<Boolean> original) {
+        if (!(instance instanceof ServerPlayer player)) return original.call(instance, effect, pEntity);
+
+        PlayerHealthData.of(player).ifPresent(data -> data.addSickness(effect.getDuration() * Util.TICK_TO_SEC * 0.75f * (1 + effect.getAmplifier())));
+        return true;
+    }
+}

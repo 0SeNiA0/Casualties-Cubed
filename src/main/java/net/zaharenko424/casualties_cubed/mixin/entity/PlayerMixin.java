@@ -1,4 +1,4 @@
-package net.zaharenko424.casualties_cubed.mixin;
+package net.zaharenko424.casualties_cubed.mixin.entity;
 
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Player.class)
 public abstract class PlayerMixin {
 
-    @Inject(method = "updatePlayerPose",at = @At("HEAD"), cancellable = true)
-    private void pp$forceLaydownPose(CallbackInfo ci) {
-        Player self = (Player)(Object)this;
+    @Inject(method = "updatePlayerPose", at = @At("HEAD"), cancellable = true)
+    private void forceLaydownPose(CallbackInfo ci) {
+        Player self = (Player) (Object) this;
         self.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
             if (h.getConsciousness() <= 10) {
-                if (!(PhysicsUtil.isPhysicsLoaded()&& ServerConfig.PHYS_INTEGRATION.get())) {
+                if (!(PhysicsUtil.isPhysicsLoaded() && ServerConfig.PHYS_INTEGRATION.get())) {
                     self.setPose(Pose.SWIMMING);
                     ci.cancel(); // prevent vanilla from picking another pose
                 }
             }
-            if (h.isAmputated(Limb.RIGHT_LEG)&&h.isAmputated(Limb.LEFT_LEG)&&!self.isPassenger()){
+            if (h.isAmputated(Limb.RIGHT_LEG) && h.isAmputated(Limb.LEFT_LEG) && !self.isPassenger()) {
                 self.setPose(Pose.SWIMMING);
                 ci.cancel();
             }

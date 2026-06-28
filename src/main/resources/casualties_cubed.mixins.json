@@ -8,8 +8,15 @@
   "mixins": [
     "FoodDataMixin",
     "MessageArgumentMixin",
-    "PlayerMixin",
-    "ServerPacketListenerMixin"
+    "ServerPacketListenerMixin",
+    "SuspiciousStewMixin",
+    "entity.ArrowMixin",
+    "entity.BeeMixin",
+    "entity.CaveSpiderMixin",
+    "entity.HuskMixin",
+    "entity.LivingEntityMixin",
+    "entity.PlayerMixin",
+    "entity.PufferfishMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",

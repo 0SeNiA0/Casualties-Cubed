@@ -104,7 +104,7 @@ public class ModCreativeTab {
                         output.accept(MORPHINE_VIAL.get().withDefFluid());
                         output.accept(FENTANYL_VIAL.get().withDefFluid());
                         output.accept(NALOXONE_VIAL.get().withDefFluid());
-                        output.accept(MEDICINE_VIAL.get().withFluid(ModFluids.REACTION_LIQUID));
+                        output.accept(MEDICINE_VIAL.get().withFluid(ModFluids.BIO_CHEM));
 
                         output.accept(PROCOAGULANT_INJECTOR.get().withDefFluid());
                         output.accept(STREPTOKINASE_INJECTOR.get().withDefFluid());
