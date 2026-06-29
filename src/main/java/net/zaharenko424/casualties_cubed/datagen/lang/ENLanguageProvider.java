@@ -211,6 +211,16 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("sickness.title4", "Grossly sick");
         addMoodle("sickness.description4", "Dangerously sick. Something is VERY wrong on the inside. Weak, confused and in a world of pain.");
 
+        addMoodle("wetness.title1", "Damp");
+        addMoodle("wetness.description1", "Your feel slightly wet.");
+        addMoodle("wetness.title2", "Wet");
+        addMoodle("wetness.description2", "Considerably wet. Temperature and comfort decreased.");
+        addMoodle("wetness.title3", "Soaked");
+        addMoodle("wetness.description3", "Dripping wet. Temperature and comfort considerably decreased.");
+        addMoodle("wetness.title4", "Water-logged");
+        addMoodle("wetness.description4", "Completely drenched! The water is weighing you down. Temperature and comfort highly decreased.");
+
+
         addMoodleO("bleeding.title1", "Minor Bleeding");
         addMoodleO("bleeding.description1", "Blood is slowly escaping. No imidiate danger.");
         addMoodleO("bleeding.title2", "Bleeding");
@@ -393,6 +403,7 @@ public class ENLanguageProvider extends LanguageProvider {
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
 
         addCommand("heal.success", "Healed %1$s player(s).");
+        addCommand("coagulate.success", "Coagulated bleeding of %1$s player(s).");
         addCommand("error.unknown_field", "Unknown field: %1$s");
         addCommand("setlimb.success", "Applied value %1$s to %2$s | %3$s for %4$s");
         addCommand("setbody.success", "Applied value %1$s to %2$s for %3$s");

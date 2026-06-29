@@ -92,6 +92,7 @@ public class PlayerHealthData {
     private float sepsis = 0;
     private float sickness = 0;
     private float venomTotal, venomCurrent;
+    private float wetness;
 
     private boolean leftEyeBlind = false;
     private boolean RightEyeBlind = false;
@@ -397,6 +398,14 @@ public class PlayerHealthData {
 
     public void addVenom(float value) {
         venomTotal = Math.max(0, venomTotal + value);
+    }
+
+    public float getWetness() {
+        return wetness;
+    }
+
+    public void addWetness(float wetness) {
+        this.wetness = Mth.clamp(this.wetness + wetness, 0, 100);
     }
 
     public ChipState getChip() {
@@ -726,7 +735,7 @@ public class PlayerHealthData {
         } else setSepsis(sepsis - 0.07f * Util.TICK_TO_SEC);
 
         // Sickness
-        setSickness(sickness - 2.4f * Util.TICK_TO_MIN);
+        addSickness(-2.4f * Util.TICK_TO_MIN);
         if (sickness > 85) {
             stats = getLimb(Limb.CHEST);
             if (stats.getInfection() <= 0) stats.addInfection(1);
@@ -742,6 +751,22 @@ public class PlayerHealthData {
         // Blood viscosity
         //TODO lower blood viscosity based on venomCurrent
         bloodViscosity = Math.max(0, bloodViscosity - ServerConfig.BLOOD_VISCOSITY_REGEN.get().floatValue() * Util.TICK_TO_SEC);
+
+        // Wetness
+        if (player.isInWaterOrBubble()) {
+            if (wetness < 100) addWetness(15 * Util.TICK_TO_SEC);
+        } else {
+            if (player.isInWaterOrRain()) {
+                if (wetness < 100) addWetness((player.level().isThundering() ? 2 : 1) * Util.TICK_TO_SEC);
+            } else addWetness(-(wetness > 75 ? 0.35f : 0.2f) * Util.TICK_TO_SEC);
+
+            if (temperature > 37.5f) {
+                float maxWetness = (temperature - 37.5f) * 20;
+                if (wetness < maxWetness) addWetness(Math.min(maxWetness - wetness, Util.TICK_TO_SEC));
+            }
+
+            temperature -= 0.001f * wetness * Util.TICK_TO_SEC;
+        }
 
         // Limb regrowth
         maybeRegrowLimbs(player);
@@ -1142,6 +1167,7 @@ public class PlayerHealthData {
         nbt.putFloat("Sickness", sickness);
         nbt.putFloat("VenomTotal", venomTotal);
         nbt.putFloat("VenomCurrent", venomCurrent);
+        nbt.putFloat("Wetness", wetness);
         nbt.putBoolean("LastStand", LastStand);
         nbt.putFloat("Stability", Stability);
 
@@ -1234,6 +1260,8 @@ public class PlayerHealthData {
             venomTotal = nbt.getFloat("VenomTotal");
         if (nbt.contains("VenomCurrent"))
             venomCurrent = nbt.getFloat("VenomCurrent");
+        if (nbt.contains("Wetness"))
+            wetness = nbt.getFloat("Wetness");
         if (nbt.contains("LastStand"))
             LastStand = nbt.getBoolean("LastStand");
         if (nbt.contains("Stability"))
@@ -1319,6 +1347,7 @@ public class PlayerHealthData {
         sickness = other.sickness;
         venomTotal = other.venomTotal;
         venomCurrent = other.venomCurrent;
+        wetness = other.wetness;
         LastStand = other.LastStand;
         Stability = other.Stability;
 
@@ -1376,6 +1405,7 @@ public class PlayerHealthData {
         sepsis = 0;
         sickness = 0;
         venomTotal = venomCurrent = 0;
+        wetness = 0;
         LastStand = false;
         isRagdolled = false;
         Stability = 100;

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MoodleController {
 
-    public static final int MOODLE_SIZE = 16;
+    public static final int MOODLE_SIZE = 20;
     public static final int PADDING = 4;
 
     private static final OverflowMoodle overflowMoodle = new OverflowMoodle();
@@ -86,6 +86,7 @@ public class MoodleController {
         tmp.add(new TemperatureMoodle());
         tmp.add(new HearingLossMoodle());
         tmp.add(new DirtynessMoodle());
+        tmp.add(new WetnessMoodle());
             //Side
         tmp.add(new ImmunocompromisedMoodle());
         tmp.add(new DisfiguredMoodle());

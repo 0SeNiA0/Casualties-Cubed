@@ -75,6 +75,27 @@ public class ModCommands {
                                 )
                         )
 
+                        .then(Commands.literal("coagulate")
+                                .requires(source -> source.hasPermission(2))
+                                .then(Commands.argument("targets", EntityArgument.players())
+                                        .executes(ctx -> {
+                                            Collection<ServerPlayer> targets = EntityArgument.getPlayers(ctx, "targets");
+
+                                            for (ServerPlayer player : targets) {
+                                                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                                                    for (Limb limb : Limb.values()) {
+                                                        data.getLimb(limb).setBleedRate(0);
+                                                    }
+                                                    data.setInternalBleeding(0);
+                                                });
+                                            }
+
+                                            ctx.getSource().sendSuccess(() ->
+                                                    Component.translatable("commands.casualties_cubed.coagulate.success", targets.size()), true);
+
+                                            return targets.size();
+                                        })))
+
                         .then(Commands.literal("checklimb")
                                 .requires(source -> source.hasPermission(2))
                                 .then(Commands.argument("target", EntityArgument.player())

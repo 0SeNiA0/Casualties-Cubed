@@ -114,8 +114,8 @@ public abstract class AbstractMoodleVisual {
         if (moodleStatus == null) return;
 
         guiGraphics.blit(moodleStatus.tex, x, y, 0, 0, 16, 16, 16, 16);
-        guiGraphics.blit(moodleStatus.positive ? SQUARE_TEX : RING_TEX, x, y, 0, 0, 16, 16, 16, 16);
+        guiGraphics.blit(moodleStatus.positive ? SQUARE_TEX : RING_TEX, x - 2, y - 2, 20, 20, 0, 0, 40, 40, 40, 40);
     }
 
-    protected abstract void renderIcon(GuiGraphics ms, float partialTicks, int x, int y);
+    protected abstract void renderIcon(GuiGraphics graphics, float partialTicks, int x, int y);
 }
