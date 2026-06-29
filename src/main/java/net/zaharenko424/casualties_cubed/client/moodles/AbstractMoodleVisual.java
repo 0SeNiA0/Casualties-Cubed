@@ -81,7 +81,7 @@ public abstract class AbstractMoodleVisual {
             int endcolor = getCriticalEndColor();
             float pulse = Mth.sin(time * Mth.PI);
 
-            ms.fillGradient(x + 1, (int) (finaly - 20 + (10 * pulse)), x + 15, finaly + 3, endcolor, color);
+            ms.fillGradient(x - 2, (int) (finaly - 20 + (10 * pulse)), x + 18, finaly + 3, endcolor, color);
         }
 
         renderBackground(ms, partialTicks, x, finaly);

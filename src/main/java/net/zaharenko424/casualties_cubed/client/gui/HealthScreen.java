@@ -501,7 +501,7 @@ public class HealthScreen extends Screen {
             helper.openMinigameScreen(target, itemstack, limb, hand);
         }
 
-        if (!itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE) || !(itemstack.getItem() instanceof ISimpleMedicalUsable)) {
+        if (!itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE) && !(itemstack.getItem() instanceof ISimpleMedicalUsable)) {
             return;
         }
 

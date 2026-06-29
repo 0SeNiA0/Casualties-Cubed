@@ -845,8 +845,8 @@ public class PlayerHealthData {
         OxygenCap = 100;
         if (blood < 3) OxygenCap -= (3 - blood) / 0.025f * 0.8f;
         OxygenCap -= 0.3f * hemothorax;
-        if (bloodViscosity > 40) OxygenCap -= bloodViscosity - 40;
-        if (bloodViscosity < -40) OxygenCap += bloodViscosity + 40;
+        if (bloodViscosity > 40) OxygenCap -= (bloodViscosity - 40) * 0.4f;
+        if (bloodViscosity < -40) OxygenCap += (bloodViscosity + 40) * 0.4f;
         OxygenCap -= venomCurrent * 0.5f;
         OxygenCap = Math.max(0, Math.min(OxygenCap, 100 - sepsis * 0.72f));
 
