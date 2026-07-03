@@ -1,5 +1,16 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
+
 public class MakeshiftLRDItem extends LRDItem {
 
     public MakeshiftLRDItem() {
@@ -9,5 +20,36 @@ public class MakeshiftLRDItem extends LRDItem {
     @Override
     public int getCapacity() {
         return 50;
+    }
+
+    @Override
+    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
+        if (MultiTankHelper.getAmountOfFluid(stack, new FluidStack(ModFluids.LRD_SERUM.get(), 1)) >= 25) {
+            if (!source.isCreative()) MultiTankHelper.drainSpecificFluid(stack, 25, new FluidStack(ModFluids.LRD_SERUM.get(), 1));
+
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                LimbStatistics stats = data.getLimb(limb);
+
+                stats.addMuscleHealth(50);
+                stats.addInfection(-10);
+                stats.setDisinfectionTimerAtLeast(8000);
+                data.setAdrenaline(data.getAdrenaline() + 60);
+                stats.setBleedRate(stats.getBleedRate() * 0.7f);
+                data.setPendingOpioids(data.getPendingOpioids() + 10);
+                data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));
+
+                for (Limb limb1 : limb.getConnectedLimbs()) {
+                    stats = data.getLimb(limb1);
+
+                    stats.addMuscleHealth(40);
+                    stats.addInfection(-5);
+                    stats.setDisinfectionTimerAtLeast(6000);
+                }
+
+                if (limb == Limb.CHEST) data.setInternalBleeding(data.getInternalBleeding() * 0.75f);
+            });
+
+            source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
+        }
     }
 }

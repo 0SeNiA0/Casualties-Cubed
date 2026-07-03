@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
@@ -36,10 +37,10 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
                 stats.addMuscleHealth(50);
                 stats.addInfection(-10);
                 stats.setDisinfectionTimerAtLeast(12000);
+                data.setAdrenaline(data.getAdrenaline() + 90);
                 stats.setBleedRate(stats.getBleedRate() * 0.7f);
-
-                data.setInternalBleeding(data.getInternalBleeding() * 0.45f);
-                data.setPendingOpioids(data.getPendingOpioids() + 20);
+                data.setPendingOpioids(data.getPendingOpioids() + 10);
+                data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));
 
                 for (Limb limb1 : limb.getConnectedLimbs()) {
                     stats = data.getLimb(limb1);
@@ -47,10 +48,10 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
                     stats.addMuscleHealth(40);
                     stats.addInfection(-5);
                     stats.setDisinfectionTimerAtLeast(6000);
-                    stats.setBleedRate(stats.getBleedRate() * 0.75f);
+                    stats.setBleedRate(stats.getBleedRate() * 0.85f);
                 }
 
-                data.addVenom(-12);
+                if (limb == Limb.CHEST) data.setInternalBleeding(data.getInternalBleeding() * 0.45f);
             });
 
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

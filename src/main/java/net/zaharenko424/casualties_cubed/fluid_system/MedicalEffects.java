@@ -179,7 +179,7 @@ public class MedicalEffects {
                 chest.addMuscleHealth(-0.675f * ml);
                 if (chest.getPain() < 50) chest.addPain(Math.min(1.5f * ml, 50 - chest.getPain()));
 
-                data.setInternalBleeding(data.getInternalBleeding() + 0.01f * ml);
+                data.setInternalBleeding(data.getInternalBleedingCapped() + 0.01f * ml);
                 data.addSickness(0.9f * ml);
             });
         }
@@ -359,7 +359,7 @@ public class MedicalEffects {
                     stats.setBleedRate(stats.getBleedRate() * bleedScale);
                 }
 
-                data.setInternalBleeding(data.getInternalBleeding() * (1f - ml * 0.01f));
+                data.setInternalBleeding(data.getInternalBleedingCapped() * (1f - ml * 0.01f));
                 data.setBloodViscosity(data.getBloodViscosity() + 0.6f * ml);
             });
         }
@@ -374,7 +374,7 @@ public class MedicalEffects {
                     stats.setBleedRate(stats.getBleedRate() * bleedScale);
                 }
 
-                data.setInternalBleeding(data.getInternalBleeding() * (1f - ml * 0.017f));
+                data.setInternalBleeding(data.getInternalBleedingCapped() * (1f - ml * 0.017f));
                 data.setBloodViscosity(data.getBloodViscosity() + 0.6f * ml);
             });
         }
@@ -392,7 +392,7 @@ public class MedicalEffects {
                     stats.setBleedRate(stats.getBleedRate() * bleedScale);
                 }
 
-                data.setInternalBleeding(data.getInternalBleeding() * (1f + ml * 0.0147f));
+                data.setInternalBleeding(data.getInternalBleedingCapped() * (1f + ml * 0.0147f));
                 data.setBloodViscosity(data.getBloodViscosity() - 0.75f * ml);
                 data.addSickness(10 / 33.34f * ml);
             });
@@ -408,7 +408,7 @@ public class MedicalEffects {
                     stats.setBleedRate(stats.getBleedRate() * bleedScale);
                 }
 
-                data.setInternalBleeding(data.getInternalBleeding() * (1f + ml * 0.0147f));
+                data.setInternalBleeding(data.getInternalBleedingCapped() * (1f + ml * 0.0147f));
                 data.setBloodViscosity(data.getBloodViscosity() - 1.5f * ml);
                 data.addSickness(5 / 33.34f * ml);
             });

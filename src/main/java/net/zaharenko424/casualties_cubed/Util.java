@@ -9,6 +9,17 @@ public class Util {
     public static final float TICK_TO_SEC = 1 / 20f;
     public static final float TICK_TO_MIN = TICK_TO_SEC / 60;
     public static final float ML_TO_L = 1 / 1000f;
+    public static final float CU_BLOOD_POINT_AS_L = 0.025f;
+
+    public static float CUBloodPointsToL(float cuPoints) {
+        return cuPoints * CU_BLOOD_POINT_AS_L;
+    }
+
+    public static float moveTowards(float moveAmount, float start, float end) {
+        if (Math.abs(end - start) <= moveAmount) return end;
+
+        return start + Math.signum(end - start) * moveAmount;
+    }
 
     public static int mixColors(Map<Integer, Float> colorRatios) {
         float total = 0f;

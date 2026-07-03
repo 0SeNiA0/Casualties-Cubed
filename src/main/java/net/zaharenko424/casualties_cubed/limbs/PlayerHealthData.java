@@ -62,13 +62,13 @@ public class PlayerHealthData {
     private final Map<Limb, LimbStatistics> limbStats = new EnumMap<>(Limb.class);
     private final List<DelayedChangeEntry> changeEntries = new ArrayList<>();
 
-    private float blood = 5f;
+    private float blood = 5f;   //! C:U -50 - 200? range, 1 = 0.025L, total body blood = 2.5 + blood * 0.025
     private double totalPain = 0f;
     private float consciousness = 100f;
     private float consciousnessCap = 100f;
     private float hemothorax = 0f;
     private float hemothoraxPain = 0f;
-    private float internalBleeding = 0f;//per minute -> per tick = / 1200
+    private float internalBleeding = 0f;//per minute -> per tick = / 1200 //! C:U uses 0 - 100 range with 1 = 0.0088/m (Body.HandleBody())
     private float Oxygen = 100f;
     private float OxygenCap = 100;
     private float Opioids = 0;
@@ -91,6 +91,8 @@ public class PlayerHealthData {
     private float flashHearingLoss = 0;
     private float sepsis = 0;
     private float sickness = 0;
+    private final Vomiter vomiter = new Vomiter(this);
+    float temporarySlowdown;
     private float venomTotal, venomCurrent;
     private float wetness;
 
@@ -255,6 +257,10 @@ public class PlayerHealthData {
         this.hearingLoss = Mth.clamp(hearingLoss, 0, 1);
     }
 
+    public float getInternalBleedingCapped() {
+        return Mth.clamp(internalBleeding, 0, 25 * 0.0088f);
+    }
+
     public float getInternalBleeding() {
         return internalBleeding;
     }
@@ -396,8 +402,16 @@ public class PlayerHealthData {
         return venomCurrent;
     }
 
+    public float getVenomTotal() {
+        return venomTotal;
+    }
+
     public void addVenom(float value) {
         venomTotal = Math.max(0, venomTotal + value);
+    }
+
+    public void setVenom(float value) {
+        venomTotal = value;
     }
 
     public float getWetness() {
@@ -639,11 +653,33 @@ public class PlayerHealthData {
     boolean JustTriggeredLastStand = false;
     float tempspeedup = 0f;
 
+    /*public void update(ServerPlayer player) {
+        //Painkillers component = base.GetComponent<Painkillers>();
+        //if (this.reversedControls)
+        //{
+        //    this.moveDir = -this.moveDir;
+        //}
+        //HandleVariableUpdates();
+        //HandleBody(component); - handleCirculation(oxygen, blood)
+        //HandleBodyTemperature(component);
+        //--HandleDogWaterShaking();
+        //HandleRadiationSickness();
+        //HandlePeriodicChecks();
+        //--HandleGroundedState();
+        //--HandlePhysics();
+        //--HandleVisuals(component);
+        //--HandleSounds();
+    }*/
+
     public void tickUpdate(ServerPlayer player) {
+        temporarySlowdown = Util.moveTowards(Util.TICK_TO_SEC * 0.1f, temporarySlowdown, 0);
+
         if (player.isCreative()) {
             applyPenalties(player);
             return;
         }
+
+        player.getFoodData().addExhaustion(1 / 23f * Util.TICK_TO_SEC * 4);
 
         isRagdolled = false;
 
@@ -729,6 +765,9 @@ public class PlayerHealthData {
             totalInfection += stats.getInfection();
         }
 
+        // Limb regrowth
+        maybeRegrowLimbs(player);
+
         // Sepsis
         if (totalInfection > 100) {
             setSepsis(sepsis + 0.0277f * Util.TICK_TO_SEC * totalInfection / 100);
@@ -767,17 +806,6 @@ public class PlayerHealthData {
 
             temperature -= 0.001f * wetness * Util.TICK_TO_SEC;
         }
-
-        // Limb regrowth
-        maybeRegrowLimbs(player);
-
-        recalcTotalPain();
-        if (totalPain > 75) {
-            Shock += 0.0015f;
-        } else {
-            Shock -= 0.003f;
-        }
-        Shock = Mth.clamp(Shock, 0, 1);
 
         // Bleeding — internal
         if (internalBleeding > 0) {
@@ -927,7 +955,18 @@ public class PlayerHealthData {
             Stability = 100;
         }
 
+        // Total pain & shock
+        recalcTotalPain();
+        if (totalPain > 75) {
+            Shock += 0.0015f;
+        } else {
+            Shock -= 0.003f;
+        }
+        Shock = Mth.clamp(Shock, 0, 1);
+
         blood = Math.max(0, blood);
+
+        vomiter.update(player);
     }
 
     private void handleLastStand(ServerPlayer player) {
@@ -944,26 +983,30 @@ public class PlayerHealthData {
 
         LastStand = true;
         lastStandAnim = 0;
-        float newBrain = (float) (75f + (Math.random() * 15));
+        float newBrain = 75f + (player.getRandom().nextFloat() * 15);
         player.getFoodData().setFoodLevel(20);
         player.getFoodData().setSaturation(20);
         //thirst if i add it
-        //sickness if i add it
-        blood = Math.max(blood, 3.5f);
-        if (player.isUnderWater()) Oxygen = 100;
-        else Oxygen = 20;
-        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 500, 1));
-        internalBleeding *= 0.2f;
-        hemothorax *= 0.2f;
+        sickness = Mth.lerp(0.3f, sickness, 0);
+        blood = Math.max(blood, 3.75f);
+        Oxygen = 100;
+        bloodViscosity = 0;
+        sepsis *= 0.4f;
+        venomCurrent = 0;
+        venomTotal = 0;
+        antibioticTimer = 120 * 20;//120s
+        hemothorax *= 0.5f;
         temperature = 36.6f;
-        antibioticTimer += 1.5f * 60 * 20;
+        internalBleeding *= 0.05f;
+
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 500, 1));
 
         LimbStatistics stats;
         for (Limb limb : Limb.values()) {
             stats = getLimb(limb);
-            stats.addMuscleHealth(30);
-            stats.setInfection(stats.getInfection() * 0.2f);
-            stats.setBleedRate(stats.getBleedRate() * 0.2f);
+            stats.setMuscleHealth(Mth.lerp(0.3f, stats.getMuscleHealth(), 100));
+            stats.setInfection(stats.getInfection() * 0.05f);
+            stats.setBleedRate(stats.getBleedRate() * 0.05f);
         }
 
         setOpioids(0);
@@ -1071,7 +1114,7 @@ public class PlayerHealthData {
         }
 // --- Apply modifiers safely ---
         applyAttributeModifier(player, Attributes.MOVEMENT_SPEED, MOVE_SPEED_MODIFIER, MOVE_SPEED_MODIFIER_UUID,
-                (baseMoveSpeed * Math.max(0.0, moveMultiplier)) - baseMoveSpeed,
+                (baseMoveSpeed * Math.max(0.0, Math.min(moveMultiplier, 1 - temporarySlowdown))) - baseMoveSpeed,
                 AttributeModifier.Operation.ADDITION);
 
         applyAttributeModifier(player, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, ATTACK_DAMAGE_MODIFIER_UUID,
@@ -1165,6 +1208,8 @@ public class PlayerHealthData {
         nbt.putFloat("FlashHearing", flashHearingLoss);
         nbt.putFloat("Sepsis", sepsis);
         nbt.putFloat("Sickness", sickness);
+        nbt.put("Vomiter", vomiter.save());
+        nbt.putFloat("TemporarySlowdown", temporarySlowdown);
         nbt.putFloat("VenomTotal", venomTotal);
         nbt.putFloat("VenomCurrent", venomCurrent);
         nbt.putFloat("Wetness", wetness);
@@ -1256,6 +1301,10 @@ public class PlayerHealthData {
             sepsis = nbt.getFloat("Sepsis");
         if (nbt.contains("Sickness"))
             sickness = nbt.getFloat("Sickness");
+        if (nbt.contains("Vomiter"))
+            vomiter.load(nbt.getCompound("Vomiter"));
+        if (nbt.contains("TemporarySlowdown"))
+            temporarySlowdown = nbt.getFloat("TemporarySlowdown");
         if (nbt.contains("VenomTotal"))
             venomTotal = nbt.getFloat("VenomTotal");
         if (nbt.contains("VenomCurrent"))
@@ -1345,6 +1394,8 @@ public class PlayerHealthData {
         flashHearingLoss = other.flashHearingLoss;
         sepsis = other.sepsis;
         sickness = other.sickness;
+        vomiter.copyFrom(other.vomiter);
+        temporarySlowdown = other.temporarySlowdown;
         venomTotal = other.venomTotal;
         venomCurrent = other.venomCurrent;
         wetness = other.wetness;
@@ -1404,6 +1455,8 @@ public class PlayerHealthData {
         flashHearingLoss = 0;
         sepsis = 0;
         sickness = 0;
+        vomiter.reset();
+        temporarySlowdown = 0;
         venomTotal = venomCurrent = 0;
         wetness = 0;
         LastStand = false;
