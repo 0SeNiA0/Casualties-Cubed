@@ -1,6 +1,5 @@
 package net.zaharenko424.casualties_cubed.client.gui.widget;
 
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -8,7 +7,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 
 public class ItemWidget extends AbstractWidget {
 
@@ -54,7 +53,6 @@ public class ItemWidget extends AbstractWidget {
         guiGraphics.renderItemDecorations(Minecraft.getInstance().font, this.stack, stack_x, stack_y);
         if (!dragging && isHovered() && !BGMode && !stack.isEmpty()) {
             guiGraphics.renderTooltip(Minecraft.getInstance().font, this.stack, mouseX, mouseY);
-            guiGraphics.renderComponentTooltip(Minecraft.getInstance().font, this.stack.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL), mouseX, mouseY);
         }
     }
 
