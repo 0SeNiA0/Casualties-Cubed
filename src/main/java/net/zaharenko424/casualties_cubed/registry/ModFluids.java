@@ -76,10 +76,10 @@ public class ModFluids {
     public static final RegistryObject<MedicalFluid> BRAINGROW = FLUIDS.register("braingrow", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BRAINGROW_TYPE, ModFluids.BRAINGROW, ModFluids.BRAINGROW), MedicalEffects.BRAINGROW));
 
     public static final RegistryObject<FluidType> LRD_SERUM_TYPE = FLUID_TYPES.register("lrd_serum", () -> new MedicalFluidType(FluidType.Properties.create(), 0xebb734));
-    public static final RegistryObject<MedicalFluid> LRD_SERUM = FLUIDS.register("lrd_serum", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LRD_SERUM_TYPE, ModFluids.LRD_SERUM, ModFluids.LRD_SERUM), MedicalEffect.EMPTY));
+    public static final RegistryObject<MedicalFluid> LRD_SERUM = FLUIDS.register("lrd_serum", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LRD_SERUM_TYPE, ModFluids.LRD_SERUM, ModFluids.LRD_SERUM), MedicalEffects.LRD_SERUM));
 
     public static final RegistryObject<FluidType> BIO_CHEM_TYPE = FLUID_TYPES.register("bio_chem", () -> new MedicalFluidType(FluidType.Properties.create(), -6364641));
-    public static final RegistryObject<MedicalFluid> BIO_CHEM = FLUIDS.register("bio_chem", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BIO_CHEM_TYPE, ModFluids.BIO_CHEM, ModFluids.BIO_CHEM), MedicalEffect.EMPTY));
+    public static final RegistryObject<MedicalFluid> BIO_CHEM = FLUIDS.register("bio_chem", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BIO_CHEM_TYPE, ModFluids.BIO_CHEM, ModFluids.BIO_CHEM), MedicalEffects.BIO_CHEM));
 
     public static final RegistryObject<FluidType> SALINE_TYPE = FLUID_TYPES.register("saline", () -> new MedicalFluidType(FluidType.Properties.create(), 0xc9c8c5));
     public static final RegistryObject<MedicalFluid> SALINE = FLUIDS.register("saline", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SALINE_TYPE, ModFluids.SALINE, ModFluids.SALINE), MedicalEffects.SALINE));

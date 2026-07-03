@@ -19,6 +19,15 @@ public class MedicalEffects {
         return ExtraMedFluids.getOrDef(fluid).effect();
     }
 
+    public static final MedicalEffect LRD_SERUM = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addSickness(0.05f * ml);
+            });
+        }
+    };
 
     public static final MedicalEffect MORPHINE = new MedicalEffect() {
 
@@ -33,6 +42,44 @@ public class MedicalEffects {
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.setPendingOpioids(data.getPendingOpioids() + 0.9f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect BIO_CHEM = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addSickness(0.1f * ml);
+
+                LimbStatistics stats;
+                for (Limb limb : Limb.values()) {
+                    stats = data.getLimb(limb);
+                    if (stats.isAmputated()) continue;
+
+                    stats.addPain(0.05f * ml);
+                    stats.addMuscleHealth(-0.03f * ml);
+                    stats.setDisinfectionTimerAtLeast(2 * ml);
+                }
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addSickness(0.1f * ml);
+
+                LimbStatistics stats;
+                for (Limb limb1 : Limb.values()) {
+                    stats = data.getLimb(limb1);
+                    if (stats.isAmputated()) continue;
+
+                    if (limb1 == limb) stats.addDisinfectionTimer(0.3f * ml);
+
+                    stats.addPain(0.04f * ml);
+                    stats.addMuscleHealth(-0.01f * ml);
+                }
             });
         }
     };
