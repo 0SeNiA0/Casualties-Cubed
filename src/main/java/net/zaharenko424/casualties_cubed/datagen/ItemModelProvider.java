@@ -69,6 +69,9 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         basicItem(RELIEF_CREAM_BOTTLE.get());
         basicItem(RIPPED_DRESSING.get());
         basicItem(IV_BAG.get());
+
+        withTintLayer(BLOOD_BAG, BLOOD_BAG.getId().withPrefix("item/"), BLOOD_BAG.getId().withPrefix("item/").withSuffix("_fill"));
+
         basicItem(SPLINT.get());
         basicItem(STERILIZED_DRESSING.get());
         basicItem(SYRINGE.get());

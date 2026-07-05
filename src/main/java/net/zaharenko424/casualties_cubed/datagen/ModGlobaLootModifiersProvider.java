@@ -135,6 +135,13 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
 
         // UUUUUUUUUUUUUU RNADOM
 
+        add("add_bleach", new AddFilledToChestsModifier(
+                new LootItemCondition[] {
+                        LootItemRandomChanceCondition.randomChance(0.09f * sanityScale).build()
+                },
+                ModItems.BLEACH_JUG.get()
+        ));
+
         add("add_alcohol", new AddFilledToChestsModifier(
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.09f * sanityScale).build()
@@ -161,6 +168,13 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                         LootItemRandomChanceCondition.randomChance(0.07f * sanityScale).build()
                 },
                 ModItems.IV_BAG.get()
+        ));
+
+        add("add_blood", new AddFilledToChestsModifier(
+                new LootItemCondition[] {
+                        LootItemRandomChanceCondition.randomChance(0.07f * sanityScale).build()
+                },
+                ModItems.BLOOD_BAG.get()
         ));
 
         add("add_painkillers", new AddFilledToChestsModifier(

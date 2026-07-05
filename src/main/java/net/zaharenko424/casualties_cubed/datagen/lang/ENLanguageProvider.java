@@ -50,7 +50,8 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(WATER_JUG, "Big, heavy plastic bottle. Stores 3L of liquid.");
         addItemFromIdWDesc(ALCOHOL_BOTTLE, "A glass bottle that can hold 0.5L of liquid.");
         addItemFromIdWDesc(ICE_PACK, "Reduces swelling and eases sore muscles.");
-        addItemWDesc(IV_BAG, "IV Bag", "A 750ml fluid bag with a needle at the end.");
+        addItemWDesc(IV_BAG, "IV Bag", "A 0.75L fluid bag with a needle at the end.");
+        addItemFromIdWDesc(BLOOD_BAG, "A 0.75L plastic bag with an autoinjector at the end. Injects 375mL on use. Use to draw blood from yourself.");
         addItemWDesc(OPIUM_VIAL, "Poppy Extract Vial", "A 100ml bottle. The overdose label says 200ml.");
         addItemFromIdWDesc(MORPHINE_VIAL, "A 100ml bottle. The overdose label says 90ml.");
         addItemFromIdWDesc(HEROIN_SYRINGE, "A 150ml syringe for intravenous injection. The dosage marks are scratched off.");

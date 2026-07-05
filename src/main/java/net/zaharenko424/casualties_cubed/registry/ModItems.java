@@ -82,6 +82,7 @@ public class ModItems {
     public static final RegistryObject<OpiumVialItem> OPIUM_VIAL = ITEMS.register("opium_vial", OpiumVialItem::new);
     public static final RegistryObject<PainkillersPillItem> PAINKILLERS_PILLS = ITEMS.register("painkillers_pill_bottle", PainkillersPillItem::new);
     public static final RegistryObject<IVBagItem> IV_BAG = ITEMS.register("iv_bag", IVBagItem::new);
+    public static final RegistryObject<BloodBagItem> BLOOD_BAG = ITEMS.register("blood_bag", BloodBagItem::new);
     public static final RegistryObject<ReliefCreamBottle> RELIEF_CREAM_BOTTLE = ITEMS.register("relief_cream_bottle", ReliefCreamBottle::new);
 
     public static final RegistryObject<Item> EXPIE_PLUSHY = ITEMS.register("expie_plushy", () ->

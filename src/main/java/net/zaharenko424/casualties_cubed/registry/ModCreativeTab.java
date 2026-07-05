@@ -84,6 +84,7 @@ public class ModCreativeTab {
                         output.accept(SYRINGE.get());
                         output.accept(HEROIN_SYRINGE.get());
                         output.accept(IV_BAG.get());
+                        output.accept(BLOOD_BAG.get());
 
                         output.accept(BLEACH_JUG.get());
 
@@ -112,7 +113,7 @@ public class ModCreativeTab {
 
                         output.accept(HEROIN_SYRINGE.get().withDefFluid());
                         output.accept(IV_BAG.get().withDefFluid());
-                        output.accept(IV_BAG.get().withFluid(ModFluids.BLOOD));
+                        output.accept(BLOOD_BAG.get().withDefFluid());
 
                         output.accept(BLEACH_JUG.get().withDefFluid());
 
