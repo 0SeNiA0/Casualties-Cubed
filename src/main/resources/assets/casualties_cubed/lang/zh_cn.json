@@ -164,8 +164,6 @@
   "medical_fluid.casualties_cubed.naloxone.description": "常见的阿片类拮抗剂。用于逆转阿片类药物过量。",
   "medical_fluid.casualties_cubed.relief_cream": "镇痛膏",
   "medical_fluid.casualties_cubed.relief_cream.description": "带有轻微抗菌效果和舒缓性质的乳霜。",
-  "medical_fluid.casualties_cubed.reaction_liquid": "反应液",
-  "medical_fluid.casualties_cubed.reaction_liquid.description": "由发光果实制成的微酸性液体。具有一些反应性。",
   "medical_fluid.casualties_cubed.chocolate_milk": "巧克力奶",
   "medical_fluid.casualties_cubed.chocolate_milk.description": "谁不喜欢巧克力奶呢？",
   "medical_fluid.casualties_cubed.lrd_serum": "L.R.D. 血清",
@@ -409,5 +407,18 @@
   "commands.casualties_cubed.fillfluid.error.player_only": "只能由玩家执行此命令",
   "commands.casualties_cubed.fillfluid.error.invalid_fluid": "无效的液体",
   "commands.casualties_cubed.fillfluid.error.no_item": "主手未找到兼容物品",
-  "commands.casualties_cubed.fillfluid.success": "已向物品加入 %1$sml 的 %2$s"
+  "commands.casualties_cubed.fillfluid.success": "已向物品加入 %1$sml 的 %2$s",
+  "commands.casualties_cubed.coagulate.success": "已为 %1$s 名玩家止血。",
+  "gui.casualties_cubed.moodle.wetness.description1": "略微潮湿。",
+  "gui.casualties_cubed.moodle.wetness.description2": "相当潮湿。体感温度和舒适度下降。",
+  "gui.casualties_cubed.moodle.wetness.description3": "浑身滴水。体感温度和舒适度显著下降。",
+  "gui.casualties_cubed.moodle.wetness.description4": "彻底湿透！水让你行动迟缓。体感温度和舒适度急剧下降。",
+  "gui.casualties_cubed.moodle.wetness.title1": "略微潮湿",
+  "gui.casualties_cubed.moodle.wetness.title2": "明显潮湿",
+  "gui.casualties_cubed.moodle.wetness.title3": "完全湿透",
+  "gui.casualties_cubed.moodle.wetness.title4": "被水浸透",
+  "item.casualties_cubed.blood_bag": "血袋",
+  "item.casualties_cubed.blood_bag.description": "一个带有自动注射器的0.75L塑料袋。单次自动注射375mL。使用会从你身上抽取血液。",
+  "medical_fluid.casualties_cubed.bio_chem": "生化流体",
+  "medical_fluid.casualties_cubed.bio_chem.description": "一种先进的化学混合物，可以极大促进化学反应的进行，也可将某些材料粘合在一起，甚至能融化它们。在制作中很常用。"
 }
