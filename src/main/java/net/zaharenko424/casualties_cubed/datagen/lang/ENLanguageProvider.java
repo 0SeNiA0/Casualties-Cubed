@@ -213,7 +213,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("sickness.description4", "Dangerously sick. Something is VERY wrong on the inside. Weak, confused and in a world of pain.");
 
         addMoodle("wetness.title1", "Damp");
-        addMoodle("wetness.description1", "Your feel slightly wet.");
+        addMoodle("wetness.description1", "You feel slightly wet.");
         addMoodle("wetness.title2", "Wet");
         addMoodle("wetness.description2", "Considerably wet. Temperature and comfort decreased.");
         addMoodle("wetness.title3", "Soaked");

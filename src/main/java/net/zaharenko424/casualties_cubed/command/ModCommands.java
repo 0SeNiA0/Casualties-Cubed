@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -31,7 +33,9 @@ import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModCommands {
@@ -40,8 +44,12 @@ public class ModCommands {
         for (Limb e : Limb.values()) {
             builder.suggest(e.name().toLowerCase()); // lowercase is more user-friendly
         }
+
         return builder.buildFuture();
     };
+
+    private static final Function<CommandContext<CommandSourceStack>, Limb> LIMB_ARG = ctx ->
+            Limb.valueOf(StringArgumentType.getString(ctx, "limb").toUpperCase());
 
     private static final SuggestionProvider<CommandSourceStack> MED_FLUIDS = (context, builder) -> {
         for (RegistryObject<Fluid> medicalFluid : ModFluids.FLUIDS.getEntries()) {
@@ -55,86 +63,39 @@ public class ModCommands {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
                 Commands.literal("casualties_cubed")
-                        .requires(source -> source.hasPermission(0))
+                        .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("heal")
-                                .requires(source -> source.hasPermission(2))
+                                .executes(ctx -> ctx.getSource().isPlayer() ? heal(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
                                 .then(Commands.argument("targets", EntityArgument.players())
-                                        .executes(ctx -> {
-                                            Collection<ServerPlayer> targets = EntityArgument.getPlayers(ctx, "targets");
-
-                                            for (ServerPlayer player : targets) {
-                                                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                                                        data.resetToDefaults(player));
-                                            }
-
-                                            ctx.getSource().sendSuccess(() ->
-                                                    Component.translatable("commands.casualties_cubed.heal.success", targets.size()), true);
-
-                                            return targets.size();
-                                        })
+                                        .executes(ctx -> heal(ctx, EntityArgument.getPlayers(ctx, "targets")))
                                 )
                         )
 
                         .then(Commands.literal("coagulate")
-                                .requires(source -> source.hasPermission(2))
+                                .executes(ctx -> ctx.getSource().isPlayer() ? coagulate(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
                                 .then(Commands.argument("targets", EntityArgument.players())
-                                        .executes(ctx -> {
-                                            Collection<ServerPlayer> targets = EntityArgument.getPlayers(ctx, "targets");
-
-                                            for (ServerPlayer player : targets) {
-                                                player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                                                    for (Limb limb : Limb.values()) {
-                                                        data.getLimb(limb).setBleedRate(0);
-                                                    }
-                                                    data.setInternalBleeding(0);
-                                                });
-                                            }
-
-                                            ctx.getSource().sendSuccess(() ->
-                                                    Component.translatable("commands.casualties_cubed.coagulate.success", targets.size()), true);
-
-                                            return targets.size();
-                                        })))
+                                        .executes(ctx -> coagulate(ctx, EntityArgument.getPlayers(ctx, "targets")))
+                                )
+                        )
 
                         .then(Commands.literal("checklimb")
-                                .requires(source -> source.hasPermission(2))
-                                .then(Commands.argument("target", EntityArgument.player())
-                                        .then(Commands.argument("limb", StringArgumentType.word())
-                                                .suggests(LIMBS)
-                                                .executes(ctx -> {
-                                                    String raw = StringArgumentType.getString(ctx, "limb");
-                                                    Limb limb = Limb.valueOf(raw.toUpperCase());
-
-                                                    ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
-
-                                                    target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                                                        ctx.getSource().sendSuccess(
-                                                                () -> Component.literal(h.getLimb(limb).toString()),
-                                                                false
-                                                        );
-                                                    });
-
-                                                    return 1;
-                                                })
+                                .then(Commands.argument("limb", StringArgumentType.word())
+                                        .suggests(LIMBS)
+                                        .executes(ctx -> ctx.getSource().isPlayer() ? checkLimb(ctx, ctx.getSource().getPlayerOrException(), LIMB_ARG.apply(ctx)) : 0)
+                                        .then(Commands.argument("target", EntityArgument.player())
+                                                .executes(ctx -> checkLimb(ctx, EntityArgument.getPlayer(ctx, "target"), LIMB_ARG.apply(ctx)))
                                         )
                                 )
                         )
 
                         .then(Commands.literal("checkbody")
-                                .requires(source -> source.hasPermission(2))
+                                .executes(ctx -> ctx.getSource().isPlayer() ? checkBody(ctx, ctx.getSource().getPlayerOrException()) : 0)
                                 .then(Commands.argument("target", EntityArgument.player())
-                                        .executes(ctx -> {
-                                            ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
-                                            Optional<String> text = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::baseToString);
-                                            ctx.getSource().sendSuccess(() ->
-                                                    Component.literal(String.valueOf(text)), false);
-                                            return 1;
-                                        })
+                                        .executes(ctx -> checkBody(ctx, EntityArgument.getPlayer(ctx, "target")))
                                 )
                         )
 
                         .then(Commands.literal("setlimb")
-                                .requires(source -> source.hasPermission(2))
                                 .then(Commands.argument("target", EntityArgument.player())
                                         .then(Commands.argument("limb", StringArgumentType.word())
                                                 .suggests(LIMBS)
@@ -152,16 +113,14 @@ public class ModCommands {
                                                         })
                                                         .then(Commands.argument("value", FloatArgumentType.floatArg())
                                                                 .executes(ctx -> {
-                                                                    String raw = StringArgumentType.getString(ctx, "limb");
-                                                                    Limb limb = Limb.valueOf(raw.toUpperCase());
-                                                                    raw = StringArgumentType.getString(ctx, "field");
+                                                                    Limb limb = LIMB_ARG.apply(ctx);
+                                                                    String raw = StringArgumentType.getString(ctx, "field");
                                                                     float value = FloatArgumentType.getFloat(ctx, "value");
                                                                     ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
 
-                                                                    String finalRaw = raw;
                                                                     target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                                                                         LimbStatistics stats = data.getLimb(limb);
-                                                                        switch (finalRaw) {
+                                                                        switch (raw) {
                                                                             case "skinhealth" ->
                                                                                     stats.setSkinHealth(value);
                                                                             case "musclehealth" ->
@@ -179,11 +138,11 @@ public class ModCommands {
                                                                             case "bleedrate" ->
                                                                                     stats.setBleedRate(value);
                                                                             default ->
-                                                                                    ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", finalRaw));
+                                                                                    ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", raw));
                                                                         }
                                                                     });
                                                                     ctx.getSource().sendSuccess(() ->
-                                                                                    Component.translatable("commands.casualties_cubed.setlimb.success", value, limb, finalRaw, target.getName()),
+                                                                                    Component.translatable("commands.casualties_cubed.setlimb.success", value, limb, raw, target.getName()),
                                                                             false);
                                                                     return 1;
                                                                 })
@@ -194,7 +153,6 @@ public class ModCommands {
                         )
 
                         .then(Commands.literal("setbody")
-                                .requires(source -> source.hasPermission(2))
                                 .then(Commands.argument("target", EntityArgument.player())
                                         .then(Commands.argument("field", StringArgumentType.word())
                                                 .suggests((ctx, builder) -> {
@@ -263,29 +221,16 @@ public class ModCommands {
                         )
 
                         .then(Commands.literal("amputate")
-                                .requires(source -> source.hasPermission(2))
-                                .then(Commands.argument("target", EntityArgument.player())
-                                        .then(Commands.argument("limb", StringArgumentType.word())
-                                                .suggests(LIMBS)
-                                                .executes(ctx -> {
-                                                    String raw = StringArgumentType.getString(ctx, "limb");
-                                                    Limb limb = Limb.valueOf(raw.toUpperCase());
-
-                                                    ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
-
-                                                    target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                                                        h.dismember(limb);
-                                                        ctx.getSource().sendSuccess(() -> Component.translatable("commands.casualties_cubed.amputate.success", raw), true);
-                                                    });
-
-                                                    return 1;
-                                                })
+                                .then(Commands.argument("limb", StringArgumentType.word())
+                                        .suggests(LIMBS)
+                                        .executes(ctx -> ctx.getSource().isPlayer() ? amputate(ctx, ctx.getSource().getPlayerOrException(), LIMB_ARG.apply(ctx)) : 0)
+                                        .then(Commands.argument("target", EntityArgument.player())
+                                                .executes(ctx -> amputate(ctx, EntityArgument.getPlayer(ctx, "target"), LIMB_ARG.apply(ctx)))
                                         )
                                 )
                         )
 
                         .then(Commands.literal("fillfluid")
-                                .requires(source -> source.hasPermission(2))
                                 .then(Commands.argument("fluid", ResourceLocationArgument.id())
                                         .suggests(MED_FLUIDS)
                                         .then(Commands.argument("amount", IntegerArgumentType.integer())
@@ -319,6 +264,66 @@ public class ModCommands {
                                 )
                         )
         );
-        dispatcher.register(Commands.literal("ccu").redirect(node));
+
+        dispatcher.register(Commands.literal("ccu")
+                .requires(ctx -> ctx.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                .redirect(node));
+    }
+
+    private static int heal(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> targets) {
+        FoodData foodData;
+        for (ServerPlayer player : targets) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
+                    data.resetToDefaults(player));
+            foodData = player.getFoodData();
+            foodData.setExhaustion(0);
+            foodData.setFoodLevel(20);
+            foodData.setSaturation(5);
+        }
+
+        ctx.getSource().sendSuccess(() ->
+                Component.translatable("commands.casualties_cubed.heal.success", targets.size()), true);
+
+        return targets.size();
+    }
+
+    private static int coagulate(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> targets) {
+        for (ServerPlayer player : targets) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                for (Limb limb : Limb.values()) {
+                    data.getLimb(limb).setBleedRate(0);
+                }
+                data.setInternalBleeding(0);
+            });
+        }
+
+        ctx.getSource().sendSuccess(() ->
+                Component.translatable("commands.casualties_cubed.coagulate.success", targets.size()), true);
+
+        return targets.size();
+    }
+
+    private static int checkLimb(CommandContext<CommandSourceStack> ctx, ServerPlayer target, Limb limb) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
+                ctx.getSource().sendSuccess(() -> Component.literal(data.getLimb(limb).toString()), false)
+        );
+
+        return 1;
+    }
+
+    private static int checkBody(CommandContext<CommandSourceStack> ctx, ServerPlayer target) {
+        Optional<String> text = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::baseToString);
+        ctx.getSource().sendSuccess(() ->
+                Component.literal(String.valueOf(text)), false);
+        return 1;
+    }
+
+    private static int amputate(CommandContext<CommandSourceStack> ctx, ServerPlayer target, Limb limb) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
+            h.dismember(limb);
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.casualties_cubed.amputate.success", limb.comp), true);
+        });
+
+        return 1;
     }
 }
