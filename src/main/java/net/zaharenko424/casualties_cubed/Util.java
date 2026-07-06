@@ -1,6 +1,12 @@
 package net.zaharenko424.casualties_cubed;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.Map;
 
@@ -19,6 +25,14 @@ public class Util {
         if (Math.abs(end - start) <= moveAmount) return end;
 
         return start + Math.signum(end - start) * moveAmount;
+    }
+
+    public static Level level() {
+        if (FMLEnvironment.dist.isDedicatedServer()) {
+            return ServerLifecycleHooks.getCurrentServer().overworld();
+        }
+
+        return DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().level);
     }
 
     public static int mixColors(Map<Integer, Float> colorRatios) {

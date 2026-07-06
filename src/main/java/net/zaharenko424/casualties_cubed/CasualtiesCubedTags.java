@@ -23,7 +23,7 @@ public class CasualtiesCubedTags {
 
     public static class Fluid {
 
-        public static final TagKey<net.minecraft.world.level.material.Fluid> OPIOIDS = tag("opioids");
+        public static final TagKey<net.minecraft.world.level.material.Fluid> OPIATES = tag("opiates");
         public static final TagKey<net.minecraft.world.level.material.Fluid> DISINFECTING = tag("disinfect");
 
         private static TagKey<net.minecraft.world.level.material.Fluid> tag(String name) {

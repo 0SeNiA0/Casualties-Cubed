@@ -23,7 +23,7 @@ public class FluidTagProvider extends TagsProvider<Fluid> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(CasualtiesCubedTags.Fluid.OPIOIDS)
+        tag(CasualtiesCubedTags.Fluid.OPIATES)
                 .add(new ResourceKey[]{OPIUM.getKey(), MORPHINE.getKey(), FENTANYL.getKey(), HEROIN.getKey(),
                         PAINKILLERS.getKey(), RELIEF_CREAM.getKey()});
 

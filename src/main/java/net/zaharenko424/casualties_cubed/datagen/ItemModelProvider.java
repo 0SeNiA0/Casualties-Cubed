@@ -18,66 +18,71 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
 
     @Override
     protected void registerModels() {
-        basicItem(ALCOHOL_BOTTLE.get());
-        basicItem(ALGINATE_DRESSING.get());
-        basicItem(ANTIBIOTICS_PILLS.get());
-        basicItem(ANTISEPTIC_SPRAY.get());
-        basicItem(AUTO_PUMP.get());
+        basicItem(ALCOHOL_BOTTLE);
+        basicItem(ALGINATE_DRESSING);
+        basicItem(ANTIBIOTICS_PILLS);
+        basicItem(ANTISEPTIC_SPRAY);
+        basicItem(AUTO_PUMP);
+        basicItem(CHEST_DRAIN);
 
         withTintLayer(AUTO_INJECTOR, AUTO_INJECTOR.getId().withPrefix("item/"), AUTO_INJECTOR.getId().withPrefix("item/").withSuffix("_fill"));
 
         withExistingParent(ANTISERUM_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
-        basicItem(ADHESIVE_BANDAGE.get());
+        basicItem(ADHESIVE_BANDAGE);
         withExistingParent(PROCOAGULANT_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
-        basicItem(WOUND_GLUE_SPRAY.get());
+        basicItem(WOUND_GLUE_SPRAY);
         withExistingParent(STREPTOKINASE_INJECTOR.getId().toString(), AUTO_INJECTOR.getId());
-        basicItem(BONE_WELDER.get());
+        basicItem(BONE_WELDER);
 
-        basicItem(CANTEEN.get());
+        basicItem(CANTEEN);
 
         withTintLayer(WATER_BOTTLE);
         withTintLayer(WATER_JUG);
 
-        basicItem(BRAIN_GROW_PILLS.get());
-        basicItem(BROWN_CAP_MUSH.get());
-        basicItem(BRUISE_KIT.get());
-        basicItem(DRESSING.get());
-        basicItem(EXPERIMENTAL_TREATMENT.get());
-        basicItem(GLOW_FRUIT.get());
-        basicItem(HEAT_PACK.get());
-        basicItem(ICE_PACK.get());
-        basicItem(LRD.get());
-        basicItem(MAKESHIFT_LRD.get());
-        basicItem(HEROIN_SYRINGE.get());
-        basicItem(MEDICAL_GAUZE.get());
-        basicItem(MEDICAL_SUTURE.get());
+        basicItem(BRAIN_GROW_PILLS);
+        basicItem(BROWN_CAP_MUSH);
+        basicItem(BRUISE_KIT);
+        basicItem(DRESSING);
+        basicItem(EXPERIMENTAL_TREATMENT);
+        basicItem(GLOW_FRUIT);
+        basicItem(HEAT_PACK);
+        basicItem(ICE_PACK);
+        basicItem(LRD);
+        basicItem(MAKESHIFT_LRD);
+        basicItem(HEROIN_SYRINGE);
+        basicItem(MEDICAL_GAUZE);
+        basicItem(MEDICAL_SUTURE);
 
         withTintLayer(MEDICINE_VIAL, CasualtiesCubed.resourceLoc("item/empty_vial"), CasualtiesCubed.resourceLoc("item/vial_color"));
 
         withExistingParent(CEFTRIAXONE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
-        basicItem(BLEACH_JUG.get());
+        basicItem(BLEACH_JUG);
         withExistingParent(FENTANYL_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(MORPHINE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(NALOXONE_VIAL.getId().toString(), MEDICINE_VIAL.getId());
         withExistingParent(OPIUM_VIAL.getId().toString(), MEDICINE_VIAL.getId());
-        basicItem(OLD_RAG.get());
-        basicItem(PAINKILLERS_PILLS.get());
+        basicItem(OLD_RAG);
+        basicItem(PAINKILLERS_PILLS);
 
         withTintLayer(PILL_BOTTLE, CasualtiesCubed.resourceLoc("item/generic_pill0"), CasualtiesCubed.resourceLoc("item/generic_pill1"));
 
-        basicItem(PLASTIC_DRESSING.get());
-        basicItem(RELIEF_CREAM_BOTTLE.get());
-        basicItem(RIPPED_DRESSING.get());
-        basicItem(IV_BAG.get());
+        basicItem(PLASTIC_DRESSING);
+        basicItem(RELIEF_CREAM_BOTTLE);
+        basicItem(RIPPED_DRESSING);
+        basicItem(IV_BAG);
 
         withTintLayer(BLOOD_BAG, BLOOD_BAG.getId().withPrefix("item/"), BLOOD_BAG.getId().withPrefix("item/").withSuffix("_fill"));
 
-        basicItem(SPLINT.get());
-        basicItem(STERILIZED_DRESSING.get());
-        basicItem(SYRINGE.get());
-        basicItem(THERMOMETER.get());
-        basicItem(TOURNIQUET.get());
-        basicItem(TWEEZERS.get());
+        basicItem(SPLINT);
+        basicItem(STERILIZED_DRESSING);
+        basicItem(SYRINGE);
+        basicItem(THERMOMETER);
+        basicItem(TOURNIQUET);
+        basicItem(TWEEZERS);
+    }
+
+    protected void basicItem(RegistryObject<? extends Item> item) {
+        basicItem(item.getId());
     }
 
     protected void withTintLayer(RegistryObject<? extends Item> item) {

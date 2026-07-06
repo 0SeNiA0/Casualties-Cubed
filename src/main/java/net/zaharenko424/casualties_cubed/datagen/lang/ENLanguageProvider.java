@@ -87,7 +87,8 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemWDesc(MAKESHIFT_LRD, "Makeshift L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. This one seems to be crudely made. Holds 50ml of fluid. Needs at least 25ml of LRD serum to function");
         addItemFromIdWDesc(MEDICAL_SUTURE, "Used to stitch wounds back together. Instantly stops most of the bleeding.");
         addItemFromIdWDesc(HEAT_PACK, "A slightly larger chemical hand warmer. Aids in healing of muscles slightly.");
-        addItemFromIdWDesc(AUTO_PUMP, "A very advanced Life support device with internal batteries. Keeps oxygen at stable levels,provides adrenaline and energy. Batteries last about 5min. Usable on Chest");
+        addItemFromIdWDesc(AUTO_PUMP, "A very advanced Life support device with internal batteries. Keeps oxygen at stable levels,provides adrenaline and energy. Batteries last about 5min. Only usable on the chest");
+        addItemFromIdWDesc(CHEST_DRAIN, "Used to drain fluid from the thorax. Reduces hemothorax, reusable after some time. Only usable on the chest.");
         addItemFromIdWDesc(THERMOMETER, "A small device that reads the temperature around the user.");
         addItemFromId(SimpleEarProtection);
         addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10ml.");

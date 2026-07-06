@@ -53,6 +53,7 @@ public class ModItems {
     public static final RegistryObject<Item> BROWN_CAP_MUSH = ITEMS.register("brown_cap_mush", BrownCapMushItem::new);
     public static final RegistryObject<Item> EXPERIMENTAL_TREATMENT = ITEMS.register("experimental_treatment", ExperimentalTreatmentItem::new);
     public static final RegistryObject<Item> AUTO_PUMP = ITEMS.register("auto_pump", AutoPumpItem::new);
+    public static final RegistryObject<ChestDrainItem> CHEST_DRAIN = ITEMS.register("chest_drain", ChestDrainItem::new);
 
     public static final RegistryObject<Item> THERMOMETER = ITEMS.register("thermometer", ThermometerItem::new);
     public static final RegistryObject<Item> SimpleEarProtection = ITEMS.register("simple_ear_protection", net.zaharenko424.casualties_cubed.item.special.SimpleEarProtection::new);

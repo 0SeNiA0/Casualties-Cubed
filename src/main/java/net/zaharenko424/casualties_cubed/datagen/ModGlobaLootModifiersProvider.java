@@ -42,12 +42,6 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 },       // no extra conditions
                 ModItems.ADHESIVE_BANDAGE.get()
         ));
-        add("add_ice", new AddFilledToChestsModifier(
-                new LootItemCondition[] {
-                        LootItemRandomChanceCondition.randomChance(0.14f*sanityScale).build()
-                },       // no extra conditions
-                ModItems.ICE_PACK.get()
-        ));
         add("add_splint", new AddFilledToChestsModifier(
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.05f*sanityScale).build()
@@ -126,11 +120,23 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 },       // no extra conditions
                 ModItems.HEAT_PACK.get()
         ));
+        add("add_ice", new AddFilledToChestsModifier(
+                new LootItemCondition[] {
+                        LootItemRandomChanceCondition.randomChance(0.14f*sanityScale).build()
+                },       // no extra conditions
+                ModItems.ICE_PACK.get()
+        ));
         add("add_auto_pump",new AddFilledToChestsModifier(
                 new LootItemCondition[] {
                         LootItemRandomChanceCondition.randomChance(0.01f*sanityScale).build()
                 },       // no extra conditions
-                ModItems.HEAT_PACK.get()
+                ModItems.AUTO_PUMP.get()
+        ));
+        add("add_chest_drain",new AddFilledToChestsModifier(
+                new LootItemCondition[] {
+                        LootItemRandomChanceCondition.randomChance(0.01f*sanityScale).build()
+                },       // no extra conditions
+                ModItems.CHEST_DRAIN.get()
         ));
 
         // UUUUUUUUUUUUUU RNADOM
@@ -315,8 +321,5 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 },       // no extra conditions
                 ModItems.AUTO_INJECTOR.get()
         ));
-
-
-
     }
 }

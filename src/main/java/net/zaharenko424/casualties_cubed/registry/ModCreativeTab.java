@@ -49,6 +49,7 @@ public class ModCreativeTab {
                         output.accept(MAKESHIFT_LRD.get().withFluid(ModFluids.LRD_SERUM));
                         output.accept(LRD.get().withFluid(ModFluids.LRD_SERUM));
                         output.accept(AUTO_PUMP.get());
+                        output.accept(CHEST_DRAIN.get());
 
                         output.accept(SPLINT.get());
                         output.accept(TWEEZERS.get());

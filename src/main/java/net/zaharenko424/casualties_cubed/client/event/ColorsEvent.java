@@ -43,6 +43,10 @@ public class ColorsEvent {
                 ModItems.PILL_BOTTLE.get()
         );
 
-        event.register(FluidTint.COLOR, ModItems.WATER_JUG.get(), ModItems.BLOOD_BAG.get());
+        event.register((stack, tintIndex) -> {
+            if (stack.getItem() instanceof FluidTint fluidTint) return fluidTint.getColor(stack, tintIndex);
+
+            return -1;
+        }, ModItems.WATER_JUG.get(), ModItems.BLOOD_BAG.get());
     }
 }
