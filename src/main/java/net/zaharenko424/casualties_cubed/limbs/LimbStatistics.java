@@ -19,7 +19,7 @@ public class LimbStatistics {
     private float fracture = 0f;//
     private float dislocation = 0f;
     private int shrapnel = 0;//
-    private float bleedRate = 0f;//
+    private float bleedRate = 0f;// THIS IS PER TICK for whateve reason
     private float disinfectionTimer = 0f;//
     private float minPain = 0f;//
     private float pain = 0f;//
@@ -214,7 +214,7 @@ public class LimbStatistics {
     public void setBleedRate(float bleedRate) {
         if (amputated) return;
 
-        bleedRate = Mth.clamp(bleedRate, 0, data.getMAX_BLEED_RATE() * (100 - getSkinHealth()) / 100);
+        bleedRate = Mth.clamp(bleedRate, 0, data.getMAX_BLEED_RATE() *  (1 - getSkinHealth() / 100));
         if (this.bleedRate == bleedRate) return;
 
         this.bleedRate = bleedRate;
@@ -391,7 +391,7 @@ public class LimbStatistics {
             }
         }
 
-        burn -= .05f;// 1/s
+        if (burn > 0) burn -= Math.min(burn, .05f);// 1/s
 
         //MinpainCalculation
         setMinPain(((getInfection() / 100) * 10) + (((getSkinHealth() - 100) / -100) * 15));
@@ -426,7 +426,7 @@ public class LimbStatistics {
 
         // Bleed
         if (shrapnel == 0 && bleedRate > 0 && data.getVenom() < 20) {
-            addBleedRate(-0.027f * Util.TICK_TO_MIN * (1 - data.getVenom() / 20) * (1 + data.getBloodViscosity() / 100));
+            addBleedRate(-0.027f * Util.TICK_TO_MIN/*!magic stuff! twice because bleed is per tick*/ * Util.TICK_TO_MIN * (1 - data.getVenom() / 20) * (1 + data.getBloodViscosity() / 100));
         }
 
         //Fract/Disl calculation

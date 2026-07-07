@@ -51,7 +51,10 @@ public class ChestDrainItem extends Item implements ISimpleMedicalUsable, IAllow
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         if (limb != Limb.CHEST || !isReady(source.level(), stack)) return;
 
-        PlayerHealthData.of(target).ifPresent(data -> data.setHemothorax(data.getHemothorax() - 35));
+        PlayerHealthData.of(target).ifPresent(data -> {
+            data.getLimb(Limb.CHEST).addBleedRate(0.036f);
+            data.setHemothorax(data.getHemothorax() - 35);
+        });
 
         stack.getOrCreateTag().putLong("LastUse", source.level().getGameTime());
     }

@@ -419,7 +419,11 @@ public class PlayerHealthData {
     }
 
     public void addWetness(float wetness) {
-        this.wetness = Mth.clamp(this.wetness + wetness, 0, 100);
+        setWetness(this.wetness + wetness);
+    }
+
+    public void setWetness(float wetness) {
+        this.wetness = Mth.clamp(wetness, 0, 100);
     }
 
     public ChipState getChip() {
