@@ -391,7 +391,7 @@ public class LimbStatistics {
             }
         }
 
-        if (burn > 0) burn -= Math.min(burn, .05f);// 1/s
+        if (burn > 0) burn -= Math.min(burn, 0.1f * Util.TICK_TO_SEC);// 0.1/s -> 100 to 0 in ~16min
 
         //MinpainCalculation
         setMinPain(((getInfection() / 100) * 10) + (((getSkinHealth() - 100) / -100) * 15));
