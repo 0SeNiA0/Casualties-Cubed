@@ -420,5 +420,7 @@
   "item.casualties_cubed.blood_bag": "血袋",
   "item.casualties_cubed.blood_bag.description": "一个带有自动注射器的0.75L塑料袋。单次自动注射375mL。使用会从你身上抽取血液。",
   "medical_fluid.casualties_cubed.bio_chem": "生化流体",
-  "medical_fluid.casualties_cubed.bio_chem.description": "一种先进的化学混合物，可以极大促进化学反应的进行，也可将某些材料粘合在一起，甚至能融化它们。在制作中很常用。"
+  "medical_fluid.casualties_cubed.bio_chem.description": "一种先进的化学混合物，可以极大促进化学反应的进行，也可将某些材料粘合在一起，甚至能融化它们。在制作中很常用。",
+  "item.casualties_cubed.chest_drain": "胸腔引流器",
+  "item.casualties_cubed.chest_drain.description": "用于排出胸腔积液。缓解血胸症状，可重复使用。只能用于胸部。"
 }
