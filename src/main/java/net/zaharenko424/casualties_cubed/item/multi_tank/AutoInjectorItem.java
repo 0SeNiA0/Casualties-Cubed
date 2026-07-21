@@ -5,12 +5,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
+import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 import java.util.List;
 
-public class AutoInjectorItem extends MultiTankFluidItem implements ISimpleMedicalUsable {
+public class AutoInjectorItem extends MultiTankFluidItem implements ISimpleMedicalUsable, IAllowInMedicBags {
 
     @Override
     public int getCapacity() {
