@@ -70,7 +70,7 @@ public class MedicalMixerBlockEntity extends BlockEntity implements MenuProvider
             FluidStack remaining = resource.copy();
             for (int i = 0; i < 3; i++) {
                 if (remaining.isEmpty()) return resource.getAmount();
-                remaining.shrink(Tanks[i].fill(remaining, FluidAction.EXECUTE));
+                remaining.shrink(Tanks[i].fill(remaining, action));
             }
 
             return resource.getAmount() - remaining.getAmount();
