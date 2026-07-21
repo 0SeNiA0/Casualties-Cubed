@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.event;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -116,13 +117,15 @@ public class CommonEvent {
 
     @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
-            event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(oldStore -> {
-                event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
-                });
+        if (event.isWasDeath()) return;
+
+        event.getOriginal().reviveCaps();
+        event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(oldStore -> {
+            event.getEntity().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(newStore -> {
+                newStore.deserializeNBT(oldStore.serializeNBT(new CompoundTag(), true));
             });
-        }
+        });
+        event.getOriginal().invalidateCaps();
     }
 
     @SubscribeEvent
@@ -173,7 +176,7 @@ public class CommonEvent {
 
             profiler.push("casualties_cubed:player_health_system");
             event.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.tickUpdate(player);
+                data.update(player);
                 boolean usingArm = player.isUsingItem();
                 if (usingArm) {
                     InteractionHand hand = player.getUsedItemHand();
@@ -226,16 +229,16 @@ public class CommonEvent {
             Item item = event.getItem().getItem();
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
 
-            if (head.getFracture() > 0) {
+            if (head.getBoneHealTimer() > 0) {
                 head.addPain(3);
             }
 
-            if (chest.getDislocation() > 0 || chest.getFracture() > 0) {
+            if (chest.getDislocationTimer() > 0 || chest.getBoneHealTimer() > 0) {
                 chest.addPain(4);
             }
 
             if (item.isEdible()) {
-                if (head.getDislocation() > 0) {
+                if (head.getDislocationTimer() > 0) {
                     head.addDislocation(25);
                 }
             }
@@ -249,9 +252,9 @@ public class CommonEvent {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
 
-            if (head.getFracture() > 0) head.addPain(3);
+            if (head.getBoneHealTimer() > 0) head.addPain(3);
 
-            if (chest.getFracture() > 0 || chest.getDislocation() > 0) {
+            if (chest.getBoneHealTimer() > 0 || chest.getDislocationTimer() > 0) {
                 chest.addPain(4);
             }//TODO also add pain to used arm if direct attack?
         });
@@ -266,16 +269,16 @@ public class CommonEvent {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
 
-            if (head.getFracture() > 0) head.addPain(10);
+            if (head.getBoneHealTimer() > 0) head.addPain(10);
 
-            if (chest.getDislocation() > 0) {
+            if (chest.getDislocationTimer() > 0) {
                 chest.addPain(10);
             }
 
             LimbStatistics stats;
             for (Limb limb : LEG_PARTS) {
                 stats = data.getLimb(limb);
-                if (stats.getDislocation() > 0 || stats.getFracture() > 0) stats.addPain(10);
+                if (stats.getDislocationTimer() > 0 || stats.getBoneHealTimer() > 0) stats.addPain(10);
             }
         });
     }

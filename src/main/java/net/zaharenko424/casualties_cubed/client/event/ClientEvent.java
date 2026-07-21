@@ -227,7 +227,7 @@ public class ClientEvent {
         if (player == null) return;
 
         float Oxygen = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getOxygen)
+                .map(PlayerHealthData::getBloodOxygen)
                 .orElse(0f);
 
         float stab = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
@@ -237,7 +237,7 @@ public class ClientEvent {
         lastStab = Mth.lerp(0.1f, lastStab, stab);
 
         double Pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                        .map(PlayerHealthData::getTotalPain)
+                        .map(PlayerHealthData::getAveragePain)
                                 .orElse(0d);
 
         GuiGraphics gui = event.getGuiGraphics();

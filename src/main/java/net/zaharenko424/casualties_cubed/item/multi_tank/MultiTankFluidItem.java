@@ -20,7 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.RegistryObject;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;

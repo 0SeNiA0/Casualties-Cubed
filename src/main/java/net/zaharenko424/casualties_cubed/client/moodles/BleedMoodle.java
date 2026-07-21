@@ -18,7 +18,7 @@ public class BleedMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        float bleed = data.getCombinedBleed();
+        float bleed = data.totalBleedSpeed();
 
         if (bleed > 0.6f / 20 / 60) {
             return MoodleStatus.CRITICAL_NEG;

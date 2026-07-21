@@ -21,7 +21,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.CountIngredient;
 import net.zaharenko424.casualties_cubed.recipe.ingridients.FluidIngredient;

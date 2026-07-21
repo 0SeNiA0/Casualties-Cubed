@@ -1,6 +1,6 @@
 package net.zaharenko424.casualties_cubed.item.api;
 
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;

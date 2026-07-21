@@ -130,11 +130,11 @@ public class ModCommands {
                                                                             case "infection" ->
                                                                                     stats.setInfection(value);
                                                                             case "fracturetimer" ->
-                                                                                    stats.setFracture(value);
+                                                                                    stats.setBoneHealTimer(value);
                                                                             case "dislocatedtimer" ->
-                                                                                    stats.setDislocation(value);
+                                                                                    stats.setDislocationTimer(value);
                                                                             case "desinfectiontimer" ->
-                                                                                    stats.setDisinfectionTimer(value);
+                                                                                    stats.setDisinfectionTime(value);
                                                                             case "bleedrate" ->
                                                                                     stats.setBleedRate(value);
                                                                             default ->
@@ -159,11 +159,9 @@ public class ModCommands {
                                                     // suggest all available fields
                                                     builder.suggest("blood");
                                                     builder.suggest("contiousness");
-                                                    builder.suggest("contiousnessCap");
                                                     builder.suggest("hemothorax");
                                                     builder.suggest("internalBleeding");
                                                     builder.suggest("oxygen");
-                                                    builder.suggest("oxygenCap");
                                                     builder.suggest("opioids");
                                                     builder.suggest("bloodViscosity");
                                                     builder.suggest("brainhealth");
@@ -187,13 +185,10 @@ public class ModCommands {
                                                                 switch (field) {
                                                                     case "blood" -> h.setBloodVolume(value);
                                                                     case "contiousness" -> h.setConsciousness(value);
-                                                                    case "contiousnesscap" ->
-                                                                            h.setConsciousnessCap(value);
                                                                     case "hemothorax" -> h.setHemothorax(value);
                                                                     case "internalbleeding" ->
                                                                             h.setInternalBleeding(value);
-                                                                    case "oxygen" -> h.setOxygen(value);
-                                                                    case "oxygencap" -> h.setOxygenCap(value);
+                                                                    case "oxygen" -> h.setBloodOxygen(value);
                                                                     case "opioids" -> h.setPendingOpioids(value);
                                                                     case "bloodviscosity" -> h.setBloodViscosity(value);
                                                                     case "brainhealth" -> h.setBrainHealth(value);
@@ -274,7 +269,7 @@ public class ModCommands {
         FoodData foodData;
         for (ServerPlayer player : targets) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                    data.resetToDefaults(player));
+                    data.heal(player));
             foodData = player.getFoodData();
             foodData.setExhaustion(0);
             foodData.setFoodLevel(20);

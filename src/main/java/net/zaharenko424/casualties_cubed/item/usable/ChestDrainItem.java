@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;

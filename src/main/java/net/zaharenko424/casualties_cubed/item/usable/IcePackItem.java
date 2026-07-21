@@ -31,7 +31,7 @@ public class IcePackItem extends Item implements ISimpleMedicalUsable, IAllowInM
             LimbStatistics stats = data.getLimb(limb);
 
             stats.addMuscleHealth(35);
-            stats.setDislocation(stats.getDislocation() * 0.4f);
+            stats.setDislocationTimer(stats.getDislocationTimer() * 0.4f);
             stats.setPain(stats.getPain() * 0.5f);
             stats.setMuscleHeal(true);
         });

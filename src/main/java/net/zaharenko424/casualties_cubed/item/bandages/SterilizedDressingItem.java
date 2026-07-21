@@ -39,8 +39,8 @@ public class SterilizedDressingItem extends Item implements IBandage, IAllowInMe
             stats.addSkinHealth(0.1f * scalableAmount);
 
             float fractRed = Math.max(0f, 1f - 0.001f * scalableAmount);
-            stats.setFracture(stats.getFracture() * fractRed);
-            stats.setDislocation(stats.getDislocation() * fractRed);
+            stats.setBoneHealTimer(stats.getBoneHealTimer() * fractRed);
+            stats.setDislocationTimer(stats.getDislocationTimer() * fractRed);
 
             stats.addDisinfectionTimer(250 * scalableAmount);
         });

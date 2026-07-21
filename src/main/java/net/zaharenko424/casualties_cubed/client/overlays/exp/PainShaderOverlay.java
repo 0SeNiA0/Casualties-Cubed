@@ -20,7 +20,7 @@ public class PainShaderOverlay implements IShaderOverlay {
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();
         float pain = (float)(mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getTotalPain).orElse(0d) / 100f);
+                .map(PlayerHealthData::getAveragePain).orElse(0d) / 100f);
 
         return pain>0.1;
     }
@@ -36,7 +36,7 @@ public class PainShaderOverlay implements IShaderOverlay {
 
         // interpolate between last tick and current tick values
         float pain = (float)(mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getTotalPain).orElse(0d) / 100f);
+                .map(PlayerHealthData::getAveragePain).orElse(0d) / 100f);
         float Consiousness = (mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
                 .map(PlayerHealthData::getConsciousness).orElse(0f));
         if (Consiousness<10){

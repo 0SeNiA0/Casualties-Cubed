@@ -1,32 +1,37 @@
 package net.zaharenko424.casualties_cubed.limbs;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.zaharenko424.casualties_cubed.Util;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
-import org.apache.commons.lang3.BooleanUtils;
+import net.zaharenko424.casualties_cubed.util.Util;
 
 public class LimbStatistics {
 
+    private static final float dislocationHealSpeed = 0.07f;
+    private static final float boneHealSpeed = 0.043f;
+    private static final float muscleDeathThreshold = 5;
+
     private final PlayerHealthData data;
 
-    private float skinHealth = 100f;//
-    private boolean skinHeal = false;
-    private float muscleHealth = 100f;//
-    private boolean muscleHeal = false;
+    private float skinHealth = 100f;
+    private float skinHealAmount;
+    private float muscleHealth = 100f;
     private float burn = 0;
+    private float disinfectionTime = 0f;
+    private int infectionCheck;
     private float infection = 0f;//
-    private float fracture = 0f;//
-    private float dislocation = 0f;
+    private float boneHealTimer = 0f;//
+    private float dislocationTimer = 0f;
     private int shrapnel = 0;//
-    private float bleedRate = 0f;// THIS IS PER TICK for whateve reason
-    private float disinfectionTimer = 0f;//
-    private float minPain = 0f;//
+    /// THIS IS PER TICK for whateve reason
+    private float bleedRate = 0f;
+    private float bandageSlowAmount;
     private float pain = 0f;//
-    private float finalPain = 0f;
     private boolean hasSplint = false;//
     private boolean tourniquet = false;
     private int tourniquetTimer = 0;
+
     private boolean amputated = false;
     private float regrowthProgress = 0;
 
@@ -55,15 +60,18 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public boolean isSkinHeal() {
-        return skinHeal;
+    public float skinHealAmount() {
+        return skinHealAmount;
+    }
+
+    public void addSkinHealAmount(float skinHealAmount) {
+        if (amputated) return;
+
+        this.skinHealAmount += skinHealAmount;
+        syncNeeded = true;
     }
 
     public void setSkinHeal(boolean skinHeal) {
-        if (amputated || this.skinHeal == skinHeal) return;
-
-        this.skinHeal = skinHeal;
-        syncNeeded = true;
     }
 
     public float getMuscleHealth() {
@@ -84,15 +92,7 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public boolean isMuscleHeal() {
-        return muscleHeal;
-    }
-
     public void setMuscleHeal(boolean muscleHeal) {
-        if (amputated || this.muscleHeal == muscleHeal) return;
-
-        this.muscleHeal = muscleHeal;
-        syncNeeded = true;
     }
 
     public float getBurn() {
@@ -124,7 +124,6 @@ public class LimbStatistics {
     public void setPain(float pain) {
         if (amputated) return;
 
-        pain = Math.max(minPain, pain);
         if (this.pain == pain) return;
 
         this.pain = pain;
@@ -149,39 +148,39 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getFracture() {
-        return fracture;
+    public float getBoneHealTimer() {
+        return boneHealTimer;
     }
 
     public void addFracture(float fracture) {
-        setFracture(this.fracture + fracture);
+        setBoneHealTimer(this.boneHealTimer + fracture);
     }
 
-    public void setFracture(float fracture) {
+    public void setBoneHealTimer(float boneHealTimer) {
         if (amputated) return;
 
-        fracture = Mth.clamp(fracture, 0, 100);
-        if (this.fracture == fracture) return;
+        boneHealTimer = Mth.clamp(boneHealTimer, 0, 100);
+        if (this.boneHealTimer == boneHealTimer) return;
 
-        this.fracture = fracture;
+        this.boneHealTimer = boneHealTimer;
         syncNeeded = true;
     }
 
-    public float getDislocation() {
-        return dislocation;
+    public float getDislocationTimer() {
+        return dislocationTimer;
     }
 
     public void addDislocation(float dislocation) {
-        setDislocation(this.dislocation + dislocation);
+        setDislocationTimer(this.dislocationTimer + dislocation);
     }
 
-    public void setDislocation(float dislocation) {
+    public void setDislocationTimer(float dislocationTimer) {
         if (amputated) return;
 
-        dislocation = Mth.clamp(dislocation, 0, 100);
-        if (this.dislocation == dislocation) return;
+        dislocationTimer = Mth.clamp(dislocationTimer, 0, 100);
+        if (this.dislocationTimer == dislocationTimer) return;
 
-        this.dislocation = dislocation;
+        this.dislocationTimer = dislocationTimer;
         syncNeeded = true;
     }
 
@@ -221,6 +220,17 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
+    public float bandageSlowAmount() {
+        return bandageSlowAmount;
+    }
+
+    public void addBandageSlowAmount(float bandageSlowAmount) {
+        if (amputated) return;
+
+        this.bandageSlowAmount = bandageSlowAmount;
+        syncNeeded = true;
+    }
+
     public boolean hasSplint() {
         return hasSplint;
     }
@@ -232,52 +242,22 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getDisinfectionTimer() {
-        return disinfectionTimer;
+    public float getDisinfectionTime() {
+        return disinfectionTime;
     }
 
     public void addDisinfectionTimer(float disinfectionTimer) {
-        setDisinfectionTimer(this.disinfectionTimer + disinfectionTimer);
+        setDisinfectionTime(this.disinfectionTime + disinfectionTimer);
     }
 
     public void setDisinfectionTimerAtLeast(float disinfectionTimer) {
-        setDisinfectionTimer(Math.max(this.disinfectionTimer, disinfectionTimer));
+        setDisinfectionTime(Math.max(this.disinfectionTime, disinfectionTimer));
     }
 
-    public void setDisinfectionTimer(float disinfectionTimer) {
-        if (amputated || this.disinfectionTimer == disinfectionTimer) return;
+    public void setDisinfectionTime(float disinfectionTime) {
+        if (amputated || this.disinfectionTime == disinfectionTime) return;
 
-        this.disinfectionTimer = disinfectionTimer;
-        syncNeeded = true;
-    }
-
-    public float getMinPain() {
-        return minPain;
-    }
-
-    public void addMinPain(float minPain) {
-        setMinPain(this.minPain + minPain);
-    }
-
-    public void setMinPain(float minPain) {
-        if (amputated || this.minPain == minPain) return;
-
-        this.minPain = minPain;
-        syncNeeded = true;
-    }
-
-    public float getFinalPain() {
-        return finalPain;
-    }
-
-    public void addFinalPain(float finalPain) {
-        setFinalPain(this.finalPain + finalPain);
-    }
-
-    public void setFinalPain(float finalPain) {
-        if (amputated || this.finalPain == finalPain) return;
-
-        this.finalPain = finalPain;
+        this.disinfectionTime = disinfectionTime;
         syncNeeded = true;
     }
 
@@ -297,15 +277,15 @@ public class LimbStatistics {
         return tourniquetTimer;
     }
 
-    public void addTourniquetTimer(int tourniquetTimer) {
-        setTourniquetTimer(this.tourniquetTimer + tourniquetTimer);
-    }
-
-    public void setTourniquetTimer(int tourniquetTimer) {
+    public void setTourniquetTimer(int tourniquetTimer) {//TODO TourniquetTimer
         if (amputated || !tourniquet || this.tourniquetTimer == tourniquetTimer) return;
 
         this.tourniquetTimer = tourniquetTimer;
         syncNeeded = true;
+    }
+
+    public float bleedSpeedMult() {
+        return data.bleedingSpeedMultiplier();
     }
 
     public boolean isAmputated() {
@@ -323,21 +303,22 @@ public class LimbStatistics {
 
         skinHealth = 0;
         muscleHealth = 0;
+        burn = 0;
         pain = 0;
         infection = 0;
-        fracture = 0;
-        dislocation = 0;
+        boneHealTimer = 0;
+        dislocationTimer = 0;
         shrapnel = 0;
         bleedRate = 0;
-        disinfectionTimer = 0;
-        minPain = 0;
-        finalPain = 0;
-        skinHeal = false;
-        muscleHeal = false;
+        disinfectionTime = 0;
 
         hasSplint = false;//TODO drop splint / tourniquet if any present - need player context
         tourniquet = false;
         tourniquetTimer = 0;
+
+        bandageSlowAmount = 0;
+        skinHealAmount = 0;
+        infectionCheck = 0;
     }
 
     public float getRegrowthProgress() {
@@ -368,7 +349,7 @@ public class LimbStatistics {
         return true;
     }
 
-    void tick(Limb limb) {
+    void update(ServerPlayer player, Limb limb) {
         if (isAmputated()) return;
 
         if (burn >= 100 && ServerConfig.PERMANENT_DAMAGE.get()) {
@@ -376,141 +357,113 @@ public class LimbStatistics {
             return;
         }
 
-        //Healing
-        if (burn < 25) {
-            if (isSkinHeal() && getShrapnel() <= 0) {
-                addSkinHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f));
-            } else {
-                addSkinHealth((ServerConfig.NORMAL_LIMB_HEAL_RATE.get().floatValue() / 20f));
-            }
-
-            if (isMuscleHeal() && getShrapnel() <= 0 && getInfection() <= 0) {
-                addMuscleHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f));
-            } else if (getShrapnel() <= 0 && getInfection() <= 0) {
-                addMuscleHealth((ServerConfig.NORMAL_LIMB_HEAL_RATE.get().floatValue() / 20f));
-            }
-        }
-
         if (burn > 0) burn -= Math.min(burn, 0.1f * Util.TICK_TO_SEC);// 0.1/s -> 100 to 0 in ~16min
 
-        //MinpainCalculation
-        setMinPain(((getInfection() / 100) * 10) + (((getSkinHealth() - 100) / -100) * 15));
+        data.setBloodVolume(data.getBloodVolume() - bleedRate);
 
-        // Pain Adjustment
-        float x = getPain() / 100f;
-        float decay = 0.05f + 0.1f * (float) Math.pow(x, 1.2f);
-        if (isTourniquet()) {
-            if (getPain() > 60) {
-                addPain(-decay * (1 + (data.getNetOpioids() > 0 ? (data.getNetOpioids() / 40) : 0)));
-            }
-        } else {
-            addPain(-decay * (1 + (data.getNetOpioids() > 0 ? (data.getNetOpioids() / 40) : 0)));
+        float newPain = 15 - skinHealth * 0.15f + infection * 0.1f;
+        pain = Mth.clamp(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain),0 ,100);
+        if (data.getTemperature() < 32) {
+            pain -= Util.TICK_TO_SEC * 5;
         }
 
-        // Infection Adjustment
-        calculateInfectionAndSpread(limb);
-        if (getSkinHealth() < 100 && getInfection() <= 0) {
-            float chance = ((100 - getSkinHealth()) / 100f) * (ServerConfig.INFECTION_CHANCE.get().floatValue() / 20f);
-            if (Math.random() < chance) {
-                addInfection(1);
-            }
-        }
+        dislocationTimer -= Util.TICK_TO_SEC * dislocationHealSpeed * 1;//option healingRate
+        boneHealTimer -= Util.TICK_TO_SEC * boneHealSpeed * 1;//option healingRate
 
-        if (getInfection() >= 75) {
-            addMuscleHealth(-(ServerConfig.INFECTION_MUSCLE_DRAIN.get().floatValue() / 20f));
-        }
+        //CU uses dislocated/broken booleans which is effectively respective healTimer > 0
 
-        if (getInfection() <= 0 && limb == Limb.HEAD && getMuscleHealth() < 15) {
-            addMuscleHealth((ServerConfig.BOOSTED_LIMB_HEAL_RATE.get().floatValue() / 20f) * 3);
-        }
-
-        // Bleed
         if (shrapnel == 0 && bleedRate > 0 && data.getVenom() < 20) {
-            addBleedRate(-0.027f * Util.TICK_TO_MIN/*!magic stuff! twice because bleed is per tick*/ * Util.TICK_TO_MIN * (1 - data.getVenom() / 20) * (1 + data.getBloodViscosity() / 100));
+            /*mul twice as bleed is per tick TODO make per second or smth*/
+            addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(data.bleedClottingSpeed() * 1/*option healingRate*/ * bleedSpeedMult()));
+            if (bandageSlowAmount > 0) addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(1.25f * bleedSpeedMult()));
         }
 
-        //Fract/Disl calculation
-        if (getFracture() > 0 || getDislocation() > 0) {
-            setMuscleHealth(Math.min(getMuscleHealth(), 50));
-        }
+        bandageSlowAmount = Math.max(bandageSlowAmount - 1.25f * Util.TICK_TO_SEC, 0);
+        skinHealAmount = Math.max(skinHealAmount - 0.5f * Util.TICK_TO_SEC, 0);
+        disinfectionTime = Math.max(disinfectionTime - 1/*option infectionSpeed*/ * Util.TICK_TO_SEC, 0);
 
-        if (getFracture() > 0) {
-            float reduction = (ServerConfig.FRACTURE_HEAL_RATE.get().floatValue() / 20) * (1 + BooleanUtils.toInteger(hasSplint()));
-            setFracture(Mth.clamp(getFracture() - reduction, 0, 100));
-        }
-        if (getDislocation() > 0) {
-            float reduction = (ServerConfig.DISLOCATION_HEAL_RATE.get().floatValue() / 20) * (1 + BooleanUtils.toInteger(hasSplint()));
-            setDislocation(Mth.clamp(getDislocation() - reduction, 0, 100));
-        }
-
-        if (isTourniquet()) {
-            // Pain ramps up towards 40
-            if (getPain() < 60) {
-                addPain(ServerConfig.TOURNIQUET_PAIN_PER_TICK.get().floatValue());
-            }
-
-            // Timer ticks up
-            addTourniquetTimer(1);
-            if (getTourniquetTimer() > ServerConfig.TOURNIQUET_SAFE_TICKS.get()) {
-                float tourniquetMuscleDamage = (ServerConfig.TOURNIQUET_MUSCLE_DAMAGE.get().floatValue() / 20f);
-                addMuscleHealth(-tourniquetMuscleDamage);
-                switch (limb) {
-                    case LEFT_ARM ->
-                            data.getLimb(Limb.LEFT_HAND).addMuscleHealth(-tourniquetMuscleDamage);
-                    case RIGHT_ARM ->
-                            data.getLimb(Limb.RIGHT_HAND).addMuscleHealth(-tourniquetMuscleDamage);
-                    case LEFT_LEG ->
-                            data.getLimb(Limb.LEFT_FOOT).addMuscleHealth(-tourniquetMuscleDamage);
-                    case RIGHT_LEG ->
-                            data.getLimb(Limb.RIGHT_FOOT).addMuscleHealth(-tourniquetMuscleDamage);
-                }
+        if (infection <= 0 && skinHealth < 80) {
+            infectionCheck--;
+            if (infectionCheck <= 0) {//40 seconds
+                infectionCheck = 40 * 20;
+                float f = Mth.lerp(0.77f, skinHealth * 0.01f / 0.8f, 1) - (bleedRate * 20 / bleedSpeedMult()) * 0.007f;//convert L/t to CU points
+                if (player.getRandom().nextFloat() * 1/*option infectionChance*/ < 1 - f) infection = 0.1f;
             }
         }
 
-        setFinalPain(getPain());
+        if (infection > 0) {
+            float infectionSpeed = infectionSpeed();
+            infection += infectionSpeed * Util.TICK_TO_SEC / 60 * 1;//option infectionSpeed
+
+            if (data.getTemperature() < 40.5f) {
+                data.addTemperature(0.02f * Util.TICK_TO_SEC);
+            }
+
+            infection = Mth.clamp(infection, 0, 100);
+        }
+
+        if (infection > 90) {
+            LimbStatistics stats;
+            for (Limb connected : limb.getConnectedLimbs()) {
+                stats = data.getLimb(connected);
+                if (stats.getInfection() > 0) continue;
+
+                stats.setInfection(0.1f);
+            }
+        }
+
+        if (infection > 75) {
+            addMuscleHealth(-0.2f * Util.TICK_TO_SEC);
+        } else if ((infection <= 0 || limb == Limb.HEAD) && data.getCUHunger(player) > 0) {
+            addMuscleHealth(muscleHealRate(player, limb));
+
+            if (infection <= 0) {
+                addSkinHealth(skinHealRate(player));
+            }
+        }
+
+        if (muscleHealth <= muscleDeathThreshold) {
+            if (limb == Limb.CHEST) {
+                data.respiratoryRate(0);
+                data.setInternalBleeding(data.getInternalBleeding() + 0.2f * Util.TICK_TO_SEC);
+            }
+        }
+
+        if ((dislocationTimer > 0 || boneHealTimer > 0) && muscleHealth > 50) {
+            muscleHealth = 50;
+        }
+
+        if (skinHealAmount > 0) {
+            addSkinHealth(0.5f * Util.TICK_TO_SEC);
+            addBurn(-0.5f * Util.TICK_TO_SEC);
+        }
+
+        if (data.getBloodOxygen() <= 5 || data.bloodPressure() < 20) {
+            addMuscleHealth(-0.6f * Util.TICK_TO_SEC);
+        }
     }
 
-    private void calculateInfectionAndSpread(Limb limb) {
-        float infection_progress = (float) ((data.getImmunity() * ServerConfig.IMMUNITY_SCALE.get()) * -0.001188f + 0.18f);
-        if (getDisinfectionTimer() > 0) {
-            infection_progress -= (0.125f * 20) * (ServerConfig.DISINFECTION_SCALE.get().floatValue() / 20f);
-            addDisinfectionTimer(-1);
+    float infectionSpeed() {
+        float infectionSpeed = data.currentImmunityMult();
+        if (disinfectionTime > 0) {
+            infectionSpeed -= 1.7f;
         }
-
-        if (getInfection() <= 0) return;
-
-        addInfection(infection_progress / 20);
-        if (getInfection() < 75) return;
-
-        float chance = (getInfection() - 75);
-        if (Math.random() > chance) {
-            LimbStatistics connectedLimb = data.getLimb(limb.randomFromConectedLimb());
-            if (connectedLimb.getInfection() <= 0) {
-                connectedLimb.addInfection(1);
-            }
-        }
+        return 7.2f * infectionSpeed;
     }
 
-    void copyFrom(LimbStatistics other) {
-        skinHealth = other.skinHealth;
-        muscleHealth = other.muscleHealth;
-        burn = other.burn;
-        pain = other.pain;
-        infection = other.infection;
-        fracture = other.fracture;
-        dislocation = other.dislocation;
-        shrapnel = other.shrapnel;
-        hasSplint = other.hasSplint;
-        bleedRate = other.bleedRate;
-        disinfectionTimer = other.disinfectionTimer;
-        minPain = other.minPain;
-        finalPain = other.finalPain;
-        skinHeal = other.skinHeal;
-        muscleHeal = other.muscleHeal;
-        tourniquet = other.tourniquet;
-        tourniquetTimer = other.tourniquetTimer;
-        amputated = other.amputated;
-        regrowthProgress = other.regrowthProgress;
+    float muscleHealRate(ServerPlayer player, Limb limb) {
+        if (burn > 25) return 0;
+
+        return Util.TICK_TO_SEC * 0.08f * (player.isSleeping() ? 1.4f : 1) * ((muscleHealth > 10 || limb == Limb.HEAD) ? 1 : 0.25f)
+                * (shrapnel > 0 ? (limb != Limb.HEAD || muscleHealth > 14.28571f) ? 0 : 1 : 1) * data.hungerLimbHealCurrent() * 1;//option healingRate
+    }
+
+    float skinHealRate(ServerPlayer player) {
+        if (burn > 25) return 0;
+
+        if (shrapnel > 0) return 0;
+        return Util.TICK_TO_SEC * 0.055f * (player.isSleeping() ? 1.4f : 1) * (skinHealth > 10 ? 1 : 0.25f)
+                * (bleedRate * 20 > Util.CUBloodPointsToL(bleedSpeedMult()) ? 0.2f : 1) * data.hungerLimbHealCurrent() * 1;//option healingRate
     }
 
     void save(CompoundTag tag) {
@@ -525,18 +478,18 @@ public class LimbStatistics {
         tag.putFloat("Burn", burn);
         tag.putFloat("Pain", pain);
         tag.putFloat("Infection", infection);
-        tag.putFloat("FractureTimer", fracture);
-        tag.putFloat("Dislocated", dislocation);
+        tag.putFloat("FractureTimer", boneHealTimer);
+        tag.putFloat("Dislocated", dislocationTimer);
         tag.putInt("Shrapnel", shrapnel);
         tag.putBoolean("HasSplint", hasSplint);
         tag.putFloat("BleedRate", bleedRate);
-        tag.putFloat("DisinfectionTimer", disinfectionTimer);
-        tag.putFloat("MinPain", minPain);
-        tag.putFloat("FinalPain", finalPain);
-        tag.putBoolean("SkinHeal", skinHeal);
-        tag.putBoolean("MuscleHeal", muscleHeal);
+        tag.putFloat("DisinfectionTimer", disinfectionTime);
         tag.putBoolean("Tourniquet", tourniquet);
         tag.putInt("TourniquetTime", tourniquetTimer);
+
+        tag.putFloat("bandageSlowAmount", bandageSlowAmount);
+        tag.putFloat("skinHealAmount", skinHealAmount);
+        tag.putInt("infectionCheck", infectionCheck);
     }
 
     void load(CompoundTag tag) {
@@ -551,20 +504,18 @@ public class LimbStatistics {
         burn = tag.getFloat("Burn");
         pain = tag.getFloat("Pain");
         infection = tag.getFloat("Infection");
-        fracture = tag.getFloat("FractureTimer");
-        dislocation = tag.getFloat("Dislocated");
+        boneHealTimer = tag.getFloat("FractureTimer");
+        dislocationTimer = tag.getFloat("Dislocated");
         shrapnel = tag.getInt("Shrapnel");
         hasSplint = tag.getBoolean("HasSplint");
         bleedRate = tag.getFloat("BleedRate");
-        disinfectionTimer = tag.getFloat("DisinfectionTimer");
-        minPain = tag.getFloat("MinPain");
-        finalPain = tag.getFloat("FinalPain");
-        skinHeal = tag.getBoolean("SkinHeal");
-        muscleHeal = tag.getBoolean("MuscleHeal");
+        disinfectionTime = tag.getFloat("DisinfectionTimer");
         tourniquet = tag.getBoolean("Tourniquet");
         tourniquetTimer = tag.getInt("TourniquetTime");
 
-        if (Float.isNaN(bleedRate)) bleedRate = 0;
+        bandageSlowAmount = tag.getFloat("bandageSlowAmount");
+        skinHealAmount = tag.getFloat("skinHealAmount");
+        infectionCheck = tag.getInt("infectionCheck");
     }
 
     @Override
@@ -575,16 +526,13 @@ public class LimbStatistics {
                 ", burn=" + burn +
                 ", pain=" + pain +
                 ", infection=" + infection +
-                ", fractureTimer=" + fracture +
-                ", dislocatedTimer=" + dislocation +
+                ", fractureTimer=" + boneHealTimer +
+                ", dislocatedTimer=" + dislocationTimer +
                 ", shrapnell=" + shrapnel +
                 ", hasSplint=" + hasSplint +
                 ", bleedRate=" + bleedRate +
-                ", disinfectionTimer=" + disinfectionTimer +
-                ", minPain=" + minPain +
-                ", finalPain=" + finalPain +
-                ", skinHeal=" + skinHeal +
-                ", muscleHeal=" + muscleHeal +
+                ", disinfectionTimer=" + disinfectionTime +
+                ", skinHealAmount=" + skinHealAmount +
                 ", tourniquet=" + tourniquet +
                 ", tourniquetTimer=" + tourniquetTimer +
                 '}';

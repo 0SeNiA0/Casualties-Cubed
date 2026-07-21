@@ -18,7 +18,7 @@ public class BrainDamageServerController {
         float brain = data.getBrainHealth();
         if (brain < 30) return null; // unconscious
 
-        float dislocatedJaw = data.getLimb(Limb.HEAD).getDislocation();
+        float dislocatedJaw = data.getLimb(Limb.HEAD).getDislocationTimer();
         boolean JawMissing = data.isMouthRemoved();
 
         float clarity = Mth.clamp(brain / 100f, 0, 1);

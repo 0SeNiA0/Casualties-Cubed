@@ -125,7 +125,7 @@ public class BandageMinigameScreen extends Screen {
         Player player = Minecraft.getInstance().player;
         if (player != null) {
             Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
-            Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
+            Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getAveragePain);
             float consscale = (cons.orElse(100f) / 100) * 0.15f;
             float painscale = (float) (pain.orElse(0d) / 100);
             handObject.setShakeScale(painscale);
@@ -200,7 +200,6 @@ public class BandageMinigameScreen extends Screen {
         guiGraphics.drawString(mc.font, comp, this.width / 10 + 16, this.height / 10 + 5, 0xFFFFFF);
 
         handObject.render(guiGraphics, partialTicks);
-
     }
 
     @Override

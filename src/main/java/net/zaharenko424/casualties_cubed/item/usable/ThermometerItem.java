@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import org.jetbrains.annotations.Nullable;
 

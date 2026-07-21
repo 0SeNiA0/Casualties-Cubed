@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +23,7 @@ import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
@@ -150,7 +152,7 @@ public class HealthScreen extends Screen {
         healthbox.setName(Component.literal(target.getScoreboardName()));
         if (player != null) {
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                heartBeatSound = new HeartBeatSound(player, h.getBPM());
+                heartBeatSound = new HeartBeatSound(player, h.getHeartRate());
             });
         }
         if (RightItem.getStack().getItem() instanceof IBag iBag) {
@@ -272,6 +274,94 @@ public class HealthScreen extends Screen {
             if (!BGmode)
                 lastHovered = h;
         }
+
+        pGuiGraphics.pose().pushPose();
+        pGuiGraphics.pose().translate(width / 2f, height * 0.666f, 0);
+        drawECG(pGuiGraphics);
+        pGuiGraphics.pose().popPose();
+    }
+
+    float timeToUpdate;
+    long lastFrameMS = System.currentTimeMillis();
+    int writeX;
+    int lastY;
+    float writeHeight;
+    int[][] pixelGrid = new int[120][25];
+
+    private void drawECG(GuiGraphics graphics) {
+        PlayerHealthData data = PlayerHealthData.of(Minecraft.getInstance().player).orElse(null);
+        if (data == null) return;
+
+        int width = 120;
+        int height = 25;
+
+        long currentMS = System.currentTimeMillis();
+        timeToUpdate += (currentMS - lastFrameMS) / 1000f;
+        lastFrameMS = currentMS;
+        if (timeToUpdate > 0.1f) {
+            timeToUpdate = 0.1f;
+        }
+
+        while (timeToUpdate > 0.028f) {
+            writeX++;
+            if (writeX >= width) {
+                writeX = 0;
+            }
+
+            writeHeight = data.getECGHeight(timeToUpdate - 0.028f);
+
+            int num = Math.round((writeHeight + 1f) * 0.5f * (float)(height - 1));
+            num = height - num;
+            int num2 = Math.min(lastY, num);
+            int num3 = Math.max(lastY, num);
+            for (int i = num2; i <= num3; i++) {
+                pixelGrid[writeX][i] = -1;
+                if (i + 1 < height) {
+                    pixelGrid[writeX][i + 1] = color(-1, Math.max(50, alpha(pixelGrid[writeX][i + 1])));
+                }
+
+                if (i - 1 >= 0) {
+                    pixelGrid[writeX][i - 1] = color(-1, Math.max(50, alpha(pixelGrid[writeX][i - 1])));
+                }
+
+                if (writeX + 1 < width) {
+                    pixelGrid[writeX + 1][i] = color(-1, Math.max(50, alpha(pixelGrid[writeX + 1][i])));
+                }
+
+                if (writeX - 1 >= 0) {
+                    pixelGrid[writeX - 1][i] = color(-1, Math.max(50, alpha(pixelGrid[writeX - 1][i])));
+                }
+            }
+
+            for (int j = 0; j < width; j++) {
+                for (int k = 0; k < height; k++) {
+                    int color = pixelGrid[j][k];
+                    pixelGrid[j][k] = color(color, (byte) (alpha(color) * 0.985f));
+                }
+            }
+
+            lastY = num;
+            timeToUpdate -= 0.028f;
+        }
+
+        graphics.drawManaged(() -> {
+            for (int j = 0; j < width; j++) {
+                for (int k = 0; k < height; k++) {
+                    int color = pixelGrid[j][k];
+                    if (color == 0 || alpha(color) == 0) continue;
+
+                    graphics.fill(j, k, j + 1, k + 1, color);
+                }
+            }
+        });
+    }
+
+    private static int alpha(int packed) {
+        return FastColor.ARGB32.alpha(packed);
+    }
+
+    private static int color(int packed, int alpha) {
+        return alpha << 24 | (packed & 0x00FFFFFF);
     }
 
     @Override
@@ -280,7 +370,7 @@ public class HealthScreen extends Screen {
         cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getConsciousness() < 10).orElse(false) && (target != Minecraft.getInstance().player);
         if (heartBeatSound != null && Minecraft.getInstance().player != null) {
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                float bpm = h.getBPM();
+                float bpm = h.getHeartRate();
                 heartBeatSound.setBPM(bpm);
             });
             heartBeatSound.tick();
@@ -309,15 +399,15 @@ public class HealthScreen extends Screen {
             healthbox.setLimbname(lastHovered.getLimb());
             healthbox.setPain2(hovered.getPain());
             healthbox.setBleed2(hovered.getBleedRate());
-            healthbox.setPain((float) health.getTotalPain());
+            healthbox.setPain((float) health.getAveragePain());
             healthbox.setContiousness(health.getConsciousness());
             healthbox.setBlood(health.getBloodVolume());
-            healthbox.setBleed(health.getCombinedBleed());
+            healthbox.setBleed(health.totalBleedSpeed());
             healthbox.setInfection(hovered.getInfection());
             healthbox.setOpiates(health.getNetOpioids());
-            healthbox.setOxygen(health.getOxygen());
-            healthbox.setDislocated(hovered.getDislocation());
-            healthbox.setFracture(hovered.getFracture());
+            healthbox.setOxygen(health.getBloodOxygen());
+            healthbox.setDislocated(hovered.getDislocationTimer());
+            healthbox.setFracture(hovered.getBoneHealTimer());
             healthbox.setBrain(health.getBrainHealth());
             healthbox.setTemp(health.getTemperature());
             healthbox.setImmunity(health.getImmunity());
@@ -416,17 +506,17 @@ public class HealthScreen extends Screen {
                 }
                 // collect values once
                 float bleed = stats.getBleedRate();
-                boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !health.isOppositeToChestUnderTourniquet(limb);
+                boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !health.isUnderTourniquet(limb);
                 float pain = stats.getPain();
                 float skin = stats.getSkinHealth();
                 float muscle = stats.getMuscleHealth();
 
                 boolean infection = stats.getInfection() > 25;
-                boolean dislocated = stats.getDislocation() > 0;
+                boolean dislocated = stats.getDislocationTimer() > 0;
                 boolean splint = stats.hasSplint();
                 boolean shrapnel = stats.getShrapnel() > 0;
-                boolean fractured = stats.getFracture() > 0;
-                boolean desinfection = stats.getDisinfectionTimer() > 0;
+                boolean fractured = stats.getBoneHealTimer() > 0;
+                boolean desinfection = stats.getDisinfectionTime() > 0;
                 boolean tourniquet = stats.isTourniquet();
 
                 // ---- apply to the widget ----

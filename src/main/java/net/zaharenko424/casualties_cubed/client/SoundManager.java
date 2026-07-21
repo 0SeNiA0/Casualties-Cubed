@@ -19,7 +19,7 @@ public class SoundManager {
         if (!ClientConfig.EXPERIMENTAL_SOUNDS.get())return;
 
         boolean shouldPlay = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(h -> h.getTotalPain() > 50)
+                .map(h -> h.getAveragePain() > 50)
                 .orElse(false);
 
         if (shouldPlay && (painDrone == null || painDrone.isStopped())) {

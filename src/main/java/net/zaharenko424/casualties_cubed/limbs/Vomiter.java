@@ -3,7 +3,7 @@ package net.zaharenko424.casualties_cubed.limbs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.food.FoodData;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 
 public class Vomiter {
 

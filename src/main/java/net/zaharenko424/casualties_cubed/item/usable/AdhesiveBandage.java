@@ -29,13 +29,13 @@ public class AdhesiveBandage extends Item implements ISimpleMedicalUsable, IAllo
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.addDelayedChange(((0.1f) / 20f) / 60f, 100, limb);
             LimbStatistics stas = data.getLimb(limb);
 
-            stas.addSkinHealth(3);
+            stas.addSkinHealAmount(3);
+            stas.addBandageSlowAmount(6);
             stas.setPain(stas.getPain() * .90f);
 
-            if (!source.isCreative()) subNbtDurability(stack, 20);
+            if (!source.isCreative()) subNbtDurability(stack, 16);
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
         });
     }

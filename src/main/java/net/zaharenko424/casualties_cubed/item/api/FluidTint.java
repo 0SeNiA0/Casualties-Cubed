@@ -1,7 +1,7 @@
 package net.zaharenko424.casualties_cubed.item.api;
 
 import net.minecraft.world.item.ItemStack;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 

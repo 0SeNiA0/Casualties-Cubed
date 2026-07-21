@@ -185,8 +185,8 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
             for (Limb limb : Limb.values()) {
                 stats = data.getLimb(limb);
                 stats.setSkinHealth(100);
-                stats.setFracture(0);
-                stats.setDislocation(0);
+                stats.setBoneHealTimer(0);
+                stats.setDislocationTimer(0);
             }
         } else if (roll < 67) {
             for (Limb limb : Limb.values()) {
@@ -195,7 +195,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
         } else if (roll < 77) {
             data.setTemperature(36.6f);
         } else if (roll < 87) {
-            data.setLastStand(false);
+            data.setTriedRollingLastStand(false);
         } else if (roll < 90) {
             for (Limb limb : Limb.values()) {
                 data.getLimb(limb).setDisinfectionTimerAtLeast(10 * 60 * 20);

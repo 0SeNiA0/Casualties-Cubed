@@ -71,7 +71,7 @@ public class DislocationMinigameScreen extends Screen {
         Player player = Minecraft.getInstance().player;
         if (player != null) {
             Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
-            Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getTotalPain);
+            Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getAveragePain);
             float consscale = (cons.orElse(100f) / 100) * 0.15f;
             float painscale = (float) (pain.orElse(0d) / 100);
             handObject.setShakeScale(painscale);
@@ -169,7 +169,7 @@ public class DislocationMinigameScreen extends Screen {
             hp.BGmode = true;
         }
 
-        float dislocation = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(limb).getDislocation()).orElse(0f);
+        float dislocation = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(limb).getDislocationTimer()).orElse(0f);
         boneObject = new BoneObject(this.width / 2, this.height / 2 - 40, dislocation);
     }
 

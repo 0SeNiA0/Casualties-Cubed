@@ -80,7 +80,7 @@ public class ServerConfig {
                         .defineInRange("infectionMuscleDrain",0.4,0,100);
         HEMOTHORAX_HEAL_RATE = BUILDER
                 .comment("The rate at which Hemothorax is healed (pts/s)")
-                        .defineInRange("hemothoraxHealRate",0.05,0,100);
+                        .defineInRange("hemothoraxHealRate",0.036,0,100);
         OXYGEN_REPLENISH = BUILDER
                 .comment("The rate at which Oxygen Replenishes (%/s)")
                         .defineInRange("oxygenReplenish",8d,0,100);

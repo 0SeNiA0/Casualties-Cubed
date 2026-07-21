@@ -39,7 +39,7 @@ public class BruiseKitItem extends Item implements IBandage, IAllowInMedicBags {
             stats.addMuscleHealth(1.2f * scalableAmount);
 
             float fractRed = Math.max(0f, 1f - 0.024f * scalableAmount);
-            stats.setDislocation(stats.getDislocation() * fractRed);
+            stats.setDislocationTimer(stats.getDislocationTimer() * fractRed);
         });
     }
 

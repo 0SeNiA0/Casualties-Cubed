@@ -1,4 +1,4 @@
-package net.zaharenko424.casualties_cubed;
+package net.zaharenko424.casualties_cubed.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +25,21 @@ public class Util {
         if (Math.abs(end - start) <= moveAmount) return end;
 
         return start + Math.signum(end - start) * moveAmount;
+    }
+
+    public static float min(float... values) {
+        if (values.length == 0) return 0;
+
+        float min = values[0];
+        for (int i = 1; i < values.length; i++) {
+            if (values[i] < min) min = values[i];
+        }
+
+        return min;
+    }
+
+    public static float remap(float value, float from1, float to1, float from2, float to2) {
+        return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
     }
 
     public static Level level() {

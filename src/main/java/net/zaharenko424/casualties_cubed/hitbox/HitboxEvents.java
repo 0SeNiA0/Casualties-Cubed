@@ -108,7 +108,8 @@ public class HitboxEvents {
         if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount)
                 || (ctx != null && ctx.preArmorAmount == Float.MAX_VALUE)) return;
 
-        if (src.is(DamageTypeTags.IS_DROWNING) || src.is(DamageTypes.IN_WALL)) {//Handled in PlayerHealthData
+        if (src.is(DamageTypeTags.IS_DROWNING) || src.is(DamageTypes.IN_WALL)
+                || src.is(DamageTypes.STARVE)) {//Handled in PlayerHealthData
             event.setAmount(0);
             return;
         }

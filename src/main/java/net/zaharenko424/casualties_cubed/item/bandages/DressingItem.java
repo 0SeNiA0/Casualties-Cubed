@@ -39,8 +39,8 @@ public class DressingItem extends Item implements IBandage, IAllowInMedicBags {
             stats.addSkinHealth(0.3f * scalableAmount);
 
             float fractRed = Math.max(0f, 1f - 0.001f * scalableAmount);
-            stats.setFracture(stats.getFracture() * fractRed);
-            stats.setDislocation(stats.getDislocation() * fractRed);
+            stats.setBoneHealTimer(stats.getBoneHealTimer() * fractRed);
+            stats.setDislocationTimer(stats.getDislocationTimer() * fractRed);
         });
     }
 

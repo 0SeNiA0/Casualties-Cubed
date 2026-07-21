@@ -30,12 +30,13 @@ public class MedicalSutureItem extends Item implements ISimpleMedicalUsable, IAl
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             LimbStatistics stats = data.getLimb(limb);
-            stats.addSkinHealth(25);
-            stats.addBleedRate(- 0.81f / 20f / 60f);
-            stats.addPain(10);
+
+            stats.addPain(12.5f);
+            stats.addSkinHealAmount(25);
+            stats.addBleedRate(- 0.81f / 20f / 60f);//TODO replace with delayedTask-like thing
         });
 
-        if (!source.isCreative()) subNbtDurability(stack, 50);
+        if (!source.isCreative()) subNbtDurability(stack, 51);
         source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
     }
 

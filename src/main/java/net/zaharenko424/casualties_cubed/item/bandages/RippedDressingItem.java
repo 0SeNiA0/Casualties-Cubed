@@ -39,8 +39,8 @@ public class RippedDressingItem extends Item implements IBandage, IAllowInMedicB
             stats.addSkinHealth(0.16f * scalableAmount);
 
             float fractRed = Math.max(0f, 1f - 0.0002f * scalableAmount);
-            stats.setFracture(stats.getFracture() * fractRed);
-            stats.setDislocation(stats.getDislocation() * fractRed);
+            stats.setBoneHealTimer(stats.getBoneHealTimer() * fractRed);
+            stats.setDislocationTimer(stats.getDislocationTimer() * fractRed);
         });
     }
 

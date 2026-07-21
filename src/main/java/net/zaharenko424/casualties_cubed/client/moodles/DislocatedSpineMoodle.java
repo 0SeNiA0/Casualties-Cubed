@@ -25,7 +25,7 @@ public class DislocatedSpineMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getLimb(Limb.CHEST).getDislocation() > 0 ? MoodleStatus.HEAVY_NEG : MoodleStatus.NONE;
+        return data.getLimb(Limb.CHEST).getDislocationTimer() > 0 ? MoodleStatus.HEAVY_NEG : MoodleStatus.NONE;
     }
 
     @Override

@@ -94,7 +94,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
     }
 
     private boolean sendDistorted(Player player) {
-        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(Limb.HEAD).getDislocation() > 0 || data.isMouthRemoved()).orElse(false);
+        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(Limb.HEAD).getDislocationTimer() > 0 || data.isMouthRemoved()).orElse(false);
     }
 
     private short[] applyEcho(short[] in, float power, int delay) {

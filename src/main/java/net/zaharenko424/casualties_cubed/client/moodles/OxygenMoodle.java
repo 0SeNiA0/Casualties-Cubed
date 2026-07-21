@@ -25,7 +25,7 @@ public class OxygenMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        float ox = data.getOxygen();
+        float ox = data.getBloodOxygen();
 
         if (ox < 5) {
             return MoodleStatus.CRITICAL_NEG;

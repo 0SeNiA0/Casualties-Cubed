@@ -18,11 +18,11 @@ public class PainMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        double totalPain = data.getTotalPain();
+        double totalPain = data.getAveragePain();
 
         if (totalPain > 80) {
             return MoodleStatus.CRITICAL_NEG;
-        } else if (totalPain > 60) {
+        } else if (totalPain > 55) {
             return MoodleStatus.HEAVY_NEG;
         } else if (totalPain > 30) {
             return MoodleStatus.NORMAL_NEG;

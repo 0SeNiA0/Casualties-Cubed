@@ -1,6 +1,6 @@
 package net.zaharenko424.casualties_cubed.fluid_system;
 
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

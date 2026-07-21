@@ -1,7 +1,7 @@
 package net.zaharenko424.casualties_cubed.client.event;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.Util;
+import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.FluidTint;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
