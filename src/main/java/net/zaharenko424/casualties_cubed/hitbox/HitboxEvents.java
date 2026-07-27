@@ -9,14 +9,11 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
@@ -221,20 +218,6 @@ public class HitboxEvents {
             data.handleFireDamage(damageamount, player);
             event.setAmount(0);
             return;
-        } else if (src.getEntity() instanceof Player shooter) {
-            double range = 400.0;
-            EntityHitResult hitPos = rayTraceLivingEntity(shooter, range);
-            if (hitPos == null) {
-                return;
-            }
-            // Your custom hit sector logic
-            HitSector hit = detectHit(player, hitPos.getLocation());
-            // This damage value is AFTER vanilla reductions (armor, resistance, etc.)
-            float finalDamage = event.getAmount();
-            // Call into your capability with final damage
-            data.handleProjectileDamage(hit, finalDamage, player);
-            event.setAmount(0);
-            return;
         } else if (src.is(DamageTypeTags.BYPASSES_ARMOR)) {
             data.handleRandomDamage(damageamount, player);
             event.setAmount(0);
@@ -242,44 +225,14 @@ public class HitboxEvents {
         }
         //fuck you warium
 
+        //TODO replace with specific non projectile damage
+        //if (src.getSourcePosition() != null) {
+        //    data.handleProjectileDamage(detectHit(player, src.getSourcePosition()), damageamount, player);
+        //}
+
         data.handleRandomDamage(damageamount, player);
         event.setAmount(0);
     }
-
-
-    //@SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void oLivingDamage(LivingHurtEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        float absorb = player.getAbsorptionAmount();
-        float damageamount = event.getAmount();
-
-        if (player.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-            int amp = player.getEffect(MobEffects.DAMAGE_RESISTANCE).getAmplifier();
-            float reduction = 0.2f * (amp + 1); // 20% per level
-            damageamount *= (1.0f - reduction);
-        }
-        if (absorb > 0) {
-            float reduction = Math.min(absorb, damageamount * 0.75f);
-            player.setAbsorptionAmount(absorb - reduction);
-            damageamount -= reduction;
-        }
-        damageamount = Math.max(damageamount, 0);
-
-        /*
-        player.sendSystemMessage(Component.literal(
-                "Source: " + event.getSource().toString()
-                        + " | amt: " + damageamount
-                        + " | bypassArmor: " + event.getSource().is(DamageTypeTags.BYPASSES_ARMOR)
-                        + " | bypassShield: " + event.getSource().is(DamageTypeTags.BYPASSES_SHIELD)
-                        + " | bypassEnchant: " + event.getSource().is(DamageTypeTags.BYPASSES_ENCHANTMENTS)
-                        + " | ignoredTag: " + event.getSource().is(ModDamageTypeTags.IGNORE)
-                        + " | absorb: " + absorb
-        ));
-
-         */
-
-    }
-
 
     @SubscribeEvent
     public static void onHeal(LivingHealEvent event) {
@@ -405,9 +358,7 @@ public class HitboxEvents {
 
         // 2. Direct entity instanceof check
         Entity direct = source.getDirectEntity();
-        if (direct instanceof Projectile) return true;
-
-        return false;
+        return direct instanceof Projectile;
     }
 
     static final ResourceKey<DamageType> CBCproj = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "cannon_projectile"));
@@ -417,59 +368,4 @@ public class HitboxEvents {
     static final ResourceKey<DamageType> CBCtraff = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "traffic_cone"));
     static final ResourceKey<DamageType> CBCshrap = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "shrapnel"));
     static final ResourceKey<DamageType> CBCgrape = ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("createbigcannons", "grapeshot"));
-
-
-    public static EntityHitResult rayTraceLivingEntity(LivingEntity shooter, double range) {
-        Level world = shooter.level();
-        Vec3 start = shooter.getEyePosition(1.0F);
-        Vec3 direction = shooter.getViewVector(1.0F).normalize();
-        Vec3 end = start.add(direction.scale(range));
-
-        // Raytrace for blocks first
-        ClipContext blockContext = new ClipContext(
-                start,
-                end,
-                ClipContext.Block.COLLIDER,
-                ClipContext.Fluid.NONE,
-                shooter
-        );
-        BlockHitResult blockHit = world.clip(blockContext);
-
-        Vec3 finalEnd = end;
-        if (blockHit.getType() == HitResult.Type.BLOCK) {
-            finalEnd = blockHit.getLocation();
-        }
-
-        // Build an AABB along the ray
-        AABB scanBox = shooter.getBoundingBox().expandTowards(direction.scale(range)).inflate(1.0);
-        List<LivingEntity> candidates = world.getEntitiesOfClass(
-                LivingEntity.class,
-                scanBox,
-                e -> e != shooter && e.isAlive()
-        );
-
-        LivingEntity nearest = null;
-        double nearestDistSq = Double.MAX_VALUE;
-        Vec3 hitPos = null;
-
-        for (LivingEntity target : candidates) {
-            AABB box = target.getBoundingBox().inflate(target.getPickRadius());
-            Optional<Vec3> optHit = box.clip(start, finalEnd);
-            if (optHit.isPresent()) {
-                double distSq = start.distanceToSqr(optHit.get());
-                if (distSq < nearestDistSq) {
-                    nearestDistSq = distSq;
-                    nearest = target;
-                    hitPos = optHit.get();
-                }
-            }
-        }
-
-        if (nearest != null && hitPos != null) {
-            return new EntityHitResult(nearest, hitPos);
-        }
-
-        return null; // No entity hit
-    }
-
 }
