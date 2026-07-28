@@ -1,50 +1,37 @@
 package net.zaharenko424.casualties_cubed.item.bandages;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
-import net.zaharenko424.casualties_cubed.item.api.IBandage;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.awt.*;
 
-public class BruiseKitItem extends Item implements IBandage, IAllowInMedicBags {
+public class BruiseKitItem extends AbstractBandage {
 
     public BruiseKitItem() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1), Color.GREEN.getRGB());
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.bruise_kit.description").withStyle(ChatFormatting.GRAY));
+    public float durabilityScale(float angle) {
+        return angle / 10 * 100;
     }
 
     @Override
-    public void useBandageAction(float scalableAmount, Player target, @Nullable Limb limb) {
+    protected void useBandageAction(float amount, Player target, @Nullable Limb limb) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data->{
             LimbStatistics stats = data.getLimb(limb);
 
-            float painRed = Math.max(0f, 1f - 0.01f * scalableAmount);
-            stats.setPain(stats.getPain() * painRed);
-            stats.addSkinHealth(0.24f * scalableAmount);
-            stats.addMuscleHealth(1.2f * scalableAmount);
+            stats.addSkinHealAmount(amount * 1);
 
-            float fractRed = Math.max(0f, 1f - 0.024f * scalableAmount);
-            stats.setDislocationTimer(stats.getDislocationTimer() * fractRed);
+            //Timed muscle regen
+            stats.addMuscleHealth(1 * amount * 1.4f);//duration = amount * 1.4
+
+            stats.addPain(-amount * 0.8f);
+            stats.addDislocationTimer(-amount * 0.8f);
         });
-    }
-
-    @Override
-    public Component getName(ItemStack pStack) {
-        return appendDurability(pStack, Component.empty().append(super.getName(pStack)));
     }
 }

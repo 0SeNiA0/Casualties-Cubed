@@ -1,43 +1,39 @@
 package net.zaharenko424.casualties_cubed.item.bandages;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
-import net.zaharenko424.casualties_cubed.item.api.IBandage;
+import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class OldRagItem extends Item implements IBandage, IAllowInMedicBags {
+public class OldRagItem extends AbstractBandage {
 
     public OldRagItem() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().stacksTo(1), FastColor.ARGB32.color(255, 143, 126, 139));
     }
 
     @Override
-    public void useBandageAction(float scalableAmount, Player target, @Nullable Limb limb) {
+    public float durabilityScale(float angle) {
+        return angle / 8 * 100;
+    }
+
+    @Override
+    public void useBandageAction(float amount, Player target, @Nullable Limb limb) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.addDelayedChange(((0.003f * scalableAmount) / 20f) / 60f, 200, limb);
             LimbStatistics stats = data.getLimb(limb);
 
-            float painRed = Math.max(0f, 1f - 0.02f * scalableAmount);
-            stats.setPain(stats.getPain() * painRed);
-            stats.addSkinHealth(0.12f * scalableAmount);
-
-            float fractRed = Math.max(0f, 1f - 0.0002f * scalableAmount);
-            stats.setBoneHealTimer(stats.getBoneHealTimer() * fractRed);
-            stats.setDislocationTimer(stats.getDislocationTimer() * fractRed);
+            stats.addSkinHealAmount(amount * 0.08f);
+            stats.addBandageSlowAmount(amount * 0.1f);
+            stats.addPain(-amount * 0.25f);
+            stats.addBoneHealTimer(-amount * 0.05f);
+            stats.addDislocationTimer(-amount * 0.05f);
         });
     }
 
@@ -50,16 +46,5 @@ public class OldRagItem extends Item implements IBandage, IAllowInMedicBags {
         PlayerHealthData.of(pPlayer).ifPresent(data -> data.setWetness(data.getWetness() * 0.5f));
 
         return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
-    }
-
-    @Override
-    public Component getName(ItemStack pStack) {
-        return appendDurability(pStack, Component.empty().append(super.getName(pStack)));
-    }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.old_rag.description").withStyle(ChatFormatting.GRAY));
     }
 }

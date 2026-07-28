@@ -18,7 +18,7 @@ import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
-import net.zaharenko424.casualties_cubed.item.api.IBandage;
+import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.item.multi_tank.SyringeItem;
@@ -160,8 +160,6 @@ public class ServerPacketHandler {
     public static void handleUseBandage(ServerboundUseBandagePacket packet, Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            if (packet.durability() == 0) return;// Noop
-
             ServerPlayer sender = context.getSender();
             if (sender == null) return;
 
@@ -183,15 +181,15 @@ public class ServerPacketHandler {
                 ItemStack stackInBag = bag.getItem(stack, bagSlot);
                 item = stackInBag.getItem();
 
-                if (!(item instanceof IBandage bandage)) return;
+                if (!(item instanceof AbstractBandage bandage)) return;
 
-                bandage.use(sender, target, packet.limb(), packet.durability(), stackInBag);
+                bandage.use(sender, target, packet.limb(), stackInBag);
                 bag.setItem(stack, bagSlot, stackInBag);
                 return;
             }
 
-            if (item instanceof IBandage bandage) {
-                bandage.use(sender, target, packet.limb(), packet.durability(), stack);
+            if (item instanceof AbstractBandage bandage) {
+                bandage.use(sender, target, packet.limb(), stack);
             }
         });
         context.setPacketHandled(true);
@@ -299,7 +297,7 @@ public class ServerPacketHandler {
 
                         chest.addPain((random.nextFloat() + 0.5f) * 30);
                         if (random.nextInt(8) == 0) {
-                            chest.addFracture(10);
+                            chest.addBoneHealTimer(10);
                         }
                         if (random.nextInt(2) == 0) {
                             chest.addMuscleHealth(- (random.nextFloat() + 0.5f) * 8);
@@ -313,7 +311,7 @@ public class ServerPacketHandler {
 
                         chest.addPain((random.nextFloat() + 0.5f) * 20);
                         if (random.nextInt(6) == 0) {
-                            chest.addFracture(10);
+                            chest.addBoneHealTimer(10);
                         }
                         if (random.nextInt(4) == 0) {
                             chest.addMuscleHealth(- (random.nextFloat() + 0.5f) * 5);
@@ -327,7 +325,7 @@ public class ServerPacketHandler {
 
                         chest.addPain((random.nextFloat() + 0.5f) * 10);
                         if (random.nextInt(4) == 0) {
-                            chest.addFracture(10);
+                            chest.addBoneHealTimer(10);
                         }
                         if (random.nextInt(8) == 0) {
                             chest.addMuscleHealth(- (random.nextFloat() + 0.5f) * 1);

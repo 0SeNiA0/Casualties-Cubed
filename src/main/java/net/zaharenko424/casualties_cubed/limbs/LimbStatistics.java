@@ -152,7 +152,7 @@ public class LimbStatistics {
         return boneHealTimer;
     }
 
-    public void addFracture(float fracture) {
+    public void addBoneHealTimer(float fracture) {
         setBoneHealTimer(this.boneHealTimer + fracture);
     }
 
@@ -170,7 +170,7 @@ public class LimbStatistics {
         return dislocationTimer;
     }
 
-    public void addDislocation(float dislocation) {
+    public void addDislocationTimer(float dislocation) {
         setDislocationTimer(this.dislocationTimer + dislocation);
     }
 

@@ -239,7 +239,7 @@ public class CommonEvent {
 
             if (item.isEdible()) {
                 if (head.getDislocationTimer() > 0) {
-                    head.addDislocation(25);
+                    head.addDislocationTimer(25);
                 }
             }
         });

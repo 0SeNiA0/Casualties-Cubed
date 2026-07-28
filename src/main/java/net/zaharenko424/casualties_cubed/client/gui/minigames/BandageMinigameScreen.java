@@ -69,10 +69,8 @@ public class BandageMinigameScreen extends Screen {
     public boolean isBothAmputated() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return false;
-        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
-            if (h.isAmputated(Limb.LEFT_HAND) && h.isAmputated(Limb.RIGHT_HAND)) return true;
-            return false;
-        }).orElse(false);
+        return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h ->
+                h.isAmputated(Limb.LEFT_HAND) && h.isAmputated(Limb.RIGHT_HAND)).orElse(false);
     }
 
     @Override
@@ -106,7 +104,7 @@ public class BandageMinigameScreen extends Screen {
                 this.height / 2,
                 stack,
                 slot,
-                hand
+                hand, target, limb
         );
         maxBleed = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getMAX_BLEED_RATE).orElse(1f);
     }
@@ -120,7 +118,7 @@ public class BandageMinigameScreen extends Screen {
         bleedRate = BD.orElse(0f);
         parent.tick();
         handObject.update(lastpMouseX, lastpMouseY);
-        bandageObject.update(target, limb);
+        bandageObject.update();
         bandageObject.mouseDragged(handObject.x, handObject.y, 0);
         Player player = Minecraft.getInstance().player;
         if (player != null) {
@@ -196,7 +194,7 @@ public class BandageMinigameScreen extends Screen {
         }
         guiGraphics.renderItem(bandageObject.lastStack, this.width / 10 - 10, this.height / 10 + 5);
 
-        Component comp = INbtDrivenDurability.appendDurability((bandageObject.lastDurability - bandageObject.durabilitySincePacket) / bandageObject.maxDurability, Component.translatable(bandageObject.lastStack.getDescriptionId()));
+        Component comp = INbtDrivenDurability.appendDurability(bandageObject.lastDurability / bandageObject.maxDurability, Component.translatable(bandageObject.lastStack.getDescriptionId()));
         guiGraphics.drawString(mc.font, comp, this.width / 10 + 16, this.height / 10 + 5, 0xFFFFFF);
 
         handObject.render(guiGraphics, partialTicks);

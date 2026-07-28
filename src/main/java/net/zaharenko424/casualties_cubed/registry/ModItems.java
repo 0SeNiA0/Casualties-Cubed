@@ -26,7 +26,7 @@ public class ModItems {
     public static final RegistryObject<Item> OLD_RAG = ITEMS.register("old_rag", OldRagItem::new);
     public static final RegistryObject<Item> RIPPED_DRESSING = ITEMS.register("ripped_dressing", RippedDressingItem::new);
     public static final RegistryObject<Item> ADHESIVE_BANDAGE = ITEMS.register("adhesive_bandage", AdhesiveBandage::new);
-    public static final RegistryObject<Item> DRESSING = ITEMS.register("dressing", DressingItem::new);
+    public static final RegistryObject<DressingItem> DRESSING = ITEMS.register("dressing", DressingItem::new);
     public static final RegistryObject<Item> BRUISE_KIT = ITEMS.register("bruise_kit", BruiseKitItem::new);
     public static final RegistryObject<Item> ALGINATE_DRESSING = ITEMS.register("alginate_dressing", AlginateDressingItem::new);
     public static final RegistryObject<Item> MEDICAL_GAUZE = ITEMS.register("medical_gauze", MedicalGauzeItem::new);

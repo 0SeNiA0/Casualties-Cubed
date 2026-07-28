@@ -18,7 +18,7 @@ import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodleVisual;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
 import net.zaharenko424.casualties_cubed.client.ticksounds.HeartBeatSound;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
-import net.zaharenko424.casualties_cubed.item.api.IBandage;
+import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -585,7 +585,7 @@ public class HealthScreen extends Screen {
         Limb limb = widget.getLimb();
         ItemStack itemstack = minecraft.player.getItemInHand(hand);
 
-        if (itemstack.getItem() instanceof IBandage) {
+        if (itemstack.getItem() instanceof AbstractBandage) {
             MinigameOpener.OpenBandageMinigame(target, itemstack, limb, hand);
         } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
             helper.openMinigameScreen(target, itemstack, limb, hand);
@@ -608,7 +608,7 @@ public class HealthScreen extends Screen {
             limb = widget.getLimb();
             itemstack = widgets.get(slot).getStack();
 
-            if (itemstack.getItem() instanceof IBandage) {
+            if (itemstack.getItem() instanceof AbstractBandage) {
                 MinigameOpener.OpenBandageMinigame(target, itemstack, slot, limb, hand);
                 return;
             } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
