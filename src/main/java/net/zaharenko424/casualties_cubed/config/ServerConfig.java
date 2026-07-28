@@ -57,6 +57,9 @@ public class ServerConfig {
     public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_MIN_REGEN;
     public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_DURATION;
 
+    public static final ForgeConfigSpec.BooleanValue INFINITE_LAST_STAND;
+    public static final ForgeConfigSpec.BooleanValue TOTEM_OF_UNDYING_LAST_STAND;
+
     public static final ForgeConfigSpec.BooleanValue PHYS_INTEGRATION;
 
     static {
@@ -196,6 +199,13 @@ public class ServerConfig {
                         .define("doTempChange",true);
 
 
+        INFINITE_LAST_STAND = BUILDER
+                .comment("Allow triggering last stand unlimited amount of times")
+                .define("infiniteLastStand", false);
+
+        TOTEM_OF_UNDYING_LAST_STAND = BUILDER
+                .comment("Use totem of undying to guarantee last stand (doing so will prevent natural last stand roll unless infiniteLastStand is true)")
+                .define("totemLastStand", true);
 
 
 

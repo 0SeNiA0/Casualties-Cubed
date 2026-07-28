@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -856,9 +857,22 @@ public class PlayerHealthData {
 
     float dirtReduceTime;
 
-    private void tryLastStand(ServerPlayer player) {//TODO make public?
+    private void tryLastStand(ServerPlayer player) {
         triedRollingLastStand = true;
-        if (player.getRandom().nextFloat() > 0.5f) return;//hardcoded 50% chance for now. mb use a config option until happiness is added
+
+        ItemStack totem = null;
+        if (ServerConfig.TOTEM_OF_UNDYING_LAST_STAND.get()) {
+            for(InteractionHand interactionhand : InteractionHand.values()) {
+                ItemStack itemstack1 = player.getItemInHand(interactionhand);
+                if (itemstack1.is(Items.TOTEM_OF_UNDYING)) {
+                    totem = itemstack1.copy();
+                    itemstack1.shrink(1);
+                    break;
+                }
+            }
+        }
+
+        if (totem == null && player.getRandom().nextFloat() > 0.5f) return;//hardcoded 50% chance for now. mb use a config option until happiness is added
 
         brainHealth = player.getRandom().nextFloat() * 15 + 75;
         FoodData food = player.getFoodData();
@@ -906,6 +920,9 @@ public class PlayerHealthData {
         successfullyRolledLastStand = true;
 
         //TODO if infinite last stands reset the lastStand boolean
+        if (ServerConfig.INFINITE_LAST_STAND.get()) {
+            triedRollingLastStand = false;
+        }
     }
 
     private void handleCirculation(ServerPlayer player) {
