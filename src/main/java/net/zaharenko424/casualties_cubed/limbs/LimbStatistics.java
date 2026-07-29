@@ -367,33 +367,33 @@ public class LimbStatistics {
             pain -= Util.TICK_TO_SEC * 5;
         }
 
-        dislocationTimer -= Util.TICK_TO_SEC * dislocationHealSpeed * 1;//option healingRate
-        boneHealTimer -= Util.TICK_TO_SEC * boneHealSpeed * 1;//option healingRate
+        dislocationTimer -= Util.TICK_TO_SEC * dislocationHealSpeed * ServerConfig.HEALING_RATE.get().floatValue();
+        boneHealTimer -= Util.TICK_TO_SEC * boneHealSpeed * ServerConfig.HEALING_RATE.get().floatValue();
 
         //CU uses dislocated/broken booleans which is effectively respective healTimer > 0
 
         if (shrapnel == 0 && bleedRate > 0 && data.getVenom() < 20) {
             /*mul twice as bleed is per tick TODO make per second or smth*/
-            addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(data.bleedClottingSpeed() * 1/*option healingRate*/ * bleedSpeedMult()));
+            addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(data.bleedClottingSpeed() * ServerConfig.HEALING_RATE.get().floatValue() * bleedSpeedMult()));
             if (bandageSlowAmount > 0) addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(1.25f * bleedSpeedMult()));
         }
 
         bandageSlowAmount = Math.max(bandageSlowAmount - 1.25f * Util.TICK_TO_SEC, 0);
         skinHealAmount = Math.max(skinHealAmount - 0.5f * Util.TICK_TO_SEC, 0);
-        disinfectionTime = Math.max(disinfectionTime - 1/*option infectionSpeed*/ * Util.TICK_TO_SEC, 0);
+        disinfectionTime = Math.max(disinfectionTime - ServerConfig.INFECTION_RATE.get().floatValue() * Util.TICK_TO_SEC, 0);
 
         if (infection <= 0 && skinHealth < 80) {
             infectionCheck--;
             if (infectionCheck <= 0) {//40 seconds
                 infectionCheck = 40 * 20;
                 float f = Mth.lerp(0.77f, skinHealth * 0.01f / 0.8f, 1) - (bleedRate * 20 / bleedSpeedMult()) * 0.007f;//convert L/t to CU points
-                if (player.getRandom().nextFloat() * 1/*option infectionChance*/ < 1 - f) infection = 0.1f;
+                if (player.getRandom().nextFloat() * ServerConfig.INFECTION_CHANCE.get().floatValue() < 1 - f) infection = 0.1f;
             }
         }
 
         if (infection > 0) {
             float infectionSpeed = infectionSpeed();
-            infection += infectionSpeed * Util.TICK_TO_SEC / 60 * 1;//option infectionSpeed
+            infection += infectionSpeed * Util.TICK_TO_SEC / 60 * ServerConfig.INFECTION_RATE.get().floatValue();
 
             if (data.getTemperature() < 40.5f) {
                 data.addTemperature(0.02f * Util.TICK_TO_SEC);
@@ -455,7 +455,7 @@ public class LimbStatistics {
         if (burn > 25) return 0;
 
         return Util.TICK_TO_SEC * 0.08f * (player.isSleeping() ? 1.4f : 1) * ((muscleHealth > 10 || limb == Limb.HEAD) ? 1 : 0.25f)
-                * (shrapnel > 0 ? (limb != Limb.HEAD || muscleHealth > 14.28571f) ? 0 : 1 : 1) * data.hungerLimbHealCurrent() * 1;//option healingRate
+                * (shrapnel > 0 ? (limb != Limb.HEAD || muscleHealth > 14.28571f) ? 0 : 1 : 1) * data.hungerLimbHealCurrent() * ServerConfig.HEALING_RATE.get().floatValue();
     }
 
     float skinHealRate(ServerPlayer player) {
@@ -463,7 +463,7 @@ public class LimbStatistics {
 
         if (shrapnel > 0) return 0;
         return Util.TICK_TO_SEC * 0.055f * (player.isSleeping() ? 1.4f : 1) * (skinHealth > 10 ? 1 : 0.25f)
-                * (bleedRate * 20 > Util.CUBloodPointsToL(bleedSpeedMult()) ? 0.2f : 1) * data.hungerLimbHealCurrent() * 1;//option healingRate
+                * (bleedRate * 20 > Util.CUBloodPointsToL(bleedSpeedMult()) ? 0.2f : 1) * data.hungerLimbHealCurrent() * ServerConfig.HEALING_RATE.get().floatValue();
     }
 
     void save(CompoundTag tag) {

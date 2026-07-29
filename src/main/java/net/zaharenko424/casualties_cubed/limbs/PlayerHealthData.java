@@ -83,7 +83,6 @@ public class PlayerHealthData {
     ));
 
     private final Map<Limb, LimbStatistics> limbStats = new EnumMap<>(Limb.class);
-    private final List<DelayedChangeEntry> changeEntries = new ArrayList<>();
 
     ///C:U -50 - 200? range, 1 = 0.025L, total body blood = 2.5 + blood * 0.025
     private float blood = 5f;
@@ -191,10 +190,6 @@ public class PlayerHealthData {
 
     public float getStability() {
         return Stability;
-    }
-
-    public void setStability(float stability) {
-        Stability = stability;
     }
 
     public float getDrugAddition() {
@@ -632,10 +627,6 @@ public class PlayerHealthData {
         limb.addBleedRate((damage / 15) * getMAX_BLEED_RATE());
     }
 
-    private void applyDirectBleedRate(Limb limb, float value) {
-        getLimb(limb).setBleedRate(Mth.clamp(limbStats.get(limb).getBleedRate() - value, 0, 100));
-    }
-
     private void applyConcussion(Limb limb, float damage) {
         if (limb == Limb.HEAD) {
             setConsciousness(consciousness - (Math.max(damage * 2, 10)));
@@ -732,7 +723,6 @@ public class PlayerHealthData {
 
             stats.update(player, limb);
 
-            //TODO tourniquet stops bleeding in all limbs that are lower than the one its applied to (arm -> hand)
             if (!stats.isTourniquet() && !isUnderTourniquet(limb)) totalBleedSpeed += stats.getBleedRate();//bleed rate is per tick but totalBleedSpeed is calculated per second
             averagePain = Math.max(stats.getPain() - currentAdrenaline * 0.5f, averagePain);
             totalInfection += stats.getInfection();
@@ -749,7 +739,7 @@ public class PlayerHealthData {
         //trauma
 
         if (totalInfection > 100) {
-            setSepsis(sepsis + 0.00028f * totalInfection * Util.TICK_TO_SEC * 1);//option infectionSpeed
+            setSepsis(sepsis + 0.00028f * totalInfection * Util.TICK_TO_SEC * ServerConfig.INFECTION_RATE.get().floatValue());
         } else setSepsis(sepsis - 0.07f * Util.TICK_TO_SEC);
 
         venomTotal = Util.moveTowards(Util.TICK_TO_SEC / 10.5f, venomTotal, 0);
@@ -794,9 +784,9 @@ public class PlayerHealthData {
             setConsciousness(Util.moveTowards(3 * Util.TICK_TO_SEC, consciousness, newConsciousness));
         }
 
-        setBrainHealth(brainHealth + (brainHealth > 0 ? 0.003f : 0) * Util.TICK_TO_SEC * 1);//option healingRate
+        setBrainHealth(brainHealth + (brainHealth > 0 ? 0.003f : 0) * Util.TICK_TO_SEC * ServerConfig.HEALING_RATE.get().floatValue());
 
-        addSickness(-0.06f * Util.TICK_TO_SEC * 1);//option metabolismRate
+        addSickness(-0.06f * Util.TICK_TO_SEC * ServerConfig.METABOLISM_RATE.get().floatValue());
         if (sickness >= 95) {
             getLimb(Limb.CHEST).addInfection(1);
         }
@@ -919,7 +909,6 @@ public class PlayerHealthData {
 
         successfullyRolledLastStand = true;
 
-        //TODO if infinite last stands reset the lastStand boolean
         if (ServerConfig.INFINITE_LAST_STAND.get()) {
             triedRollingLastStand = false;
         }
@@ -983,10 +972,10 @@ public class PlayerHealthData {
 
         if (fibrillationProgress > 0) {
             if (isFibrillationRising()) {
-                fibrillationProgress += Util.TICK_TO_SEC * 1;//fibRate option
+                fibrillationProgress += Util.TICK_TO_SEC * ServerConfig.FIB_RATE.get().floatValue();
 
                 if (heartRate > 280) {
-                    fibrillationProgress += Util.TICK_TO_SEC * 3 * 1;//fibRate option
+                    fibrillationProgress += Util.TICK_TO_SEC * 3 * ServerConfig.FIB_RATE.get().floatValue();
                 }
             } else {
                 fibrillationProgress -= Util.TICK_TO_SEC * 0.75f;
@@ -1170,7 +1159,7 @@ public class PlayerHealthData {
     }
 
     private float bloodRegenSpeed(ServerPlayer player) {
-        return Util.CUBloodPointsToL(0.035f * Math.max(getCUHunger(player) * 0.01f, 0) * 1);//option healingRate
+        return Util.CUBloodPointsToL(0.035f * Math.max(getCUHunger(player) * 0.01f, 0) * ServerConfig.HEALING_RATE.get().floatValue());
     }
 
     private boolean isFibrillationRising() {
@@ -1225,7 +1214,7 @@ public class PlayerHealthData {
             temperatureMovementMult = temperatureMovementCurve.evaluate(temperature);
             //clothingTemperature = 0
             bleedClottingSpeed = 0.025f * Mth.map(bloodViscosity, -100, 0, 0, 1) * Mth.clamp(1 - venomCurrent / 20, 0, 1);
-            bleedingSpeedMultiplier = (0.01f + Mth.map(bloodViscosity, -100, 0, 0.01f, 0)) * 1;//option bleedRate
+            bleedingSpeedMultiplier = (0.01f + Mth.map(bloodViscosity, -100, 0, 0.01f, 0)) * ServerConfig.BLEED_RATE.get().floatValue();
             lastStandTime--;
 
             if (bloodViscosity > 90 && random.nextFloat() < 0.0166) {
@@ -1245,7 +1234,7 @@ public class PlayerHealthData {
             }
 
             if (strokeAmount > 0) {
-                strokeAmount += 0.1333f * 1;//boolean option strokes 1 : -1
+                strokeAmount += 0.1333f * (ServerConfig.STROKES.get() ? 1 : -1);
             }
 
             //thirst too high -> fibrillation
@@ -1469,12 +1458,6 @@ public class PlayerHealthData {
         nbt.putFloat("bleedingSpeedMultiplier", bleedingSpeedMultiplier);
         nbt.putFloat("currentImmunityMult", currentImmunityMult);
 
-        ListTag changeList = new ListTag();
-        for (DelayedChangeEntry entry : changeEntries) {
-            changeList.add(entry.toNBT());
-        }
-        nbt.put("ChangeList", changeList);
-
         // Serialize limb data as a list
         ListTag limbList = new ListTag();
         CompoundTag limbTag;
@@ -1560,13 +1543,6 @@ public class PlayerHealthData {
         bleedingSpeedMultiplier = nbt.getFloat("bleedingSpeedMultiplier");
         currentImmunityMult = nbt.getFloat("currentImmunityMult");
 
-        changeEntries.clear();
-        ListTag changeList = nbt.getList("ChangeList", 10);
-        for (int i = 0; i < changeList.size(); i++) {
-            CompoundTag changeTag = changeList.getCompound(i);
-            changeEntries.add(DelayedChangeEntry.fromNBT(changeTag));
-        }
-
         ListTag limbList = nbt.getList("LimbStats", Tag.TAG_COMPOUND);
         CompoundTag limbTag;
         for (int i = 0; i < limbList.size(); i++) {
@@ -1614,9 +1590,6 @@ public class PlayerHealthData {
         for (Limb limb : Limb.values()) {
             limbStats.put(limb, new LimbStatistics(this));
         }
-
-        // clear delayed changes
-        changeEntries.clear();
 
         // reset player-wide primitives to initial defaults (match the field initializers)
         blood = 5f;
@@ -2027,11 +2000,6 @@ public class PlayerHealthData {
         }
     }
 
-
-    public void addDelayedChange(float totalBleedAmount, int timeInTicks, Limb limb) {
-        float bleed = totalBleedAmount / timeInTicks;
-        changeEntries.add(new DelayedChangeEntry(bleed, timeInTicks, limb));
-    }
 
     public void onArmUse(InteractionHand hand, Player player) {
         HumanoidArm arm = Limb.getArmFromHand(hand, player);

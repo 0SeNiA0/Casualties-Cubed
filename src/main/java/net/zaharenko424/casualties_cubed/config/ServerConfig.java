@@ -6,32 +6,18 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.DoubleValue DISINFECTION_SCALE;
     public static final ForgeConfigSpec.DoubleValue WOUND_ANTIBLEED_RATE;
-    public static final ForgeConfigSpec.DoubleValue INFECTION_CHANCE;
-    public static final ForgeConfigSpec.DoubleValue INFECTION_MUSCLE_DRAIN;
     public static final ForgeConfigSpec.DoubleValue HEMOTHORAX_HEAL_RATE;
 
-    // Oxygen changes
-    public static final ForgeConfigSpec.DoubleValue OXYGEN_REPLENISH;
-    public static final ForgeConfigSpec.DoubleValue OXYGEN_DRAIN;
-
     // Blood regen & bleeding
-    public static final ForgeConfigSpec.DoubleValue BLOOD_REGEN_RATE;   // L per second
     public static final ForgeConfigSpec.DoubleValue MAX_BLEED_RATE;// L per second
-    public static final ForgeConfigSpec.DoubleValue BLOOD_VISCOSITY_REGEN;
 
     // Damage scaling
     public static final ForgeConfigSpec.DoubleValue DAMAGE_SCALE;
     public static final ForgeConfigSpec.DoubleValue PAIN_PER_DAMAGE;
-    public static final ForgeConfigSpec.DoubleValue OPIATE_PAIN_REDUCTION;
     public static final ForgeConfigSpec.DoubleValue FRAC_DISL_FROM_MUSCLE_DAMAGE_CHANCE;
-    public static final ForgeConfigSpec.DoubleValue FRACTURE_HEAL_RATE;
-    public static final ForgeConfigSpec.DoubleValue DISLOCATION_HEAL_RATE;
 
     // Limb healing rates
-    public static final ForgeConfigSpec.DoubleValue NORMAL_LIMB_HEAL_RATE;  // % per second
-    public static final ForgeConfigSpec.DoubleValue BOOSTED_LIMB_HEAL_RATE;   // % per second
     public static final ForgeConfigSpec.DoubleValue MAGICAL_HEAL_RATE;
 
     // Tourniquet behavior
@@ -41,21 +27,26 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue CONS_PENALTY_PER_OPIOID;
     public static final ForgeConfigSpec.DoubleValue CONSCIOUSNESS_REGEN;
 
-    //Heavy Shit
-
+    //Armor
     public static final ForgeConfigSpec.DoubleValue HELMET_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue CHESTPLATE_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue LEG_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue BOOTS_ARMOR_SCALE;
-    public static final ForgeConfigSpec.DoubleValue BRAIN_DRAIN;
-    public static final ForgeConfigSpec.DoubleValue BRAIN_HEALTH_REGEN;
-    public static final ForgeConfigSpec.DoubleValue IMMUNITY_SCALE;
+
     public static final ForgeConfigSpec.BooleanValue DO_TEMP_CHANGE;
 
     public static final ForgeConfigSpec.BooleanValue PERMANENT_DAMAGE;
     public static final ForgeConfigSpec.BooleanValue LIMB_REGROWTH;
     public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_MIN_REGEN;
     public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_DURATION;
+
+    public static final ForgeConfigSpec.DoubleValue METABOLISM_RATE;
+    public static final ForgeConfigSpec.DoubleValue HEALING_RATE;
+    public static final ForgeConfigSpec.DoubleValue INFECTION_CHANCE;
+    public static final ForgeConfigSpec.DoubleValue INFECTION_RATE;
+    public static final ForgeConfigSpec.DoubleValue BLEED_RATE;
+    public static final ForgeConfigSpec.DoubleValue FIB_RATE;
+    public static final ForgeConfigSpec.BooleanValue STROKES;
 
     public static final ForgeConfigSpec.BooleanValue INFINITE_LAST_STAND;
     public static final ForgeConfigSpec.BooleanValue TOTEM_OF_UNDYING_LAST_STAND;
@@ -67,56 +58,26 @@ public class ServerConfig {
 
         BUILDER.push("Prototype Pain Server Config");
 
-        DISINFECTION_SCALE = BUILDER
-                .comment("The scale of strength of Disinfectants")
-                        .defineInRange("disinfectionScale",1d,0,100);
-
         WOUND_ANTIBLEED_RATE = BUILDER
                 .comment("The rate at which internal Bleeding heals (L/min)")
                         .defineInRange("wundAntiBleed",0.000025,0,10);
 
-        INFECTION_CHANCE=BUILDER
-                .comment("Chance of an infection at 0% skin health (%/s)")
-                        .defineInRange("infectionChance",0.001,0,1);
-        INFECTION_MUSCLE_DRAIN = BUILDER
-                .comment("The rate at which Infection Drains Muscle health(only above 80% infection) (%/s)")
-                        .defineInRange("infectionMuscleDrain",0.4,0,100);
         HEMOTHORAX_HEAL_RATE = BUILDER
                 .comment("The rate at which Hemothorax is healed (pts/s)")
                         .defineInRange("hemothoraxHealRate",0.036,0,100);
-        OXYGEN_REPLENISH = BUILDER
-                .comment("The rate at which Oxygen Replenishes (%/s)")
-                        .defineInRange("oxygenReplenish",8d,0,100);
-        OXYGEN_DRAIN = BUILDER
-                .comment("The rate at which Oxygen Drains when not breathing (%/s)")
-                        .defineInRange("oxygenDrain",5d,0,100);
-        BLOOD_REGEN_RATE = BUILDER
-                .comment("The rate at which Blood balances itself around 5L at full hunger (L/s)")
-                        .defineInRange("bloodRegen",0.000875,0,10);
+
         MAX_BLEED_RATE = BUILDER
                 .comment("The Maximum Rate of Bleeding from one Limb (L/s)")
                         .defineInRange("maxBleedRate",0.03,0,10);
-        BLOOD_VISCOSITY_REGEN = BUILDER
-                .comment("The rate at which Blood viscosity returns to 0 (pts/s)")
-                        .defineInRange("bloodViscosityRegen",0.2,0,100);
         DAMAGE_SCALE = BUILDER
                 .comment("% Damage Per point of normal damage to the Limb muscle and skin health")
                         .defineInRange("damageScale",5d,0.1,100);
         PAIN_PER_DAMAGE = BUILDER
                 .comment("How much pain gives one point of normal damage")
                         .defineInRange("painPerDamage",5,0.1,100);
-        OPIATE_PAIN_REDUCTION = BUILDER
-                .comment("How much pain relief gives each point of Opiates")
-                        .defineInRange("OpiatePainReduction",0.4,0.1,100);
         FRAC_DISL_FROM_MUSCLE_DAMAGE_CHANCE = BUILDER
                 .comment("Chance for Discocation/Fracture at 0% Muscle Health")
                         .defineInRange("fractDislcFromMuslceDamageChance",0.33,0,1);
-        NORMAL_LIMB_HEAL_RATE = BUILDER
-                .comment("The normal rate at which Limbs Heal their Health passively (%/s)")
-                        .defineInRange("normalLimbHealRate",0.04,0,100);
-        BOOSTED_LIMB_HEAL_RATE = BUILDER
-                .comment("The Boosted rate at which Limbs Heal their Health passively (%/s)")
-                        .defineInRange("boostedLimbHealRate",0.125,0,100);
         TOURNIQUET_PAIN_PER_TICK = BUILDER
                 .comment("Pain per tick for limb with applied tourniquet")
                         .defineInRange("tourniquetPainPerTick",0.05,0,100);
@@ -174,29 +135,38 @@ public class ServerConfig {
         BUILDER.pop();
 
 
-        BRAIN_DRAIN = BUILDER
-                .comment("How much the Brain health is drain per s when dying")
-                        .defineInRange("deathBrainDrain",1.5,0.01,100);
-
-        BRAIN_HEALTH_REGEN = BUILDER
-                .comment("Brain health Regeneration per min (only works in Permanent Damage mode")
-                        .defineInRange("brainRegen",0.3,0,Double.MAX_VALUE);
-
-        IMMUNITY_SCALE = BUILDER
-                .comment("Scalar of Immunity value")
-                        .defineInRange("immunityScale",1,0,Double.MAX_VALUE);
-
-        FRACTURE_HEAL_RATE = BUILDER
-                .comment("Fracture Heal rate (%/s)")
-                        .defineInRange("fractureRegen",0.05,0,Double.MAX_VALUE);
-        DISLOCATION_HEAL_RATE = BUILDER
-                .comment("Dislocation Heal rate (%/s)")
-                .defineInRange("dislocationRegen",0.05,0,Double.MAX_VALUE);
-
-
         DO_TEMP_CHANGE = BUILDER
                 .comment("on/off temperature")
                         .define("doTempChange",true);
+
+
+        METABOLISM_RATE = BUILDER
+                .comment("Multiplier of sickness decrease and hunger buildup.")
+                .defineInRange("metabolismRate", 1f, 0, 1000);
+
+        HEALING_RATE = BUILDER
+                .comment("Healing multiplier.")
+                .defineInRange("healingRate", 1f, 0, 1000);
+
+        INFECTION_CHANCE = BUILDER
+                .comment("Infection chance multiplier.")
+                .defineInRange("infectionChance",1f,0,1000);
+
+        INFECTION_RATE = BUILDER
+                .comment("Infection rate multiplier.")
+                .defineInRange("infectionRate", 1f, 0, 1000);
+
+        BLEED_RATE = BUILDER
+                .comment("Bleed rate multiplier.")
+                .defineInRange("bleedRate", 1f, 0, 1000);
+
+        FIB_RATE = BUILDER
+                .comment("Multiplier of fibrillation buildup.")
+                .defineInRange("fibRate", 1f, 0, 1000);
+
+        STROKES = BUILDER
+                .comment("Enables strokes.")
+                .define("strokes", true);
 
 
         INFINITE_LAST_STAND = BUILDER
