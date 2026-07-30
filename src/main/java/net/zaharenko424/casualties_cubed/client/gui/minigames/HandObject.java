@@ -2,8 +2,8 @@ package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.minecraft.client.gui.GuiGraphics;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 
 public class HandObject {
     
@@ -17,7 +17,7 @@ public class HandObject {
     public final SpriteType spriteType;
     public double x, y;     // current position
     public double vx, vy;   // velocity
-    private double prevX, prevY;
+    public double prevX, prevY;
     private double shakeX = 0;
     private double shakeY = 0;
     private final double shakeAmount = 24.0;

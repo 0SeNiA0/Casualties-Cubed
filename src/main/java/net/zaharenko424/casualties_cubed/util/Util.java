@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import org.joml.Vector2f;
 
 import java.util.Map;
 
@@ -16,6 +17,8 @@ public class Util {
     public static final float TICK_TO_MIN = TICK_TO_SEC / 60;
     public static final float ML_TO_L = 1 / 1000f;
     public static final float CU_BLOOD_POINT_AS_L = 0.025f;
+
+    public static final Vector2f REUSABLE_2F = new Vector2f();
 
     public static float CUBloodPointsToL(float cuPoints) {
         return cuPoints * CU_BLOOD_POINT_AS_L;
@@ -40,6 +43,14 @@ public class Util {
 
     public static float remap(float value, float from1, float to1, float from2, float to2) {
         return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+    }
+
+    public static Vector2f clampLength(Vector2f vec, float length) {
+        float lengthSqr = vec.x * vec.x + vec.y + vec.y;
+        if (lengthSqr <= length * length) return vec;
+
+        float invLength = org.joml.Math.invsqrt(lengthSqr) * length;
+        return vec.mul(invLength);
     }
 
     public static Level level() {

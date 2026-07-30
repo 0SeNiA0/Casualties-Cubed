@@ -8,6 +8,8 @@ import net.zaharenko424.casualties_cubed.util.Util;
 
 public class LimbStatistics {
 
+    public static final float MAX_BLEED_RATE = 1.8f;//  L/min
+
     private static final float dislocationHealSpeed = 0.07f;
     private static final float boneHealSpeed = 0.043f;
     private static final float muscleDeathThreshold = 5;
