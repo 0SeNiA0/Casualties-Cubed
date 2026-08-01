@@ -4,7 +4,6 @@ import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -33,7 +32,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         add(GLOW_FRUIT_BUSH.get(), applyExplosionDecay(GLOW_FRUIT_BUSH.get(), LootTable.lootTable()
                 .withPool(
                         LootPool.lootPool()
-                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SWEET_BERRY_BUSH).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(GLOW_FRUIT_BUSH.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
                                 .add(LootItem.lootTableItem(ModItems.GLOW_FRUIT.get()))
                 )
         ));
