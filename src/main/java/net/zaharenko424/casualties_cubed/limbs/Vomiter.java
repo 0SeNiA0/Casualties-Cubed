@@ -102,14 +102,6 @@ public class Vomiter {
         bloodVomitProgress = -1;
     }
 
-    public void copyFrom(Vomiter other) {
-        vomitTime = other.vomitTime;
-        bloodVomitTime = other.bloodVomitTime;
-        vomitProgress = other.vomitProgress;
-        vomitPower = other.vomitPower;
-        bloodVomitProgress = other.bloodVomitProgress;
-    }
-
     public void reset() {
         vomitTime = bloodVomitTime = 0;
         vomitProgress = bloodVomitProgress = -1;

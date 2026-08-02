@@ -1,6 +1,7 @@
 package net.zaharenko424.casualties_cubed.fluid_system;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.ForgeMod;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
@@ -34,14 +35,14 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 0.4f * ml);
+                data.painkillers().addOpiates(0.4f * ml);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 0.9f * ml);
+                data.painkillers().addOpiates(0.9f * ml);
             });
         }
     };
@@ -51,16 +52,16 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.1f * ml);
+                data.addSickness(0.4f * ml);
+                data.getLimb(Limb.HEAD).setDisinfectionTimerAtLeast(2 * ml);
 
                 LimbStatistics stats;
-                for (Limb limb : Limb.values()) {
+                for (Limb limb : Limb.values()) {//TODO timed effect
                     stats = data.getLimb(limb);
                     if (stats.isAmputated()) continue;
 
                     stats.addPain(0.05f * ml);
                     stats.addMuscleHealth(-0.03f * ml);
-                    stats.setDisinfectionTimerAtLeast(2 * ml);
                 }
             });
         }
@@ -70,16 +71,10 @@ public class MedicalEffects {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addSickness(0.1f * ml);
 
-                LimbStatistics stats;
-                for (Limb limb1 : Limb.values()) {
-                    stats = data.getLimb(limb1);
-                    if (stats.isAmputated()) continue;
-
-                    if (limb1 == limb) stats.addDisinfectionTimer(0.3f * ml);
-
-                    stats.addPain(0.04f * ml);
-                    stats.addMuscleHealth(-0.01f * ml);
-                }
+                LimbStatistics stats = data.getLimb(limb);
+                stats.addDisinfectionTimer(0.3f * ml);
+                stats.addPain(0.04f * ml);
+                stats.addMuscleHealth(-0.01f * ml);
             });
         }
     };
@@ -89,14 +84,14 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 0.2f * ml);
+                data.painkillers().addOpiates(0.2f * ml);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 0.4f * ml);
+                data.painkillers().addOpiates(0.4f * ml);
             });
         }
     };
@@ -106,14 +101,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + (1.4f * ml));
-            });
-        }
-
-        @Override
-        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + (0.1f * ml));
+                data.painkillers().addOpiates(1.4f * ml);
             });
         }
     };
@@ -123,7 +111,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 0.6f * ml);
+                data.painkillers().addOpiates(0.6f * ml);
                 data.addSickness(0.25f * ml);
             });
         }
@@ -131,7 +119,7 @@ public class MedicalEffects {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 1.3f * ml);
+                data.painkillers().addOpiates(1.3f * ml);
                 data.addSickness(0.5f * ml);
             });
         }
@@ -142,8 +130,7 @@ public class MedicalEffects {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setOpioids(data.getOpioids() - (4f * ml));
-                data.setPendingOpioids(data.getPendingOpioids() - (4f * ml));
+                data.painkillers().addAntagonist(0.5f * ml);
             });
         }
     };
@@ -153,8 +140,8 @@ public class MedicalEffects {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setAntibioticTimer(data.getAntibioticTimer() + 225 * ml);
-                data.getLimb(Limb.CHEST).addPain(1.5f * ml);
+                data.setAntibioticTimer(data.getAntibioticTimer() + 11.25f * ml);
+                data.getLimb(limb).addPain(0.8f * ml);
             });
         }
     };
@@ -164,14 +151,14 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 40 * ml);
+                data.painkillers().addOpiates(40 * ml);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setPendingOpioids(data.getPendingOpioids() + 42 * ml);
+                data.painkillers().addOpiates(42 * ml);
             });
         }
     };
@@ -199,8 +186,9 @@ public class MedicalEffects {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setBloodViscosity(data.getBloodViscosity() + 0.075f * ml);
-                data.addSickness(0.263f * ml);
+                final  float sickness = 0.75f;//TODO any liquid when injected reduces viscosity by 0.1 * injectSickness (here 0.75).
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * sickness * ml);//might be a bug but in CU viscosity penalty doesnt scale with ml
+                data.addSickness(0.3f * sickness * ml);
             });
         }
 
@@ -209,7 +197,7 @@ public class MedicalEffects {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(limb);
                 stats.addPain(0.1f * ml);
-                stats.setDisinfectionTimerAtLeast(70 * ml);
+                stats.setDisinfectionTimerAtLeast(3.5f * ml);
             });
         }
     };
@@ -234,8 +222,9 @@ public class MedicalEffects {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setBloodViscosity(data.getBloodViscosity() + 0.5f * ml);
-                data.addSickness(1.75f * ml);
+                final float sickness = 5;
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * sickness * ml);
+                data.addSickness(0.3f * sickness * ml);
             });
         }
 
@@ -247,7 +236,7 @@ public class MedicalEffects {
                 stats.addMuscleHealth(-0.15f * ml);
                 stats.addPain(0.25f * ml);
                 stats.addInfection(-0.05f * ml);
-                stats.addDisinfectionTimer(80 * ml);
+                stats.setDisinfectionTimerAtLeast(4 * ml);
             });
         }
     };
@@ -258,15 +247,19 @@ public class MedicalEffects {
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addSickness(0.1f * ml);
-                //chance to vomit (wat chance tho...)
+
+                if (player.getRandom().nextFloat() < ml / 80) {
+                    data.vomiter().vomit();
+                }
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.263f * ml);
-                data.setBloodViscosity(data.getBloodViscosity() + 0.075f * ml);
+                final float sickness = 0.75f;
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * sickness * ml);
+                data.addSickness(0.3f * sickness * ml);
             });
         }
 
@@ -274,7 +267,7 @@ public class MedicalEffects {
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(limb);
-                stats.setDisinfectionTimerAtLeast(636 * ml);
+                stats.setDisinfectionTimerAtLeast(30 * ml);
                 stats.setPain(stats.getPain() * 0.01f);
             });
         }
@@ -286,15 +279,19 @@ public class MedicalEffects {
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addSickness(0.1f * ml);
-                //chance to vomit
+
+                if (player.getRandom().nextFloat() < ml / 80) {
+                    data.vomiter().vomit();
+                }
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.263f * ml);
-                data.setBloodViscosity(data.getBloodViscosity() + 0.075f * ml);
+                final float sickness = 0.75f;
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * sickness * ml);
+                data.addSickness(0.3f * sickness * ml);
             });
         }
 
@@ -305,8 +302,8 @@ public class MedicalEffects {
                 stats.addSkinHealth(0.5f * ml);
                 stats.addMuscleHealth(0.25f * ml);
                 stats.addInfection(-0.25f * ml);
-                stats.addDisinfectionTimer(300 * ml);
-                stats.addPain(-stats.getPain() * 0.9f * 1/20 * ml);
+                stats.setDisinfectionTimerAtLeast(15 * ml);
+                stats.setPain(stats.getPain() * 0.9f * 1/20 * ml);
                 data.setBloodViscosity(data.getBloodViscosity() + 0.75f * ml);
                 data.addSickness(0.1125f * ml);
             });
@@ -321,17 +318,10 @@ public class MedicalEffects {
                 data.setBrainHealth(data.getBrainHealth() + ml);
                 data.getLimb(Limb.HEAD).addPain(5 * ml);
                 data.addSickness(1 * ml);
-                //chance to vomit
-            });
-        }
 
-        @Override
-        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setBrainHealth(data.getBrainHealth() - ml / 2);
-                data.getLimb(Limb.HEAD).addPain(10 * ml);
-                data.addSickness(0.35f * ml);
-                data.setBloodViscosity(data.getBloodViscosity() + 0.1f * ml);
+                if (player.getRandom().nextFloat() < ml / 20) {
+                    data.vomiter().vomit();
+                }
             });
         }
     };
@@ -341,7 +331,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setAntibioticTimer(Math.max(data.getAntibioticTimer(), 4000));
+                data.setAntibioticTimer(data.getAntibioticTimer() + 25 * ml);
                 data.setSepsis(data.getSepsis() - 0.25f * ml);
             });
         }
@@ -349,8 +339,9 @@ public class MedicalEffects {
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(1.75f * ml);
-                data.setBloodViscosity(data.getBloodViscosity() + 0.5f * ml);
+                final float sickness = 0.5f;
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * sickness * ml);
+                data.addSickness(0.3f * sickness * ml);
             });
         }
     };
@@ -358,16 +349,16 @@ public class MedicalEffects {
     public static final MedicalEffect ANTIVENOM = new MedicalEffect() {
 
         @Override
-        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+        public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addVenom(-0.8f * ml);
+                data.addSickness(0.24f * ml);
             });
         }
 
         @Override
-        public void applyIngested(ServerPlayer player, float ml) {
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.24f * ml);
+                data.addVenom(-0.8f * ml);
             });
         }
     };
@@ -377,8 +368,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setAntibioticTimer(Math.max(data.getAntibioticTimer(), 6000));
-                data.setBloodVolume(data.getBloodVolume() + 0.001f * ml);
+                data.setAntibioticTimer(data.getAntibioticTimer() + 1 * ml);
                 data.addSickness(0.3f * ml);
             });
         }
@@ -388,13 +378,23 @@ public class MedicalEffects {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.setSepsis(data.getSepsis() - 0.2f * ml);
                 data.setBloodVolume(data.getBloodVolume() + 0.001f * ml);
-                data.setAntibioticTimer(Math.max(data.getAntibioticTimer(), 6000));
-                data.getLimb(limb).addDisinfectionTimer(72 * ml);
+                data.setAntibioticTimer(data.getAntibioticTimer() + 6 * ml);
+
+                float disinfect = Mth.clamp(ml * 0.02f, 0, 1);
+                data.getLimb(limb).setDisinfectionTimerAtLeast(180 * disinfect);
+
+                LimbStatistics stats;
+                for (Limb connected : limb.getConnectedLimbs()) {
+                    stats = data.getLimb(connected);
+                    if (stats.isAmputated()) continue;
+
+                    stats.setDisinfectionTimerAtLeast(150 * disinfect);
+                }
             });
         }
     };
 
-    public static final MedicalEffect PROCOAGULANT = new MedicalEffect() {
+    public static final MedicalEffect PROCOAGULANT = new MedicalEffect() {//FIXME update with timed runnables
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
@@ -432,32 +432,16 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                LimbStatistics stats;
-                float bleedScale = 1f + ml * 0.014f;
-                for (Limb limb1 : Limb.values()) {
-                    stats = data.getLimb(limb1);
-                    stats.setBleedRate(stats.getBleedRate() * bleedScale);
-                }
-
-                data.setInternalBleeding(data.getInternalBleedingCapped() * (1f + ml * 0.0147f));
                 data.setBloodViscosity(data.getBloodViscosity() - 0.75f * ml);
-                data.addSickness(10 / 33.34f * ml);
+                data.addSickness(0.3f * ml);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                LimbStatistics stats;
-                float bleedScale = 1f + ml * 0.014f;
-                for (Limb limb1 : Limb.values()) {
-                    stats = data.getLimb(limb1);
-                    stats.setBleedRate(stats.getBleedRate() * bleedScale);
-                }
-
-                data.setInternalBleeding(data.getInternalBleedingCapped() * (1f + ml * 0.0147f));
                 data.setBloodViscosity(data.getBloodViscosity() - 1.5f * ml);
-                data.addSickness(5 / 33.34f * ml);
+                data.addSickness(0.15f * ml);
             });
         }
     };
@@ -467,14 +451,14 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.042f * ml);
+                data.addSickness(32 / 750f * ml);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setBloodViscosity(data.getBloodViscosity() - 0.002f * ml);
+                data.setBloodViscosity(data.getBloodViscosity() - 50 / 750f * ml);
                 data.setBloodVolume(data.getBloodVolume() + ml * 0.001f);
             });
         }
@@ -503,17 +487,16 @@ public class MedicalEffects {
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addSickness(0.15f * ml);
-                LimbStatistics stats = data.getLimb(Limb.HEAD);
-                stats.addPain(1 * ml);
-                stats.setDisinfectionTimerAtLeast(480 * ml);
+                data.getLimb(Limb.HEAD).setDisinfectionTimerAtLeast(240 * Mth.clamp(ml / 100, 0, 1));
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.438f * ml);
-                data.setBloodViscosity(data.getBloodViscosity() + 0.125f * ml);
+                final float sickness = 1.25f;
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * sickness * ml);
+                data.addSickness(0.3f * sickness * ml);
             });
         }
 
@@ -521,8 +504,8 @@ public class MedicalEffects {
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(limb);
-                stats.addPain(1 * ml);
-                stats.setDisinfectionTimerAtLeast(480 * ml);//4 * 60 * 20 / 10
+                stats.addPain(10 * Mth.clamp(ml / 10, 0, 1));
+                stats.setDisinfectionTimerAtLeast(Math.min(24 * ml, 240));
             });
         }
     };
@@ -546,6 +529,7 @@ public class MedicalEffects {
                 head.addSkinHealth(-15 * ml);
                 head.addPain(ml * 2);
                 head.addMuscleHealth(-15 * ml);
+                head.addBurn(10 * ml);
                 data.setTemperature(data.getTemperature() + 0.5f * ml);
             });
         }
@@ -557,6 +541,7 @@ public class MedicalEffects {
                 stats.addSkinHealth(-10 * ml);
                 stats.addPain(2 * ml);
                 stats.addMuscleHealth(-20 * ml);
+                stats.addBurn(10 * ml);
                 data.setTemperature(data.getTemperature() + 0.5f * ml);
             });
         }
@@ -569,6 +554,7 @@ public class MedicalEffects {
                 stats.addSkinHealth(-20 * ml);
                 stats.addPain(2.5f * ml);
                 stats.addMuscleHealth(-10 * ml);
+                stats.addBurn(5 * ml);
                 data.setTemperature(data.getTemperature() + 0.5f * ml);
             });
         }

@@ -165,7 +165,6 @@ public class ModCommands {
                                                     builder.suggest("opioids");
                                                     builder.suggest("bloodViscosity");
                                                     builder.suggest("brainhealth");
-                                                    builder.suggest("drug_addiction");
                                                     builder.suggest("dirtyness");
                                                     builder.suggest("painshock");
                                                     builder.suggest("temperature");
@@ -192,7 +191,6 @@ public class ModCommands {
                                                                     case "opioids" -> h.setPendingOpioids(value);
                                                                     case "bloodviscosity" -> h.setBloodViscosity(value);
                                                                     case "brainhealth" -> h.setBrainHealth(value);
-                                                                    case "drug_addiction" -> h.setDrugAddition(value);
                                                                     case "dirtyness" -> h.setDirtiness(value);
                                                                     case "painshock" -> h.setShock(value);
                                                                     case "temperature" -> h.setTemperature(value);

@@ -20,7 +20,7 @@ public class LimbStatistics {
     private float skinHealAmount;
     private float muscleHealth = 100f;
     private float burn = 0;
-    private float disinfectionTime = 0f;
+    private float disinfectionTime = 0f;//seconds
     private int infectionCheck;
     private float infection = 0f;//
     private float boneHealTimer = 0f;//

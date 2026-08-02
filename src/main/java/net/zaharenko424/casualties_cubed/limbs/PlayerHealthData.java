@@ -105,8 +105,8 @@ public class PlayerHealthData {
     private int lifeSupportTimer = 0;
 
     private float immunity = 100;
-    private float antibioticTimer = 0;
-    private float drugAddition = 0;
+    private float antibioticTimer = 0;//seconds
+    private final Painkillers painkillers = new Painkillers(this);
     private float brainHealth = 100;
     private float Shock = 0;
     private float dirtiness = 0;
@@ -190,14 +190,6 @@ public class PlayerHealthData {
 
     public float getStability() {
         return Stability;
-    }
-
-    public float getDrugAddition() {
-        return drugAddition;
-    }
-
-    public void setDrugAddition(float drugAddition) {
-        this.drugAddition = drugAddition;
     }
 
     public float getTemperature() {
@@ -356,10 +348,6 @@ public class PlayerHealthData {
         Opioids = va;
     }
 
-    public float getNetOpioids() {
-        return Opioids - drugAddition;
-    }
-
     public float getBloodOxygen() {
         return bloodOxygen;
     }
@@ -483,6 +471,14 @@ public class PlayerHealthData {
 
     public float bloodPressure() {
         return bloodPressure;
+    }
+
+    public Painkillers painkillers() {
+        return painkillers;
+    }
+
+    public Vomiter vomiter() {
+        return vomiter;
     }
 
     ///Checks whether the limb is below a limb with tourniquet
@@ -639,6 +635,8 @@ public class PlayerHealthData {
         //--{
         //--    this.moveDir = -this.moveDir;
         //--}
+        painkillers.update(player);
+
         handleVariableUpdates(player);
         handleBody(player); //(+ handle the limbs)
         handleBodyTemperature(player);
@@ -651,7 +649,7 @@ public class PlayerHealthData {
         //--
 
         player.setAirSupply(player.getMaxAirSupply());//reset vanilla air
-        vomiter.update(player);//TODO move somewhere else?
+        vomiter.update(player);
         maybeRegrowLimbs(player);
         applyPenalties(player);
     }
@@ -681,7 +679,7 @@ public class PlayerHealthData {
 
         brainGrowSickness = Math.max(brainGrowSickness - Util.TICK_TO_SEC, 0f);
         updateDirtyness(player);
-        breathing = player.isAlive() && !player.isInWall() && respiratoryRate > 10 && !player.getEyeInFluidType().canDrownIn(player);//TODO add other breathing factors
+        breathing = player.isAlive() && !player.isInWall() && respiratoryRate > 10 && !player.getEyeInFluidType().canDrownIn(player);//TODO add other breathing factors, somehow factor in stuff from other mods //ForgeHooks.onLivingBreathe();
         caffeinated = Math.max(caffeinated - Util.TICK_TO_SEC, 0f);
 
         //ragdoll if unconscious, legSpeedMult <= 0, shock > 10
@@ -903,9 +901,7 @@ public class PlayerHealthData {
             stats.setBleedRate(stats.getBleedRate() * 0.05f);
         }
 
-        Opioids = 0;
-        PendingOpioids = 0;
-        drugAddition = 0;
+        painkillers.reset();
 
         successfullyRolledLastStand = true;
 
@@ -950,6 +946,9 @@ public class PlayerHealthData {
         }
 
         //opiate effects
+        if (painkillers.currentOpiateReception() != 0) {
+            newRespRate -= painkillers.currentOpiateReception();
+        }
 
         newRespRate -= fibrillationProgress * 0.3f;
         newRespRate -= hemothorax * 0.5f;
@@ -1013,7 +1012,9 @@ public class PlayerHealthData {
             newPressure *= 1.25f;
         }
 
-        //TODO opiates
+        if (painkillers.currentOpiateReception() != 0) {
+            newPressure -= painkillers.currentOpiateReception() * 0.4f;
+        }
 
         if (!isInCardiacArrest()) {
             float newHeartRate = 70;
@@ -1023,7 +1024,9 @@ public class PlayerHealthData {
             newHeartRate -= Math.max(0, bloodViscosity) * 0.3f;
             newHeartRate += tempDiffFromNormal * 0.5f;
 
-            //TODO opiates Body#785
+            if (painkillers.currentOpiateReception() != 0) {
+                newHeartRate -= painkillers.currentOpiateReception() / 5;
+            }
 
             if (bloodPressure < newPressure - 5) {
                 heartRatePressureOffset += Util.TICK_TO_SEC * 1.5f;
@@ -1069,10 +1072,13 @@ public class PlayerHealthData {
         float f8 = 1 - fibrillationProgress / 260f;
         float f9 = 1 + bloodViscosity / 200f;
         float f10 = 1 - sepsis * 0.00525f;
-        //TODO opiates
+        float f11 = 1;
+        if (painkillers.currentOpiateReception() != 0) {
+            f11 = Mth.clamp(1 - painkillers.currentOpiateReception() / 400f, 0.75f, 1.25f);
+        }
         float f12 = 1 - tempDiffFromNormal / 40f;
         //weightOffset
-        float newBloodPressure = 120 * (1 + f6) * f7 * f8 * f9 * /*thirstBloodPressure*/ f10 * 1 * f12 * 1 / bloodVesselSize;
+        float newBloodPressure = 120 * (1 + f6) * f7 * f8 * f9 * /*thirstBloodPressure*/ f10 * f11 * f12 * 1 / bloodVesselSize;
 
         if (bloodPressureChangeFromMedicine > 0) {
             newBloodPressure *= 0.75f;
@@ -1175,7 +1181,7 @@ public class PlayerHealthData {
         return bloodPressure < 10 || consciousness < 5;
     }
 
-    private void tryStartFibrillation(boolean forced) {
+    public void tryStartFibrillation(boolean forced) {
         if (fibrillationProgress <= 0) {
             fibrillationProgress = 0.1f;
         }
@@ -1404,13 +1410,12 @@ public class PlayerHealthData {
         nbt.putFloat("InternalBleeding", internalBleeding);
         nbt.putFloat("Oxygen", bloodOxygen);
         nbt.putFloat("OxygenCap", OxygenCap);
-        nbt.putFloat("Opioids", Opioids);
         nbt.putFloat("BPM", heartRate);
         nbt.putBoolean("IsBreathing", isBreathing);
         nbt.putFloat("BloodViscosity", bloodViscosity);
         nbt.putFloat("BrainHealth", brainHealth);
         nbt.putFloat("Immunity", immunity);
-        nbt.putFloat("Drug_addition", drugAddition);
+        nbt.put("painkillers", painkillers.save());
         nbt.putFloat("Shock", Shock);
         nbt.putFloat("Dirty", dirtiness);
         nbt.putFloat("Temp", temperature);
@@ -1480,7 +1485,7 @@ public class PlayerHealthData {
             return;
         }
 
-        blood = nbt.getFloat("Blood");//TODO use def values if absent?
+        blood = nbt.getFloat("Blood");
         averagePain = nbt.getFloat("AveragePain");
         consciousness = nbt.getFloat("Consciousness");
         hemothorax = nbt.getFloat("Hemothorax");
@@ -1488,7 +1493,6 @@ public class PlayerHealthData {
         internalBleeding = nbt.getFloat("InternalBleeding");
         bloodOxygen = nbt.getFloat("Oxygen");
         OxygenCap = nbt.getFloat("OxygenCap");
-        Opioids = nbt.getFloat("Opioids");
         heartRate = nbt.getFloat("BPM");
         isBreathing = nbt.getBoolean("IsBreathing");
         bloodViscosity = nbt.getFloat("BloodViscosity");
@@ -1496,7 +1500,7 @@ public class PlayerHealthData {
 
         totalBleedSpeed = nbt.getFloat("totalBleedSpeed");
         immunity = nbt.getFloat("Immunity");
-        drugAddition = nbt.getFloat("Drug_addition");
+        painkillers.load(nbt.getCompound("painkillers"));
         Shock = nbt.getFloat("Shock");
         dirtiness = nbt.getFloat("Dirty");
         temperature = nbt.getFloat("Temp");
@@ -1600,13 +1604,12 @@ public class PlayerHealthData {
         internalBleeding = 0f;
         bloodOxygen = 100f;
         OxygenCap = 100f;
-        Opioids = 0f;
         heartRate = 70;
         isBreathing = true;
         respiratoryArrest = false;
         bloodViscosity = 0f;
         brainHealth = 100;
-        drugAddition = 0;
+        painkillers.reset();
         temperature = 36.6f;
         Shock = 0;
         dirtiness = 0;
@@ -2033,7 +2036,7 @@ public class PlayerHealthData {
     public void killPlayer(ServerPlayer player, boolean gaveUp) {
         boolean bleedout = blood < 3.5f;
         boolean internalBleed = hemothorax > 50;
-        boolean overdose = getNetOpioids() > 100;
+        boolean overdose = painkillers.currentOpiateReception() > 100;
         boolean bleedoutHeavy = totalBleedSpeed() > 2f / 20f / 60f;
 
         DamageSource src = ModDamageTypes.oxygen(player.serverLevel());
@@ -2135,7 +2138,11 @@ public class PlayerHealthData {
 
             temperature = Mth.lerp(0.003f / Math.max(/*0.5f*/0.9f, clampedInsulationEffect), temperature, 24);
 
-            temperature += 0.04f;
+            float mul = 1 - Mth.clamp(0.3f - energy * 0.01f, 0, 1);
+            if (painkillers.currentOpiateReception() > 0) {
+                mul -= painkillers.currentOpiateReception() * 0.005f;
+            }
+            temperature += 0.04f * mul;//TODO test temp, might need to lower ambient
 
             if (temperature > 37.5f) {
                 float maxWetness = (temperature - 37.5f) * 20;
@@ -2287,13 +2294,11 @@ public class PlayerHealthData {
                 ", internalBleeding=" + internalBleeding +
                 ", oxygen=" + bloodOxygen +
                 ", oxygenCap=" + OxygenCap +
-                ", opioids=" + Opioids +
                 ", bpm=" + heartRate +
                 ", isBreathing=" + isBreathing +
                 ", respiratoryArrest=" + respiratoryArrest +
                 ", bloodViscosity=" + bloodViscosity +
                 ", immunity=" + immunity +
-                ", drug_addiction=" + drugAddition +
                 ", brainHealth=" + brainHealth +
                 ", Shock=" + Shock +
                 ", dirtiness=" + dirtiness +

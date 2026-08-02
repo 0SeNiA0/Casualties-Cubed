@@ -404,7 +404,7 @@ public class HealthScreen extends Screen {
             healthbox.setBlood(health.getBloodVolume());
             healthbox.setBleed(health.totalBleedSpeed());
             healthbox.setInfection(hovered.getInfection());
-            healthbox.setOpiates(health.getNetOpioids());
+            healthbox.setOpiates(health.painkillers().currentOpiateReception());
             healthbox.setOxygen(health.getBloodOxygen());
             healthbox.setDislocated(hovered.getDislocationTimer());
             healthbox.setFracture(hovered.getBoneHealTimer());
