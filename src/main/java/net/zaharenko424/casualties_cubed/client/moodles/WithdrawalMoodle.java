@@ -24,7 +24,7 @@ public class WithdrawalMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        float netOpioids = data.painkillers().currentOpiateReception();
+        float netOpioids = data.painkillers.currentOpiateReception();
         boolean hasOP = data.getPendingOpioids() > 0;
 
         if (hasOP) return MoodleStatus.NONE;

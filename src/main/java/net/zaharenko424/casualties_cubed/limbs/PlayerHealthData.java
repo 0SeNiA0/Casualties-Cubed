@@ -106,7 +106,7 @@ public class PlayerHealthData {
 
     private float immunity = 100;
     private float antibioticTimer = 0;//seconds
-    private final Painkillers painkillers = new Painkillers(this);
+    public final Painkillers painkillers = new Painkillers(this);
     private float brainHealth = 100;
     private float Shock = 0;
     private float dirtiness = 0;
@@ -115,7 +115,7 @@ public class PlayerHealthData {
     private float flashHearingLoss = 0;
     private float sepsis = 0;
     private float sickness = 0;
-    private final Vomiter vomiter = new Vomiter(this);
+    public final Vomiter vomiter = new Vomiter(this);
     float temporarySlowdown;
     private float venomTotal, venomCurrent;
     private float wetness;
@@ -245,7 +245,7 @@ public class PlayerHealthData {
     }
 
     public void setDirtiness(float dirtiness) {
-        this.dirtiness = dirtiness;
+        this.dirtiness = Math.max(dirtiness, 0);
     }
 
     public float getAdrenaline() {
@@ -473,12 +473,8 @@ public class PlayerHealthData {
         return bloodPressure;
     }
 
-    public Painkillers painkillers() {
-        return painkillers;
-    }
-
-    public Vomiter vomiter() {
-        return vomiter;
+    public void addBloodPressureChangeFromMedicine(float amount) {
+        bloodPressureChangeFromMedicine += amount;
     }
 
     ///Checks whether the limb is below a limb with tourniquet

@@ -15,7 +15,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,6 +22,7 @@ import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
 import java.util.List;
 
@@ -97,9 +97,7 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
 
             // Check for water source
             if (state.getBlock() == Blocks.WATER && state.getFluidState().isSource()) {
-
-
-                MultiTankHelper.addFluid(stack, 100, new FluidStack(Fluids.WATER, 1));
+                MultiTankHelper.addFluid(stack, 100, new FluidStack(ModFluids.GROUNDWATER.get(), 1));
 
                 // play a sound (optional)
                 player.playSound(SoundEvents.BOTTLE_FILL, 1.0F, 1.0F);

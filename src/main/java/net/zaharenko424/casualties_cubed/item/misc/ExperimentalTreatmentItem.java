@@ -178,7 +178,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
             }
             data.setInternalBleeding(0);
         } else if (roll < 45) {
-            data.painkillers().reset();
+            data.painkillers.reset();
         } else if (roll < 55) {
             LimbStatistics stats;
             for (Limb limb : Limb.values()) {

@@ -32,6 +32,10 @@ public class Painkillers {
         return currentOpiateReception;
     }
 
+    public void addTolerance(float amount) {
+        if (opiateAmount != 0 || opiateTolerance != 0) opiateTolerance += amount;
+    }
+
     public void update(ServerPlayer player) {
         antagonistAmount = Math.max(antagonistAmount - Util.TICK_TO_SEC, 0);
 
