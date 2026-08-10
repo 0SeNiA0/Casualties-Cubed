@@ -40,6 +40,7 @@ public class CasualtiesCubed {
         ModCreativeTab.CREATIVE_TABS.register(modEventBus);
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);
+        TimedEffectRegistry.TIMED_EFFECTS.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);

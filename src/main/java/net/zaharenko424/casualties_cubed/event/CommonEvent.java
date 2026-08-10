@@ -2,7 +2,6 @@ package net.zaharenko424.casualties_cubed.event;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -122,7 +121,7 @@ public class CommonEvent {
         event.getOriginal().reviveCaps();
         event.getOriginal().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(oldStore -> {
             event.getEntity().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(newStore -> {
-                newStore.deserializeNBT(oldStore.serializeNBT(new CompoundTag(), true));
+                newStore.deserializeFromDisk(oldStore.serializeToDisk());
             });
         });
         event.getOriginal().invalidateCaps();

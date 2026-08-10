@@ -5,15 +5,8 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 
 public class MedicalFluid extends ForgeFlowingFluid {
 
-    private final MedicalEffect effect;
-
-    public MedicalFluid(Properties properties, MedicalEffect effect) {
+    public MedicalFluid(Properties properties) {
         super(properties);
-        this.effect = effect;
-    }
-
-    public MedicalEffect getEffect() {
-        return effect;
     }
 
     public int getAmount(FluidState state) {

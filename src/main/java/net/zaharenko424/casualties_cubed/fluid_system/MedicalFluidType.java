@@ -3,22 +3,60 @@ package net.zaharenko424.casualties_cubed.fluid_system;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 import java.util.function.Consumer;
 
 public class MedicalFluidType extends FluidType {
 
+    private final MedicalEffect effect;
     private final int color;
 
-    public MedicalFluidType(Properties properties, int color) {
+    public MedicalFluidType(MedicalEffect effect, int color) {
+        this(Properties.create(), effect, color);
+    }
+
+    public MedicalFluidType(Properties properties, MedicalEffect effect, int color) {
         super(properties);
+        this.effect = effect;
         this.color = color;
+    }
+
+    private static MedicalEffect effect(Fluid fluid) {
+        return fluid.getFluidType() instanceof MedicalFluidType type ? type.effect : ExtraMedFluids.getOrDef(fluid).effect();
+    }
+
+    public static void ingest(ServerPlayer target, float ml, Fluid fluid) {
+        effect(fluid).applyIngested(target, ml);
+    }
+
+    public static void inject(ServerPlayer target, float ml, Limb limb, Fluid fluid) {
+        MedicalEffect effect = effect(fluid);
+
+        float injectionSickness = effect.injectionSickness();
+        if (injectionSickness > 0) {
+            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addSickness(0.3f * injectionSickness * ml);
+                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * injectionSickness);//might be a bug but in CU viscosity penalty doesnt scale with ml
+            });
+        }
+
+        effect.applyInjected(target, ml, limb);
+    }
+
+    public static void apply(ServerPlayer target, float ml, Limb limb, Fluid fluid) {
+        effect(fluid).applyOnSkin(target, ml, limb);
+    }
+
+    public MedicalEffect effect() {
+        return effect;
     }
 
     public int getColor() {
@@ -27,8 +65,6 @@ public class MedicalFluidType extends FluidType {
 
     public static int getColor(Fluid fluid) {
         if (fluid.getFluidType() instanceof MedicalFluidType medFluid) return medFluid.getColor();
-
-        if (fluid.getFluidType() == ForgeMod.WATER_TYPE.get()) return 0x5276d1;
 
         return ExtraMedFluids.getOrDef(fluid).color();
     }
@@ -57,12 +93,7 @@ public class MedicalFluidType extends FluidType {
 
             @Override
             public int getTintColor(FluidStack stack) {
-                if (stack.getFluid().getFluidType() instanceof MedicalFluidType fluid) {
-                    return fluid.color | 0xFF000000;
-                }
-
-                // fallback color
-                return 0xFFFFFFFF;
+                return MedicalFluidType.getColor(stack.getFluid()) | 0xFF000000;
             }
 
             @Override

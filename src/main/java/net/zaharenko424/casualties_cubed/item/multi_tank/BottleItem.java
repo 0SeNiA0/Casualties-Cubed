@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.fluids.FluidStack;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -44,7 +44,7 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getDrinkingAmount());
         List<FluidStack> drained = MultiTankHelper.drain(pStack, max, player.isCreative());
         for (FluidStack fs : drained) {
-            MedicalEffects.forFluid(fs.getFluid()).applyIngested(player, fs.getAmount());
+            MedicalFluidType.ingest(player, fs.getAmount(), fs.getFluid());
         }
 
         return pStack;
@@ -78,7 +78,7 @@ public class BottleItem extends MultiTankFluidItem implements ISimpleMedicalUsab
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(stack), getOnSkinAmount());
         List<FluidStack> drained = MultiTankHelper.drain(stack, max, source.isCreative());
         for (FluidStack fs : drained) {
-            MedicalEffects.forFluid(fs.getFluid()).applyOnSkin(target, fs.getAmount(), limb);
+            MedicalFluidType.apply(target, fs.getAmount(), limb, fs.getFluid());
         }
     }
 

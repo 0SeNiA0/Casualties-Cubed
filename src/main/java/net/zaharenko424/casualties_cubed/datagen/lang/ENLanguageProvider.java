@@ -114,6 +114,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.NALTREXONE, "Pills used to treat general ailments like sickness or opiate abuse. Lowers happiness and may cause vomiting.");
         addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Very advanced form of injected antibiotic. May cause excruciating chest pain.");
         addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly dangerous opiate. 100 times stronger than morphine");
+        addMedicalFluidFromIdWDesc(ModFluids.CHLOROFORM, "A volatile, colorless, sweet-smelling, dense liquid produced on a large scale as a precursor to refrigerants and polytetrafluoroethylene. In practical use, it's very useful at knocking people out.");
         addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "Who doesn't like chocolate milk?");
         addMedicalFluidFromIdWDesc(ModFluids.MOLD, "Any indication of what this once was is long gone. Smells putrid...");
         addMedicalFluidFromIdWDesc(ModFluids.MERCURY, "Liquid metal. Great for skin care, not so great for your bodily functions.");
@@ -126,8 +127,11 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies. Helps when fighting infections. Slightly increases blood volume.");
         addMedicalFluidFromIdWDesc(ModFluids.PROCOAGULANT, "A simple blood-clotting agent. Decreases bleeding overall but causes clotting. Dangerous in excess.");
+        addMedicalFluidFromIdWDesc(ModFluids.EPINEPHRINE, "Pure adrenaline. Reduces pain for a while and has a low chance to restart the heart if it stops. Going over 40ml will cause fibrillation.");
+        addMedicalFluidFromIdWDesc(ModFluids.OXYLINE, "Synthesized reagent that quickly reoxygenates the bloodstream when injected, also stabilizing fibrillation and promoting hemoglobin production. Has explosive tendencies when mixed with stomach acid.");
         addMedicalFluidFromIdWDesc(ModFluids.SODIUM_NITROPRUSSIDE, "A medication used to lower blood pressure, useful for avoiding hypertensive crisis. Only works intravenously. 10ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.VASOPRESSIN, "A hormone used to increase blood pressure, useful for avoiding lethal hypotension. Only works intravenously. 10ml per minute.");
+        addMedicalFluidFromIdWDesc(ModFluids.AMIODARONE, "An antiarrhythmic medication used to treat and prevent fibrillation from occurring. Will cause most arrhythmias to slowly regress, but causes mild internal damage. Only works intravenously. 20ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "A blood thinner. Decreases blood clotting. May cause increased bleeding.");
         addMedicalFluidFromIdWDesc(ModFluids.SALINE, "A mix of water, salt, and minerals. Useful for thirst and regaining body liquid.");
         addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");

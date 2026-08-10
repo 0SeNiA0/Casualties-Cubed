@@ -32,7 +32,7 @@ public class LimbStatistics {
     private float pain = 0f;//
     private boolean hasSplint = false;//
     private boolean tourniquet = false;
-    private int tourniquetTimer = 0;
+    private float tourniquetTimer = 0;//seconds
 
     private boolean amputated = false;
     private float regrowthProgress = 0;
@@ -73,9 +73,6 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public void setSkinHeal(boolean skinHeal) {
-    }
-
     public float getMuscleHealth() {
         return muscleHealth;
     }
@@ -92,9 +89,6 @@ public class LimbStatistics {
 
         this.muscleHealth = muscleHealth;
         syncNeeded = true;
-    }
-
-    public void setMuscleHeal(boolean muscleHeal) {
     }
 
     public float getBurn() {
@@ -275,15 +269,8 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public int getTourniquetTimer() {
+    public float getTourniquetTimer() {
         return tourniquetTimer;
-    }
-
-    public void setTourniquetTimer(int tourniquetTimer) {//TODO TourniquetTimer
-        if (amputated || !tourniquet || this.tourniquetTimer == tourniquetTimer) return;
-
-        this.tourniquetTimer = tourniquetTimer;
-        syncNeeded = true;
     }
 
     public float bleedSpeedMult() {
@@ -443,6 +430,30 @@ public class LimbStatistics {
         if (data.getBloodOxygen() <= 5 || data.bloodPressure() < 20) {
             addMuscleHealth(-0.6f * Util.TICK_TO_SEC);
         }
+
+        if (!tourniquet) return;
+
+        tourniquetTimer += Util.TICK_TO_SEC;
+
+        if (pain < 40) {
+            addPain(2 * Util.TICK_TO_SEC);
+        }
+
+        if (limb == Limb.HEAD) {
+            data.respiratoryRate(0);
+        }
+
+        if (tourniquetTimer > 540) {
+            LimbStatistics stats;
+            for (Limb l : limb.getLowerAndSelf()) {
+                stats = data.getLimb(l);
+
+                stats.addMuscleHealth(-2 * Util.TICK_TO_SEC);
+                if (stats.getMuscleHealth() < 5 && stats.getInfection() < 10) {
+                    stats.setInfection(10);
+                }
+            }
+        }
     }
 
     float infectionSpeed() {
@@ -487,7 +498,7 @@ public class LimbStatistics {
         tag.putFloat("BleedRate", bleedRate);
         tag.putFloat("DisinfectionTimer", disinfectionTime);
         tag.putBoolean("Tourniquet", tourniquet);
-        tag.putInt("TourniquetTime", tourniquetTimer);
+        tag.putFloat("TourniquetTime", tourniquetTimer);
 
         tag.putFloat("bandageSlowAmount", bandageSlowAmount);
         tag.putFloat("skinHealAmount", skinHealAmount);
@@ -513,7 +524,7 @@ public class LimbStatistics {
         bleedRate = tag.getFloat("BleedRate");
         disinfectionTime = tag.getFloat("DisinfectionTimer");
         tourniquet = tag.getBoolean("Tourniquet");
-        tourniquetTimer = tag.getInt("TourniquetTime");
+        tourniquetTimer = tag.getFloat("TourniquetTime");
 
         bandageSlowAmount = tag.getFloat("bandageSlowAmount");
         skinHealAmount = tag.getFloat("skinHealAmount");

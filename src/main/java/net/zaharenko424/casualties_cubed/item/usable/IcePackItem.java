@@ -27,16 +27,15 @@ public class IcePackItem extends Item implements ISimpleMedicalUsable, IAllowInM
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setTemperature(data.getTemperature() - .5f);
+            data.setTemperature(data.getTemperature() - 1);
             LimbStatistics stats = data.getLimb(limb);
 
-            stats.addMuscleHealth(35);
+            stats.addMuscleHealth(35);//TODO add timed effect or chilled object
             stats.setDislocationTimer(stats.getDislocationTimer() * 0.4f);
             stats.setPain(stats.getPain() * 0.5f);
-            stats.setMuscleHeal(true);
         });
 
-        if (!source.isCreative()) subNbtDurability(stack, 20);
+        if (!source.isCreative()) subNbtDurability(stack, 50);
         source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
     }
 

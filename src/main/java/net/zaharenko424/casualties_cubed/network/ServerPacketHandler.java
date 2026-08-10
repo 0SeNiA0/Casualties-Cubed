@@ -14,11 +14,11 @@ import net.minecraftforge.network.NetworkEvent;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
-import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
+import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.item.multi_tank.SyringeItem;
@@ -127,7 +127,7 @@ public class ServerPacketHandler {
             for (int i = 0; i < count; i++) {
                 if (Float.isNaN(packet.amounts()[i])) continue;
 
-                MedicalEffects.forFluid(fluids.get(i).getFluid()).applyInjected(target, packet.amounts()[i], packet.limb());
+                MedicalFluidType.inject(target, packet.amounts()[i], packet.limb(), fluids.get(i).getFluid());
             }
         });
         ctx.get().setPacketHandled(true);

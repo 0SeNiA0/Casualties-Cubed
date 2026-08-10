@@ -52,6 +52,21 @@ public enum Limb {
         };
     }
 
+    public List<Limb> getLowerAndSelf() {
+        return switch (this) {
+            case CHEST -> List.of();
+            case LEFT_ARM -> List.of(LEFT_ARM, LEFT_HAND);
+            case RIGHT_ARM -> List.of(RIGHT_ARM, RIGHT_HAND);
+            case LEFT_HAND -> List.of(LEFT_HAND);
+            case RIGHT_HAND -> List.of(RIGHT_HAND);
+            case LEFT_LEG -> List.of(LEFT_LEG, LEFT_FOOT);
+            case RIGHT_LEG -> List.of(RIGHT_LEG, RIGHT_FOOT);
+            case LEFT_FOOT -> List.of(LEFT_FOOT);
+            case RIGHT_FOOT -> List.of(RIGHT_FOOT);
+            case HEAD -> List.of(HEAD);
+        };
+    }
+
     public List<Limb> getConnectedLimbs(){
         return switch (this){
             case CHEST -> List.of(HEAD, RIGHT_ARM, LEFT_ARM, RIGHT_LEG, LEFT_LEG);

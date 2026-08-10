@@ -7,6 +7,10 @@ public interface MedicalEffect {
 
     default void applyIngested(ServerPlayer player, float ml){}
 
+    default float injectionSickness() {
+        return 0;
+    }
+
     default void applyInjected(ServerPlayer player, float ml, Limb limb){}
 
     default void applyOnSkin(ServerPlayer player, float ml, Limb limb){}

@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
-import net.zaharenko424.casualties_cubed.fluid_system.MedicalEffects;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
 
@@ -37,7 +37,7 @@ public class PillContainerItem extends MultiTankFluidItem {
         int max = (int) Math.min(MultiTankHelper.getFilledTotal(pStack), getUseAmount());
         List<FluidStack> drained = MultiTankHelper.drain(pStack, max, player.isCreative());
         for (FluidStack fs : drained) {
-            MedicalEffects.forFluid(fs.getFluid()).applyIngested(player, fs.getAmount());
+            MedicalFluidType.ingest(player, fs.getAmount(), fs.getFluid());
         }
 
         return pStack;
