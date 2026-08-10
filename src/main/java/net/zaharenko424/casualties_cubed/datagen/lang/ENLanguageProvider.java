@@ -115,6 +115,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Very advanced form of injected antibiotic. May cause excruciating chest pain.");
         addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly dangerous opiate. 100 times stronger than morphine");
         addMedicalFluidFromIdWDesc(ModFluids.CHLOROFORM, "A volatile, colorless, sweet-smelling, dense liquid produced on a large scale as a precursor to refrigerants and polytetrafluoroethylene. In practical use, it's very useful at knocking people out.");
+        addMedicalFluidWDesc(ModFluids.HIGH_GRADE_STIMULANT, "Medical-Grade Stimulant", "Medical stimulant drug. Gives you a very good kick for a pretty long while, and is generally safe to use. Overdose generally entails weakness, with a negligible crash. Dosage is 100ml.");
+        addMedicalFluidWDesc(ModFluids.MID_GRADE_STIMULANT, "Hard Stimulant", "Decently refined stimulating hard drug. Only works intravenously. Will give you a pretty good kick for a short while, but has some side effects. Overdose entails weakness and internal bleeding. Dosage is 50ml.");
+        addMedicalFluidWDesc(ModFluids.LOW_GRADE_STIMULANT, "Off-Brand Stimulant", "Unrefined stimulating hard drug. Dodgy. Gives you a pretty nice kick, but overdose and the subsequent crash is extremely debilitating. Dosage is unknown. Use with caution.");
         addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "Who doesn't like chocolate milk?");
         addMedicalFluidFromIdWDesc(ModFluids.MOLD, "Any indication of what this once was is long gone. Smells putrid...");
         addMedicalFluidFromIdWDesc(ModFluids.MERCURY, "Liquid metal. Great for skin care, not so great for your bodily functions.");
@@ -122,7 +125,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.BLEACH, "Chemical product used to remove color from fiber, or to disinfect. Can be used to disinfect wounds. Drinking is lethal.");
         addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "A slightly antiseptic cream with soothing properties.");
         addMedicalFluidFromIdWDesc(ModFluids.WOUND_GLUE, "A hemostatic, antibiotic glue-like substance. Fights infection, promotes healing and is very effective at sealing bleeding wounds. Might cause circulation problems - use with care.");
-        addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special medicine used for heavy concussions and brain trauma. May cause discomfort. Meant to be taken orally");
+        addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special medicine used for heavy concussions and brain trauma. May cause discomfort. Meant to be taken orally.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIBIOTICS, "Pills that increase your immunity to infection. For some reason they taste like nickels.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies. Helps when fighting infections. Slightly increases blood volume.");

@@ -131,8 +131,8 @@ public class PlayerHealthData {
 
     private float stimulantMultiplier;
     private float hungerLimbHealCurrent;
-    private boolean breathing;
-    private float respiratoryRate;
+    private boolean breathing = true;
+    private float respiratoryRate = 100;
     private float brainGrowSickness;
     private float caffeinated;
     private float painShock;
@@ -525,6 +525,14 @@ public class PlayerHealthData {
         return bleedingSpeedMultiplier;
     }
 
+    public float stimulantMultiplier() {
+        return stimulantMultiplier;
+    }
+
+    public void addStimulantMultiplier(float value) {
+        stimulantMultiplier += value;
+    }
+
     public void tryStartFibrillation(boolean forced) {
         if (fibrillationProgress <= 0) {
             fibrillationProgress = 0.1f;
@@ -536,7 +544,7 @@ public class PlayerHealthData {
     public void addTimedEffect(RegistryObject<TimedEffectFunction> effect, float ml, @Nullable Limb limb, float duration) {
         for (TimedEffect e : effects) {
             if (e.is(effect) && e.limb() == limb) {
-                e.addTime(duration);//TODO instead of increasing duration add an embedded effect that will take place of current one? Mb if ml > e.ml update the e.ml
+                e.addDuration(duration);//TODO instead of increasing duration add an embedded effect that will take place of current one? Mb if ml > e.ml update the e.ml
                 return;
             }
         }
@@ -599,6 +607,11 @@ public class PlayerHealthData {
         vomiter.update(player);
         maybeRegrowLimbs(player);
         applyPenalties(player);
+
+        
+        if (brainHealth <= 0) {
+            killPlayer(player, false);
+        }
     }
 
     private void updateTimedEffects(ServerPlayer player) {
@@ -848,6 +861,7 @@ public class PlayerHealthData {
         }
 
         painkillers.reset();
+        effects.clear();
 
         successfullyRolledLastStand = true;
 

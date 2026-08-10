@@ -1,10 +1,5 @@
 package net.zaharenko424.casualties_cubed.item.usable;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
-import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
-import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,7 +8,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
+import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
+import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,11 +27,7 @@ public class IcePackItem extends Item implements ISimpleMedicalUsable, IAllowInM
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             data.setTemperature(data.getTemperature() - 1);
-            LimbStatistics stats = data.getLimb(limb);
-
-            stats.addMuscleHealth(35);//TODO add timed effect or chilled object
-            stats.setDislocationTimer(stats.getDislocationTimer() * 0.4f);
-            stats.setPain(stats.getPain() * 0.5f);
+            data.getLimb(limb).setChilled();
         });
 
         if (!source.isCreative()) subNbtDurability(stack, 50);

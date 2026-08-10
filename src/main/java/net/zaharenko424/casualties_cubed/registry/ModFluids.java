@@ -56,6 +56,15 @@ public class ModFluids {
     public static final RegistryObject<FluidType> CHLOROFORM_TYPE = FLUID_TYPES.register("chloroform", () -> new MedicalFluidType(MedicalEffects.CHLOROFORM, FastColor.ARGB32.color(255, 186, 209, 167)));
     public static final RegistryObject<MedicalFluid> CHLOROFORM = FLUIDS.register("chloroform", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CHLOROFORM_TYPE, ModFluids.CHLOROFORM, ModFluids.CHLOROFORM)));
 
+    public static final RegistryObject<FluidType> HIGH_GRADE_STIMULANT_TYPE = FLUID_TYPES.register("high_grade_stimulant", () -> new MedicalFluidType(MedicalEffects.HIGH_GRADE_STIMULANT, -1));
+    public static final RegistryObject<MedicalFluid> HIGH_GRADE_STIMULANT = FLUIDS.register("high_grade_stimulant", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.HIGH_GRADE_STIMULANT_TYPE, ModFluids.HIGH_GRADE_STIMULANT, ModFluids.HIGH_GRADE_STIMULANT)));
+
+    public static final RegistryObject<FluidType> MID_GRADE_STIMULANT_TYPE = FLUID_TYPES.register("mid_grade_stimulant", () -> new MedicalFluidType(MedicalEffects.MID_GRADE_STIMULANT, FastColor.ARGB32.color(255, 209, 209, 209)));
+    public static final RegistryObject<MedicalFluid> MID_GRADE_STIMULANT = FLUIDS.register("mid_grade_stimulant", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.MID_GRADE_STIMULANT_TYPE, ModFluids.MID_GRADE_STIMULANT, ModFluids.MID_GRADE_STIMULANT)));
+
+    public static final RegistryObject<FluidType> LOW_GRADE_STIMULANT_TYPE = FLUID_TYPES.register("low_grade_stimulant", () -> new MedicalFluidType(MedicalEffects.LOW_GRADE_STIMULANT, FastColor.ARGB32.color(255, 144, 144, 144)));
+    public static final RegistryObject<MedicalFluid> LOW_GRADE_STIMULANT = FLUIDS.register("low_grade_stimulant", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LOW_GRADE_STIMULANT_TYPE, ModFluids.LOW_GRADE_STIMULANT, ModFluids.LOW_GRADE_STIMULANT)));
+
     public static final RegistryObject<FluidType> CHOCOLATE_MILK_TYPE = FLUID_TYPES.register("chocolate_milk", () -> new MedicalFluidType(MedicalEffects.CHOCOLATE_MILK, 0x2e251c));
     public static final RegistryObject<MedicalFluid> CHOCOLATE_MILK = FLUIDS.register("chocolate_milk", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CHOCOLATE_MILK_TYPE, ModFluids.CHOCOLATE_MILK, ModFluids.CHOCOLATE_MILK)));
 

@@ -186,6 +186,59 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect HIGH_GRADE_STIMULANT = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addTimedEffect(TimedEffectRegistry.HIGH_GRADE_STIMULANT, ml, null, 2 * ml);
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addTimedEffect(TimedEffectRegistry.HIGH_GRADE_STIMULANT, ml, null, 2.4f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect MID_GRADE_STIMULANT = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                //-happiness
+                data.addSickness(0.1f * ml);
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addTimedEffect(TimedEffectRegistry.MID_GRADE_STIMULANT, ml, null, 3.6f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect LOW_GRADE_STIMULANT = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addTimedEffect(TimedEffectRegistry.HIGH_GRADE_STIMULANT, ml, null, 2.5f * ml);
+                //-happiness
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addTimedEffect(TimedEffectRegistry.LOW_GRADE_STIMULANT, ml, null, 3.25f * ml);
+            });
+        }
+    };
+
     public static final MedicalEffect CHOCOLATE_MILK = new MedicalEffect() {
 
         @Override

@@ -1,5 +1,7 @@
 package net.zaharenko424.casualties_cubed.item.bandages;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -38,13 +40,15 @@ public class OldRagItem extends AbstractBandage {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if (pPlayer.isInWaterOrBubble()) return InteractionResultHolder.pass(pPlayer.getItemInHand(pUsedHand));
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand pUsedHand) {
+        if (player.isInWaterOrBubble()) return InteractionResultHolder.pass(player.getItemInHand(pUsedHand));
 
-        if (pLevel.isClientSide) return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
+        if (level.isClientSide) return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
 
-        PlayerHealthData.of(pPlayer).ifPresent(data -> data.setWetness(data.getWetness() * 0.5f));
+        PlayerHealthData.of(player).ifPresent(data -> data.setWetness(data.getWetness() * 0.5f));
+        subNbtDurability(player.getItemInHand(pUsedHand), 5);
+        level.playSound(null, player.getOnPos(), SoundEvents.DYE_USE, SoundSource.PLAYERS);
 
-        return InteractionResultHolder.success(pPlayer.getItemInHand(pUsedHand));
+        return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
     }
 }

@@ -16,12 +16,14 @@ public class TimedEffect {
     private final Limb limb;
 
     private float duration;
+    private float highestDuration;
 
     public TimedEffect(RegistryObject<TimedEffectFunction> effect, float ml, Limb limb, float duration) {
         this.effect = effect.get();
         this.ml = ml;
         this.limb = limb;
         this.duration = duration;
+        highestDuration = duration;
     }
 
     protected TimedEffect(CompoundTag tag) {
@@ -47,7 +49,11 @@ public class TimedEffect {
         return effect.get() == this.effect;
     }
 
-    public Limb limb() {
+    public float ml() {
+        return ml;
+    }
+
+    public @Nullable Limb limb() {
         return limb;
     }
 
@@ -55,13 +61,22 @@ public class TimedEffect {
         return duration <= 0;
     }
 
-    public void addTime(float time) {
-        duration += time;
+    public float duration() {
+        return duration;
+    }
+
+    public void addDuration(float seconds) {
+        duration += seconds;
+        if (duration > highestDuration) highestDuration = duration;
+    }
+
+    public float highestDuration() {
+        return highestDuration;
     }
 
     public void update(ServerPlayer player, PlayerHealthData data) {
         duration--;
-        effect.update(player, data, ml, limb, duration);
+        effect.update(player, data, this);
     }
 
     public CompoundTag save() {

@@ -9,6 +9,7 @@ import net.zaharenko424.casualties_cubed.util.Util;
 public class LimbStatistics {
 
     public static final float MAX_BLEED_RATE = 1.8f;//  L/min
+    public static final float MAX_CHILLED_TIME = 150;//seconds
 
     private static final float dislocationHealSpeed = 0.07f;
     private static final float boneHealSpeed = 0.043f;
@@ -36,6 +37,8 @@ public class LimbStatistics {
 
     private boolean amputated = false;
     private float regrowthProgress = 0;
+
+    private float chilledTimer = 0;//seconds
 
     private boolean syncNeeded = true;
     private boolean softSyncNeeded = true;
@@ -277,6 +280,17 @@ public class LimbStatistics {
         return data.bleedingSpeedMultiplier();
     }
 
+    public boolean isChilled() {
+        return chilledTimer > 0;
+    }
+
+    public void setChilled() {
+        if (amputated) return;
+
+        chilledTimer = MAX_CHILLED_TIME;
+        syncNeeded = true;
+    }
+
     public boolean isAmputated() {
         return amputated;
     }
@@ -308,6 +322,7 @@ public class LimbStatistics {
         bandageSlowAmount = 0;
         skinHealAmount = 0;
         infectionCheck = 0;
+        chilledTimer = 0;
     }
 
     public float getRegrowthProgress() {
@@ -431,6 +446,11 @@ public class LimbStatistics {
             addMuscleHealth(-0.6f * Util.TICK_TO_SEC);
         }
 
+        updateTourniquet(limb);
+        updateChilled(player, limb);
+    }
+
+    void updateTourniquet(Limb limb) {
         if (!tourniquet) return;
 
         tourniquetTimer += Util.TICK_TO_SEC;
@@ -454,6 +474,14 @@ public class LimbStatistics {
                 }
             }
         }
+    }
+
+    void updateChilled(ServerPlayer player, Limb limb) {
+        if (chilledTimer <= 0) return;
+
+        chilledTimer -= Util.TICK_TO_SEC;
+        addMuscleHealth(2 * muscleHealRate(player, limb) * Util.TICK_TO_SEC);
+        addPain(-1.5f * Util.TICK_TO_SEC);
     }
 
     float infectionSpeed() {
@@ -503,6 +531,8 @@ public class LimbStatistics {
         tag.putFloat("bandageSlowAmount", bandageSlowAmount);
         tag.putFloat("skinHealAmount", skinHealAmount);
         tag.putInt("infectionCheck", infectionCheck);
+
+        tag.putFloat("chilledTimer", chilledTimer);
     }
 
     void load(CompoundTag tag) {
@@ -529,6 +559,8 @@ public class LimbStatistics {
         bandageSlowAmount = tag.getFloat("bandageSlowAmount");
         skinHealAmount = tag.getFloat("skinHealAmount");
         infectionCheck = tag.getInt("infectionCheck");
+
+        chilledTimer = tag.getFloat("chilledTimer");
     }
 
     @Override
@@ -548,6 +580,7 @@ public class LimbStatistics {
                 ", skinHealAmount=" + skinHealAmount +
                 ", tourniquet=" + tourniquet +
                 ", tourniquetTimer=" + tourniquetTimer +
+                ", chilledTimer=" + chilledTimer +
                 '}';
     }
 }
