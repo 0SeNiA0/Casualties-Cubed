@@ -41,6 +41,7 @@ import net.zaharenko424.casualties_cubed.hitbox.HitSector;
 import net.zaharenko424.casualties_cubed.network.MedicalAction;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
+import net.zaharenko424.casualties_cubed.registry.TimedEffectRegistry;
 import net.zaharenko424.casualties_cubed.util.AnimationCurve;
 import net.zaharenko424.casualties_cubed.util.Keyframe;
 import net.zaharenko424.casualties_cubed.util.Util;
@@ -154,6 +155,8 @@ public class PlayerHealthData {
     private float bleedClottingSpeed;
     private float bleedingSpeedMultiplier;
     private float currentImmunityMult;
+    private int overdoseIndex;
+    private boolean onHardStimulants;
 
     private final List<TimedEffect> effects = new ArrayList<>();//TODO save
 
@@ -238,6 +241,10 @@ public class PlayerHealthData {
 
     public float getFlashHearingLoss() {
         return flashHearingLoss;
+    }
+
+    public boolean isLastStand() {
+        return lastStandTime > 0;
     }
 
     public void setTriedRollingLastStand(boolean triedRollingLastStand) {
@@ -533,6 +540,18 @@ public class PlayerHealthData {
         stimulantMultiplier += value;
     }
 
+    public int overdoseIndex() {
+        return overdoseIndex;
+    }
+
+    public void overdoseIndex(int value) {
+        overdoseIndex = value;
+    }
+
+    public boolean isOnHardStimulants() {
+        return onHardStimulants;
+    }
+
     public void tryStartFibrillation(boolean forced) {
         if (fibrillationProgress <= 0) {
             fibrillationProgress = 0.1f;
@@ -589,6 +608,11 @@ public class PlayerHealthData {
         //--{
         //--    this.moveDir = -this.moveDir;
         //--}
+        if (player.isCreative()) {
+            applyPenalties(player);
+            return;
+        }
+
         painkillers.update(player);
         updateTimedEffects(player);
 
@@ -603,10 +627,12 @@ public class PlayerHealthData {
         //--HandleVisuals(component);
         //--
 
-        player.setAirSupply(player.getMaxAirSupply());//reset vanilla air
         vomiter.update(player);
         maybeRegrowLimbs(player);
         applyPenalties(player);
+
+        player.setAirSupply(player.getMaxAirSupply());//reset vanilla air
+        if (overdoseIndex > 0) overdoseIndex--;
 
         
         if (brainHealth <= 0) {
@@ -1216,6 +1242,11 @@ public class PlayerHealthData {
             immunity = Mth.clamp(immunity, 0, 200);
 
             currentImmunityMult = immunityInfectionSpeed.evaluate(immunity);
+
+            for (TimedEffect effect : effects) {
+                onHardStimulants = effect.is(TimedEffectRegistry.LOW_GRADE_STIMULANT) || effect.is(TimedEffectRegistry.MID_GRADE_STIMULANT) || effect.is(TimedEffectRegistry.HIGH_GRADE_STIMULANT);
+                if (onHardStimulants) break;
+            }
         }
     }
 
@@ -1460,6 +1491,7 @@ public class PlayerHealthData {
         triedRollingLastStand = false;
         isRagdolled = false;
         Stability = 100;
+        respiratoryRate = 100;
 
         clearAttributePenalties(player);
     }
@@ -2240,6 +2272,9 @@ public class PlayerHealthData {
         nbt.putFloat("bleedingSpeedMultiplier", bleedingSpeedMultiplier);
         nbt.putFloat("currentImmunityMult", currentImmunityMult);
 
+        nbt.putInt("overdoseIndex", overdoseIndex);//TMP Technically not necessary to save
+        nbt.putBoolean("onHardStimulants", onHardStimulants);
+
         // Serialize limb data as a list
         ListTag limbList = new ListTag();
         CompoundTag limbTag;
@@ -2356,6 +2391,10 @@ public class PlayerHealthData {
         bleedClottingSpeed = nbt.getFloat("bleedClottingSpeed");
         bleedingSpeedMultiplier = nbt.getFloat("bleedingSpeedMultiplier");
         currentImmunityMult = nbt.getFloat("currentImmunityMult");
+
+        overdoseIndex = nbt.getInt("overdoseIndex");//TMP Technically not necessary to save
+        onHardStimulants = nbt.getBoolean("onHardStimulants");
+
 
         ListTag limbList = nbt.getList("LimbStats", Tag.TAG_COMPOUND);
         CompoundTag limbTag;

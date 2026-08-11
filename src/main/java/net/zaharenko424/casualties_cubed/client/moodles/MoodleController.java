@@ -51,28 +51,34 @@ public class MoodleController {
     static {
         List<AbstractMoodleVisual> tmp = new ArrayList<>();
 
-        //Positive
-        tmp.add(new SleepMoodle());
         tmp.add(new LifeSupportMoodle());
-            //Side
-        tmp.add(new ImmunocompetentMoodle());
-        tmp.add(new AdrenalineMoodle());
 
-        //Negative
+
+        tmp.add(new LastStandMoodle());
         tmp.add(new BrainHealthMoodle());
-        tmp.add(new LowBloodMoodle());
-        tmp.add(new HighBloodMoodle());
+        //stroke
+        //cardiac arrest
+        //arrhythmia
+        tmp.add(new LowBloodMoodle());//low pressure
+        tmp.add(new HighBloodMoodle());//high pressure
         tmp.add(new RespiratoryArrestMoodle());
+        //hypoventilation
         tmp.add(new LungFaliureMoodle());
         tmp.add(new HemothoraxMoodle());
         tmp.add(new OxygenMoodle());//TODO Split off cardiac arrest
+        //irradiated
         tmp.add(new PainMoodle());
-        tmp.add(new ShockMoodle());
         tmp.add(new OpiateMoodle());
         tmp.add(new WithdrawalMoodle());
+        tmp.add(new ShockMoodle());
+        tmp.add(new StimulatedMoodle());
+        //concussion
+        tmp.add(new SleepMoodle());
         tmp.add(new ConsiousnessMoodle());
+        tmp.add(new DrugOverdoseMoodle());
         tmp.add(new BleedInternalMoodle());
         tmp.add(new BleedMoodle());
+        //exertion (stamina)
         tmp.add(new FractureMoodle());
         tmp.add(new DislocationMoodle());
         tmp.add(new FracturedNeckMoodle());
@@ -82,16 +88,31 @@ public class MoodleController {
         tmp.add(new InfectionMoodle());
         tmp.add(new SepsisMoodle());
         tmp.add(new ToxicosisMoodle());
+        //tiredness (energy)
+        //hunger low/high
+        //thirst
+        //overhydration
         tmp.add(new SicknessMoodle());
         tmp.add(new TemperatureMoodle());
+        //happiness
+        //claw health
         tmp.add(new HearingLossMoodle());
         tmp.add(new DirtynessMoodle());
+        //encumbrance
         tmp.add(new WetnessMoodle());
-            //Side
-        tmp.add(new ImmunocompromisedMoodle());
+        tmp.add(new ImmunityMoodle());
+        //keratin booster
+        //under/overweight
+        //trauma
+        //energized
+        //bad sleep
+        //impaired speech
+        //braingrow sickness
         tmp.add(new DisfiguredMoodle());
         tmp.add(new AmputatedMoodle());
         tmp.add(new BlindMoodle());
+        tmp.add(new AdrenalineMoodle());
+        //hollow
 
         MinecraftForge.EVENT_BUS.post(new RegisterMoodlesEvent(tmp));
 

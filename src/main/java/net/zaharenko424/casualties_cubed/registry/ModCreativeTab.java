@@ -89,6 +89,8 @@ public class ModCreativeTab {
 
                         output.accept(BLEACH_JUG.get());
 
+                        output.accept(COMBAT_PEN.get());
+
                         //Filled
                         output.accept(MEDICAL_MIXER.get());
 
@@ -117,6 +119,8 @@ public class ModCreativeTab {
                         output.accept(BLOOD_BAG.get().withDefFluid());
 
                         output.accept(BLEACH_JUG.get().withDefFluid());
+
+                        output.accept(COMBAT_PEN.get().withDefFluid());
 
 
                         output.accept(EXPIE_PLUSHY.get());

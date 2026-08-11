@@ -12,9 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ImmunocompetentMoodle extends AbstractMoodleVisual {
+public class ImmunityMoodle extends AbstractMoodleVisual {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/immunocompetent.png");
+    private static final ResourceLocation TEX_HIGH = CasualtiesCubed.resourceLoc("textures/gui/moodles/immunocompetent.png");
+    private static final ResourceLocation TEX_LOW = CasualtiesCubed.resourceLoc("textures/gui/moodles/immunocompromised.png");
+
+    private boolean high;
 
     @Override
     public boolean isSideMoodle() {
@@ -28,18 +31,31 @@ public class ImmunocompetentMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getImmunity() > 150 ? MoodleStatus.NORMAL_POS : MoodleStatus.NONE;
+        if (data.getImmunity() > 150) {
+            high = true;
+            return MoodleStatus.NORMAL_POS;
+        }
+
+        if (data.getImmunity() < 55) {
+            high = false;
+            return MoodleStatus.NORMAL_NEG;
+        }
+
+        return MoodleStatus.NONE;
     }
 
     @Override
     protected void renderIcon(GuiGraphics graphics, float partialTicks, int x, int y) {
-        graphics.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
+        graphics.blit(high ? TEX_HIGH : TEX_LOW, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
     public List<Component> getTooltip(Player player) {
-        return List.of(
+        return high ? List.of(
                 Component.translatable("gui.casualties_cubed.moodle.immunocompetent.title"),
-                Component.translatable("gui.casualties_cubed.moodle.immunocompetent.description").withStyle(ChatFormatting.GRAY));
+                Component.translatable("gui.casualties_cubed.moodle.immunocompetent.description").withStyle(ChatFormatting.GRAY))
+                : List.of(
+                Component.translatable("gui.casualties_cubed.moodle.immunocompromised.title"),
+                Component.translatable("gui.casualties_cubed.moodle.immunocompromised.description"));
     }
 }

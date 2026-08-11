@@ -168,7 +168,7 @@ public class TimedEffectRegistry {
                     if (data.stimulantMultiplier()  > -0.5f) {
                         data.addStimulantMultiplier(-0.1f);
                     }
-                    //overdoseIndex 3
+                    data.overdoseIndex(3);
                 }
 
                 if (effect.highestDuration() > 80 && effect.duration() <= 1) {
@@ -207,7 +207,7 @@ public class TimedEffectRegistry {
                     if (stats.getPain() < 60) {
                         stats.addPain(4);
                     }
-                    //overdoseIndex 3
+                    data.overdoseIndex(3);
                 }
 
                 if (effect.highestDuration() > 59) {
@@ -266,7 +266,7 @@ public class TimedEffectRegistry {
                     if (stats.getPain() < 60) {
                         stats.addPain(4);
                     }
-                    //overdoseIndex 3
+                    data.overdoseIndex(3);
                 }
 
                 if (effect.highestDuration() > 50) {

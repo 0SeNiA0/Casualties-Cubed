@@ -11,14 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ImmunocompromisedMoodle extends AbstractMoodleVisual {
+public class StimulatedMoodle extends AbstractMoodleVisual {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/immunocompromised.png");
-
-    @Override
-    public boolean isSideMoodle() {
-        return true;
-    }
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/stimulated.png");
 
     @Override
     public boolean shouldBeDisplayed(ChipState state) {
@@ -27,7 +22,7 @@ public class ImmunocompromisedMoodle extends AbstractMoodleVisual {
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getImmunity() < 55 ? MoodleStatus.NORMAL_NEG : MoodleStatus.NONE;
+        return data.isOnHardStimulants() ? MoodleStatus.NORMAL_POS : MoodleStatus.NONE;
     }
 
     @Override
@@ -37,7 +32,7 @@ public class ImmunocompromisedMoodle extends AbstractMoodleVisual {
 
     @Override
     public List<Component> getTooltip(Player player) {
-        return List.of(Component.translatable("gui.casualties_cubed.moodle.immunocompromised.title"),
-                Component.translatable("gui.casualties_cubed.moodle.immunocompromised.description"));
+        return List.of(Component.translatable("gui.casualties_cubed.moodle.stimulated.title"),
+                Component.translatable("gui.casualties_cubed.moodle.stimulated.description"));
     }
 }

@@ -276,7 +276,7 @@ public class HealthScreen extends Screen {
         }
 
         pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate(width / 2f, height * 0.666f, 0);
+        pGuiGraphics.pose().translate(width / 2f, height * 0.8f, 0);
         drawECG(pGuiGraphics);
         pGuiGraphics.pose().popPose();
     }

@@ -281,7 +281,12 @@ public class ModGlobaLootModifiersProvider extends GlobalLootModifierProvider {
                 ModItems.EXPIE_PLUSHY.get()
         ));
 
-
+        add("combat_pen", new AddFilledToChestsModifier(
+                new LootItemCondition[] {
+                        LootItemRandomChanceCondition.randomChance(0.01f * sanityScale).build()
+                },
+                ModItems.COMBAT_PEN.get()
+        ));
 
 
 

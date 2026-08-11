@@ -75,6 +75,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(ANTISEPTIC_SPRAY, "A 200ml spray bottle. Sprays 10ml of liquid at a time.");
         addItemFromIdWDesc(RELIEF_CREAM_BOTTLE, "A 200ml bottle. The label warns, \"Do not use more than 10 bottles in one day.\"");
         addItemFromIdWDesc(ANTISERUM_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 50ml.");
+        addItemFromIdWDesc(COMBAT_PEN, "A 100ml injector pen which instantly injects its contents into the body. Contains a mixture intended to quickly stabilize casualties and aid in combat scenarios.");
         addItemWDesc(BRAIN_GROW_PILLS, "BrainGrow Pill Bottle", "A 50ml bottle. The label says, \"Take up to one dose per day.\"");
         addItemFromIdWDesc(SYRINGE, "A 100ml syringe for intravenous injection.");
         addItemFromIdWDesc(OLD_RAG, "A worn piece of cloth. Can be used as a makeshift dressing.");
@@ -193,6 +194,12 @@ public class ENLanguageProvider extends LanguageProvider {
         addDeathMessage(ModDamageTypes.OPIOIDS.location().getPath(), "%1$s took too much pain medication", null, "%1$s overdosed with a little help from %2$s");
         addDeathMessage(ModDamageTypes.OXYGEN.location().getPath(), "%1$s forgot to breathe", null, "%1$s forgot to breathe while fighting %2$s");
 
+        addMoodle("last_stand.title", "Last stand");
+        addMoodle("last_stand.description", "You're not going down that easily. Something deep inside you compels you to push through.");
+
+        addMoodle("stimulated.title", "Stimulated");
+        addMoodle("stimulated.description", "Hard stimulant drugs in the bloodstream. You feel ready to tackle anything thrown at you...For now, at least.");
+
         addMoodle("sleep.title", "Sleeping");
         addMoodle("sleep.description", "Just taking a nap.");
 
@@ -268,6 +275,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("consiousness.description4", "Can't stand or think. You barely feel anything.");
         addMoodleO("consiousness.title5", "Unconscious");
         addMoodleO("consiousness.description5", "Not responding to any external stimuli. Lights out.");
+
+        addMoodle("drug_overdose.title", "Drug overdose");
+        addMoodle("drug_overdose.description", "You have overdosed on a non-opioid drug. Health complications likely.");
 
         addMoodleO("dirty.title1", "Dirty");
         addMoodleO("dirty.description1", "Consider taking a quick bath.");
