@@ -404,7 +404,7 @@ public class PlayerHealthData {
     }
 
     ///Maps vanilla food points to CU -50 - 120 range
-    public float getCUHunger(ServerPlayer player) {//def hunger is 100 so 20 is extra -> use saturation? or new system
+    public float getCUHunger(Player player) {//def hunger is 100 so 20 is extra -> use saturation? or new system
         return Mth.map(player.getFoodData().getFoodLevel(), 0, 20, -50, 120);
     }
 
@@ -500,12 +500,24 @@ public class PlayerHealthData {
         bloodPressureChangeFromMedicine += amount;
     }
 
+    public float strokeAmount() {
+        return strokeAmount;
+    }
+
     public void addStrokeAmount(float amount) {
         strokeAmount = Mth.clamp(strokeAmount + amount, 0, 100);
     }
 
     public boolean isCardiacArrest() {
         return heartRate < 20;
+    }
+
+    public boolean isBreathing() {
+        return breathing;
+    }
+
+    public float respiratoryRate() {
+        return respiratoryRate;
     }
 
     public void addRespiratoryRate(float value) {

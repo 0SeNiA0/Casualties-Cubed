@@ -225,6 +225,19 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("toxicosis.title4", "Toxic crisis");
         addMoodle("toxicosis.description4", "Your blood more closely resembles marmalade than something that can upkeep life.");
 
+        addMoodle("hunger.title1", "Peckish");
+        addMoodle("hunger.description1", "Could do with a bite to eat.");
+        addMoodle("hunger.title2", "Hungry");
+        addMoodle("hunger.description2", "Uncomfortably hungry. Slightly weaker than usual.");
+        addMoodle("hunger.title3", "Very hungry");
+        addMoodle("hunger.description3", "Extremely hungry, desperate for satiation. Weaker than usual.");
+        addMoodle("hunger.title4", "Starving");
+        addMoodle("hunger.description4", "Your entire body, just wasting away... Total organ failure imminent.");
+        addMoodle("hunger.title5", "Satiated");
+        addMoodle("hunger.description5", "Eating good today! Lowered weight loss rate and mobility. Slight happiness increase.");
+        addMoodle("hunger.title6", "Full");
+        addMoodle("hunger.description6", "Stomach totally stuffed with food! Any more and you'll be sick. Greatly lowered weight loss rate and mobility. Happiness increase.");
+
         addMoodle("sickness.title1", "Queasy");
         addMoodle("sickness.description1", "Feeling discomfort. Minorly sick.");
         addMoodle("sickness.title2", "Nauseous");
@@ -235,7 +248,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("sickness.description4", "Dangerously sick. Something is VERY wrong on the inside. Weak, confused and in a world of pain.");
 
         addMoodle("wetness.title1", "Damp");
-        addMoodle("wetness.description1", "You feel slightly wet.");
+        addMoodle("wetness.description1", "Your fur feels slightly wet.");
         addMoodle("wetness.title2", "Wet");
         addMoodle("wetness.description2", "Considerably wet. Temperature and comfort decreased.");
         addMoodle("wetness.title3", "Soaked");
@@ -264,6 +277,19 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("brain_health.description3", "reality  ..  stops   making   sense");
         addMoodleO("brain_health.title4", "Comatose");
         addMoodleO("brain_health.description4", ". . .");
+
+        addMoodle("stroke.title", "Stroke");
+        addMoodle("stroke.description", "Bleeding in the brain, likely caused by severe hypertension. Already in its advanced stages, chances of survival are null unless you have Braingrow or a procoagulant.");
+
+        addMoodle("cardiac_arrest.title", "Cardiac arrest");
+        addMoodle("cardiac_arrest.description", "Asystole. If you're somehow conscious, this has a low chance of being treated via defibrillation. Otherwise, cerebral hypoxia and death is soon to follow.");
+
+        addMoodle("arrhythmia.title1", "Arrhythmia");
+        addMoodle("arrhythmia.description1", "Abnormal heart rhythm, likely caused by severe strain to the body. May progress further if the cause isn't addressed. Can be defibrillated.");
+        addMoodle("arrhythmia.title2", "Ventricular tachycardia");
+        addMoodle("arrhythmia.description2", "Severe irregular heartbeat, preventing effective blood pumping. Will progress into lethal V-fib if not treated. Can be defibrillated.");
+        addMoodle("arrhythmia.title3", "Ventricular fibrillation");
+        addMoodle("arrhythmia.description3", "Life threatening, chaotic heart rhythm. Asystole is soon to follow. Things have gone horribly wrong.");
 
         addMoodleO("consiousness.title1", "Confused");
         addMoodleO("consiousness.description1", "Feeling disoriented and slightly dizzy.");
@@ -320,11 +346,15 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("infection.title4", "Life-threatening infection");
         addMoodleO("infection.description4", "The infection is spreading to other limbs, and the infected limb is starting to undergo necrosis. Sepsis is setting in. Emergency care needed.");
 
+        addMoodle("hypoventilation.title1", "Mild hypoventilation");
+        addMoodle("hypoventilation.description1", "Lowered respiratory rate.");
+        addMoodle("hypoventilation.title2", "Hypoventilation");
+        addMoodle("hypoventilation.description2", "Highly lowered respiratory rate, enough to slowly lower blood oxygen concentration.");
+        addMoodle("hypoventilation.title3", "Respiratory arrest");
+        addMoodle("hypoventilation.description3", "Suffocating! Loss of consciousness and death imminent if untreated.");
+
         addMoodleO("lung_faliure.title4", "Lung failure");
         addMoodleO("lung_faliure.description4", "Your lungs are too damaged to function, caused by critically low chest muscle health. Asphyxiation imminent.");
-
-        addMoodleO("not_breathing.title4", "Respiratory arrest");
-        addMoodleO("not_breathing.description4", "Suffocating! Loss of consciousness and death imminent if untreated.");
 
         addMoodleO("opiate.title1", "Opiated");
         addMoodleO("opiate.description1", "Relaxed and calm. Your body feels numb.");
@@ -335,14 +365,14 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("opiate.title4", "Fatal opioid overdose");
         addMoodleO("opiate.description4", "Respiratory failure. You are leaving this world in a drug-filled euphoria. Brain damage and death imminent.");
 
-        addMoodleO("oxygen.title1", "Hypoxemic");
-        addMoodleO("oxygen.description1", "Lowered blood oxygen. Slightly confused, with rubbery skin. Something's wrong...");
-        addMoodleO("oxygen.title2", "Very hypoxemic");
-        addMoodleO("oxygen.description2", "Not enough oxygen is circulating around the body. Feeling light-headed and numb in the extremities. Something is very wrong.");
-        addMoodleO("oxygen.title3", "Asphyxiating");
-        addMoodleO("oxygen.description3", "Consciousness lost. Tissues deprived of oxygen. Brain damage imminent.");
-        addMoodleO("oxygen.title4", "Cardiac arrest");
-        addMoodleO("oxygen.description4", "Heart stopped. Brain dying from oxygen deprivation. Your entire body is rapidly shutting down; Death imminent.");
+        addMoodleO("oxygen.title1", "Mild hypoxemia");
+        addMoodleO("oxygen.description1", "SpO2 below 90%. While not dangerous, it could be a sign of an underlying condition.");
+        addMoodleO("oxygen.title2", "Hypoxemia");
+        addMoodleO("oxygen.description2", "SpO2 below 75%, causing tachycardia and slowly depriving the brain of oxygen. While not lethal, it does point at an underlying condition.");
+        addMoodleO("oxygen.title3", "Severe hypoxemia");
+        addMoodleO("oxygen.description3", "SpO2 below 60%, depriving tissues of oxygen and likely causing heart arrhythmia. Lethal if left to progress.");
+        addMoodleO("oxygen.title4", "Critical hypoxemia");
+        addMoodleO("oxygen.description4", "SpO2 below 45%. Something in your body has gone horribly, horribly wrong. Lethal if left to progress.");
 
         addMoodleO("pain.title1", "Discomfort");
         addMoodleO("pain.description1", "Feeling mild pain.");
@@ -383,6 +413,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("withdrawal.title4", "Dying of withdrawal");
         addMoodleO("withdrawal.description4", "Your body is failing to sustain itself without the opiates it became so reliant on. Your heart is struggling to pump oxygen around the body, resulting in hypoxic brain damage during a desperate episode.");
 
+        addMoodle("concussion.title", "Concussed");
+        addMoodle("concussion.description", "Rendered unconscious by low head vitality - you will wake up when your head heals.");
+
         addMoodleO("adrenaline.title1", "Adrenaline");
         addMoodleO("adrenaline.description1", "Pain numbed. You're on high alert.");
 
@@ -408,6 +441,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("eye_gone.description1", "One of your eyes has been ripped out, halving your field of view. You are somewhat scarred by the experience. Don't lose the remaining one.");
         addMoodleO("eye_gone.title2", "Blind");
         addMoodleO("eye_gone.description2", "Both of your eyes have been ripped out. You can only get by using feel and sound. At least you no longer need a light source...");
+
+        addMoodle("braingrow_sickness.title", "Rapid neuron regeneration sickness");
+        addMoodle("braingrow_sickness.description", "Neural shock caused by a sudden and rapid regeneration of brain tissue. While you'll adjust after some time, you might not want to take another dose for now. (%1$ss)");
 
         addMoodleO("mouth_gone.title2", "Disfigured");
         addMoodleO("mouth_gone.description2", "Your lower jaw has been ripped off due severe trauma to the head. Eating and talking is much harder. You are horribly scarred by the experience.");

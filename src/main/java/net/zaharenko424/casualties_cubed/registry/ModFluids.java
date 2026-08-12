@@ -122,7 +122,7 @@ public class ModFluids {
     public static final RegistryObject<FluidType> SALINE_TYPE = FLUID_TYPES.register("saline", () -> new MedicalFluidType(MedicalEffects.SALINE, 0xc9c8c5));
     public static final RegistryObject<MedicalFluid> SALINE = FLUIDS.register("saline", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SALINE_TYPE, ModFluids.SALINE, ModFluids.SALINE)));
 
-    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(MedicalEffects.BLOOD, -7862264));
+    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(MedicalEffects.BLOOD, FastColor.ARGB32.color(255, 201, 0, 255)));
     public static final RegistryObject<MedicalFluid> BLOOD = FLUIDS.register("blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.BLOOD)));
 
     public static final RegistryObject<FluidType> ANTISEPTIC_TYPE = FLUID_TYPES.register("antiseptic", () -> new MedicalFluidType(MedicalEffects.ANTISEPTIC, 0x5a6b45));

@@ -51,32 +51,31 @@ public class MoodleController {
     static {
         List<AbstractMoodleVisual> tmp = new ArrayList<>();
 
-        tmp.add(new LifeSupportMoodle());
+        tmp.add(new LifeSupportMoodle());//not in CU
 
 
         tmp.add(new LastStandMoodle());
         tmp.add(new BrainHealthMoodle());
-        //stroke
-        //cardiac arrest
-        //arrhythmia
-        tmp.add(new LowBloodMoodle());//low pressure
-        tmp.add(new HighBloodMoodle());//high pressure
-        tmp.add(new RespiratoryArrestMoodle());
-        //hypoventilation
+        tmp.add(new StrokeMoodle());
+        tmp.add(new CardiacArrestMoodle());
+        tmp.add(new ArrhythmiaMoodle());
+        tmp.add(new LowBloodMoodle());//TODO low pressure
+        tmp.add(new HighBloodMoodle());//TODO high pressure
+        tmp.add(new HypoventilationMoodle());
         tmp.add(new LungFaliureMoodle());
         tmp.add(new HemothoraxMoodle());
-        tmp.add(new OxygenMoodle());//TODO Split off cardiac arrest
+        tmp.add(new OxygenMoodle());
         //irradiated
         tmp.add(new PainMoodle());
         tmp.add(new OpiateMoodle());
         tmp.add(new WithdrawalMoodle());
         tmp.add(new ShockMoodle());
         tmp.add(new StimulatedMoodle());
-        //concussion
+        tmp.add(new ConcussionMoodle());
         tmp.add(new SleepMoodle());
         tmp.add(new ConsiousnessMoodle());
         tmp.add(new DrugOverdoseMoodle());
-        tmp.add(new BleedInternalMoodle());
+        tmp.add(new InternalBleedingMoodle());
         tmp.add(new BleedMoodle());
         //exertion (stamina)
         tmp.add(new FractureMoodle());
@@ -89,7 +88,7 @@ public class MoodleController {
         tmp.add(new SepsisMoodle());
         tmp.add(new ToxicosisMoodle());
         //tiredness (energy)
-        //hunger low/high
+        tmp.add(new HungerMoodle());
         //thirst
         //overhydration
         tmp.add(new SicknessMoodle());
@@ -107,7 +106,7 @@ public class MoodleController {
         //energized
         //bad sleep
         //impaired speech
-        //braingrow sickness
+        tmp.add(new BrainGrowSicknessMoodle());
         tmp.add(new DisfiguredMoodle());
         tmp.add(new AmputatedMoodle());
         tmp.add(new BlindMoodle());

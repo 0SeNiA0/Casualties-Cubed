@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BleedInternalMoodle extends AbstractMoodleVisual {
+public class InternalBleedingMoodle extends AbstractMoodleVisual {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/internalblood_moodle.png");
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/internal_bleeding.png");
 
     @Override
     public boolean shouldBeDisplayed(ChipState state) {

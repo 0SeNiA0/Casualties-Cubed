@@ -16,7 +16,6 @@ import java.util.List;
 public class OxygenMoodle extends AbstractMoodleVisual {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/oxygen_moodle.png");
-    private static final ResourceLocation TEX_CRIT = CasualtiesCubed.resourceLoc("textures/gui/moodles/heartstop_moodle.png");;
 
     @Override
     public boolean shouldBeDisplayed(ChipState state) {
@@ -27,22 +26,15 @@ public class OxygenMoodle extends AbstractMoodleVisual {
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
         float ox = data.getBloodOxygen();
 
-        if (ox < 5) {
-            return MoodleStatus.CRITICAL_NEG;
-        } else if (ox < 30) {
-            return MoodleStatus.HEAVY_NEG;
-        } else if (ox < 60) {
-            return MoodleStatus.NORMAL_NEG;
-        } else if (ox < 90) {
-            return MoodleStatus.LIGHT_NEG;
-        }
-
-        return MoodleStatus.NONE;
+        if (ox < 45) return MoodleStatus.CRITICAL_NEG;
+        if (ox < 60) return MoodleStatus.HEAVY_NEG;
+        if (ox < 75) return MoodleStatus.NORMAL_NEG;
+        return ox < 90 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
     }
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ms.blit(getMoodleStatus() == MoodleStatus.CRITICAL_NEG ? TEX_CRIT : TEX, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

@@ -14,7 +14,10 @@ import java.util.List;
 
 public class BleedMoodle extends AbstractMoodleVisual {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/blood_moodle.png");
+    private static final ResourceLocation TEX_1 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding1.png");
+    private static final ResourceLocation TEX_2 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding2.png");
+    private static final ResourceLocation TEX_3 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding3.png");
+    private static final ResourceLocation TEX_4 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding4.png");
 
     @Override
     protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
@@ -35,7 +38,12 @@ public class BleedMoodle extends AbstractMoodleVisual {
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(switch (getMoodleStatus()) {
+            case LIGHT_NEG -> TEX_1;
+            case NORMAL_NEG -> TEX_2;
+            case HEAVY_NEG -> TEX_3;
+            default -> TEX_4;
+        }, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override
