@@ -6,22 +6,27 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class HypoventilationMoodle extends AbstractMoodleVisual {
+public class HypoventilationMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/hypoventilation.png");
     private static final ResourceLocation RESP_ARREST = CasualtiesCubed.resourceLoc("textures/gui/moodles/cant_breathe.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        if (!data.isBreathing()) return MoodleStatus.CRITICAL_NEG;
+    public void update(Player player, PlayerHealthData data) {
+        if (!data.isBreathing()) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+            return;
+        }
 
         float respRate = data.respiratoryRate();
-        if (respRate < 50) return MoodleStatus.NORMAL_NEG;
-        return respRate < 90 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
+        if (respRate < 50) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else if (respRate < 90) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

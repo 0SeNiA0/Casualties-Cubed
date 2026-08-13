@@ -6,42 +6,32 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ImmunityMoodle extends AbstractMoodleVisual {
+public class ImmunityMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX_HIGH = CasualtiesCubed.resourceLoc("textures/gui/moodles/immunocompetent.png");
     private static final ResourceLocation TEX_LOW = CasualtiesCubed.resourceLoc("textures/gui/moodles/immunocompromised.png");
 
     private boolean high;
 
-    @Override
-    public boolean isSideMoodle() {
-        return true;
+    public ImmunityMoodle() {
+        super(true, true);
     }
 
     @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
-    }
+    public void update(Player player, PlayerHealthData data) {
+        float immunity = data.getImmunity();
 
-    @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        if (data.getImmunity() > 150) {
+        if (immunity > 150) {
             high = true;
-            return MoodleStatus.NORMAL_POS;
-        }
-
-        if (data.getImmunity() < 55) {
+            setStatus(MoodleStatus.NORMAL_POS);
+        } else if (immunity < 55) {
             high = false;
-            return MoodleStatus.NORMAL_NEG;
-        }
-
-        return MoodleStatus.NONE;
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else clearStatus();
     }
 
     @Override

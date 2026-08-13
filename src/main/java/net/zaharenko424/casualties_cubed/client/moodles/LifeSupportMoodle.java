@@ -7,18 +7,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LifeSupportMoodle extends AbstractMoodleVisual {
+public class LifeSupportMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/item/auto_pump.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getLifeSupportTimer() > 0 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
+    public void update(Player player, PlayerHealthData data) {
+        if (data.getLifeSupportTimer() > 0) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

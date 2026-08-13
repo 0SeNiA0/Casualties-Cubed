@@ -23,23 +23,23 @@ public class MoodleController {
 
     private static final OverflowMoodle overflowMoodle = new OverflowMoodle();
 
-    private static final List<AbstractMoodleVisual> moodles;
-    private static final List<AbstractMoodleVisual> toRender = new ArrayList<>();
+    private static final List<AbstractMoodle> moodles;
+    private static final List<AbstractMoodle> toRender = new ArrayList<>();
 
     /**
      * Collects all visible moodles for given player. Returned list is reused.
      */
     @SuppressWarnings("SameReturnValue")
-    public static List<AbstractMoodleVisual> updateAndGetToRender(Player player, boolean healthPanel) {
+    public static List<AbstractMoodle> updateAndGetToRender(Player player, boolean sideMoodles) {
         toRender.clear();
 
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
         if (data == null) return toRender;
 
         ChipState state = data.getChip();
-        for (AbstractMoodleVisual moodle : moodles) {
+        for (AbstractMoodle moodle : moodles) {
+            if (moodle.isSideMoodle() && !sideMoodles) continue;
             if (!moodle.shouldBeDisplayed(state)) continue;
-            if (moodle.isSideMoodle() && !healthPanel) continue;
 
             moodle.update(player, data);
             if (moodle.shouldRender()) toRender.add(moodle);
@@ -49,7 +49,7 @@ public class MoodleController {
     }
 
     static {
-        List<AbstractMoodleVisual> tmp = new ArrayList<>();
+        List<AbstractMoodle> tmp = new ArrayList<>();
 
         tmp.add(new LifeSupportMoodle());//not in CU
 
@@ -59,10 +59,9 @@ public class MoodleController {
         tmp.add(new StrokeMoodle());
         tmp.add(new CardiacArrestMoodle());
         tmp.add(new ArrhythmiaMoodle());
-        tmp.add(new LowBloodMoodle());//TODO low pressure
-        tmp.add(new HighBloodMoodle());//TODO high pressure
+        tmp.add(new BloodPressureMoodle());
         tmp.add(new HypoventilationMoodle());
-        tmp.add(new LungFaliureMoodle());
+        tmp.add(new LungFailureMoodle());
         tmp.add(new HemothoraxMoodle());
         tmp.add(new OxygenMoodle());
         //irradiated
@@ -73,16 +72,16 @@ public class MoodleController {
         tmp.add(new StimulatedMoodle());
         tmp.add(new ConcussionMoodle());
         tmp.add(new SleepMoodle());
-        tmp.add(new ConsiousnessMoodle());
+        tmp.add(new ConsciousnessMoodle());
         tmp.add(new DrugOverdoseMoodle());
         tmp.add(new InternalBleedingMoodle());
-        tmp.add(new BleedMoodle());
+        tmp.add(new BleedingMoodle());
         //exertion (stamina)
         tmp.add(new FractureMoodle());
         tmp.add(new DislocationMoodle());
-        tmp.add(new FracturedNeckMoodle());
+        tmp.add(new FracturedNeckMoodle());//TODO severity based on fracture time
         tmp.add(new FracturedRibsMoodle());
-        tmp.add(new DislocatedJawMoodle());
+        tmp.add(new DislocatedJawMoodle());//TODO severity based on dislocation time
         tmp.add(new DislocatedSpineMoodle());
         tmp.add(new InfectionMoodle());
         tmp.add(new SepsisMoodle());
@@ -96,16 +95,16 @@ public class MoodleController {
         //happiness
         //claw health
         tmp.add(new HearingLossMoodle());
-        tmp.add(new DirtynessMoodle());
+        tmp.add(new DirtinessMoodle());
         //encumbrance
         tmp.add(new WetnessMoodle());
         tmp.add(new ImmunityMoodle());
         //keratin booster
         //under/overweight
         //trauma
-        //energized
+        tmp.add(new EnergizedMoodle());
         //bad sleep
-        //impaired speech
+        tmp.add(new ImpairedSpeechMoodle());
         tmp.add(new BrainGrowSicknessMoodle());
         tmp.add(new DisfiguredMoodle());
         tmp.add(new AmputatedMoodle());
@@ -131,7 +130,7 @@ public class MoodleController {
         ProfilerFiller profiler = minecraft.getProfiler();
         profiler.push(CasualtiesCubed.MOD_ID + ":moodles");
 
-        List<AbstractMoodleVisual> visible = updateAndGetToRender(minecraft.player, false);
+        List<AbstractMoodle> visible = updateAndGetToRender(minecraft.player, false);
 
         PoseStack stack = graphics.pose();
         stack.pushPose();

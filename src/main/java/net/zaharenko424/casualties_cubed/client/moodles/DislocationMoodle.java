@@ -6,32 +6,39 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DislocationMoodle extends AbstractMoodleVisual {
+public class DislocationMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/dislocation_moodle.png");
-    private static final List<Limb> checkList = List.of(Limb.LEFT_ARM, Limb.RIGHT_FOOT, Limb.RIGHT_LEG, Limb.RIGHT_ARM,
-            Limb.RIGHT_HAND, Limb.LEFT_FOOT, Limb.LEFT_LEG, Limb.LEFT_HAND);
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public DislocationMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        for (Limb limb : checkList) {
-            if (data.getLimb(limb).getDislocationTimer() > 0) return MoodleStatus.HEAVY_NEG;
+    public void update(Player player, PlayerHealthData data) {
+        float timer = 0;
+        LimbStatistics stats;
+        for (Limb limb : Limb.values()) {
+            stats = data.getLimb(limb);
+            if (stats.getDislocationTimer() > timer) timer = stats.getDislocationTimer();
         }
 
-        return MoodleStatus.NONE;
+        if (timer > 19 * 60 + 50) {
+            setStatus(MoodleStatus.CRITICAL_NEG);
+        } else if(timer > 11 * 60 + 54) {
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (timer > 3 * 60 + 58) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else if (timer > 0) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

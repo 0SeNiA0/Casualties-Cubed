@@ -14,7 +14,7 @@ import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
-import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodleVisual;
+import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodle;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
 import net.zaharenko424.casualties_cubed.client.ticksounds.HeartBeatSound;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
@@ -248,13 +248,13 @@ public class HealthScreen extends Screen {
         }
 
         // render moodles for self (ignoring hotbar constraints!)
-        List<AbstractMoodleVisual> visible = MoodleController.updateAndGetToRender(localPlayer, true);
+        List<AbstractMoodle> visible = MoodleController.updateAndGetToRender(localPlayer, true);
 
         int x = 4; // center moodles
         int y = this.height - MoodleController.MOODLE_SIZE - MoodleController.PADDING; // fixed height above bottom
 
-        AbstractMoodleVisual hovered = null;
-        for (AbstractMoodleVisual moodle : visible) {
+        AbstractMoodle hovered = null;
+        for (AbstractMoodle moodle : visible) {
             moodle.render(pGuiGraphics, pPartialTick, x, y);
 
             if (moodle.isMouseOver(pMouseX, pMouseY, x, y)) {

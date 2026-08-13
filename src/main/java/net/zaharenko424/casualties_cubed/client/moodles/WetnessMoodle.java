@@ -7,23 +7,26 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class WetnessMoodle extends AbstractMoodleVisual {
+public class WetnessMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/wetness.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float wetness = data.getWetness();
 
-        if (wetness > 70) return MoodleStatus.CRITICAL_NEG;
-        if (wetness > 45) return MoodleStatus.HEAVY_NEG;
-        if (wetness > 20) return MoodleStatus.NORMAL_NEG;
-
-        return wetness > 5 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
+        if (wetness > 70) {
+            setStatus(MoodleStatus.CRITICAL_NEG);
+        } else if (wetness > 45) {
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (wetness > 20) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else if (wetness > 5) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

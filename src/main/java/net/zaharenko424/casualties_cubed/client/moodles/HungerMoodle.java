@@ -6,25 +6,30 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class HungerMoodle extends AbstractMoodleVisual {
+public class HungerMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/hunger.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float hunger = data.getCUHunger(player);
 
-        if (hunger <= 15) return MoodleStatus.CRITICAL_NEG;
-        if (hunger < 35) return MoodleStatus.HEAVY_NEG;
-        if (hunger < 50) return MoodleStatus.NORMAL_NEG;
-        if (hunger < 75) return MoodleStatus.LIGHT_NEG;
-        if (hunger >= 120) return MoodleStatus.NORMAL_POS;// CU > but currently 120 is max
-
-        return hunger > 100 ? MoodleStatus.LIGHT_POS : MoodleStatus.NONE;
+        if (hunger <= 15) {
+            setStatus(MoodleStatus.CRITICAL_NEG, hunger <= 0);
+        } else if (hunger < 35) {
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (hunger < 50) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else if (hunger < 75) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else if (hunger >= 120) {
+            setStatus(MoodleStatus.NORMAL_POS);// CU > but currently 120 is max
+        } else if (hunger > 100) {
+            setStatus(MoodleStatus.LIGHT_POS);
+        } else clearStatus();
     }
 
     @Override

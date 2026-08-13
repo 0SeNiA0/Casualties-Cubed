@@ -98,8 +98,6 @@ public class PlayerHealthData {
     private float internalBleeding = 0f;
     private float bloodOxygen = 100f;
     private float OxygenCap = 100;
-    private float Opioids = 0;
-    private float PendingOpioids = 0;
     private float heartRate = 70;
     private boolean isBreathing = true;
     private boolean respiratoryArrest = false;
@@ -347,20 +345,12 @@ public class PlayerHealthData {
         consciousness = Mth.clamp(value, 0, 100);
     }
 
-    public float getPendingOpioids() {
-        return PendingOpioids;
+    public float getPendingOpioids() {//TODO remove
+        return 0;
     }
 
     public void setPendingOpioids(float value) {
-        PendingOpioids = value;
-    }
 
-    public float getOpioids() {
-        return Opioids;
-    }
-
-    public void setOpioids(float va) {
-        Opioids = va;
     }
 
     public float getBloodOxygen() {
@@ -399,7 +389,7 @@ public class PlayerHealthData {
         return bloodViscosity;
     }
 
-    public double getAveragePain() {
+    public float getAveragePain() {
         return averagePain;
     }
 
@@ -562,6 +552,10 @@ public class PlayerHealthData {
 
     public boolean isOnHardStimulants() {
         return onHardStimulants;
+    }
+
+    public float caffeinated() {
+        return caffeinated;
     }
 
     public void tryStartFibrillation(boolean forced) {

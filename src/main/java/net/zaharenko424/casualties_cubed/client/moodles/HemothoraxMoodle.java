@@ -6,33 +6,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HemothoraxMoodle extends AbstractMoodleVisual {
+public class HemothoraxMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/hemothorax_moodle.png");
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public HemothoraxMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float hemothorax = data.getHemothorax();
 
-        if (hemothorax > 70) {
-            return MoodleStatus.CRITICAL_NEG;
-        } else if (hemothorax > 40) {
-            return MoodleStatus.HEAVY_NEG;
-        }
-
-        return MoodleStatus.NONE;
+        if (hemothorax > 40) {
+            setStatus(MoodleStatus.NORMAL_NEG, hemothorax > 70);
+        } else clearStatus();
     }
 
     @Override

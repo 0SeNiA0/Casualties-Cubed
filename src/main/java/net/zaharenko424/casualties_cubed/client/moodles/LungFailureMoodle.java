@@ -8,18 +8,19 @@ import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LungFaliureMoodle extends AbstractMoodleVisual {
+public class LungFailureMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/lungfaliure_moodle.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.getLimb(Limb.CHEST).getMuscleHealth() <= 4 ? MoodleStatus.CRITICAL_NEG : MoodleStatus.NONE;
+    public void update(Player player, PlayerHealthData data) {
+        if (data.getLimb(Limb.CHEST).getMuscleHealth() < 4) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+        } else clearStatus();
     }
 
     @Override

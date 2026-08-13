@@ -6,30 +6,32 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OxygenMoodle extends AbstractMoodleVisual {
+public class OxygenMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/oxygen_moodle.png");
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public OxygenMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float ox = data.getBloodOxygen();
 
-        if (ox < 45) return MoodleStatus.CRITICAL_NEG;
-        if (ox < 60) return MoodleStatus.HEAVY_NEG;
-        if (ox < 75) return MoodleStatus.NORMAL_NEG;
-        return ox < 90 ? MoodleStatus.LIGHT_NEG : MoodleStatus.NONE;
+        if (ox < 45) {
+            setStatus(MoodleStatus.CRITICAL_NEG);
+        } else if (ox < 60) {
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (ox < 75) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else if (ox < 90) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

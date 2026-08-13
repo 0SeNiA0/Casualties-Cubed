@@ -5,24 +5,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class StrokeMoodle extends AbstractMoodleVisual {
+public class StrokeMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/stroke.png");
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public StrokeMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.strokeAmount() > 70 ? MoodleStatus.CRITICAL_NEG : MoodleStatus.NONE;
+    public void update(Player player, PlayerHealthData data) {
+        if (data.strokeAmount() > 70) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+        } else clearStatus();
     }
 
     @Override

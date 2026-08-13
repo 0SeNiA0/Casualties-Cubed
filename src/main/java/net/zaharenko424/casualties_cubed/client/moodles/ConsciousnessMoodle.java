@@ -7,12 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConsiousnessMoodle extends AbstractMoodleVisual {
+public class ConsciousnessMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/consious_moodle.png");
     private static final ResourceLocation UNC_TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/unconsious_moodle.png");
@@ -20,33 +19,29 @@ public class ConsiousnessMoodle extends AbstractMoodleVisual {
     public boolean fullyUNC = false;
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float consciousness = data.getConsciousness();
 
-        if (consciousness < 10) {
+        if (consciousness < 20) {
             fullyUNC = true;
-            return MoodleStatus.CRITICAL_NEG;
+            setStatus(MoodleStatus.CRITICAL_NEG);
         } else if (consciousness < 30) {
             fullyUNC = false;
-            return MoodleStatus.CRITICAL_NEG;
+            setStatus(MoodleStatus.CRITICAL_NEG);
         } else if (consciousness < 55) {
-            fullyUNC = false;
-            return MoodleStatus.HEAVY_NEG;
-        } else if (consciousness < 75) {
-            fullyUNC = false;
-            return MoodleStatus.NORMAL_NEG;
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (consciousness < 72) {
+            setStatus(MoodleStatus.NORMAL_NEG);
         } else if (consciousness < 90) {
-            fullyUNC = false;
-            return MoodleStatus.LIGHT_NEG;
+            setStatus(MoodleStatus.LIGHT_NEG);
         } else {
-            fullyUNC = false;
-            return MoodleStatus.NONE;
+            clearStatus();
         }
     }
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ResourceLocation tex = fullyUNC ? UNC_TEX : TEX;
+        ResourceLocation tex = getMoodleStatus() == MoodleStatus.CRITICAL_NEG && fullyUNC ? UNC_TEX : TEX;
         ms.blit(tex, x, y, 0, 0, 16, 16, 16, 16);
     }
 

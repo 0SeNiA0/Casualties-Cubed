@@ -6,37 +6,27 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdrenalineMoodle extends AbstractMoodleVisual {
+public class AdrenalineMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/adrenaline_moodle.png");
 
-    @Override
-    public boolean isSideMoodle() {
-        return true;
+    public AdrenalineMoodle() {
+        super(true, true);
     }
 
     @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
-    }
-
-    @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float blood2 = data.getAdrenaline();
         if (blood2 > 65) {
-            return MoodleStatus.NORMAL_NEG;
+            setStatus(MoodleStatus.NORMAL_NEG);
         } else if (blood2 > 20) {
-            return MoodleStatus.LIGHT_NEG;
-        } else {
-            return MoodleStatus.NONE;
-        }
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

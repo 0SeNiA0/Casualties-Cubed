@@ -5,22 +5,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.List;
 
-public class StimulatedMoodle extends AbstractMoodle {
+public class ImpairedSpeechMoodle extends AbstractMoodle {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/stimulated.png");
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/impaired_speech.png");
 
-    public StimulatedMoodle() {
-        super(false, true);
+    public ImpairedSpeechMoodle() {
+        super(true, false);
     }
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.isOnHardStimulants()) {
-            setStatus(MoodleStatus.NORMAL_POS);
+        if (data.getLimb(Limb.HEAD).getDislocationTimer() > 0 || data.isMouthRemoved()) {
+            setStatus(MoodleStatus.LIGHT_NEG);
         } else clearStatus();
     }
 
@@ -31,7 +32,7 @@ public class StimulatedMoodle extends AbstractMoodle {
 
     @Override
     public List<Component> getTooltip(Player player) {
-        return List.of(Component.translatable("gui.casualties_cubed.moodle.stimulated.title"),
-                Component.translatable("gui.casualties_cubed.moodle.stimulated.description"));
+        return List.of(Component.translatable("gui.casualties_cubed.moodle.impaired_speech.title"),
+                       Component.translatable("gui.casualties_cubed.moodle.impaired_speech.description"));
     }
 }

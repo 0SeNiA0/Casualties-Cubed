@@ -7,26 +7,23 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DirtynessMoodle extends AbstractMoodleVisual {
+public class DirtinessMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/dirty.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float dirt = data.getDirtiness();
 
         if (dirt > 80) {
-            return MoodleStatus.NORMAL_NEG;
+            setStatus(MoodleStatus.NORMAL_NEG);
         } else if (dirt > 50) {
-            return MoodleStatus.LIGHT_NEG;
-        } else {
-            return MoodleStatus.NONE;
-        }
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

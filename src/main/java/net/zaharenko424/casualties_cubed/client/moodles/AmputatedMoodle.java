@@ -8,27 +8,28 @@ import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AmputatedMoodle extends AbstractMoodleVisual {
+public class AmputatedMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/amputated_moodle.png");
 
-    @Override
-    public boolean isSideMoodle() {
-        return true;
+    public AmputatedMoodle() {
+        super(true, false);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         for (Limb limb : Limb.values()) {
-            if (data.isAmputated(limb)) return MoodleStatus.HEAVY_NEG;
+            if (data.isAmputated(limb)) {
+                setStatus(MoodleStatus.HEAVY_NEG);
+                return;
+            }
         }
 
-        return MoodleStatus.NONE;
+        clearStatus();
     }
 
     @Override

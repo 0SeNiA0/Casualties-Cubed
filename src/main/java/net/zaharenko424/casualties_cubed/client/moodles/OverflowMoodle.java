@@ -4,15 +4,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
-public class OverflowMoodle extends AbstractMoodleVisual {
+public class OverflowMoodle extends AbstractMoodle {
 
     public int leftover = 0;
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return MoodleStatus.LIGHT_NEG;
+    public void update(Player player, PlayerHealthData data) {
+        setStatus(MoodleStatus.LIGHT_NEG);
     }
 
     public void setLeftover(int leftover) {

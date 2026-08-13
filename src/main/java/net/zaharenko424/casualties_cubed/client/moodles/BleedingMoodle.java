@@ -7,12 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BleedMoodle extends AbstractMoodleVisual {
+public class BleedingMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX_1 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding1.png");
     private static final ResourceLocation TEX_2 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding2.png");
@@ -20,20 +19,18 @@ public class BleedMoodle extends AbstractMoodleVisual {
     private static final ResourceLocation TEX_4 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding4.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float bleed = data.totalBleedSpeed();
 
         if (bleed > 0.6f / 20 / 60) {
-            return MoodleStatus.CRITICAL_NEG;
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
         } else if (bleed > 0.3f / 20 / 60) {
-            return MoodleStatus.HEAVY_NEG;
+            setStatus(MoodleStatus.HEAVY_NEG, true);
         } else if (bleed > 0.15f / 20 / 60) {
-            return MoodleStatus.NORMAL_NEG;
+            setStatus(MoodleStatus.NORMAL_NEG);
         } else if (bleed > 0.05f / 20 / 60) {
-            return MoodleStatus.LIGHT_NEG;
-        }
-
-        return MoodleStatus.NONE;
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override
@@ -69,5 +66,4 @@ public class BleedMoodle extends AbstractMoodleVisual {
         }
         return componentList;
     }
-
 }

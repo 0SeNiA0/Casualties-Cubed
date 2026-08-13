@@ -258,13 +258,13 @@ public class ENLanguageProvider extends LanguageProvider {
 
 
         addMoodleO("bleeding.title1", "Minor Bleeding");
-        addMoodleO("bleeding.description1", "Blood is slowly escaping. No imidiate danger.");
+        addMoodleO("bleeding.description1", "Blood is oozing out of a relatively small wound. There is no immediate danger.");
         addMoodleO("bleeding.title2", "Bleeding");
-        addMoodleO("bleeding.description2", "Blood is flowing out from a decently sized wound. Treatment recomended.");
-        addMoodleO("bleeding.title3", "Heavy Bleeding");
-        addMoodleO("bleeding.description3", "A large volume of blood is comming out of your body. Treatment needed.");
-        addMoodleO("bleeding.title4", "Catastrophic Bleeding");
-        addMoodleO("bleeding.description4", "Blood is spraying like out of a fire hose. Treatment critical!");
+        addMoodleO("bleeding.description2", "Blood is flowing out of a decently sized wound. Unlikely to be fatal if you're healthy. Treatment recommended.");
+        addMoodleO("bleeding.title3", "Heavy bleeding");
+        addMoodleO("bleeding.description3", "A large volume of blood is hemorrhaging out of your body. Likely lethal if untreated. Treatment needed.");
+        addMoodleO("bleeding.title4", "Catastrophic bleeding");
+        addMoodleO("bleeding.description4", "§oAs your life gushes out behind you, you remember that you are mortal.");
 
         addMoodleO("internal_bleeding.title3", "Internal Bleeding");
         addMoodleO("internal_bleeding.description3", "Turns out your guts and lungs are NOT where the blood is supposed to be. Treatment recommended.");
@@ -290,6 +290,25 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("arrhythmia.description2", "Severe irregular heartbeat, preventing effective blood pumping. Will progress into lethal V-fib if not treated. Can be defibrillated.");
         addMoodle("arrhythmia.title3", "Ventricular fibrillation");
         addMoodle("arrhythmia.description3", "Life threatening, chaotic heart rhythm. Asystole is soon to follow. Things have gone horribly wrong.");
+
+        addMoodle("hypotension.title1", "Mild hypotension");
+        addMoodle("hypotension.description1", "Slightly decreased blood pressure. You feel slightly dizzy.");
+        addMoodle("hypotension.title2", "Hypotension");
+        addMoodle("hypotension.description2", "Moderately decreased blood pressure. You look pale and have clammy skin. Something is wrong - check your vitals.");
+        addMoodle("hypotension.title3", "Severe hypotension");
+        addMoodle("hypotension.description3", "Severely decreased blood pressure, you're on the edge of fainting. Treatment needed. This might start fibrillation, check your vitals.");
+        addMoodle("hypotension.title4", "Circulatory collapse");
+        addMoodle("hypotension.description4", "Lethally low blood pressure. Blood is not getting to your organs. Cerebral hypoxia and death is imminent.");
+
+        addMoodle("hypertension.title1", "Mild hypertension");
+        addMoodle("hypertension.description1", "Slightly elevated blood pressure.");
+        addMoodle("hypertension.title2", "Hypertension");
+        addMoodle("hypertension.description2", "Moderately elevated blood pressure. You have a headache, you're dizzy and your nose is bleeding. Check your vitals.");
+        addMoodle("hypertension.title3", "Severe hypertension");
+        addMoodle("hypertension.description3", "Severely elevated blood pressure, dangerously close to having severe health complications. You feel terrible. Check your vitals.");
+        addMoodle("hypertension.title4", "Hypertensive crisis");
+        addMoodle("hypertension.description4", "Life-threatening blood pressure. Risk of hemorrhagic stroke. Check your vitals urgently, and watch for stroke symptoms.");
+
 
         addMoodleO("consiousness.title1", "Confused");
         addMoodleO("consiousness.description1", "Feeling disoriented and slightly dizzy.");
@@ -318,24 +337,6 @@ public class ENLanguageProvider extends LanguageProvider {
 
         addMoodleO("hemothorax.title3", "Hemothorax");
         addMoodleO("hemothorax.description3", "Blood is accumulating in the pleural cavity due to internal bleeding. Your chest hurts... Treatment needed.");
-
-        addMoodleO("high_blood.title1", "Bloated");
-        addMoodleO("high_blood.description1", "Feeling uncomfortable. Increased blood pressure.");
-        addMoodleO("high_blood.title2", "Hypervolemic");
-        addMoodleO("high_blood.description2", "Body bloated, blood pressure high, feeling dizzy with a headache.");
-        addMoodleO("high_blood.title3", "Critically hypervolemic");
-        addMoodleO("high_blood.description3", "Grossly bloated. Extremely high blood pressure. Can barely stand, or think.");
-        addMoodleO("high_blood.title4", "Lethally hypervolemic");
-        addMoodleO("high_blood.description4", "There's a terrible pain in your chest... Vital signs fading. Blood volume and pressure way too high.");
-
-        addMoodleO("low_blood.title1", "Pale");
-        addMoodleO("low_blood.description1", "Minor blood loss. You're feeling a little weak, with pale skin.");
-        addMoodleO("low_blood.title2", "Hypovolemic");
-        addMoodleO("low_blood.description2", "Weak and confused from blood loss. You feel really unwell. Treatment recommended.");
-        addMoodleO("low_blood.title3", "Critically hypovolemic");
-        addMoodleO("low_blood.description3", "Missing a major amount of blood, barely conscious. Your vision is fuzzy... Treatment needed.");
-        addMoodleO("low_blood.title4", "Exsanguinated");
-        addMoodleO("low_blood.description4", "Life-threatening blood loss, about to pass out. Moments away from total heart failure. Death imminent.");
 
         addMoodleO("infection.title1", "Infection");
         addMoodleO("infection.description1", "The infection site is swollen and warm. Treatment needed. Find something that can kill off foreign bodies.");
@@ -444,6 +445,12 @@ public class ENLanguageProvider extends LanguageProvider {
 
         addMoodle("braingrow_sickness.title", "Rapid neuron regeneration sickness");
         addMoodle("braingrow_sickness.description", "Neural shock caused by a sudden and rapid regeneration of brain tissue. While you'll adjust after some time, you might not want to take another dose for now. (%1$ss)");
+
+        addMoodle("energized.title", "Energized");
+        addMoodle("energized.description", "Stamina loss and sleepiness decreased. (%1$ss)");
+
+        addMoodle("impaired_speech.title", "Impaired speech");
+        addMoodle("impaired_speech.description", "Something is making speaking difficult... You might have trouble communicating with others.");
 
         addMoodleO("mouth_gone.title2", "Disfigured");
         addMoodleO("mouth_gone.description2", "Your lower jaw has been ripped off due severe trauma to the head. Eating and talking is much harder. You are horribly scarred by the experience.");

@@ -162,7 +162,6 @@ public class ModCommands {
                                                     builder.suggest("hemothorax");
                                                     builder.suggest("internalBleeding");
                                                     builder.suggest("oxygen");
-                                                    builder.suggest("opioids");
                                                     builder.suggest("bloodViscosity");
                                                     builder.suggest("brainhealth");
                                                     builder.suggest("dirtyness");
@@ -188,7 +187,6 @@ public class ModCommands {
                                                                     case "internalbleeding" ->
                                                                             h.setInternalBleeding(value);
                                                                     case "oxygen" -> h.setBloodOxygen(value);
-                                                                    case "opioids" -> h.setPendingOpioids(value);
                                                                     case "bloodviscosity" -> h.setBloodViscosity(value);
                                                                     case "brainhealth" -> h.setBrainHealth(value);
                                                                     case "dirtyness" -> h.setDirtiness(value);

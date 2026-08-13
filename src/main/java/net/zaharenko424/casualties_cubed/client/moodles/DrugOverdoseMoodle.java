@@ -5,24 +5,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class DrugOverdoseMoodle extends AbstractMoodleVisual {
+public class DrugOverdoseMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/drug_overdose.png");
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public DrugOverdoseMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return data.overdoseIndex() > 0 ? MoodleStatus.CRITICAL_NEG : MoodleStatus.NONE;
+    public void update(Player player, PlayerHealthData data) {
+        if (data.overdoseIndex() > 0) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+        } else clearStatus();
     }
 
     @Override

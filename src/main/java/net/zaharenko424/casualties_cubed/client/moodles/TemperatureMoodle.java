@@ -7,12 +7,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TemperatureMoodle extends AbstractMoodleVisual {
+public class TemperatureMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX_HIGH = CasualtiesCubed.resourceLoc("textures/gui/moodles/temphigh.png");
     private static final ResourceLocation TEX_LOW = CasualtiesCubed.resourceLoc("textures/gui/moodles/templow.png");
@@ -20,21 +19,19 @@ public class TemperatureMoodle extends AbstractMoodleVisual {
     boolean low = false;
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float temp = data.getTemperature();
         low = temp < 36.6;
 
         if (temp <= 28 || temp >= 41.5) {
-            return MoodleStatus.CRITICAL_NEG;
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
         } else if (temp <= 32.5 || temp >= 40.25) {
-            return MoodleStatus.HEAVY_NEG;
+            setStatus(MoodleStatus.HEAVY_NEG);
         } else if (temp <= 34 || temp >= 39) {
-            return MoodleStatus.NORMAL_NEG;
+            setStatus(MoodleStatus.NORMAL_NEG);
         } else if (temp <= 35.5 || temp >= 38) {
-            return MoodleStatus.LIGHT_NEG;
-        }
-
-        return MoodleStatus.NONE;
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

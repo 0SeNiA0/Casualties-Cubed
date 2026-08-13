@@ -7,21 +7,28 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class SepsisMoodle extends AbstractMoodleVisual {
+public class SepsisMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/sepsis.png");
 
+    public SepsisMoodle() {
+        super(false, true);
+    }
+
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float sepsis = data.getSepsis();
 
-        if (sepsis > 80) return MoodleStatus.CRITICAL_NEG;
-        if (sepsis > 50) return MoodleStatus.HEAVY_NEG;
-        return sepsis > 10 ? MoodleStatus.NORMAL_NEG : MoodleStatus.NONE;
+        if (sepsis > 80) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+        } else if (sepsis > 50) {
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (sepsis > 10) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else clearStatus();
     }
 
     @Override

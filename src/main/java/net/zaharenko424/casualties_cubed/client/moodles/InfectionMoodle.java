@@ -8,12 +8,11 @@ import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfectionMoodle extends AbstractMoodleVisual {
+public class InfectionMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/infection_moodle.png");
 
@@ -23,20 +22,18 @@ public class InfectionMoodle extends AbstractMoodleVisual {
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         double maxInfection = data.getMaxInfection();
 
         if (maxInfection > 80) {
-            return MoodleStatus.CRITICAL_NEG;
+            setStatus(MoodleStatus.CRITICAL_NEG);
         } else if (maxInfection > 60) {
-            return MoodleStatus.HEAVY_NEG;
+            setStatus(MoodleStatus.HEAVY_NEG);
         } else if (maxInfection > 40) {
-            return MoodleStatus.NORMAL_NEG;
+            setStatus(MoodleStatus.NORMAL_NEG);
         } else if (maxInfection > 25) {
-            return MoodleStatus.LIGHT_NEG;
-        } else {
-            return MoodleStatus.NONE;
-        }
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

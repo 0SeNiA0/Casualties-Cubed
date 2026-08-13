@@ -6,17 +6,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class SleepMoodle extends AbstractMoodleVisual {
+public class SleepMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/sleep.png");
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
-        return player.isSleeping() ? MoodleStatus.LIGHT_POS : MoodleStatus.NONE;
+    public void update(Player player, PlayerHealthData data) {
+        if (player.isSleeping()) {
+            setStatus(MoodleStatus.LIGHT_POS);
+        } else clearStatus();
     }
 
     @Override

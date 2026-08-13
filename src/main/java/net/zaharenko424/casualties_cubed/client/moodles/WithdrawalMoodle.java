@@ -6,40 +6,32 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WithdrawalMoodle extends AbstractMoodleVisual {
+public class WithdrawalMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/withdrawal.png");
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public WithdrawalMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float netOpioids = data.painkillers.currentOpiateReception();
-        boolean hasOP = data.getPendingOpioids() > 0;
 
-        if (hasOP) return MoodleStatus.NONE;
-
-        if (netOpioids <= -42) {
-            return MoodleStatus.CRITICAL_NEG;
-        } else if (netOpioids <= -25) {
-            return MoodleStatus.HEAVY_NEG;
-        } else if (netOpioids <= -15) {
-            return MoodleStatus.NORMAL_NEG;
-        } else if (netOpioids <= -5) {
-            return MoodleStatus.LIGHT_NEG;
-        }
-
-        return MoodleStatus.NONE;
+        if (netOpioids < -34) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+        } else if (netOpioids < -25) {
+            setStatus(MoodleStatus.HEAVY_NEG);
+        } else if (netOpioids < -15) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else if (netOpioids < -5) {
+            setStatus(MoodleStatus.LIGHT_NEG);
+        } else clearStatus();
     }
 
     @Override

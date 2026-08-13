@@ -5,28 +5,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ArrhythmiaMoodle extends AbstractMoodleVisual {
+public class ArrhythmiaMoodle extends AbstractMoodle {
 
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/arrhythmia.png");
 
-    @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive();
+    public ArrhythmiaMoodle() {
+        super(false, true);
     }
 
     @Override
-    protected @NotNull MoodleStatus calculateStatus(Player player, PlayerHealthData data) {
+    public void update(Player player, PlayerHealthData data) {
         float fibrillation = data.getFibrillationProgress();
-        if (fibrillation > 75) return MoodleStatus.CRITICAL_NEG;
-        if (fibrillation > 50) return MoodleStatus.HEAVY_NEG;
 
-        return fibrillation > 15 ? MoodleStatus.NORMAL_NEG : MoodleStatus.NONE;
+        if (fibrillation > 75) {
+            setStatus(MoodleStatus.CRITICAL_NEG, true);
+        } else if (fibrillation > 50) {
+            setStatus(MoodleStatus.HEAVY_NEG, true);
+        } else if (fibrillation > 15) {
+            setStatus(MoodleStatus.NORMAL_NEG);
+        } else clearStatus();
     }
 
     @Override
