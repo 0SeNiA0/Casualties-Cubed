@@ -39,6 +39,9 @@ public class ModNetwork {
         registerClientbound(ClientboundSyncHealthPacket.class, ClientboundSyncHealthPacket::encode,
                 ClientboundSyncHealthPacket::new, (packet, ctx) -> ClientPacketHandler.handleSyncHealth(packet, ctx));
 
+        registerClientbound(ClientboundHeartThumpPacket.class, ClientboundHeartThumpPacket::encode,
+                ClientboundHeartThumpPacket::new, (packet, ctx) -> ClientPacketHandler.handleHeartThump(packet, ctx));
+
         registerClientbound(ClientboundTriggerLastStandPacket.class, ClientboundTriggerLastStandPacket::encode,
                 ClientboundTriggerLastStandPacket::new, (packet, ctx) -> ClientPacketHandler.handleLastStand(packet, ctx));
 

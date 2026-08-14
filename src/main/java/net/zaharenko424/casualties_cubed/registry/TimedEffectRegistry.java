@@ -126,15 +126,15 @@ public class TimedEffectRegistry {
                 data.addRespiratoryRate(2.5f);
                 data.setBloodOxygen(data.getBloodOxygen() + 1.666f);
                 //+2.5 stamina
-                data.setFibrillationProgress(data.getFibrillationProgress() - 1.2f);
+                data.setFibrillationProgress(data.fibrillationProgress() - 1.2f);
                 data.setBloodVolume(data.getBloodVolume() + 0.0025f);
             }
     );
 
     public static final RegistryObject<TimedEffectFunction> AMIODARONE = TIMED_EFFECTS.register("amiodarone", () ->
             (player, data, effect) -> {
-                if (data.getFibrillationProgress() > 0) {
-                    data.setFibrillationProgress(Util.moveTowards(2, data.getFibrillationProgress(), 0));
+                if (data.fibrillationProgress() > 0) {
+                    data.setFibrillationProgress(Util.moveTowards(2, data.fibrillationProgress(), 0));
                 }
 
                 data.getLimb(Limb.HEAD).addMuscleHealth(-0.25f);

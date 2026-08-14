@@ -39,6 +39,8 @@ import net.zaharenko424.casualties_cubed.compat.serene_seasons.SereneSeasonsUtil
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.hitbox.HitSector;
 import net.zaharenko424.casualties_cubed.network.MedicalAction;
+import net.zaharenko424.casualties_cubed.network.SyncTracker;
+import net.zaharenko424.casualties_cubed.network.packet.ClientboundHeartThumpPacket;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import net.zaharenko424.casualties_cubed.registry.TimedEffectRegistry;
@@ -91,16 +93,13 @@ public class PlayerHealthData {
     private float blood = 5f;
     private float averagePain = 0;
     private float consciousness = 100f;
-    private float totalBleedSpeed = 0;
+    private float totalBleedSpeed = 0;//per second
     private float hemothorax = 0f;
-    private float hemothoraxPain = 0f;
     ///per minute -> per tick = / 1200 //! C:U uses 0 - 100 range with 1 = 0.0088/m (Body.HandleBody())
     private float internalBleeding = 0f;
     private float bloodOxygen = 100f;
-    private float OxygenCap = 100;
     private float heartRate = 70;
     private boolean isBreathing = true;
-    private boolean respiratoryArrest = false;
     private float bloodViscosity = 0;
     private float adrenaline = 0, currentAdrenaline = 0;
     private int lifeSupportTimer = 0;
@@ -122,7 +121,7 @@ public class PlayerHealthData {
     private float wetness;
 
     private boolean leftEyeBlind = false;
-    private boolean RightEyeBlind = false;
+    private boolean rightEyeBlind = false;
     private boolean isMouthRemoved = false;
 
     private boolean isRagdolled = false;
@@ -156,7 +155,7 @@ public class PlayerHealthData {
     private int overdoseIndex;
     private boolean onHardStimulants;
 
-    private final List<TimedEffect> effects = new ArrayList<>();//TODO save
+    private final List<TimedEffect> effects = new ArrayList<>();
 
     private Vec3 lastPos = Vec3.ZERO;//last pos used to calculate deltaMovement on server
     private final float thirst = 100;//to be implemented
@@ -218,11 +217,11 @@ public class PlayerHealthData {
     }
 
     public boolean isRightEyeBlind() {
-        return RightEyeBlind;
+        return rightEyeBlind;
     }
 
     public void setRightEyeBlind(boolean rightEyeBlind) {
-        RightEyeBlind = rightEyeBlind;
+        this.rightEyeBlind = rightEyeBlind;
     }
 
     public boolean isMouthRemoved() {
@@ -345,14 +344,6 @@ public class PlayerHealthData {
         consciousness = Mth.clamp(value, 0, 100);
     }
 
-    public float getPendingOpioids() {//TODO remove
-        return 0;
-    }
-
-    public void setPendingOpioids(float value) {
-
-    }
-
     public float getBloodOxygen() {
         return bloodOxygen;
     }
@@ -369,16 +360,12 @@ public class PlayerHealthData {
         heartRate = value;
     }
 
-    public float getFibrillationProgress() {
+    public float fibrillationProgress() {
         return fibrillationProgress;
     }
 
     public void setFibrillationProgress(float value) {
         fibrillationProgress = value;
-    }
-
-    public boolean isRespiratoryArrest() {
-        return respiratoryArrest;
     }
 
     public void setBloodViscosity(float bloodViscosity) {
@@ -1095,7 +1082,7 @@ public class PlayerHealthData {
         }
 
         heartProg += Util.TICK_TO_SEC * heartRate / 60;//CU uses unscaled time but 1.20 has no time scaling
-        if (heartProg > 1) {//TODO technically this does nothing outside ecg so could move this entirely to client/health screen
+        if (heartProg > 1) {
             if (heartProg > 1.2f) {
                 heartProg = 1.2f;
             }
@@ -1110,11 +1097,18 @@ public class PlayerHealthData {
 
         if (heartProg > 0.3f && !didThump) {
             didThump = true;
-            //heart thump sound in health screen -> prob just do this client side
+            SyncTracker.sendToViewingAndSelf(player, new ClientboundHeartThumpPacket(player.getId()));
         }
 
         //pressure readout: round(bloodPressure) / round(bloodPressure * 0.66)
         //respiratory rate readout: respiratoryRate * 0.25/m
+    }
+
+    public boolean isCriticallyDying(Player player) {
+        return (totalBleedSpeed > Util.CUBloodPointsToL(0.02f) && blood < 2.5f + Util.CUBloodPointsToL(30))
+                || bloodOxygen < 50 || (getCUHunger(player) < 0 && getLimb(Limb.HEAD).getMuscleHealth() < 25)
+                || sepsis > 82.5f || temperature < 27 || temperature > 41.5f || fibrillationProgress > 60 || isCardiacArrest()
+                || bloodPressure < 70;
     }
 
     private static final AnimationCurve heartCurveNormal = new AnimationCurve(List.of(
@@ -1199,7 +1193,7 @@ public class PlayerHealthData {
             //clothingTemperature = 0
             bleedClottingSpeed = 0.025f * Mth.map(bloodViscosity, -100, 0, 0, 1) * Mth.clamp(1 - venomCurrent / 20, 0, 1);
             bleedingSpeedMultiplier = (0.01f + Mth.map(bloodViscosity, -100, 0, 0.01f, 0)) * ServerConfig.BLEED_RATE.get().floatValue();
-            lastStandTime--;
+            if (lastStandTime > 0) lastStandTime--;
 
             if (bloodViscosity > 90 && random.nextFloat() < 0.0166) {
                 hasPulmonaryEmbolism = true;
@@ -1461,43 +1455,49 @@ public class PlayerHealthData {
         effects.clear();
 
         // reset player-wide primitives to initial defaults (match the field initializers)
-        blood = 5f;
-        averagePain = 0f;
-        consciousness = 100f;
-        hemothorax = 0f;
-        hemothoraxPain = 0f;
-        internalBleeding = 0f;
-        bloodOxygen = 100f;
-        OxygenCap = 100f;
-        heartRate = 70;
-        isBreathing = true;
-        respiratoryArrest = false;
-        bloodViscosity = 0f;
         brainHealth = 100;
-        painkillers.reset();
+        blood = 5f;
+        bloodOxygen = 100;
+        bloodPressure = 120;
+        heartRate = 70;
+        bloodVesselSize = 1;
+        bloodViscosity = 0;
+        respiratoryRate = 100;
+        strokeAmount = 0;
+        hasPulmonaryEmbolism = false;
+        fibrillationProgress = 0;
+        player.getFoodData().setFoodLevel(20);
+        sepsis = 0;
         temperature = 36.6f;
-        Shock = 0;
+        sickness = 0;
+        consciousness = 100;
+        isMouthRemoved = false;
+        rightEyeBlind = false;
+        leftEyeBlind = false;
+        internalBleeding = 0;
+        hemothorax = 0;
         dirtiness = 0;
+        wetness = 0;
+        hearingLoss = 0;
         antibioticTimer = 0;
-        immunity = 100;
+        brainGrowSickness = 0;
+        triedRollingLastStand = false;
+        successfullyRolledLastStand = false;
         adrenaline = 0;
         currentAdrenaline = 0;
-        lifeSupportTimer = 0;
-        isMouthRemoved = false;
-        leftEyeBlind = false;
-        RightEyeBlind = false;
-        hearingLoss = 0;
-        flashHearingLoss = 0;
-        sepsis = 0;
-        sickness = 0;
+        venomCurrent = 0;
+        venomTotal = 0;
+        bloodPressureChangeFromMedicine = 0;
+        caffeinated = 0;
+
+        painkillers.reset();
         vomiter.reset();
-        temporarySlowdown = 0;
-        venomTotal = venomCurrent = 0;
-        wetness = 0;
-        triedRollingLastStand = false;
+
+
+        lifeSupportTimer = 0;
+        flashHearingLoss = 0;
         isRagdolled = false;
         Stability = 100;
-        respiratoryRate = 100;
 
         clearAttributePenalties(player);
     }
@@ -1527,10 +1527,10 @@ public class PlayerHealthData {
 
         boolean skipOthers = false;
         float damage_treshold = base_damage_treshhold;
-        if ((limb == Limb.HEAD && isMouthRemoved && leftEyeBlind && RightEyeBlind) || limb == Limb.CHEST) {
+        if ((limb == Limb.HEAD && isMouthRemoved && leftEyeBlind && rightEyeBlind) || limb == Limb.CHEST) {
             damage_treshold *= 2;
             skipOthers = true;
-        } else if (limb == Limb.HEAD && (!leftEyeBlind || !RightEyeBlind)) {
+        } else if (limb == Limb.HEAD && (!leftEyeBlind || !rightEyeBlind)) {
             damage_treshold -= 10;
         }
         float musclepenalty = (100 - stats.getMuscleHealth()) / 100 * -10;
@@ -1541,8 +1541,8 @@ public class PlayerHealthData {
             if (limb == Limb.HEAD && !skipOthers) {
                 Random random = new Random();
                 int chance = random.nextInt(3);
-                if (chance == 1 && !RightEyeBlind) {
-                    RightEyeBlind = true;
+                if (chance == 1 && !rightEyeBlind) {
+                    rightEyeBlind = true;
                 } else if ((chance == 2 || chance == 1) && !leftEyeBlind) {
                     leftEyeBlind = true;
                 } else if (!isMouthRemoved) {
@@ -2221,10 +2221,8 @@ public class PlayerHealthData {
         nbt.putDouble("AveragePain", averagePain);
         nbt.putFloat("Consciousness", consciousness);
         nbt.putFloat("Hemothorax", hemothorax);
-        nbt.putFloat("HemothoraxPain", hemothoraxPain);
         nbt.putFloat("InternalBleeding", internalBleeding);
         nbt.putFloat("Oxygen", bloodOxygen);
-        nbt.putFloat("OxygenCap", OxygenCap);
         nbt.putFloat("BPM", heartRate);
         nbt.putBoolean("IsBreathing", isBreathing);
         nbt.putFloat("BloodViscosity", bloodViscosity);
@@ -2238,7 +2236,7 @@ public class PlayerHealthData {
         nbt.putFloat("CurrentAdrenaline", currentAdrenaline);
         nbt.putInt("LifeSupport", lifeSupportTimer);
         nbt.putBoolean("LeftEyeBlind", leftEyeBlind);
-        nbt.putBoolean("RightEyeBlind", RightEyeBlind);
+        nbt.putBoolean("RightEyeBlind", rightEyeBlind);
         nbt.putBoolean("MouthMissing", isMouthRemoved);
         nbt.putFloat("HearingLoss", hearingLoss);
         nbt.putFloat("FlashHearing", flashHearingLoss);
@@ -2340,10 +2338,8 @@ public class PlayerHealthData {
         averagePain = nbt.getFloat("AveragePain");
         consciousness = nbt.getFloat("Consciousness");
         hemothorax = nbt.getFloat("Hemothorax");
-        hemothoraxPain = nbt.getFloat("HemothoraxPain");
         internalBleeding = nbt.getFloat("InternalBleeding");
         bloodOxygen = nbt.getFloat("Oxygen");
-        OxygenCap = nbt.getFloat("OxygenCap");
         heartRate = nbt.getFloat("BPM");
         isBreathing = nbt.getBoolean("IsBreathing");
         bloodViscosity = nbt.getFloat("BloodViscosity");
@@ -2359,7 +2355,7 @@ public class PlayerHealthData {
         currentAdrenaline = nbt.getFloat("CurrentAdrenaline");
         lifeSupportTimer = nbt.getInt("LifeSupport");
         leftEyeBlind = nbt.getBoolean("LeftEyeBlind");
-        RightEyeBlind = nbt.getBoolean("RightEyeBlind");
+        rightEyeBlind = nbt.getBoolean("RightEyeBlind");
         isMouthRemoved = nbt.getBoolean("MouthMissing");
         hearingLoss = nbt.getFloat("HearingLoss");
         flashHearingLoss = nbt.getFloat("FlashHearing");
@@ -2431,13 +2427,10 @@ public class PlayerHealthData {
                 ", averagePain=" + averagePain +
                 ", consciousness=" + consciousness +
                 ", hemothorax=" + hemothorax +
-                ", hemothoraxpain=" + hemothoraxPain +
                 ", internalBleeding=" + internalBleeding +
                 ", oxygen=" + bloodOxygen +
-                ", oxygenCap=" + OxygenCap +
                 ", bpm=" + heartRate +
                 ", isBreathing=" + isBreathing +
-                ", respiratoryArrest=" + respiratoryArrest +
                 ", bloodViscosity=" + bloodViscosity +
                 ", immunity=" + immunity +
                 ", brainHealth=" + brainHealth +

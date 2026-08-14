@@ -50,7 +50,7 @@ public class PillContainerItem extends MultiTankFluidItem {
 
     @Override
     public SoundEvent getEatingSound() {
-        return ModSounds.PILL.get();
+        return ModSounds.PILLS.get();
     }
 
     @Override

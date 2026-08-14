@@ -69,6 +69,17 @@ public class SyncTracker {
         return holder == viewersToHolders.get(viewer);
     }
 
+    public static <MSG> void sendToViewingAndSelf(ServerPlayer holder, MSG packet) {
+        Packet<?> vanilla = ModNetwork.CHANNEL.toVanillaPacket(packet, NetworkDirection.PLAY_TO_CLIENT);
+        boolean sentToSelf = false;
+        for (ServerPlayer viewer : holdersToViewers.get(holder)) {
+            if (viewer == holder) sentToSelf = true;
+            viewer.connection.send(vanilla);
+        }
+
+        if (!sentToSelf) holder.connection.send(vanilla);
+    }
+
     private static void sync(MinecraftServer server) {
         PlayerHealthData data;
         Packet<?> partial, full;

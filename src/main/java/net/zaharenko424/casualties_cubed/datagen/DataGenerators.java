@@ -41,5 +41,6 @@ public class DataGenerators {
         generator.addProvider(event.includeClient(), new BlockStateProvider(output, existingFileHelper));
         generator.addProvider(event.includeClient(), new ItemModelProvider(output, existingFileHelper));
         generator.addProvider(event.includeClient(), new ENLanguageProvider(output));
+        generator.addProvider(event.includeClient(), new SoundProvider(output, existingFileHelper));
     }
 }

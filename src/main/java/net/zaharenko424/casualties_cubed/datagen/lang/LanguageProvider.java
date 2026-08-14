@@ -148,8 +148,8 @@ public abstract class LanguageProvider extends net.minecraftforge.common.data.La
         add("screen." + modid + "." + key, value);
     }
 
-    protected void addSound(RegistryObject<SoundEvent> sound, String value) {
-        add(toLanguageKey(sound.getId(), "subtitles"), value);
+    protected void addSound(RegistryObject<SoundEvent> sound, String subtitle) {
+        add(toLanguageKey(sound.getId(), "subtitles"), subtitle);
     }
 
     protected void addTooltipO(String key, String value) {

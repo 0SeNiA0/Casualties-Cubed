@@ -1,21 +1,21 @@
 package net.zaharenko424.casualties_cubed.item.usable;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
-import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
-import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
+import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
+import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -56,6 +56,6 @@ public class BoneWeldingItem extends Item implements ISimpleMedicalUsable, IAllo
 
     @Override
     public SoundEvent getUseSound() {
-        return SoundEvents.BONE_MEAL_USE;
+        return ModSounds.BONE_WELD.get();
     }
 }

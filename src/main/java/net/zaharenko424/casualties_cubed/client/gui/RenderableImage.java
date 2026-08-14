@@ -37,8 +37,8 @@ public class RenderableImage implements Renderable {
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        PoseStack stack = pGuiGraphics.pose();
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack stack = graphics.pose();
         stack.pushPose();
 
         stack.translate(offset.x, offset.y, offset.z);
@@ -47,7 +47,7 @@ public class RenderableImage implements Renderable {
 
         if (tint != -1) RenderSystem.setShaderColor(FastColor.ARGB32.red(tint) / 255f, FastColor.ARGB32.green(tint) / 255f, FastColor.ARGB32.blue(tint) / 255f, FastColor.ARGB32.alpha(tint) / 255f);
 
-        pGuiGraphics.blit(texture, -u / 2, -v / 2, uOffset, vOffset, u, v, texWidth, texHeight);
+        graphics.blit(texture, -u / 2, -v / 2, uOffset, vOffset, u, v, texWidth, texHeight);
 
         if (tint != -1) RenderSystem.setShaderColor(1, 1, 1, 1);
 

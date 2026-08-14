@@ -3,6 +3,7 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -18,8 +19,10 @@ import java.util.List;
 
 public class MoodleController {
 
+    public static final ResourceLocation HEALTH_PANEL_BUTTON = CasualtiesCubed.texLoc("gui/health_panel");
+    public static final ResourceLocation TIME_WARP = CasualtiesCubed.texLoc("gui/time_warp");
     public static final int MOODLE_SIZE = 20;
-    public static final int PADDING = 4;
+    public static final int PADDING = 3;
 
     private static final OverflowMoodle overflowMoodle = new OverflowMoodle();
 
@@ -137,8 +140,11 @@ public class MoodleController {
         stack.translate(0, 0, 150);
 
         int hotbarLeft = (width / 2) - 91;
-        int x = 4;
-        int y = height - MOODLE_SIZE - 4;
+        int x = 0;
+        int y = height - MOODLE_SIZE - 2;
+
+        graphics.blit(HEALTH_PANEL_BUTTON, x, y - 14, 0, 0, 32, 32, 32, 32);
+        x += 32 + 5;
 
         for (int i = 0; i < visible.size(); i++) {
             if (x + MOODLE_SIZE + 16 > hotbarLeft) {
@@ -149,6 +155,8 @@ public class MoodleController {
             visible.get(i).render(graphics, partialTick, x, y);
             x += MOODLE_SIZE + PADDING;
         }
+
+        graphics.blit(TIME_WARP, width - 64, y + 2, 0, 0, 64, 16, 64, 16);
 
         stack.popPose();
         profiler.pop();

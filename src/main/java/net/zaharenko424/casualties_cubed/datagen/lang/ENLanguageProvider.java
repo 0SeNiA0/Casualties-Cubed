@@ -6,6 +6,7 @@ import net.zaharenko424.casualties_cubed.ModDamageTypes;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.registry.ModBlocks;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -468,6 +469,13 @@ public class ENLanguageProvider extends LanguageProvider {
         addTooltipO("liquid.amount.with.capacity", "%s / %s ml");
         addTooltipO("liquid.amount", "%s ml");
         addTooltipO("percent", "%1$s%%");
+        addTooltip("health_panel_button", "Health panel (%s)");
+        addTooltip("switch_main_hand_button.title", "Swap your main hand ");
+        addTooltip("switch_main_hand_button.description", "Switch main hand between the Right/Left\nUse this to dig with your second arm if the main one is broken\nYour left arm is slightly weaker than the right");
+        addTooltip("workout_button.title", "Do some working out");
+        addTooltip("workout_button.description", "Gives experience in STR/RES at the cost of some time and energy. Good to pass the time, though it will hurt if you're seriously injured.");
+        addTooltip("sleep_button.title", "Sleep");
+        addTooltip("sleep_button.description", "Sleep quality is determined by the ground you sleep on\nCan't sleep if in pain/sick/not tired");
 
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
 
@@ -481,5 +489,16 @@ public class ENLanguageProvider extends LanguageProvider {
         addCommand("fillfluid.error.invalid_fluid", "Invalid fluid");
         addCommand("fillfluid.error.no_item", "No compatible item found in main hand");
         addCommand("fillfluid.success", "Added %1$sml of %2$s to item");
+
+        addSound(ModSounds.HEALTH_SCREEN_OPEN, "Health screen opened");
+        addSound(ModSounds.HEALTH_SCREEN_CLOSE, "Health screen closed");
+        addSound(ModSounds.HEART_THUMP, "Heart thump");
+        addSound(ModSounds.HEART_THUMP_HEAVY, "Heavy heart thump");
+        addSound(ModSounds.HEART_THUMP_HEAVY_MONITOR, "Heavy heart thump");
+        addSound(ModSounds.SPRAY, "Spray applied");
+        addSound(ModSounds.SPLINT, "Splint applied");
+        addSound(ModSounds.AUTO_PUMP, "Auto pump used");
+        addSound(ModSounds.BONE_WELD, "Bone welder used");
+        addSound(ModSounds.DRAIN_USE, "Chest drain used");
     }
 }

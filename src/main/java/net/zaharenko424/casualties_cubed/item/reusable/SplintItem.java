@@ -1,5 +1,6 @@
 package net.zaharenko424.casualties_cubed.item.reusable;
 
+import net.minecraft.sounds.SoundEvent;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,5 +44,10 @@ public class SplintItem extends Item implements ISimpleMedicalUsable, IAllowInMe
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pTooltipComponents.add(Component.translatable("item.casualties_cubed.splint.description").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public SoundEvent getUseSound() {
+        return ModSounds.SPLINT.get();
     }
 }

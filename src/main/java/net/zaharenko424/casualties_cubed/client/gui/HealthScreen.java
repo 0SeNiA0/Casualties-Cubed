@@ -5,20 +5,22 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodle;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
-import net.zaharenko424.casualties_cubed.client.ticksounds.HeartBeatSound;
-import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
+import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -28,12 +30,18 @@ import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseMedItemPacket;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class HealthScreen extends Screen {
+
+    private static final ResourceLocation SWITCH_MAIN_HAND = CasualtiesCubed.texLoc("gui/switch_main_hand");
+    private static final ResourceLocation SWITCHED_MAIN_HAND = CasualtiesCubed.texLoc("gui/switched_main_hand");
+    private static final ResourceLocation WORKOUT = CasualtiesCubed.texLoc("gui/workout");
+    private static final ResourceLocation NAP_BUTTON = CasualtiesCubed.texLoc("gui/nap");
 
     private LimbWidget L_Hand;
     private LimbWidget R_Hand;
@@ -61,15 +69,36 @@ public class HealthScreen extends Screen {
     private LimbWidget lastClicked;
     private LimbWidget lastHovered;
 
-    private HeartBeatSound heartBeatSound;
-
     public boolean BGmode = false;
 
+    private final ImageButton healthPanelButton;
+    private final RenderableImage mainRight = new RenderableImage(SWITCH_MAIN_HAND, 32, 32);
+    private final RenderableImage mainLeft = new RenderableImage(SWITCHED_MAIN_HAND, 32, 32);
+    private final ImageButton switchMainHandButton;
+    private final ImageButton sleepButton;
+    private final ImageButton workoutButton;
+    private final RenderableImage timeWarp = new RenderableImage(MoodleController.TIME_WARP, 64, 16);//move to moodleManager?
 
     public HealthScreen(Player target) {
         super(Component.empty());
         this.target = target;
         this.localPlayer = Minecraft.getInstance().player;
+
+        healthPanelButton = new ImageButton(32, 32, new RenderableImage(MoodleController.HEALTH_PANEL_BUTTON, 32, 32), this::onClose);
+        healthPanelButton.tooltip(Component.translatable("tooltip.casualties_cubed.health_panel_button", Component.keybind(Keybinds.OPEN_PAIN_GUI.getName())));
+
+        mainRight.offset.set(-4, -4, 0);
+        mainLeft.offset.set(-4, -4, 0);
+        switchMainHandButton = new ImageButton(24, 24, new RenderableImage(SWITCH_MAIN_HAND, 32, 32), () -> localPlayer.setMainArm(localPlayer.getMainArm().getOpposite()));
+        switchMainHandButton.tooltip(Component.translatable("tooltip.casualties_cubed.switch_main_hand_button.title"), Component.translatable("tooltip.casualties_cubed.switch_main_hand_button.description"));
+        switchMainHandButton.image(localPlayer.getMainArm() == HumanoidArm.RIGHT ? mainRight : mainLeft);
+
+        workoutButton = new ImageButton(32, 32, new RenderableImage(WORKOUT, 32, 32), () -> {});
+        workoutButton.tooltip(Component.translatable("tooltip.casualties_cubed.workout_button.title"), Component.translatable("tooltip.casualties_cubed.workout_button.description"));
+
+        sleepButton = new ImageButton(32, 32, new RenderableImage(NAP_BUTTON, 32, 32), () -> {});
+        sleepButton.tooltip(Component.translatable("tooltip.casualties_cubed.sleep_button.title"), Component.translatable("tooltip.casualties_cubed.sleep_button.description"));
+        sleepButton.active(false);//TODO add sleep anywhere?
     }
 
     @Override
@@ -150,11 +179,7 @@ public class HealthScreen extends Screen {
         ModNetwork.CHANNEL.sendToServer(new ServerboundGuiSyncTogglePacket(target.getId(), true));
         lastHovered = Head;
         healthbox.setName(Component.literal(target.getScoreboardName()));
-        if (player != null) {
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                heartBeatSound = new HeartBeatSound(player, h.getHeartRate());
-            });
-        }
+
         if (RightItem.getStack().getItem() instanceof IBag iBag) {
             List<ItemStack> itemStacks = iBag.getItems(RightItem.getStack());
             RightItemsubWidgets.clear();
@@ -219,22 +244,38 @@ public class HealthScreen extends Screen {
 
         }
         updateScreen();
+
+        int y = this.height - MoodleController.MOODLE_SIZE - 1;
+        healthPanelButton.offset.set(16, y + 1, 0);
+        addRenderableWidget(healthPanelButton);
+
+        switchMainHandButton.offset.set(width - 12, y - 32 - 2 - 32 - 2 - 12, 0);
+        addRenderableWidget(switchMainHandButton);
+
+        sleepButton.offset.set(width - 16, y - 16, 0);
+        addRenderableWidget(sleepButton);
+
+        workoutButton.offset.set(width - 16, y - 32 - 2 - 16, 0);
+        addRenderableWidget(workoutButton);
+
+        timeWarp.offset.set(width - 32, y + 10, 0);
+        addRenderableOnly(timeWarp);
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        renderBackground(pGuiGraphics);
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        R_Arm.renderSprites(pGuiGraphics);
-        Chest.renderSprites(pGuiGraphics);
-        Head.renderSprites(pGuiGraphics);
-        L_Arm.renderSprites(pGuiGraphics);
-        R_Hand.renderSprites(pGuiGraphics);
-        L_Hand.renderSprites(pGuiGraphics);
-        R_Leg.renderSprites(pGuiGraphics);
-        L_Leg.renderSprites(pGuiGraphics);
-        R_Foot.renderSprites(pGuiGraphics);
-        L_Foot.renderSprites(pGuiGraphics);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
+        renderBackground(graphics);
+        super.render(graphics, pMouseX, pMouseY, pPartialTick);
+        R_Arm.renderSprites(graphics);
+        Chest.renderSprites(graphics);
+        Head.renderSprites(graphics);
+        L_Arm.renderSprites(graphics);
+        R_Hand.renderSprites(graphics);
+        L_Hand.renderSprites(graphics);
+        R_Leg.renderSprites(graphics);
+        L_Leg.renderSprites(graphics);
+        R_Foot.renderSprites(graphics);
+        L_Foot.renderSprites(graphics);
         healthbox.setBGMode(BGmode);
         LeftItem.setBGMode(BGmode);
         RightItem.setBGMode(BGmode);
@@ -250,12 +291,12 @@ public class HealthScreen extends Screen {
         // render moodles for self (ignoring hotbar constraints!)
         List<AbstractMoodle> visible = MoodleController.updateAndGetToRender(localPlayer, true);
 
-        int x = 4; // center moodles
-        int y = this.height - MoodleController.MOODLE_SIZE - MoodleController.PADDING; // fixed height above bottom
+        int x = 32 + 5; // center moodles
+        int y = this.height - MoodleController.MOODLE_SIZE - 2; // fixed height above bottom
 
         AbstractMoodle hovered = null;
         for (AbstractMoodle moodle : visible) {
-            moodle.render(pGuiGraphics, pPartialTick, x, y);
+            moodle.render(graphics, pPartialTick, x, y);
 
             if (moodle.isMouseOver(pMouseX, pMouseY, x, y)) {
                 hovered = moodle;
@@ -265,7 +306,7 @@ public class HealthScreen extends Screen {
         }
 
         if (hovered != null) {
-            pGuiGraphics.renderTooltip(minecraft.font, hovered.getTooltip(localPlayer), Optional.empty(), pMouseX, pMouseY);
+            graphics.renderTooltip(minecraft.font, hovered.getTooltip(localPlayer), Optional.empty(), pMouseX, pMouseY);
         }
 
         LimbWidget h = getHoveringWidget(pMouseX, pMouseY);
@@ -275,10 +316,10 @@ public class HealthScreen extends Screen {
                 lastHovered = h;
         }
 
-        pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate(width / 2f, height * 0.8f, 0);
-        drawECG(pGuiGraphics);
-        pGuiGraphics.pose().popPose();
+        graphics.pose().pushPose();
+        graphics.pose().translate(width / 2f, height * 0.8f, 0);
+        drawECG(graphics);
+        graphics.pose().popPose();
     }
 
     float timeToUpdate;
@@ -368,13 +409,6 @@ public class HealthScreen extends Screen {
     public void tick() {
         super.tick();
         cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getConsciousness() < 10).orElse(false) && (target != Minecraft.getInstance().player);
-        if (heartBeatSound != null && Minecraft.getInstance().player != null) {
-            target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                float bpm = h.getHeartRate();
-                heartBeatSound.setBPM(bpm);
-            });
-            heartBeatSound.tick();
-        }
 
         if (!target.isAlive()) {
             onClose(); // target gone
@@ -418,6 +452,7 @@ public class HealthScreen extends Screen {
                     onClose();
             });
         }
+        switchMainHandButton.image(localPlayer.getMainArm() == HumanoidArm.RIGHT ? mainRight : mainLeft);
     }
 
     @Override
@@ -543,16 +578,15 @@ public class HealthScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        if (heartBeatSound != null) {
-            heartBeatSound = null;
-        }
+
         ModNetwork.CHANNEL.sendToServer(new ServerboundGuiSyncTogglePacket(target.getId(), false));
+        localPlayer.playSound(ModSounds.HEALTH_SCREEN_CLOSE.get());
     }
 
     @Override
-    public void renderBackground(GuiGraphics gui) {
-        super.renderBackground(gui);
-        gui.fill(0, 0, this.width, this.height, 0x000000FF);
+    public void renderBackground(GuiGraphics graphics) {
+        graphics.fill(0, 0, width, height, 1610612736);
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundRendered(this, graphics));
     }
 
     @Override
@@ -577,7 +611,12 @@ public class HealthScreen extends Screen {
         for (ItemWidget itemWidget : LeftItemsubWidgets) {
             itemWidget.onRelease(pMouseX, pMouseY);
         }
-        return super.mouseReleased(pMouseX, pMouseY, pButton);
+
+        boolean anyConsumed = false;
+        for (GuiEventListener listener : children()) {
+            anyConsumed |= listener.mouseReleased(pMouseX, pMouseY, pButton);
+        }
+        return anyConsumed;
     }
 
     private void useMedItem(LimbWidget widget, HumanoidArm arm) {

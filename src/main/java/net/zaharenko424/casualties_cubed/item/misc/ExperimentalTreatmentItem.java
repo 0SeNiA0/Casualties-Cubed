@@ -127,7 +127,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
                 data.applyMuscleDamage(limb, random.nextFloat() * 20, player);
             }
         } else if (roll <= .39) {
-            data.setPendingOpioids(100);
+            data.painkillers.addOpiates(100);
         } else if (roll <= .54) {
             data.setTemperature(43);
         } else if (roll <= .59) {

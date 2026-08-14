@@ -74,7 +74,7 @@ public class BrownCapMushItem extends Item {
         } else if (maineffect <= .75) {
             food.setFoodLevel(player.getFoodData().getFoodLevel() + 1);
             food.setSaturation(player.getFoodData().getSaturationLevel() + 1);
-            data.setPendingOpioids(data.getPendingOpioids() + 35);
+            data.painkillers.addOpiates(35);
         } else if (maineffect <= .975) {
             food.setFoodLevel(player.getFoodData().getFoodLevel() + 5);
             food.setSaturation(player.getFoodData().getSaturationLevel() + 5);

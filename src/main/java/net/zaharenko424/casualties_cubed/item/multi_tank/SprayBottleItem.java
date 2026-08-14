@@ -1,12 +1,15 @@
 package net.zaharenko424.casualties_cubed.item.multi_tank;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 
 import java.util.List;
 
@@ -28,5 +31,11 @@ public class SprayBottleItem extends MultiTankFluidItem implements ISimpleMedica
         for (FluidStack fs : drained) {
             MedicalFluidType.apply(target, fs.getAmount(), limb, fs.getFluid());
         }
+        source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
+    }
+
+    @Override
+    public SoundEvent getUseSound() {
+        return ModSounds.SPRAY.get();
     }
 }

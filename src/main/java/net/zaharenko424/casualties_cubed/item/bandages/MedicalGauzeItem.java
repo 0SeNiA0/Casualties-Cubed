@@ -27,7 +27,7 @@ public class MedicalGauzeItem extends AbstractBandage {
             stats.addSkinHealAmount(amount * 0.2f);
             stats.addBandageSlowAmount(amount * 0.5f);
             stats.addPain(-amount * 3);
-            data.setPendingOpioids(data.getPendingOpioids() + amount * 0.28f);
+            data.painkillers.addOpiates(amount * 0.28f);
         });
     }
 }

@@ -27,6 +27,10 @@ public class CasualtiesCubed {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
+    public static ResourceLocation texLoc(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, "textures/" + path + ".png");
+    }
+
     public CasualtiesCubed(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 

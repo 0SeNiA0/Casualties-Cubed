@@ -19,7 +19,7 @@ public class ArrhythmiaMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float fibrillation = data.getFibrillationProgress();
+        float fibrillation = data.fibrillationProgress();
 
         if (fibrillation > 75) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);

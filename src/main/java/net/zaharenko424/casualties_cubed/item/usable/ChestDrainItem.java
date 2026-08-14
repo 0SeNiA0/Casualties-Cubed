@@ -4,11 +4,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import net.zaharenko424.casualties_cubed.util.Util;
 import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
@@ -56,6 +59,7 @@ public class ChestDrainItem extends Item implements ISimpleMedicalUsable, IAllow
             data.setHemothorax(data.getHemothorax() - 35);
         });
 
+        source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
         stack.getOrCreateTag().putLong("LastUse", source.level().getGameTime());
     }
 
@@ -68,5 +72,10 @@ public class ChestDrainItem extends Item implements ISimpleMedicalUsable, IAllow
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pTooltipComponents.add(Component.translatable("item.casualties_cubed.chest_drain.description").withStyle(ChatFormatting.GRAY));
+    }
+
+    @Override
+    public SoundEvent getUseSound() {
+        return ModSounds.DRAIN_USE.get();
     }
 }

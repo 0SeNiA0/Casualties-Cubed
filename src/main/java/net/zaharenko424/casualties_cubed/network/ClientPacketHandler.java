@@ -1,12 +1,13 @@
 package net.zaharenko424.casualties_cubed.network;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.blocks.medical_mixer.MedicalMixerBlockEntity;
+import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.menu.MedicalMixerMenu;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundAmputateRestrictionSyncPacket;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundFluidSyncPacket;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundSyncHealthPacket;
-import net.zaharenko424.casualties_cubed.network.packet.ClientboundTriggerLastStandPacket;
+import net.zaharenko424.casualties_cubed.network.packet.*;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import net.zaharenko424.casualties_cubed.visual.ClientGamerules;
 import net.minecraft.client.Minecraft;
@@ -44,6 +45,33 @@ public class ClientPacketHandler {
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(cap ->
                     cap.deserializeNBT(packet.data()));
+        });
+        ctx.get().setPacketHandled(true);
+    }
+
+    public static void handleHeartThump(ClientboundHeartThumpPacket packet, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            Minecraft mc = Minecraft.getInstance();
+            LocalPlayer player = mc.player;
+            if (player == null || mc.level == null) return;
+
+            Entity entity = player.level().getEntity(packet.targetId());
+            if (!(entity instanceof Player target) || player.distanceToSqr(entity) > TOO_FAR) return;
+
+            PlayerHealthData targetData = PlayerHealthData.of(target).orElse(null);
+            if (targetData == null) return;
+
+            boolean isScreenActive = mc.screen instanceof HealthScreen;
+            boolean criticallyDying = targetData.isCriticallyDying(target);
+            float volume = 1 - (targetData.fibrillationProgress() - 50) / 80;
+            RegistryObject<SoundEvent> sound;
+            if (criticallyDying) {
+                sound = isScreenActive && targetData.getChip().isActive()
+                        ? ModSounds.HEART_THUMP_HEAVY_MONITOR
+                        : ModSounds.HEART_THUMP_HEAVY;
+            } else sound = ModSounds.HEART_THUMP;
+
+            if (isScreenActive || (target == player && criticallyDying)) target.playSound(sound.get(), volume, 1);
         });
         ctx.get().setPacketHandled(true);
     }

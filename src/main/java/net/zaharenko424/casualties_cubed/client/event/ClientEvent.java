@@ -36,6 +36,7 @@ import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGiveUpPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundLegUsePacket;
+import net.zaharenko424.casualties_cubed.registry.ModSounds;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -98,13 +99,8 @@ public class ClientEvent {
                 Player target = CommonEvent.getLookedAtPlayer(player, 2);
                 boolean self = target == null || player.isShiftKeyDown();
 
-
-                if (self) {
-                    Minecraft.getInstance().setScreen(new HealthScreen(player));
-                } else {
-                    Minecraft.getInstance().setScreen(new HealthScreen(target));
-                }
-
+                Minecraft.getInstance().setScreen(new HealthScreen(self ? player : target));
+                player.playSound(ModSounds.HEALTH_SCREEN_OPEN.get());
             } else {
                 Keybinds.OPEN_PAIN_GUI.setDown(false);
             }
@@ -238,7 +234,7 @@ public class ClientEvent {
 
         double Pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
                         .map(PlayerHealthData::getAveragePain)
-                                .orElse(0d);
+                                .orElse(0f);
 
         GuiGraphics gui = event.getGuiGraphics();
 

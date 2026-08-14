@@ -111,9 +111,9 @@ public class AmputationMinigameScreen extends Screen {
         Player player = Minecraft.getInstance().player;
         if (player!=null){
             Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
-            Optional<Double> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getAveragePain);
+            Optional<Float> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getAveragePain);
             float consscale = (cons.orElse(100f)/100)*0.15f;
-            float painscale = (float) (pain.orElse(0d)/100)*0.55f;
+            float painscale = (pain.orElse(0f)/100) *0.55f;
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
