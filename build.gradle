@@ -215,7 +215,7 @@ dependencies {
     //runtimeOnly(fg.deobf("maven.modrinth:oculus:iQ1SwGc3"))
     //runtimeOnly(fg.deobf("maven.modrinth:distanthorizons:FcSiScgQ"))
 
-    //runtimeOnly(fg.deobf("curse.maven:prototype-physics-1380559:7206624"))
+    runtimeOnly(fg.deobf("curse.maven:prototype-physics-1380559:7206624"))
 
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

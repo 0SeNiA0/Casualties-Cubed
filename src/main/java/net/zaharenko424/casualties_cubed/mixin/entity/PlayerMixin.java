@@ -24,7 +24,7 @@ public abstract class PlayerMixin {
                     ci.cancel(); // prevent vanilla from picking another pose
                 }
             }
-            if (h.isAmputated(Limb.RIGHT_LEG) && h.isAmputated(Limb.LEFT_LEG) && !self.isPassenger()) {
+            if (h.isAmputated(Limb.UPPER_RIGHT_LEG) && h.isAmputated(Limb.UPPER_LEFT_LEG) && !self.isPassenger()) {
                 self.setPose(Pose.SWIMMING);
                 ci.cancel();
             }

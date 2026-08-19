@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -24,12 +23,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.server.command.EnumArgument;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.limbs.Stat;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
 import java.util.Collection;
@@ -64,10 +65,15 @@ public class ModCommands {
         LiteralCommandNode<CommandSourceStack> node = dispatcher.register(
                 Commands.literal("casualties_cubed")
                         .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                        .then(Commands.literal("heal")
-                                .executes(ctx -> ctx.getSource().isPlayer() ? heal(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
-                                .then(Commands.argument("targets", EntityArgument.players())
-                                        .executes(ctx -> heal(ctx, EntityArgument.getPlayers(ctx, "targets")))
+
+                        .then(Commands.literal("addExp")
+                                .then(Commands.argument("stat", EnumArgument.enumArgument(Stat.class))
+                                        .then(Commands.argument("exp", FloatArgumentType.floatArg(0))
+                                                .executes(ctx -> ctx.getSource().isPlayer() ? addExp(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
+                                                .then(Commands.argument("targets", EntityArgument.players())
+                                                        .executes(ctx -> addExp(ctx, EntityArgument.getPlayers(ctx, "targets")))
+                                                )
+                                        )
                                 )
                         )
 
@@ -75,6 +81,13 @@ public class ModCommands {
                                 .executes(ctx -> ctx.getSource().isPlayer() ? coagulate(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
                                 .then(Commands.argument("targets", EntityArgument.players())
                                         .executes(ctx -> coagulate(ctx, EntityArgument.getPlayers(ctx, "targets")))
+                                )
+                        )
+
+                        .then(Commands.literal("heal")
+                                .executes(ctx -> ctx.getSource().isPlayer() ? heal(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
+                                .then(Commands.argument("targets", EntityArgument.players())
+                                        .executes(ctx -> heal(ctx, EntityArgument.getPlayers(ctx, "targets")))
                                 )
                         )
 
@@ -261,19 +274,17 @@ public class ModCommands {
                 .redirect(node));
     }
 
-    private static int heal(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> targets) {
-        FoodData foodData;
+    private static int addExp(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> targets) {
+        Stat stat = ctx.getArgument("stat", Stat.class);
+        float exp = FloatArgumentType.getFloat(ctx, "exp");
+
         for (ServerPlayer player : targets) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                    data.heal(player));
-            foodData = player.getFoodData();
-            foodData.setExhaustion(0);
-            foodData.setFoodLevel(20);
-            foodData.setSaturation(5);
+                    data.skills.addExp(player, stat, exp));
         }
 
         ctx.getSource().sendSuccess(() ->
-                Component.translatable("commands.casualties_cubed.heal.success", targets.size()), true);
+                Component.translatable("commands.casualties_cubed.add_exp.success", exp, stat, targets.size()), true);
 
         return targets.size();
     }
@@ -290,6 +301,18 @@ public class ModCommands {
 
         ctx.getSource().sendSuccess(() ->
                 Component.translatable("commands.casualties_cubed.coagulate.success", targets.size()), true);
+
+        return targets.size();
+    }
+
+    private static int heal(CommandContext<CommandSourceStack> ctx, Collection<ServerPlayer> targets) {
+        for (ServerPlayer player : targets) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
+                    data.heal(player));
+        }
+
+        ctx.getSource().sendSuccess(() ->
+                Component.translatable("commands.casualties_cubed.heal.success", targets.size()), true);
 
         return targets.size();
     }

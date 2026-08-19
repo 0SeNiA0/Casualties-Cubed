@@ -32,6 +32,6 @@ public class BrainGrowSicknessMoodle extends AbstractMoodle {
     @Override
     public List<Component> getTooltip(Player player) {
         return List.of(Component.translatable("gui.casualties_cubed.moodle.braingrow_sickness.title"),
-                       Component.translatable("gui.casualties_cubed.moodle.braingrow_sickness.description", PlayerHealthData.of(player).map(PlayerHealthData::brainGrowSickness).orElse(0f)));
+                       Component.translatable("gui.casualties_cubed.moodle.braingrow_sickness.description", Math.round(PlayerHealthData.of(player).map(PlayerHealthData::brainGrowSickness).orElse(0f))));
     }
 }

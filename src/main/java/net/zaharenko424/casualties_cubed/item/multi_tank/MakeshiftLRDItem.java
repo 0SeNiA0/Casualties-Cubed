@@ -31,22 +31,21 @@ public class MakeshiftLRDItem extends LRDItem {
                 LimbStatistics stats = data.getLimb(limb);
 
                 stats.addMuscleHealth(50);
-                stats.addInfection(-10);
-                stats.setDisinfectionTimerAtLeast(8000);
+                data.addCaffeinated(60);
+                stats.addInfection(-10 * stats.infectionSpeedMult);
+                stats.setDisinfectionTimerAtLeast(400);
                 data.setAdrenaline(data.getAdrenaline() + 60);
-                stats.setBleedRate(stats.getBleedRate() * 0.7f);
-                data.painkillers.addOpiates(10);
                 data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));
 
                 for (Limb limb1 : limb.getConnectedLimbs()) {
                     stats = data.getLimb(limb1);
 
                     stats.addMuscleHealth(40);
-                    stats.addInfection(-5);
-                    stats.setDisinfectionTimerAtLeast(6000);
+                    stats.addInfection(-5 * stats.infectionSpeedMult);
+                    stats.setDisinfectionTimerAtLeast(300);
                 }
 
-                if (limb == Limb.CHEST) data.setInternalBleeding(data.getInternalBleeding() * 0.75f);
+                if (limb == Limb.THORAX) data.setInternalBleeding(data.getInternalBleeding() * 0.75f);
             });
 
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

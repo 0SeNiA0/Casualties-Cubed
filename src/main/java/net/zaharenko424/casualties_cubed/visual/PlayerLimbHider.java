@@ -19,10 +19,10 @@ import java.util.Map;
 public class PlayerLimbHider {
 
     private static final List<Limb> limbsToSearch = List.of(
-            Limb.LEFT_ARM,
-            Limb.RIGHT_ARM,
-            Limb.LEFT_LEG,
-            Limb.RIGHT_LEG,
+            Limb.UPPER_LEFT_ARM,
+            Limb.UPPER_RIGHT_ARM,
+            Limb.UPPER_LEFT_LEG,
+            Limb.UPPER_RIGHT_LEG,
             Limb.HEAD
     );
 
@@ -40,22 +40,22 @@ public class PlayerLimbHider {
             for (Limb limb : limbsToSearch) {
                 isVisible = !data.isAmputated(limb);
                 switch (limb) {
-                    case RIGHT_LEG -> {
+                    case UPPER_RIGHT_LEG -> {
                         prev.put(limb, model.rightLeg.visible);
                         model.rightLeg.visible = isVisible;
                         model.rightPants.visible = isVisible;
                     }
-                    case RIGHT_ARM -> {
+                    case UPPER_RIGHT_ARM -> {
                         prev.put(limb, model.rightArm.visible);
                         model.rightArm.visible = isVisible;
                         model.rightSleeve.visible = isVisible;
                     }
-                    case LEFT_ARM -> {
+                    case UPPER_LEFT_ARM -> {
                         prev.put(limb, model.leftArm.visible);
                         model.leftArm.visible = isVisible;
                         model.leftSleeve.visible = isVisible;
                     }
-                    case LEFT_LEG -> {
+                    case UPPER_LEFT_LEG -> {
                         prev.put(limb, model.leftLeg.visible);
                         model.leftLeg.visible = isVisible;
                         model.leftPants.visible = isVisible;
@@ -81,19 +81,19 @@ public class PlayerLimbHider {
         if (prev != null) {
             for (Map.Entry<Limb, Boolean> entry : prev.entrySet()) {
                 switch (entry.getKey()) {
-                    case RIGHT_LEG -> {
+                    case UPPER_RIGHT_LEG -> {
                         model.rightLeg.visible = entry.getValue();
                         model.rightPants.visible = entry.getValue();
                     }
-                    case RIGHT_ARM -> {
+                    case UPPER_RIGHT_ARM -> {
                         model.rightArm.visible = entry.getValue();
                         model.rightSleeve.visible = entry.getValue();
                     }
-                    case LEFT_ARM -> {
+                    case UPPER_LEFT_ARM -> {
                         model.leftArm.visible = entry.getValue();
                         model.leftSleeve.visible = entry.getValue();
                     }
-                    case LEFT_LEG -> {
+                    case UPPER_LEFT_LEG -> {
                         model.leftLeg.visible = entry.getValue();
                         model.leftPants.visible = entry.getValue();
                     }

@@ -4,7 +4,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.blocks.medical_mixer.MedicalMixerBlockEntity;
-import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
+import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.menu.MedicalMixerMenu;
 import net.zaharenko424.casualties_cubed.network.packet.*;
@@ -62,7 +62,7 @@ public class ClientPacketHandler {
             if (targetData == null) return;
 
             boolean isScreenActive = mc.screen instanceof HealthScreen;
-            boolean criticallyDying = targetData.isCriticallyDying(target);
+            boolean criticallyDying = targetData.isCriticallyDying();
             float volume = 1 - (targetData.fibrillationProgress() - 50) / 80;
             RegistryObject<SoundEvent> sound;
             if (criticallyDying) {

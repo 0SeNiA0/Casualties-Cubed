@@ -9,14 +9,16 @@
     "FoodDataMixin",
     "MessageArgumentMixin",
     "ServerPacketListenerMixin",
-    "SuspiciousStewMixin",
     "entity.ArrowMixin",
     "entity.BeeMixin",
     "entity.CaveSpiderMixin",
     "entity.HuskMixin",
     "entity.LivingEntityMixin",
     "entity.PlayerMixin",
-    "entity.PufferfishMixin"
+    "entity.PufferfishMixin",
+    "item.MilkBucketMixin",
+    "item.PotionItemMixin",
+    "item.SuspiciousStewMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",

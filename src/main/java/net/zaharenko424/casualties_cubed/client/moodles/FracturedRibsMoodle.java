@@ -22,7 +22,7 @@ public class FracturedRibsMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float timer = data.getLimb(Limb.CHEST).getBoneHealTimer();//TODO replace with thorax
+        float timer = data.getLimb(Limb.THORAX).getBoneHealTimer();//TODO replace with thorax
 
         if (timer > 32 * 60 + 18) {
             setStatus(MoodleStatus.CRITICAL_NEG);

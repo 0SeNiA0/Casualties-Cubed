@@ -23,6 +23,7 @@ public class LimbStatistics {
     private float burn = 0;
     private float disinfectionTime = 0f;//seconds
     private int infectionCheck;
+    private boolean showInfection;
     private float infection = 0f;//
     private float boneHealTimer = 0f;//
     private float dislocationTimer = 0f;
@@ -42,6 +43,8 @@ public class LimbStatistics {
 
     private boolean syncNeeded = true;
     private boolean softSyncNeeded = true;
+
+    public final float infectionSpeedMult = 1;
 
     LimbStatistics(PlayerHealthData data){
         this.data = data;
@@ -72,7 +75,10 @@ public class LimbStatistics {
     public void addSkinHealAmount(float skinHealAmount) {
         if (amputated) return;
 
-        this.skinHealAmount += skinHealAmount;
+        skinHealAmount = Math.max(this.skinHealAmount + skinHealAmount, 0);
+        if (this.skinHealAmount == skinHealAmount) return;
+
+        this.skinHealAmount = skinHealAmount;
         syncNeeded = true;
     }
 
@@ -123,9 +129,21 @@ public class LimbStatistics {
     public void setPain(float pain) {
         if (amputated) return;
 
+        pain = Mth.clamp(pain, 0, 100);
         if (this.pain == pain) return;
 
         this.pain = pain;
+        syncNeeded = true;
+    }
+
+    public boolean showInfection() {
+        return showInfection;
+    }
+
+    public void showInfection(boolean showInfection) {
+        if (amputated || this.showInfection == showInfection) return;
+
+        this.showInfection = showInfection;
         syncNeeded = true;
     }
 
@@ -183,6 +201,16 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
+    public float injuryHealTime() {
+        float healingRate = ServerConfig.HEALING_RATE.get().floatValue();
+        if (boneHealTimer > 0) {
+            return boneHealTimer / (boneHealSpeed * healingRate * (hasSplint ? 2.5f : 1));
+        }
+
+        if (dislocationTimer <= 0) return 0;
+        return dislocationTimer / (dislocationHealSpeed * healingRate * (hasSplint ? 2 : 1));
+    }
+
     public int getShrapnel() {
         return shrapnel;
     }
@@ -226,6 +254,9 @@ public class LimbStatistics {
     public void addBandageSlowAmount(float bandageSlowAmount) {
         if (amputated) return;
 
+        bandageSlowAmount = Math.max(this.bandageSlowAmount + bandageSlowAmount, 0);
+        if (this.bandageSlowAmount == bandageSlowAmount) return;
+
         this.bandageSlowAmount = bandageSlowAmount;
         syncNeeded = true;
     }
@@ -254,7 +285,10 @@ public class LimbStatistics {
     }
 
     public void setDisinfectionTime(float disinfectionTime) {
-        if (amputated || this.disinfectionTime == disinfectionTime) return;
+        if (amputated) return;
+
+        disinfectionTime = Math.max(disinfectionTime, 0);
+        if (this.disinfectionTime == disinfectionTime) return;
 
         this.disinfectionTime = disinfectionTime;
         syncNeeded = true;
@@ -285,7 +319,7 @@ public class LimbStatistics {
     }
 
     public void setChilled() {
-        if (amputated) return;
+        if (amputated || chilledTimer == MAX_CHILLED_TIME) return;
 
         chilledTimer = MAX_CHILLED_TIME;
         syncNeeded = true;
@@ -339,6 +373,12 @@ public class LimbStatistics {
         }
     }
 
+    public float totalForce() {
+        return muscleHealth * 0.01f * (dislocationTimer > 0 || boneHealTimer > 0 || hasSplint ? 0 : 1) * (amputated ? 0 : 1)
+                * Mth.clamp(1 - (Math.max(pain, data.getAveragePain()) - data.currentAdrenaline() * 0.5f) * 0.007f, 0, 1)
+                * data.getBloodOxygen() * 0.01f;//+ strokeAffected?
+    }
+
     boolean sync() {
         if (!syncNeeded) return false;
 
@@ -366,13 +406,13 @@ public class LimbStatistics {
         data.setBloodVolume(data.getBloodVolume() - bleedRate);
 
         float newPain = 15 - skinHealth * 0.15f + infection * 0.1f;
-        pain = Mth.clamp(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain),0 ,100);
+        setPain(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain));
         if (data.getTemperature() < 32) {
-            pain -= Util.TICK_TO_SEC * 5;
+            addPain(-Util.TICK_TO_SEC * 5);
         }
 
-        dislocationTimer -= Util.TICK_TO_SEC * dislocationHealSpeed * ServerConfig.HEALING_RATE.get().floatValue();
-        boneHealTimer -= Util.TICK_TO_SEC * boneHealSpeed * ServerConfig.HEALING_RATE.get().floatValue();
+        addDislocationTimer(-Util.TICK_TO_SEC * dislocationHealSpeed * ServerConfig.HEALING_RATE.get().floatValue() * (hasSplint ? 2 : 1));
+        addBoneHealTimer(-Util.TICK_TO_SEC * boneHealSpeed * ServerConfig.HEALING_RATE.get().floatValue() * (hasSplint ? 2.5f : 1));
 
         //CU uses dislocated/broken booleans which is effectively respective healTimer > 0
 
@@ -382,9 +422,9 @@ public class LimbStatistics {
             if (bandageSlowAmount > 0) addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(1.25f * bleedSpeedMult()));
         }
 
-        bandageSlowAmount = Math.max(bandageSlowAmount - 1.25f * Util.TICK_TO_SEC, 0);
-        skinHealAmount = Math.max(skinHealAmount - 0.5f * Util.TICK_TO_SEC, 0);
-        disinfectionTime = Math.max(disinfectionTime - ServerConfig.INFECTION_RATE.get().floatValue() * Util.TICK_TO_SEC, 0);
+        addBandageSlowAmount(-1.25f * Util.TICK_TO_SEC);
+        addSkinHealAmount(-0.5f * Util.TICK_TO_SEC);
+        addDisinfectionTimer(-ServerConfig.INFECTION_RATE.get().floatValue() * Util.TICK_TO_SEC);
 
         if (infection <= 0 && skinHealth < 80) {
             infectionCheck--;
@@ -397,14 +437,15 @@ public class LimbStatistics {
 
         if (infection > 0) {
             float infectionSpeed = infectionSpeed();
-            infection += infectionSpeed * Util.TICK_TO_SEC / 60 * ServerConfig.INFECTION_RATE.get().floatValue();
+            addInfection(infectionSpeed * Util.TICK_TO_SEC / 60 * ServerConfig.INFECTION_RATE.get().floatValue());
 
             if (data.getTemperature() < 40.5f) {
                 data.addTemperature(0.02f * Util.TICK_TO_SEC);
             }
-
-            infection = Mth.clamp(infection, 0, 100);
         }
+
+        if (infection > 25 && !showInfection) showInfection(true);
+        if (infection <= 0) showInfection(false);
 
         if (infection > 90) {
             LimbStatistics stats;
@@ -418,7 +459,7 @@ public class LimbStatistics {
 
         if (infection > 75) {
             addMuscleHealth(-0.2f * Util.TICK_TO_SEC);
-        } else if ((infection <= 0 || limb == Limb.HEAD) && data.getCUHunger(player) > 0) {
+        } else if ((infection <= 0 || limb == Limb.HEAD) && data.hunger() > 0) {
             addMuscleHealth(muscleHealRate(player, limb));
 
             if (infection <= 0) {
@@ -427,14 +468,14 @@ public class LimbStatistics {
         }
 
         if (muscleHealth <= muscleDeathThreshold) {
-            if (limb == Limb.CHEST) {
+            if (limb == Limb.THORAX) {
                 data.respiratoryRate(0);
                 data.setInternalBleeding(data.getInternalBleeding() + 0.2f * Util.TICK_TO_SEC);
             }
         }
 
         if ((dislocationTimer > 0 || boneHealTimer > 0) && muscleHealth > 50) {
-            muscleHealth = 50;
+            setMuscleHealth(50);
         }
 
         if (skinHealAmount > 0) {
@@ -480,6 +521,7 @@ public class LimbStatistics {
         if (chilledTimer <= 0) return;
 
         chilledTimer -= Util.TICK_TO_SEC;
+        syncNeeded = true;
         addMuscleHealth(2 * muscleHealRate(player, limb) * Util.TICK_TO_SEC);
         addPain(-1.5f * Util.TICK_TO_SEC);
     }
@@ -489,7 +531,7 @@ public class LimbStatistics {
         if (disinfectionTime > 0) {
             infectionSpeed -= 1.7f;
         }
-        return 7.2f * infectionSpeed;
+        return 7.2f * infectionSpeed * infectionSpeedMult;
     }
 
     float muscleHealRate(ServerPlayer player, Limb limb) {
@@ -518,6 +560,7 @@ public class LimbStatistics {
         tag.putFloat("MuscleHealth", muscleHealth);
         tag.putFloat("Burn", burn);
         tag.putFloat("Pain", pain);
+        tag.putBoolean("showInfection", showInfection);
         tag.putFloat("Infection", infection);
         tag.putFloat("FractureTimer", boneHealTimer);
         tag.putFloat("Dislocated", dislocationTimer);
@@ -546,6 +589,7 @@ public class LimbStatistics {
         muscleHealth = tag.contains("MuscleHealth") ? tag.getFloat("MuscleHealth") : 100;
         burn = tag.getFloat("Burn");
         pain = tag.getFloat("Pain");
+        showInfection = tag.getBoolean("showInfection");
         infection = tag.getFloat("Infection");
         boneHealTimer = tag.getFloat("FractureTimer");
         dislocationTimer = tag.getFloat("Dislocated");

@@ -22,7 +22,7 @@ public class DislocatedSpineMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float timer = data.getLimb(Limb.CHEST).getDislocationTimer();//TODO replace with thorax
+        float timer = data.getLimb(Limb.THORAX).getDislocationTimer();//TODO replace with thorax
 
         if (timer > 19 * 60 + 50) {
             setStatus(MoodleStatus.CRITICAL_NEG);

@@ -37,6 +37,18 @@ public class PhysicsUtil {
         }
     }
 
+    public static Vec3 getVel(ServerPlayer player) {
+        if (!isPhysicsLoaded() || !isPhysicsActivated(player)) return Vec3.ZERO;
+
+        JbulletWorld world = JbulletWorld.get(player.serverLevel());
+        PlayerPhysics physics = world.getPlayerPhys(player);
+        if (physics.getMode() == PlayerPhysics.Mode.PRECISE) {
+            Vec3 vel = physics.getVelocity(RagdollPart.TORSO);
+            return vel == null ? Vec3.ZERO : vel;
+        }
+        return Vec3.ZERO;
+    }
+
     public static Vec3 getVel(RagdollPart part, ServerPlayer player) {
         JbulletWorld world = JbulletWorld.get(player.serverLevel());
         PlayerPhysics physics = world.getPlayerPhys(player);

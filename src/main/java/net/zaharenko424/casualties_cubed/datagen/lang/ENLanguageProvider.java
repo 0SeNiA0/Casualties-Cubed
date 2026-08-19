@@ -116,13 +116,31 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.NALTREXONE, "Pills used to treat general ailments like sickness or opiate abuse. Lowers happiness and may cause vomiting.");
         addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Very advanced form of injected antibiotic. May cause excruciating chest pain.");
         addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly dangerous opiate. 100 times stronger than morphine");
+        addMedicalFluidFromIdWDesc(ModFluids.KETCHUP, "Sweet and sour tomato paste. Slightly disgusting to drink by itself.");
+        add("medical_fluid." + modid + ".milk", "White liquid food produced by the mammary glands of mammals. Tasty and filling!");
         addMedicalFluidFromIdWDesc(ModFluids.CHLOROFORM, "A volatile, colorless, sweet-smelling, dense liquid produced on a large scale as a precursor to refrigerants and polytetrafluoroethylene. In practical use, it's very useful at knocking people out.");
         addMedicalFluidWDesc(ModFluids.HIGH_GRADE_STIMULANT, "Medical-Grade Stimulant", "Medical stimulant drug. Gives you a very good kick for a pretty long while, and is generally safe to use. Overdose generally entails weakness, with a negligible crash. Dosage is 100ml.");
         addMedicalFluidWDesc(ModFluids.MID_GRADE_STIMULANT, "Hard Stimulant", "Decently refined stimulating hard drug. Only works intravenously. Will give you a pretty good kick for a short while, but has some side effects. Overdose entails weakness and internal bleeding. Dosage is 50ml.");
         addMedicalFluidWDesc(ModFluids.LOW_GRADE_STIMULANT, "Off-Brand Stimulant", "Unrefined stimulating hard drug. Dodgy. Gives you a pretty nice kick, but overdose and the subsequent crash is extremely debilitating. Dosage is unknown. Use with caution.");
+        addMedicalFluidFromIdWDesc(ModFluids.APPLE_JUICE, "Fruit juice made by the maceration and pressing of an apple. Tasty!");
+        addMedicalFluidFromIdWDesc(ModFluids.ORANGE_JUICE, "Liquid extract of the orange tree fruit. While it is healthy, you're really not a fan of the taste.");
+        addMedicalFluidFromIdWDesc(ModFluids.LEMONADE, "Sweetened lemon-flavored drink. Tasty!");
+        addMedicalFluidFromIdWDesc(ModFluids.ICE_TEA, "Cold, sweetened decaffeinated tea. Tasty!");
+        addMedicalFluidFromIdWDesc(ModFluids.SOUP, "Unidentifiable soup, though still tasty and filling.");
         addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "Who doesn't like chocolate milk?");
+        addMedicalFluidFromIdWDesc(ModFluids.CEREAL, "The world's greatest invention - milk and cereal. Very tasty and filling.");
+        addMedicalFluidFromIdWDesc(ModFluids.COFFEE, "Beverage brewed from roasted coffee beans. Tasty and stimulating, but can be rather toxic to some due to the caffeine content.");
+        addMedicalFluidFromIdWDesc(ModFluids.ENERGY_DRINK, "Tasty, caffeinated drink. Tasty and stimulating, but can be slightly toxic for certain species.");
+        addMedicalFluidFromIdWDesc(ModFluids.SPORTS_DRINK, "Non-caffeinated electrolyte drink. Quenches thirst efficiently, gives you a little boost and tastes nice.");
+        addMedicalFluidFromIdWDesc(ModFluids.OLIVE_OIL, "A vegetable oil obtained by pressing whole olives. Very fatty and somewhat unpleasant to drink.");
+        addMedicalFluidFromIdWDesc(ModFluids.HOT_SAUCE, "Condiment made from particularly spicy peppers. Burns your mouth, but warms you up... Somehow.");
+        addMedicalFluidFromIdWDesc(ModFluids.ICE_CREAM, "A frozen dessert made from milk and cream that has been flavoured with a sweetener. Somehow still cold. Delicious!");
+        addMedicalFluidFromIdWDesc(ModFluids.YOGURT, "Bacterially fermented milk. Tastes okay. Decently filling.");
         addMedicalFluidFromIdWDesc(ModFluids.MOLD, "Any indication of what this once was is long gone. Smells putrid...");
+        addMedicalFluidFromIdWDesc(ModFluids.POWDERED_MILK, "Dehydrated and compressed efficient milk powder. While not edible on its own, it'll turn into milk when mixed with hot water.");
+        addMedicalFluidFromIdWDesc(ModFluids.RAD_WATER, "Clean, filtered water. Safe, but tastes like nothing... On further inspection, it seems mildly radioactive.");
         addMedicalFluidFromIdWDesc(ModFluids.MERCURY, "Liquid metal. Great for skin care, not so great for your bodily functions.");
+        addMedicalFluidFromIdWDesc(ModFluids.SODA, "Tasty, sugary drink. Good in moderation.");
         addMedicalFluidFromIdWDesc(ModFluids.ALCOHOL, "Highly distilled spirit. Useful for disinfecting wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.BLEACH, "Chemical product used to remove color from fiber, or to disinfect. Can be used to disinfect wounds. Drinking is lethal.");
         addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "A slightly antiseptic cream with soothing properties.");
@@ -142,7 +160,10 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "A potent disinfecting gel. Stings a lot.");
         addMedicalFluidFromIdWDesc(ModFluids.GROUNDWATER, "Slightly dirty groundwater. Mostly safe to drink, though slightly sickening.");
+        addMedicalFluidFromIdWDesc(ModFluids.SAP, "A thick, tasty sap, produced by jungle trees. Very sugary.");
         addMedicalFluidFromIdWDesc(ModFluids.SOAP, "Soap made from animal fat. Can be used in the health panel to clean dirt off of you, and slightly disinfect wounds.");
+        addMedicalFluidFromIdWDesc(ModFluids.PRODUCE_JUICE, "A bunch of fruit, vegetables and whatever else you could find, mashed up and mixed with water. It tastes... interesting.");
+        addMedicalFluidFromIdWDesc(ModFluids.REFINED_JUICE, "Cooked through, better mixed and mashed produce juice. Very tasty and nutritious!");
 
         add("key.casualties_cubed.open_pain_gui", "Open Health Screen");
         add("key.casualties_cubed.give_up", "Give Up");
@@ -479,8 +500,9 @@ public class ENLanguageProvider extends LanguageProvider {
 
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
 
-        addCommand("heal.success", "Healed %1$s player(s).");
+        addCommand("add_exp.success", "Added %1$s exp in %2$s to %3$s player(s).");
         addCommand("coagulate.success", "Coagulated bleeding of %1$s player(s).");
+        addCommand("heal.success", "Healed %1$s player(s).");
         addCommand("error.unknown_field", "Unknown field: %1$s");
         addCommand("setlimb.success", "Applied value %1$s to %2$s | %3$s for %4$s");
         addCommand("setbody.success", "Applied value %1$s to %2$s for %3$s");
@@ -500,5 +522,11 @@ public class ENLanguageProvider extends LanguageProvider {
         addSound(ModSounds.AUTO_PUMP, "Auto pump used");
         addSound(ModSounds.BONE_WELD, "Bone welder used");
         addSound(ModSounds.DRAIN_USE, "Chest drain used");
+        addSound(ModSounds.LEVEL_UP, "Skill leveled up");
+        addSound(ModSounds.CLICK, "Mouse clicked");
+        addSound(ModSounds.SMALL_CLICK, "Mouse clicked");
+        addSound(ModSounds.VOMIT_WARNING, "Vomit incoming");
+        addSound(ModSounds.BLOOD_VOMIT_WARNING, "Blood vomit incoming");
+        addSound(ModSounds.VOMIT, "Vomiting");
     }
 }

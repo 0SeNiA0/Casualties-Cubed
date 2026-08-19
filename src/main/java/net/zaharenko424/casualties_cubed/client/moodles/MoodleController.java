@@ -3,14 +3,14 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.common.MinecraftForge;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.event.RegisterMoodlesEvent;
-import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
+import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.client.gui.widget.RenderableImage;
 import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
@@ -19,10 +19,11 @@ import java.util.List;
 
 public class MoodleController {
 
-    public static final ResourceLocation HEALTH_PANEL_BUTTON = CasualtiesCubed.texLoc("gui/health_panel");
-    public static final ResourceLocation TIME_WARP = CasualtiesCubed.texLoc("gui/time_warp");
     public static final int MOODLE_SIZE = 20;
     public static final int PADDING = 3;
+
+    public static final RenderableImage HEALTH_PANEL_BUTTON = new RenderableImage(CasualtiesCubed.texLoc("gui/health_panel"), 32, 32);
+    public static final RenderableImage TIME_WARP = new RenderableImage(CasualtiesCubed.texLoc("gui/time_warp"), 64, 16);
 
     private static final OverflowMoodle overflowMoodle = new OverflowMoodle();
 
@@ -82,9 +83,9 @@ public class MoodleController {
         //exertion (stamina)
         tmp.add(new FractureMoodle());
         tmp.add(new DislocationMoodle());
-        tmp.add(new FracturedNeckMoodle());//TODO severity based on fracture time
+        tmp.add(new FracturedNeckMoodle());
         tmp.add(new FracturedRibsMoodle());
-        tmp.add(new DislocatedJawMoodle());//TODO severity based on dislocation time
+        tmp.add(new DislocatedJawMoodle());
         tmp.add(new DislocatedSpineMoodle());
         tmp.add(new InfectionMoodle());
         tmp.add(new SepsisMoodle());
@@ -143,7 +144,8 @@ public class MoodleController {
         int x = 0;
         int y = height - MOODLE_SIZE - 2;
 
-        graphics.blit(HEALTH_PANEL_BUTTON, x, y - 14, 0, 0, 32, 32, 32, 32);
+        HEALTH_PANEL_BUTTON.offset.set(16, height - 20, 0);
+        HEALTH_PANEL_BUTTON.render(graphics, 0, 0, partialTick);
         x += 32 + 5;
 
         for (int i = 0; i < visible.size(); i++) {
@@ -156,7 +158,8 @@ public class MoodleController {
             x += MOODLE_SIZE + PADDING;
         }
 
-        graphics.blit(TIME_WARP, width - 64, y + 2, 0, 0, 64, 16, 64, 16);
+        TIME_WARP.offset.set(width - 32, height - 11, 0);
+        TIME_WARP.render(graphics, 0, 0, partialTick);
 
         stack.popPose();
         profiler.pop();

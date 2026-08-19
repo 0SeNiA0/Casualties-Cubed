@@ -39,7 +39,7 @@ public class TimedEffectRegistry {
                 stats.addPain(0.05f * ml);
                 stats.addMuscleHealth(-0.025f * ml);
 
-                stats = data.getLimb(Limb.CHEST);
+                stats = data.getLimb(Limb.THORAX);
                 stats.addPain(0.05f * ml);
                 stats.addMuscleHealth(-0.03f * ml);
             }
@@ -51,6 +51,25 @@ public class TimedEffectRegistry {
     public static final RegistryObject<TimedEffectFunction> CHLOROFORM = TIMED_EFFECTS.register("chloroform", () ->
             (player, data, effect) -> data.setConsciousness(Util.moveTowards(8, data.getConsciousness(), 0)));
 
+    public static final RegistryObject<TimedEffectFunction> HOT_SAUCE = TIMED_EFFECTS.register("hot_sauce", () ->
+            (player, data, effect) -> {
+                if (data.getTemperature() < 41) {
+                    data.setTemperature(data.getTemperature() + 0.2f);
+                }
+            }
+    );
+
+    public static final RegistryObject<TimedEffectFunction> ICE_CREAM = TIMED_EFFECTS.register("ice_cream", () ->
+            (player, data, effect) -> {
+                if (data.getTemperature() > 28.5f) {
+                    data.setTemperature(data.getTemperature() - 0.2f);
+                }
+            }
+    );
+
+    public static final RegistryObject<TimedEffectFunction> RAD_WATER = TIMED_EFFECTS.register("rad_water", () ->
+            (player, data, effect) -> data.addRadiationSickness(0.0035f * effect.ml()));
+
     public static final RegistryObject<TimedEffectFunction> MERCURY = TIMED_EFFECTS.register("mercury", () ->
             (player, data, effect) -> data.setBrainHealth(data.getBrainHealth() - 0.0005f * effect.ml()));
 
@@ -58,7 +77,7 @@ public class TimedEffectRegistry {
             (player, data, effect) -> {
                 data.getLimb(Limb.HEAD).addSkinHealth(-0.1f);
 
-                LimbStatistics stats = data.getLimb(Limb.CHEST);
+                LimbStatistics stats = data.getLimb(Limb.THORAX);
                 stats.addMuscleHealth(-0.225f);
                 if (stats.getPain() < 50) {
                     stats.addPain(1.5f);
@@ -113,7 +132,7 @@ public class TimedEffectRegistry {
 
     public static final RegistryObject<TimedEffectFunction> OXYLINE_DRINK = TIMED_EFFECTS.register("oxyline_drink", () ->
             (player, data, effect) -> {
-                LimbStatistics stats = data.getLimb(Limb.CHEST);
+                LimbStatistics stats = data.getLimb(Limb.THORAX);
                 stats.addPain(8);
                 stats.addMuscleHealth(-2.5f);
 
@@ -138,8 +157,8 @@ public class TimedEffectRegistry {
                 }
 
                 data.getLimb(Limb.HEAD).addMuscleHealth(-0.25f);
-                data.getLimb(Limb.CHEST).addMuscleHealth(-0.25f);
-                //second part of chest also -0.25
+                data.getLimb(Limb.THORAX).addMuscleHealth(-0.25f);
+                data.getLimb(Limb.ABDOMEN).addMuscleHealth(-0.25f);
             }
     );
 
@@ -175,7 +194,7 @@ public class TimedEffectRegistry {
                     //-energy
                     if (effect.highestDuration() > 320) {
                         //-energy
-                        data.vomiter.vomit();
+                        data.vomiter.vomit(player);
                     }
                 }
             }
@@ -203,7 +222,7 @@ public class TimedEffectRegistry {
                     data.setInternalBleeding(data.getInternalBleeding() + 0.00132f);
                     data.setBrainHealth(data.getBrainHealth() - 0.05f);
 
-                    LimbStatistics stats = data.getLimb(Limb.CHEST);
+                    LimbStatistics stats = data.getLimb(Limb.THORAX);
                     if (stats.getPain() < 60) {
                         stats.addPain(4);
                     }
@@ -214,7 +233,7 @@ public class TimedEffectRegistry {
                     //-stamina
                     if (effect.duration() <= 1) {
                         //-energy
-                        data.vomiter.vomit();
+                        data.vomiter.vomit(player);
                     }
                 }
             }
@@ -247,7 +266,7 @@ public class TimedEffectRegistry {
                         data.setConsciousness(0);
                     }
                     if (random.nextFloat() < 0.035f) {
-                        data.vomiter.vomit();
+                        data.vomiter.vomit(player);
                     }
                     if (random.nextFloat() < 0.02f) {
                         data.setAdrenaline(0);
@@ -257,7 +276,7 @@ public class TimedEffectRegistry {
                     data.addTemperature(0.04f);
                     data.setBrainHealth(data.getBrainHealth() - 0.08f);
 
-                    LimbStatistics stats = data.getLimb(Limb.CHEST);
+                    LimbStatistics stats = data.getLimb(Limb.THORAX);
                     if (stats.getPain() < 60) {
                         stats.addPain(4);
                     }
@@ -277,9 +296,14 @@ public class TimedEffectRegistry {
                     if (effect.duration() <= 1) {
                         //-energy
                         data.setConsciousness(0);
-                        data.vomiter.vomit();
+                        data.vomiter.vomit(player);
                     }
                 }
             }
+    );
+
+    public static final RegistryObject<TimedEffectFunction> SUTURE = TIMED_EFFECTS.register("suture", () ->
+            (player, data, effect) ->
+                    data.getLimb(effect.limb()).addBleedRate(-Util.CUBloodPointsToL(4.5f) / 60 / 20)
     );
 }

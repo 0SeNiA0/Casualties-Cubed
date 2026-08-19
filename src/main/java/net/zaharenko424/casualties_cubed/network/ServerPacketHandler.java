@@ -81,7 +81,7 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
-            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+            if (data.isAmputated(Limb.UPPER_RIGHT_ARM) && data.isAmputated(Limb.UPPER_LEFT_ARM)) return;// Cant interact without arms
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 LimbStatistics stats = targetData.getLimb(packet.limb());
@@ -265,7 +265,7 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
-            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+            if (data.isAmputated(Limb.UPPER_RIGHT_ARM) && data.isAmputated(Limb.UPPER_LEFT_ARM)) return;// Cant interact without arms
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData ->
                     targetData.medicalAction(packet.action(), packet.limb(), sender));
@@ -282,11 +282,11 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             PlayerHealthData data = sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).orElse(null);
-            if (data.isAmputated(Limb.RIGHT_ARM) && data.isAmputated(Limb.LEFT_ARM)) return;// Cant interact without arms
+            if (data.isAmputated(Limb.UPPER_RIGHT_ARM) && data.isAmputated(Limb.UPPER_LEFT_ARM)) return;// Cant interact without arms
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 RandomSource random = sender.getRandom();
-                LimbStatistics chest = targetData.getLimb(Limb.CHEST);
+                LimbStatistics chest = targetData.getLimb(Limb.THORAX);
 
                 switch (packet.success()) {
                     case LOW -> {

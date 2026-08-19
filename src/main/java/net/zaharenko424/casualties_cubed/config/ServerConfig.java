@@ -6,11 +6,7 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec SPEC;
 
-    public static final ForgeConfigSpec.DoubleValue WOUND_ANTIBLEED_RATE;
-    public static final ForgeConfigSpec.DoubleValue HEMOTHORAX_HEAL_RATE;
-
-    // Blood regen & bleeding
-    public static final ForgeConfigSpec.DoubleValue MAX_BLEED_RATE;// L per second
+    public static final ForgeConfigSpec.BooleanValue EXPIE_MODE;
 
     // Damage scaling
     public static final ForgeConfigSpec.DoubleValue DAMAGE_SCALE;
@@ -19,13 +15,6 @@ public class ServerConfig {
 
     // Limb healing rates
     public static final ForgeConfigSpec.DoubleValue MAGICAL_HEAL_RATE;
-
-    // Tourniquet behavior
-    public static final ForgeConfigSpec.DoubleValue TOURNIQUET_PAIN_PER_TICK;
-    public static final ForgeConfigSpec.IntValue TOURNIQUET_SAFE_TICKS;             // 60s before muscle damage starts
-    public static final ForgeConfigSpec.DoubleValue TOURNIQUET_MUSCLE_DAMAGE;
-    public static final ForgeConfigSpec.DoubleValue CONS_PENALTY_PER_OPIOID;
-    public static final ForgeConfigSpec.DoubleValue CONSCIOUSNESS_REGEN;
 
     //Armor
     public static final ForgeConfigSpec.DoubleValue HELMET_ARMOR_SCALE;
@@ -47,6 +36,13 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue BLEED_RATE;
     public static final ForgeConfigSpec.DoubleValue FIB_RATE;
     public static final ForgeConfigSpec.BooleanValue STROKES;
+    public static final ForgeConfigSpec.DoubleValue EXP_GAIN;
+    public static final ForgeConfigSpec.DoubleValue SLEEP_CYCLE_SPEED;
+    public static final ForgeConfigSpec.DoubleValue MOOD_NORMALIZATION_RATE;
+    public static final ForgeConfigSpec.BooleanValue FORCE_SLEEP;
+    public static final ForgeConfigSpec.BooleanValue NO_SLEEP_RESTRICTIONS;
+    public static final ForgeConfigSpec.DoubleValue STAMINA_REGEN;
+    public static final ForgeConfigSpec.BooleanValue BRAIN_DAMAGE_FX;
 
     public static final ForgeConfigSpec.BooleanValue INFINITE_LAST_STAND;
     public static final ForgeConfigSpec.BooleanValue TOTEM_OF_UNDYING_LAST_STAND;
@@ -58,17 +54,11 @@ public class ServerConfig {
 
         BUILDER.push("Prototype Pain Server Config");
 
-        WOUND_ANTIBLEED_RATE = BUILDER
-                .comment("The rate at which internal Bleeding heals (L/min)")
-                        .defineInRange("wundAntiBleed",0.000025,0,10);
+        EXPIE_MODE = BUILDER
+                .comment("Defines whether some aspects of the mod should assume that player is an expie (coffee being toxic, etc).")
+                .define("expieMode", true);
 
-        HEMOTHORAX_HEAL_RATE = BUILDER
-                .comment("The rate at which Hemothorax is healed (pts/s)")
-                        .defineInRange("hemothoraxHealRate",0.036,0,100);
 
-        MAX_BLEED_RATE = BUILDER
-                .comment("The Maximum Rate of Bleeding from one Limb (L/s)")
-                        .defineInRange("maxBleedRate",0.03,0,10);
         DAMAGE_SCALE = BUILDER
                 .comment("% Damage Per point of normal damage to the Limb muscle and skin health")
                         .defineInRange("damageScale",5d,0.1,100);
@@ -78,28 +68,9 @@ public class ServerConfig {
         FRAC_DISL_FROM_MUSCLE_DAMAGE_CHANCE = BUILDER
                 .comment("Chance for Discocation/Fracture at 0% Muscle Health")
                         .defineInRange("fractDislcFromMuslceDamageChance",0.33,0,1);
-        TOURNIQUET_PAIN_PER_TICK = BUILDER
-                .comment("Pain per tick for limb with applied tourniquet")
-                        .defineInRange("tourniquetPainPerTick",0.05,0,100);
-        TOURNIQUET_SAFE_TICKS=BUILDER
-                .comment("Ticks for how long a tourniquet can be on a limb before causing muscle damage (ticks)")
-                        .defineInRange("tourniquetSafeTicks",20*60*5,0, Integer.MAX_VALUE);
-        TOURNIQUET_MUSCLE_DAMAGE=BUILDER
-                .comment("Damage to the muscle health of the limb with a tourniquet after safe ticks have passed (s)")
-                        .defineInRange("tourniquetMuscleDamage",1.5,0,100);
         MAGICAL_HEAL_RATE = BUILDER
                 .comment("the Heal Scalar of magical healing(potions, regeneration)")
                 .defineInRange("magicalHealRate",0.5,0,Double.MAX_VALUE);
-
-
-        CONS_PENALTY_PER_OPIOID = BUILDER
-                .comment("How much consciousness is penalized by one point of Opioids (opioids max is 100)")
-                        .defineInRange("consPenaltyPerOpiod",0.2,0,Double.MAX_VALUE);
-        CONSCIOUSNESS_REGEN = BUILDER
-                .comment("How fast consciousness restores itself(keep in mind that consciousness is also capped by things such as:")
-                        .comment("Oxygen,Opioids,High Pain,Head Health ...")
-                                .comment("(%/s)")
-                                        .defineInRange("consciousnessDelta",4,0,Double.MAX_VALUE);
 
         HELMET_ARMOR_SCALE = BUILDER
                 .comment("Scaling of Armor values")
@@ -167,6 +138,34 @@ public class ServerConfig {
         STROKES = BUILDER
                 .comment("Enables strokes.")
                 .define("strokes", true);
+
+        EXP_GAIN = BUILDER
+                .comment("Skill exp gain multiplier.")
+                .defineInRange("expGain", 1, 0, 1000f);
+
+        SLEEP_CYCLE_SPEED = BUILDER
+                .comment("Energy gain/loss multiplier.")
+                .defineInRange("sleepCycleSpeed", 1, 0, 1000f);
+
+        MOOD_NORMALIZATION_RATE = BUILDER
+                .comment("Mood normalization speed multiplier.")
+                .defineInRange("moodNormalizationRate", 1, 0, 1000f);
+
+        FORCE_SLEEP = BUILDER
+                .comment("Force sleep when energy too low.")
+                .define("forceSleep", true);
+
+        NO_SLEEP_RESTRICTIONS = BUILDER
+                .comment("Wont wake up from usual factors.")
+                .define("noSleepRestrictions", false);
+
+        STAMINA_REGEN = BUILDER
+                .comment("Stamina regen multiplier.")
+                .defineInRange("staminaRegen", 1, 0, 1000f);
+
+        BRAIN_DAMAGE_FX = BUILDER
+                .comment("Brain damage effects such as dropping held items")
+                .define("brainDamageFx", true);
 
 
         INFINITE_LAST_STAND = BUILDER

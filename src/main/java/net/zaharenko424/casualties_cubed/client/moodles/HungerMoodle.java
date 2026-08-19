@@ -15,7 +15,7 @@ public class HungerMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float hunger = data.getCUHunger(player);
+        float hunger = data.hunger();
 
         if (hunger <= 15) {
             setStatus(MoodleStatus.CRITICAL_NEG, hunger <= 0);

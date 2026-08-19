@@ -6,7 +6,7 @@ import mezz.jei.api.registration.*;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.client.gui.MedicalMixerScreen;
+import net.zaharenko424.casualties_cubed.client.gui.screen.MedicalMixerScreen;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.recipe.MedicalMixerRecipe;

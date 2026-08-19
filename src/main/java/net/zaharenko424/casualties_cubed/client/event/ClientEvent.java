@@ -26,8 +26,8 @@ import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.SoundManager;
-import net.zaharenko424.casualties_cubed.client.gui.FluidExchangeScreen;
-import net.zaharenko424.casualties_cubed.client.gui.HealthScreen;
+import net.zaharenko424.casualties_cubed.client.gui.screen.FluidExchangeScreen;
+import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
 import net.zaharenko424.casualties_cubed.client.overlays.OverlayController;
 import net.zaharenko424.casualties_cubed.event.CommonEvent;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
@@ -265,7 +265,7 @@ public class ClientEvent {
         Minecraft mc =  Minecraft.getInstance();
         mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             HumanoidArm arm = mc.player.getMainArm();
-            Limb limb = arm == HumanoidArm.LEFT ? Limb.LEFT_ARM : Limb.RIGHT_ARM;
+            Limb limb = arm == HumanoidArm.LEFT ? Limb.LEFT_HAND : Limb.RIGHT_HAND;
 
             if (data.isAmputated(limb)) event.setCanceled(true);
         });

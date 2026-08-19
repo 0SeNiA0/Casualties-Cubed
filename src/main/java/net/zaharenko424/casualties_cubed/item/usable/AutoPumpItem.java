@@ -27,7 +27,7 @@ public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowIn
 
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
-        if (limb != Limb.CHEST) return;
+        if (limb != Limb.THORAX) return;
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
                 data.setLifeSupportTimer(5 * 60 * 20));

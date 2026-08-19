@@ -226,7 +226,7 @@ public class CommonEvent {
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             Item item = event.getItem().getItem();
-            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
             if (head.getBoneHealTimer() > 0) {
                 head.addPain(3);
@@ -249,7 +249,7 @@ public class CommonEvent {
         if (!(event.getEntity() instanceof Player player)) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
             if (head.getBoneHealTimer() > 0) head.addPain(3);
 
@@ -259,14 +259,12 @@ public class CommonEvent {
         });
     }
 
-    private static final List<Limb> LEG_PARTS = List.of(Limb.RIGHT_LEG, Limb.RIGHT_FOOT, Limb.LEFT_LEG, Limb.LEFT_FOOT);
-
     @SubscribeEvent
     public static void onJump(LivingEvent.LivingJumpEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.CHEST);
+            LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
             if (head.getBoneHealTimer() > 0) head.addPain(10);
 
@@ -275,7 +273,7 @@ public class CommonEvent {
             }
 
             LimbStatistics stats;
-            for (Limb limb : LEG_PARTS) {
+            for (Limb limb : Limb.LEG_LIMBS) {
                 stats = data.getLimb(limb);
                 if (stats.getDislocationTimer() > 0 || stats.getBoneHealTimer() > 0) stats.addPain(10);
             }

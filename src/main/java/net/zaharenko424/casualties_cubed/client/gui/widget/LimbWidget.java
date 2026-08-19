@@ -10,12 +10,16 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.*;
 
 public class LimbWidget extends AbstractWidget {
 
     private final Limb limb;
+    private final PlayerHealthData data;
+    private final LimbStatistics stats;
     private final ResourceLocation borderTxt;
     private final ResourceLocation baseTxt;
     Random random = new Random();
@@ -23,8 +27,8 @@ public class LimbWidget extends AbstractWidget {
     private float border_red = 0;
     private float base_red = 0;
     private boolean amputated;
-    private int txt_height;
-    private int txt_width;
+    private final int txt_height;
+    private final int txt_width;
 
     private boolean LeftEyeGone = false;
     private boolean RightEyeGone = false;
@@ -44,6 +48,7 @@ public class LimbWidget extends AbstractWidget {
 
     public void setAmputated(boolean amputated) {
         this.amputated = amputated;
+        visible = !amputated;
     }
 
     public boolean isAmputated() {
@@ -53,46 +58,83 @@ public class LimbWidget extends AbstractWidget {
     private final Map<StatusSprites, SubSprite> subSprites = new EnumMap<>(StatusSprites.class);
     private boolean expanded = false;
 
-
-    public LimbWidget(int x, int y, int witdh, int height, Component title, Limb limb) {
-        super(x, y, witdh, height, title);
+    public LimbWidget(Limb limb, PlayerHealthData data) {
+        super(0, 0, 0, 0, Component.empty());
         this.limb = limb;
+        this.data = data;
+        stats = data.getLimb(limb);
         switch (limb) {
             case RIGHT_FOOT, LEFT_FOOT, RIGHT_HAND, LEFT_HAND -> {
                 borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/end_border.png");
                 baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/end_base.png");
                 txt_height = 16;
                 txt_width = 16;
+                this.width = 16;
+                this.height = 16;
             }
-            case LEFT_ARM, RIGHT_ARM -> {
-                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/limb_horizontal_border.png");
-                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/limb_horizontal_base.png");
+            case LOWER_LEFT_ARM, UPPER_RIGHT_ARM -> {
+                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/upper_limb_horizontal_border.png");
+                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/upper_limb_horizontal_base.png");
                 txt_height = 16;
-                txt_width = 48;
+                txt_width = 24;
+                this.width = 24;
+                this.height = 16;
             }
-            case LEFT_LEG, RIGHT_LEG -> {
-                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/limb_vertical_border.png");
-                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/limb_vertical_base.png");
-                txt_height = 48;
+            case UPPER_LEFT_ARM, LOWER_RIGHT_ARM -> {
+                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/lower_limb_horizontal_border.png");
+                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/lower_limb_horizontal_base.png");
+                txt_height = 16;
+                txt_width = 24;
+                this.width = 24;
+                this.height = 16;
+            }
+            case UPPER_LEFT_LEG, UPPER_RIGHT_LEG -> {
+                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/upper_limb_vertical_border.png");
+                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/upper_limb_vertical_base.png");
+                txt_height = 24;
                 txt_width = 16;
+                this.width = 16;
+                this.height = 24;
             }
-            case CHEST -> {
-                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/body_border.png");
-                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/body_base.png");
-                txt_height = 64;
+            case LOWER_LEFT_LEG, LOWER_RIGHT_LEG -> {
+                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/lower_limb_vertical_border.png");
+                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/lower_limb_vertical_base.png");
+                txt_height = 24;
+                txt_width = 16;
+                this.width = 16;
+                this.height = 24;
+            }
+            case THORAX -> {
+                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/upper_body_border.png");
+                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/upper_body_base.png");
+                txt_height = 32;
                 txt_width = 32;
+                this.width = 32;
+                this.height = 32;
+            }
+            case ABDOMEN -> {
+                borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/lower_body_border.png");
+                baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/lower_body_base.png");
+                txt_height = 32;
+                txt_width = 32;
+                this.width = 32;
+                this.height = 32;
             }
             case HEAD -> {
                 borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/head_border.png");
                 baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/head_base.png");
                 txt_height = 32;
                 txt_width = 32;
+                this.width = 32;
+                this.height = 32;
             }
             default -> {
                 borderTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/border.png");
                 baseTxt = CasualtiesCubed.resourceLoc("textures/gui/limbs/base.png");
                 txt_height = 64;
                 txt_width = 64;
+                this.width = 32;
+                this.height = 32;
             }
         }
     }
@@ -211,5 +253,38 @@ public class LimbWidget extends AbstractWidget {
 
     public boolean isSpritePresent(StatusSprites sprite) {
         return subSprites.get(sprite).isVisible();
+    }
+
+    public void update() {
+        if (stats.isAmputated()) {
+            setAmputated(true);
+            return;
+        } else setAmputated(false);
+
+        if (limb == Limb.HEAD) {
+            setLeftEyeGone(data.isLeftEyeBlind());
+            setMouthGone(data.isMouthRemoved());
+            setRightEyeGone(data.isRightEyeBlind());
+        }
+
+        setShake(stats.getPain() / 100f);
+        setBorder_red(1 - (stats.getSkinHealth() / 100f));
+        setBase_red(1 - (stats.getMuscleHealth() / 100f));
+
+        float bleed = stats.getBleedRate();
+        boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !data.isUnderTourniquet(limb);
+        if (isBleeding) {
+            float scale = Math.max(0.9f, (bleed / data.getMAX_BLEED_RATE()) * 2.5f);
+            setScaleOf(StatusSprites.BLEED, scale);
+        }
+
+        setSubSpriteVisible(StatusSprites.BLEED, isBleeding);
+        setSubSpriteVisible(StatusSprites.DISINFECTION, stats.getDisinfectionTime() > 0);
+        setSubSpriteVisible(StatusSprites.FRACTURE, stats.getBoneHealTimer() > 0);
+        setSubSpriteVisible(StatusSprites.INFECTION, stats.getInfection() > 25);
+        setSubSpriteVisible(StatusSprites.SHRAPNEL, stats.getShrapnel() > 0);
+        setSubSpriteVisible(StatusSprites.SPLINT, stats.hasSplint());
+        setSubSpriteVisible(StatusSprites.DISLOCATION, stats.getDislocationTimer() > 0);
+        setSubSpriteVisible(StatusSprites.TOURNIQUET, stats.isTourniquet());
     }
 }

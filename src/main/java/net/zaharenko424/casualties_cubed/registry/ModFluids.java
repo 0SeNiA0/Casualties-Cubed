@@ -23,6 +23,9 @@ public class ModFluids {
     public static final RegistryObject<FluidType> CLEAN_WATER_TYPE = FLUID_TYPES.register("clean_water", () -> new MedicalFluidType(MedicalEffects.CLEAN_WATER, FastColor.ARGB32.color(255, 117, 209, 255)));
     public static final RegistryObject<MedicalFluid> CLEAN_WATER = FLUIDS.register("clean_water", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CLEAN_WATER_TYPE, ModFluids.CLEAN_WATER, ModFluids.CLEAN_WATER)));
 
+    public static final RegistryObject<FluidType> CARBONATED_WATER_TYPE = FLUID_TYPES.register("carbonated_water", () -> new MedicalFluidType(MedicalEffects.CARBONATED_WATER, FastColor.ARGB32.color(255, 102, 166, 255)));
+    public static final RegistryObject<MedicalFluid> CARBONATED_WATER = FLUIDS.register("carbonated_water", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CARBONATED_WATER_TYPE, ModFluids.CARBONATED_WATER, ModFluids.CARBONATED_WATER)));
+
     public static final RegistryObject<FluidType> LRD_SERUM_TYPE = FLUID_TYPES.register("lrd_serum", () -> new MedicalFluidType(MedicalEffects.LRD_SERUM, 0xebb734));
     public static final RegistryObject<MedicalFluid> LRD_SERUM = FLUIDS.register("lrd_serum", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LRD_SERUM_TYPE, ModFluids.LRD_SERUM, ModFluids.LRD_SERUM)));
 
@@ -53,6 +56,9 @@ public class ModFluids {
     public static final RegistryObject<FluidType> FENTANYL_TYPE = FLUID_TYPES.register("fentanyl", () -> new MedicalFluidType(MedicalEffects.FENTANYL, 0xa1d9ff));
     public static final RegistryObject<MedicalFluid> FENTANYL = FLUIDS.register("fentanyl", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.FENTANYL_TYPE, ModFluids.FENTANYL, ModFluids.FENTANYL)));
 
+    public static final RegistryObject<FluidType> KETCHUP_TYPE = FLUID_TYPES.register("ketchup", () -> new MedicalFluidType(MedicalEffects.KETCHUP, FastColor.ARGB32.color(255, 255, 43, 43)));
+    public static final RegistryObject<MedicalFluid> KETCHUP = FLUIDS.register("ketchup", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.KETCHUP_TYPE, ModFluids.KETCHUP, ModFluids.KETCHUP)));
+
     public static final RegistryObject<FluidType> CHLOROFORM_TYPE = FLUID_TYPES.register("chloroform", () -> new MedicalFluidType(MedicalEffects.CHLOROFORM, FastColor.ARGB32.color(255, 186, 209, 167)));
     public static final RegistryObject<MedicalFluid> CHLOROFORM = FLUIDS.register("chloroform", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CHLOROFORM_TYPE, ModFluids.CHLOROFORM, ModFluids.CHLOROFORM)));
 
@@ -65,14 +71,62 @@ public class ModFluids {
     public static final RegistryObject<FluidType> LOW_GRADE_STIMULANT_TYPE = FLUID_TYPES.register("low_grade_stimulant", () -> new MedicalFluidType(MedicalEffects.LOW_GRADE_STIMULANT, FastColor.ARGB32.color(255, 144, 144, 144)));
     public static final RegistryObject<MedicalFluid> LOW_GRADE_STIMULANT = FLUIDS.register("low_grade_stimulant", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LOW_GRADE_STIMULANT_TYPE, ModFluids.LOW_GRADE_STIMULANT, ModFluids.LOW_GRADE_STIMULANT)));
 
-    public static final RegistryObject<FluidType> CHOCOLATE_MILK_TYPE = FLUID_TYPES.register("chocolate_milk", () -> new MedicalFluidType(MedicalEffects.CHOCOLATE_MILK, 0x2e251c));
+    public static final RegistryObject<FluidType> APPLE_JUICE_TYPE = FLUID_TYPES.register("apple_juice", () -> new MedicalFluidType(MedicalEffects.APPLE_JUICE, FastColor.ARGB32.color(255, 197, 255, 97)));
+    public static final RegistryObject<MedicalFluid> APPLE_JUICE = FLUIDS.register("apple_juice", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.APPLE_JUICE_TYPE, ModFluids.APPLE_JUICE, ModFluids.APPLE_JUICE)));
+
+    public static final RegistryObject<FluidType> ORANGE_JUICE_TYPE = FLUID_TYPES.register("orange_juice", () -> new MedicalFluidType(MedicalEffects.ORANGE_JUICE, FastColor.ARGB32.color(255, 137, 41, 255)));
+    public static final RegistryObject<MedicalFluid> ORANGE_JUICE = FLUIDS.register("orange_juice", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ORANGE_JUICE_TYPE, ModFluids.ORANGE_JUICE, ModFluids.ORANGE_JUICE)));
+
+    public static final RegistryObject<FluidType> LEMONADE_TYPE = FLUID_TYPES.register("lemonade", () -> new MedicalFluidType(MedicalEffects.LEMONADE, FastColor.ARGB32.color(255, 247, 97, 255)));
+    public static final RegistryObject<MedicalFluid> LEMONADE = FLUIDS.register("lemonade", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LEMONADE_TYPE, ModFluids.LEMONADE, ModFluids.LEMONADE)));
+
+    public static final RegistryObject<FluidType> ICE_TEA_TYPE = FLUID_TYPES.register("ice_tea", () -> new MedicalFluidType(MedicalEffects.ICE_TEA, FastColor.ARGB32.color(255, 250, 135, 52)));
+    public static final RegistryObject<MedicalFluid> ICE_TEA = FLUIDS.register("ice_tea", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ICE_TEA_TYPE, ModFluids.ICE_TEA, ModFluids.ICE_TEA)));
+
+    public static final RegistryObject<FluidType> SOUP_TYPE = FLUID_TYPES.register("soup", () -> new MedicalFluidType(MedicalEffects.SOUP, FastColor.ARGB32.color(255, 125, 81, 0)));
+    public static final RegistryObject<MedicalFluid> SOUP = FLUIDS.register("soup", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SOUP_TYPE, ModFluids.SOUP, ModFluids.SOUP)));
+
+    public static final RegistryObject<FluidType> CHOCOLATE_MILK_TYPE = FLUID_TYPES.register("chocolate_milk", () -> new MedicalFluidType(MedicalEffects.CHOCOLATE_MILK, FastColor.ARGB32.color(255, 143, 92, 55)));
     public static final RegistryObject<MedicalFluid> CHOCOLATE_MILK = FLUIDS.register("chocolate_milk", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CHOCOLATE_MILK_TYPE, ModFluids.CHOCOLATE_MILK, ModFluids.CHOCOLATE_MILK)));
+
+    public static final RegistryObject<FluidType> CEREAL_TYPE = FLUID_TYPES.register("cereal", () -> new MedicalFluidType(MedicalEffects.CEREAL, FastColor.ARGB32.color(255, 255, 219, 156)));
+    public static final RegistryObject<MedicalFluid> CEREAL = FLUIDS.register("cereal", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.CEREAL_TYPE, ModFluids.CEREAL, ModFluids.CEREAL)));
+
+    public static final RegistryObject<FluidType> COFFEE_TYPE = FLUID_TYPES.register("coffee", () -> new MedicalFluidType(MedicalEffects.COFFEE, FastColor.ARGB32.color(255, 80, 50, 30)));
+    public static final RegistryObject<MedicalFluid> COFFEE = FLUIDS.register("coffee", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.COFFEE_TYPE, ModFluids.COFFEE, ModFluids.COFFEE)));
+
+    public static final RegistryObject<FluidType> ENERGY_DRINK_TYPE = FLUID_TYPES.register("energy_drink", () -> new MedicalFluidType(MedicalEffects.ENERGY_DRINK, FastColor.ARGB32.color(255, 187, 0, 255)));
+    public static final RegistryObject<MedicalFluid> ENERGY_DRINK = FLUIDS.register("energy_drink", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ENERGY_DRINK_TYPE, ModFluids.ENERGY_DRINK, ModFluids.ENERGY_DRINK)));
+
+    public static final RegistryObject<FluidType> SPORTS_DRINK_TYPE = FLUID_TYPES.register("sports_drink", () -> new MedicalFluidType(MedicalEffects.SPORTS_DRINK, FastColor.ARGB32.color(255, 10, 59, 255)));
+    public static final RegistryObject<MedicalFluid> SPORTS_DRINK = FLUIDS.register("sports_drink", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SPORTS_DRINK_TYPE, ModFluids.SPORTS_DRINK, ModFluids.SPORTS_DRINK)));
+
+    public static final RegistryObject<FluidType> OLIVE_OIL_TYPE = FLUID_TYPES.register("olive_oil", () -> new MedicalFluidType(MedicalEffects.OLIVE_OIL, FastColor.ARGB32.color(200, 129, 135, 7)));
+    public static final RegistryObject<MedicalFluid> OLIVE_OIL = FLUIDS.register("olive_oil", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.OLIVE_OIL_TYPE, ModFluids.OLIVE_OIL, ModFluids.OLIVE_OIL)));
+
+    public static final RegistryObject<FluidType> HOT_SAUCE_TYPE = FLUID_TYPES.register("hot_sauce", () -> new MedicalFluidType(MedicalEffects.HOT_SAUCE, FastColor.ARGB32.color(200, 255, 0, 0)));
+    public static final RegistryObject<MedicalFluid> HOT_SAUCE = FLUIDS.register("hot_sauce", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.HOT_SAUCE_TYPE, ModFluids.HOT_SAUCE, ModFluids.HOT_SAUCE)));
+
+    public static final RegistryObject<FluidType> ICE_CREAM_TYPE = FLUID_TYPES.register("ice_cream", () -> new MedicalFluidType(MedicalEffects.ICE_CREAM, FastColor.ARGB32.color(255, 237, 255, 189)));
+    public static final RegistryObject<MedicalFluid> ICE_CREAM = FLUIDS.register("ice_cream", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ICE_CREAM_TYPE, ModFluids.ICE_CREAM, ModFluids.ICE_CREAM)));
+
+    public static final RegistryObject<FluidType> YOGURT_TYPE = FLUID_TYPES.register("yogurt", () -> new MedicalFluidType(MedicalEffects.YOGURT, FastColor.ARGB32.color(255, 213, 235, 240)));
+    public static final RegistryObject<MedicalFluid> YOGURT = FLUIDS.register("yogurt", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.YOGURT_TYPE, ModFluids.YOGURT, ModFluids.YOGURT)));
 
     public static final RegistryObject<FluidType> MOLD_TYPE = FLUID_TYPES.register("mold", () -> new MedicalFluidType(MedicalEffects.MOLD, FastColor.ARGB32.color(255, 63, 79, 50)));
     public static final RegistryObject<MedicalFluid> MOLD = FLUIDS.register("mold", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.MOLD_TYPE, ModFluids.MOLD, ModFluids.MOLD)));
 
+    public static final RegistryObject<FluidType> POWDERED_MILK_TYPE = FLUID_TYPES.register("powdered_milk", () -> new MedicalFluidType(MedicalEffects.POWDERED_MILK, FastColor.ARGB32.color(255, 242, 242, 242)));
+    public static final RegistryObject<MedicalFluid> POWDERED_MILK = FLUIDS.register("powdered_milk", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.POWDERED_MILK_TYPE, ModFluids.POWDERED_MILK, ModFluids.POWDERED_MILK)));
+
+    public static final RegistryObject<FluidType> RAD_WATER_TYPE = FLUID_TYPES.register("rad_water", () -> new MedicalFluidType(MedicalEffects.RAD_WATER, FastColor.ARGB32.color(255, 121, 224, 221)));
+    public static final RegistryObject<MedicalFluid> RAD_WATER = FLUIDS.register("rad_water", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.RAD_WATER_TYPE, ModFluids.RAD_WATER, ModFluids.RAD_WATER)));
+
     public static final RegistryObject<FluidType> MERCURY_TYPE = FLUID_TYPES.register("mercury", () -> new MedicalFluidType(MedicalEffects.MERCURY, FastColor.ARGB32.color(255, 77, 77, 77)));
     public static final RegistryObject<MedicalFluid> MERCURY = FLUIDS.register("mercury", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.MERCURY_TYPE, ModFluids.MERCURY, ModFluids.MERCURY)));
+
+    public static final RegistryObject<FluidType> SODA_TYPE = FLUID_TYPES.register("soda", () -> new MedicalFluidType(MedicalEffects.SODA, FastColor.ARGB32.color(255, 112, 94, 73)));
+    public static final RegistryObject<MedicalFluid> SODA = FLUIDS.register("soda", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SODA_TYPE, ModFluids.SODA, ModFluids.SODA)));
 
     public static final RegistryObject<FluidType> ALCOHOL_TYPE = FLUID_TYPES.register("alcohol", () -> new MedicalFluidType(MedicalEffects.ALCOHOL, 0x828282));
     public static final RegistryObject<MedicalFluid> ALCOHOL = FLUIDS.register("alcohol", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ALCOHOL_TYPE, ModFluids.ALCOHOL, ModFluids.ALCOHOL)));
@@ -131,8 +185,17 @@ public class ModFluids {
     public static final RegistryObject<FluidType> GROUNDWATER_TYPE = FLUID_TYPES.register("groundwater", () -> new MedicalFluidType(MedicalEffects.GROUNDWATER, FastColor.ARGB32.color(255, 89, 138, 212)));
     public static final RegistryObject<MedicalFluid> GROUNDWATER = FLUIDS.register("groundwater", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.GROUNDWATER_TYPE, ModFluids.GROUNDWATER, ModFluids.GROUNDWATER)));
 
+    public static final RegistryObject<FluidType> SAP_TYPE = FLUID_TYPES.register("sap", () -> new MedicalFluidType(MedicalEffects.SAP, FastColor.ARGB32.color(255, 209, 190, 63)));
+    public static final RegistryObject<MedicalFluid> SAP = FLUIDS.register("sap", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SAP_TYPE, ModFluids.SAP, ModFluids.SAP)));
+
     public static final RegistryObject<FluidType> SOAP_TYPE = FLUID_TYPES.register("soap", () -> new MedicalFluidType(MedicalEffects.SOAP, FastColor.ARGB32.color(255, 161, 255, 186)));
     public static final RegistryObject<MedicalFluid> SOAP = FLUIDS.register("soap", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SOAP_TYPE, ModFluids.SOAP, ModFluids.SOAP)));
+
+    public static final RegistryObject<FluidType> PRODUCE_JUICE_TYPE = FLUID_TYPES.register("produce_juice", () -> new MedicalFluidType(MedicalEffects.PRODUCE_JUICE, FastColor.ARGB32.color(255, 255, 254, 181)));
+    public static final RegistryObject<MedicalFluid> PRODUCE_JUICE = FLUIDS.register("produce_juice", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.PRODUCE_JUICE_TYPE, ModFluids.PRODUCE_JUICE, ModFluids.PRODUCE_JUICE)));
+
+    public static final RegistryObject<FluidType> REFINED_JUICE_TYPE = FLUID_TYPES.register("refined_juice", () -> new MedicalFluidType(MedicalEffects.REFINED_JUICE, FastColor.ARGB32.color(255, 255, 225, 115)));
+    public static final RegistryObject<MedicalFluid> REFINED_JUICE = FLUIDS.register("refined_juice", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.REFINED_JUICE_TYPE, ModFluids.REFINED_JUICE, ModFluids.REFINED_JUICE)));
 
     public static void register(IEventBus bus) {
         FLUID_TYPES.register(bus);

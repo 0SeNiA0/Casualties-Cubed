@@ -21,7 +21,7 @@ public class AdrenalineMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float blood2 = data.getAdrenaline();
+        float blood2 = data.currentAdrenaline();
         if (blood2 > 65) {
             setStatus(MoodleStatus.NORMAL_NEG);
         } else if (blood2 > 20) {

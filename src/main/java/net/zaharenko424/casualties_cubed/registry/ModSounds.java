@@ -22,6 +22,14 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> AUTO_PUMP = register("auto_pump");
     public static final RegistryObject<SoundEvent> BONE_WELD = register("bone_weld");
     public static final RegistryObject<SoundEvent> DRAIN_USE = register("drain_use");
+    public static final RegistryObject<SoundEvent> LEVEL_UP = register("level_up");
+
+    public static final RegistryObject<SoundEvent> CLICK = register("click");
+    public static final RegistryObject<SoundEvent> SMALL_CLICK = register("small_click");
+
+    public static final RegistryObject<SoundEvent> VOMIT_WARNING = register("vomit_warning");
+    public static final RegistryObject<SoundEvent> BLOOD_VOMIT_WARNING = register("blood_vomit_warning");
+    public static final RegistryObject<SoundEvent> VOMIT = register("vomit");
 
     public static final RegistryObject<SoundEvent> BANDAGE_USE = register("bandage");
     public static final RegistryObject<SoundEvent> SYRINGE_USE = register("syringe");

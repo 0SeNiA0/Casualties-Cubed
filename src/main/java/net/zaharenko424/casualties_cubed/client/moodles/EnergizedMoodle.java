@@ -33,7 +33,7 @@ public class EnergizedMoodle extends AbstractMoodle {
     public List<Component> getTooltip(Player player) {
         return List.of(
                 Component.translatable("gui.casualties_cubed.moodle.energized.title"),
-                Component.translatable("gui.casualties_cubed.moodle.energized.description", PlayerHealthData.of(player).map(PlayerHealthData::caffeinated).orElse(0f))
+                Component.translatable("gui.casualties_cubed.moodle.energized.description", Math.round(PlayerHealthData.of(player).map(PlayerHealthData::caffeinated).orElse(0f)))
         );
     }
 }

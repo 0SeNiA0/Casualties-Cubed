@@ -94,7 +94,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
     private static final List<Limb> AMPUTATABLE = Util.make(() -> {
         List<Limb> tmp = new ArrayList<>();
         for (Limb limb : Limb.values()) {
-            if (limb != Limb.CHEST) tmp.add(limb);
+            if (limb != Limb.THORAX) tmp.add(limb);
         }
         return List.copyOf(tmp);
     });
@@ -123,7 +123,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 400, 20));
         } else if (roll <= .35) {
             for (Limb limb : Limb.values()) {
-                if (limb == Limb.CHEST) continue;
+                if (limb == Limb.THORAX) continue;
                 data.applyMuscleDamage(limb, random.nextFloat() * 20, player);
             }
         } else if (roll <= .39) {

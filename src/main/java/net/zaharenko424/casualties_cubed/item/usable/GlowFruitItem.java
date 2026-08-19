@@ -43,13 +43,13 @@ public class GlowFruitItem extends BlockItem implements ISimpleMedicalUsable {
 
             stats.addSkinHealth(-1);
             stats.addMuscleHealth(-4);
-            stats.setDisinfectionTimerAtLeast(4400);
+            stats.addPain(10);
+            stats.setDisinfectionTimerAtLeast(220);
 
-            List<Limb> conected = limb.getConnectedLimbs();
-            for (Limb limb1 : conected) {
+            for (Limb limb1 : limb.getConnectedLimbs()) {
                 stats = data.getLimb(limb1);
+                stats.setDisinfectionTimerAtLeast(100);
                 stats.addMuscleHealth(-3);
-                stats.setDisinfectionTimerAtLeast(2200);
             }
 
             if (!source.isCreative()) stack.shrink(1);

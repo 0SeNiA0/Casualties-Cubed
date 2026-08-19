@@ -37,6 +37,12 @@ public class SoundProvider extends SoundDefinitionsProvider {
         addSimpleSound(AUTO_PUMP);
         addSimpleSound(BONE_WELD);
         addSimpleSound(DRAIN_USE);
+        addSimpleSound(LEVEL_UP);
+        addSimpleSound(CLICK);
+        addSimpleSound(SMALL_CLICK);
+        addSimpleSound(VOMIT_WARNING);
+        addSimpleSound(BLOOD_VOMIT_WARNING);
+        addSound(VOMIT, "vomit_1", "vomit_2");
 
         addSimpleSound(BANDAGE_USE);
         addSimpleSound(SYRINGE_USE);

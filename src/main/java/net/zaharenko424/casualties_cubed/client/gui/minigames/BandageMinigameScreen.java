@@ -1,5 +1,6 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,8 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.client.gui.RenderableImage;
 import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
+import net.zaharenko424.casualties_cubed.client.gui.widget.RenderableImage;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
@@ -238,6 +239,15 @@ public class BandageMinigameScreen extends MinigameScreen {
         graphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.minigame_exit"), this.width / 2, this.height / 6 + 190, 0xFFFFFF);
 
         bandageRoll.render(graphics, mouseX, mouseY, partialTick);
+
+        PoseStack stack = graphics.pose();
+        stack.pushPose();
+        stack.translate(bandageRoll.offset.x, bandageRoll.offset.y, bandageRoll.offset.z);
+        stack.mulPose(bandageRoll.rotation);
+        stack.scale(bandageRoll.scale.x, bandageRoll.scale.y, bandageRoll.scale.z);
+
+        graphics.fill(-1, -1, 1, 1, -1);
+        stack.popPose();
 
         if (bleedRate > 0) {
             float bleedscale = 0.5f + 1.4f * (bleedRate / LimbStatistics.MAX_BLEED_RATE);

@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
+import net.zaharenko424.casualties_cubed.registry.TimedEffectRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class MedicalSutureItem extends Item implements ISimpleMedicalUsable, IAl
 
             stats.addPain(12.5f);
             stats.addSkinHealAmount(25);
-            stats.addBleedRate(- 0.81f / 20f / 60f);//TODO replace with delayedTask-like thing
+            data.addTimedEffect(TimedEffectRegistry.SUTURE, 0, limb, 10);
         });
 
         if (!source.isCreative()) subNbtDurability(stack, 51);

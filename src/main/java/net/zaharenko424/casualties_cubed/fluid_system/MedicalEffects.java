@@ -3,6 +3,7 @@ package net.zaharenko424.casualties_cubed.fluid_system;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.registry.TimedEffectRegistry;
@@ -14,7 +15,20 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setTemperature(data.getTemperature() - 0.005f * ml);
+                data.drink(0.09f * ml);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect CARBONATED_WATER = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.addHappiness(0.008f);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
             });
         }
     };
@@ -134,7 +148,7 @@ public class MedicalEffects {
                 data.addTimedEffect(TimedEffectRegistry.NALTREXONE, ml, null, 1.25f * ml);
 
                 if (player.getRandom().nextFloat() < 0.0075 * ml) {
-                    data.vomiter.vomit();
+                    data.vomiter.vomit(player);
                 }
                 //-happiness
                 data.painkillers.addAntagonist(0.75f * ml);
@@ -168,6 +182,37 @@ public class MedicalEffects {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.painkillers.addOpiates(42 * ml);
             });
+        }
+    };
+
+    public static final MedicalEffect KETCHUP = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.06f * ml);
+                data.eat(player, 0.08f * ml, 0.01f * ml);
+                data.addSickness(0.05f * ml);
+                data.addHappiness(-0.025f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect MILK = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.eat(player, 0.03f * ml, 0.004f * ml);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
+                data.addHappiness(0.005f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.4f;
         }
     };
 
@@ -239,13 +284,290 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect APPLE_JUICE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.addWeightOffset(0.001f * ml);
+                data.setTemperature(data.getTemperature() - 0.003f * ml);
+                data.addHappiness(0.01f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.4f;
+        }
+    };
+
+    public static final MedicalEffect ORANGE_JUICE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.addWeightOffset(0.0007f * ml);
+                data.setTemperature(data.getTemperature() - 0.001f * ml);
+
+                if (ServerConfig.EXPIE_MODE.get()) {
+                    data.addHappiness(-0.015f * ml);
+                    data.addSickness(-0.025f * ml);
+                } else data.addHappiness(0.015f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.4f;
+        }
+    };
+
+    public static final MedicalEffect LEMONADE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.addWeightOffset(0.002f * ml);
+                data.setTemperature(data.getTemperature() - 0.003f * ml);
+                data.addHappiness(-0.012f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.4f;
+        }
+    };
+
+    public static final MedicalEffect ICE_TEA = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.addWeightOffset(0.004f * ml);
+                data.setTemperature(data.getTemperature() - 0.003f * ml);
+                data.addHappiness(0.014f * ml);
+
+                if (ServerConfig.EXPIE_MODE.get()) {
+                    data.addSickness(0.035f * ml);
+                }
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.4f;
+        }
+    };
+
+    public static final MedicalEffect SOUP = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.eat(player, 0.1f * ml, 0.005f * ml);
+                data.addHappiness(0.01f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.6f;
+        }
+    };
+
     public static final MedicalEffect CHOCOLATE_MILK = new MedicalEffect() {
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature() - 0.01f * ml);
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.eat(player, 0.025f * ml, 0.003f * ml);
+                data.addHappiness(0.01f * ml);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
+
+                if (ServerConfig.EXPIE_MODE.get()) {
+                    data.addSickness(0.12f * ml);
+                }
             });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return ServerConfig.EXPIE_MODE.get() ? 1 : 0.4f;
+        }
+    };
+
+    public static final MedicalEffect CEREAL = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.075f * ml);
+                data.eat(player, 0.06f * ml, 0.004f * ml);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
+                data.addHappiness(0.015f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.9f;
+        }
+    };
+
+    public static final MedicalEffect COFFEE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.12f * ml);
+                data.addStamina(0.25f * ml);
+                data.addEnergy(0.15f * ml);
+
+                data.addSickness((ServerConfig.EXPIE_MODE.get() ? 0.15f : 0.025f) * ml);
+
+                data.addHappiness(0.025f * ml);
+                data.addWeightOffset(0.001f * ml);
+                data.addCaffeinated(3.5f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.7f;
+        }
+    };
+
+    public static final MedicalEffect ENERGY_DRINK = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.12f * ml);
+                data.addStamina(0.25f * ml);
+                data.addEnergy(0.2f * ml);
+
+                data.addSickness((ServerConfig.EXPIE_MODE.get() ? 0.2f : 0.05f) * ml);
+
+                data.addHappiness(0.025f * ml);
+                data.addWeightOffset(0.004f * ml);
+                data.addCaffeinated(4 * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.7f;
+        }
+    };
+
+    public static final MedicalEffect SPORTS_DRINK = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.13f * ml);
+                data.addStamina(0.25f * ml);
+                data.addEnergy(0.1f * ml);
+
+                data.addSickness((ServerConfig.EXPIE_MODE.get() ? 0.02f : 0.01f) * ml);
+
+                data.addHappiness(0.005f * ml);
+                data.addWeightOffset(0.01f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.4f;
+        }
+    };
+
+    public static final MedicalEffect OLIVE_OIL = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.03f * ml);
+                data.eat(player, 0.08f * ml, 0.02f * ml);
+                data.setDirtiness(data.getDirtiness() + 0.05f * ml);
+                data.addSickness(0.12f * ml);
+                data.addHappiness(-0.01f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 1;
+        }
+    };
+
+    public static final MedicalEffect HOT_SAUCE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.04f * ml);
+                data.eat(player, 0.05f * ml, 0.02f * ml);
+                data.addSickness(0.03f * ml);
+                data.getLimb(Limb.HEAD).addPain(0.12f * ml);
+
+                data.addTimedEffect(TimedEffectRegistry.HOT_SAUCE, ml, null, 25);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 1;
+        }
+    };
+
+    public static final MedicalEffect ICE_CREAM = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.06f * ml);
+                data.eat(player, 0.06f * ml, 0.012f * ml);
+
+                if (ServerConfig.EXPIE_MODE.get()) data.addSickness(0.015f * ml);
+
+                data.addHappiness(0.015f * ml);
+
+                data.addTimedEffect(TimedEffectRegistry.ICE_CREAM, ml, null, 15);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return ServerConfig.EXPIE_MODE.get() ? 1 : 0.4f;
+        }
+    };
+
+    public static final MedicalEffect YOGURT = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.04f * ml);
+                data.eat(player, 0.09f * ml, 0.004f * ml);
+
+                if (ServerConfig.EXPIE_MODE.get()) data.addSickness(0.01f * ml);
+
+                data.addHappiness(0.002f * ml);
+                data.setTemperature(data.getTemperature() - 0.0015f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return ServerConfig.EXPIE_MODE.get() ? 1 : 0.4f;
         }
     };
 
@@ -254,11 +576,12 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.eat(player, 0.03f * ml, 0.004f * ml);
                 data.addSickness(0.3f * ml);
-                //-happiness, +food
+                data.addHappiness(-0.04f * ml);
 
                 if (ml > 25) {
-                    data.vomiter.vomit();
+                    data.vomiter.vomit(player);
                 }
             });
         }
@@ -269,6 +592,43 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect POWDERED_MILK = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                float f = ml / 30;
+                data.drink(-8 * f);
+                data.eat(player, 8 * f, 0.4f * f);
+                data.addSickness(4 * f);
+                data.addHappiness(-0.5f * f);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 1;
+        }
+    };
+
+    public static final MedicalEffect RAD_WATER = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.setTemperature(data.getTemperature() - 0.002f * ml);
+
+                data.addTimedEffect(TimedEffectRegistry.RAD_WATER, ml, null, 45);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.2f;
+        }
+    };
+
     public static final MedicalEffect MERCURY = new MedicalEffect() {
 
         @Override
@@ -276,7 +636,7 @@ public class MedicalEffects {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addSickness(0.25f * ml);
                 data.setBloodViscosity(data.getBloodViscosity() - 0.2f * ml);
-                //-happiness
+                data.addHappiness(-0.04f * ml);
                 data.addTimedEffect(TimedEffectRegistry.MERCURY, ml, null, 200);
             });
         }
@@ -287,11 +647,36 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect SODA = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.09f * ml);
+                data.setTemperature(data.getTemperature() - 0.003f * ml);
+                data.addStamina(0.04f * ml);
+                data.addEnergy(0.04f * ml);
+
+                data.addSickness((ServerConfig.EXPIE_MODE.get() ? 0.05f : 0.01f) * ml);
+
+                data.addHappiness(0.015f * ml);
+                data.addWeightOffset(0.004f * ml);
+                data.addCaffeinated(0.8f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.6f;
+        }
+    };
+
     public static final MedicalEffect ALCOHOL = new MedicalEffect() {
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.075f * ml);
                 data.setTemperature(data.getTemperature() - 0.0025f * ml);
                 data.addSickness(0.07f * ml);
             });
@@ -317,7 +702,8 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                //-happiness
+                data.drink(0.07f * ml);
+                data.addHappiness(-0.05f * ml);
                 data.addTimedEffect(TimedEffectRegistry.BLEACH, ml, null, 3 * ml);
             });
         }
@@ -331,11 +717,11 @@ public class MedicalEffects {
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(limb);
-                stats.addSkinHealth(-0.2f * ml);
-                stats.addMuscleHealth(-0.15f * ml);
                 stats.addPain(0.25f * ml);
+                stats.addMuscleHealth(-0.15f * ml);
+                stats.addSkinHealAmount(-0.2f * ml);
                 stats.addInfection(-0.05f * ml);
-                stats.setDisinfectionTimerAtLeast(4 * ml);
+                stats.setDisinfectionTimerAtLeast(400 * Mth.clamp(ml * 0.01f, 0, 1));
             });
         }
     };
@@ -348,7 +734,7 @@ public class MedicalEffects {
                 data.addSickness(0.1f * ml);
 
                 if (player.getRandom().nextFloat() < ml / 80) {
-                    data.vomiter.vomit();
+                    data.vomiter.vomit(player);
                 }
             });
         }
@@ -378,7 +764,7 @@ public class MedicalEffects {
                 data.addSickness(0.1f * ml);
 
                 if (player.getRandom().nextFloat() < ml / 80) {
-                    data.vomiter.vomit();
+                    data.vomiter.vomit(player);
                 }
             });
         }
@@ -392,12 +778,12 @@ public class MedicalEffects {
         public void applyOnSkin(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(limb);
-                stats.addSkinHealth(0.5f * ml);
+                stats.addSkinHealAmount(0.5f * ml);
                 stats.addMuscleHealth(0.25f * ml);
                 stats.addInfection(-0.25f * ml);
-                stats.setDisinfectionTimerAtLeast(15 * ml);
-                stats.setPain(stats.getPain() * 0.9f * 1/20 * ml);
-                data.setBloodViscosity(data.getBloodViscosity() + 0.75f * ml);
+                stats.setDisinfectionTimerAtLeast(300 * Mth.clamp(ml / 20, 0, 1));
+                stats.setPain(stats.getPain() * 0.9f * Mth.clamp(ml / 20, 0, 1));
+                data.setBloodViscosity(data.getBloodViscosity() + 15 * Mth.clamp(ml / 20, 0, 1));
                 data.addSickness(0.1125f * ml);
             });
         }
@@ -419,7 +805,7 @@ public class MedicalEffects {
                 data.brainGrowSickness(60 * ml);
 
                 if (player.getRandom().nextFloat() < ml / 20) {
-                    data.vomiter.vomit();
+                    data.vomiter.vomit(player);
                 }
             });
         }
@@ -676,10 +1062,12 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.setTemperature(data.getTemperature() - 0.005f * ml);
+                data.drink(0.08f * ml);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
 
                 if (player.getRandom().nextFloat() > 0.5f) {
                     data.addSickness(player.getRandom().nextFloat() * 8 + 7);
+                    data.addHappiness(-0.5f);
                 }
             });
         }
@@ -690,13 +1078,32 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect SAP = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.04f * ml);
+                data.setTemperature(data.getTemperature() - 0.0025f * ml);
+                data.addHappiness(0.5f);
+                data.addSickness((8 + player.getRandom().nextFloat()) * 0.001f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 2;
+        }
+    };
+
     public static final MedicalEffect SOAP = new MedicalEffect() {
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.04f * ml);
                 data.addSickness(0.2f * ml);
-                //-happiness, + water
+                data.addHappiness(-0.02f * ml);
             });
         }
 
@@ -711,6 +1118,42 @@ public class MedicalEffects {
                 data.getLimb(limb).setDisinfectionTimerAtLeast(30 * Mth.clamp(ml / 100, 0, 1));
                 data.setDirtiness(data.getDirtiness() - 0.25f * ml);
             });
+        }
+    };
+
+    public static final MedicalEffect PRODUCE_JUICE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.085f * ml);
+                data.setTemperature(data.getTemperature() - 0.003f * ml);
+                data.addHappiness(0.00025f);
+                data.eat(player, 0.02f * ml, 0.002f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.9f;
+        }
+    };
+
+    public static final MedicalEffect REFINED_JUICE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.095f * ml);
+                data.setTemperature(data.getTemperature() - 0.002f * ml);
+                data.addHappiness(0.002f);
+                data.eat(player, 0.025f * ml, 0.002f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 0.9f;
         }
     };
 

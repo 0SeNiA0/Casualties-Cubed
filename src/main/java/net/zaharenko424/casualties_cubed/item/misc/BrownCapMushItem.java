@@ -83,7 +83,7 @@ public class BrownCapMushItem extends Item {
         } else if (maineffect <= .995) {
             food.setFoodLevel(player.getFoodData().getFoodLevel() + 1);
             food.setSaturation(player.getFoodData().getSaturationLevel() + 1);
-            data.getLimb(Limb.CHEST).setMuscleHealth(0);
+            data.getLimb(Limb.THORAX).setMuscleHealth(0);
         } else {
             ExperimentalTreatmentItem.regrowRandom(random, data);
         }

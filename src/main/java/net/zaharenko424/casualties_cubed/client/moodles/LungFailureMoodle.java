@@ -18,7 +18,7 @@ public class LungFailureMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.getLimb(Limb.CHEST).getMuscleHealth() < 4) {
+        if (data.getLimb(Limb.THORAX).getMuscleHealth() < 4) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);
         } else clearStatus();
     }
