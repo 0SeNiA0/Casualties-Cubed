@@ -263,7 +263,7 @@ public class LimbWidget extends AbstractWidget {
 
         if (limb == Limb.HEAD) {
             setLeftEyeGone(data.isLeftEyeBlind());
-            setMouthGone(data.isMouthRemoved());
+            setMouthGone(data.disfigured());
             setRightEyeGone(data.isRightEyeBlind());
         }
 

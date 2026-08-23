@@ -36,15 +36,15 @@ import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGiveUpPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundLegUsePacket;
+import net.zaharenko424.casualties_cubed.network.packet.ServerboundRagdollPacket;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber(modid = CasualtiesCubed.MOD_ID, value = Dist.CLIENT)
 public class ClientEvent {
 
     static int GiveUpTime = 40;
     static int WaitTimer = 0;
+    static boolean ragdolled = false;
 
     @SubscribeEvent
     public static void onRenderLevel(RenderLevelStageEvent event) {
@@ -86,14 +86,13 @@ public class ClientEvent {
         }
         profiler.push("casualties_cubed:client_misc");
 
-        AtomicBoolean uncontious = new AtomicBoolean(false);
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (data.getConsciousness() <= 10) {
-                uncontious.set(true);
-            }
-        });
+        PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
+        if (data == null) {
+            profiler.pop();
+            return;
+        }
 
-        if (Keybinds.OPEN_PAIN_GUI.isDown() && !uncontious.get()) {
+        if (Keybinds.OPEN_PAIN_GUI.isDown() && !data.isConscious()) {
             Keybinds.OPEN_PAIN_GUI.consumeClick();
             if (WaitTimer <= 0) {
                 Player target = CommonEvent.getLookedAtPlayer(player, 2);
@@ -106,29 +105,38 @@ public class ClientEvent {
             }
         }
 
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (data.getConsciousness() <= 10) {
-                if (Keybinds.GIVE_UP.isDown()) {
-                    GiveUpTime--;
-                } else {
-                    GiveUpTime = 40;
-                }
+        if (!data.isConscious()) {
+            if (Keybinds.GIVE_UP.isDown()) {
+                GiveUpTime--;
+            } else {
+                GiveUpTime = 40;
             }
-        });
+        }
 
         if (GiveUpTime <= 0) {
             ModNetwork.CHANNEL.sendToServer(new ServerboundGiveUpPacket());
             GiveUpTime = 40;
+            return;
+        }
+
+
+        if (Keybinds.RAGDOLL.consumeClick() && !ragdolled) {
+            ModNetwork.CHANNEL.sendToServer(new ServerboundRagdollPacket(true));
+            ragdolled = true;
+            return;
+        }
+
+        if (!Keybinds.RAGDOLL.isDown() && ragdolled) {
+            ModNetwork.CHANNEL.sendToServer(new ServerboundRagdollPacket(false));
+            ragdolled = false;
         }
 
         profiler.pop();
 
-        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getConsciousness() <= 10) {
-                mc.player.setYRot(mc.player.yRotO); // reset yaw
-                mc.player.setXRot(mc.player.xRotO); // reset pitch
-            }
-        });
+        if (!data.isConscious()) {
+            mc.player.setYRot(mc.player.yRotO); // reset yaw
+            mc.player.setXRot(mc.player.xRotO); // reset pitch
+        }
     }
 
     @SubscribeEvent
@@ -150,7 +158,7 @@ public class ClientEvent {
     @SubscribeEvent
     public static void onInputUpdate(MovementInputUpdateEvent event) {
         event.getEntity().getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (data.getConsciousness() < 10) {
+            if (!data.isConscious()) {
                 event.getInput().down = false;
                 event.getInput().forwardImpulse = 0;
                 event.getInput().jumping = false;
@@ -177,7 +185,7 @@ public class ClientEvent {
         if (player == null) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (data.getConsciousness() <= 10) {
+            if (!data.isConscious()) {
                 event.setCanceled(true); // block opening inventory
             }
         });

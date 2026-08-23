@@ -46,6 +46,8 @@ public class ModNetwork {
                 ClientboundTriggerLastStandPacket::new, (packet, ctx) -> ClientPacketHandler.handleLastStand(packet, ctx));
 
 
+        registerServerbound(ServerboundRagdollPacket.class, ServerboundRagdollPacket::encode,
+                ServerboundRagdollPacket::new, ServerPacketHandler::handleRagdoll);
 
         registerServerbound(ServerboundAdjustShrapnelPacket.class, ServerboundAdjustShrapnelPacket::encode,
                 ServerboundAdjustShrapnelPacket::new, ServerPacketHandler::handleAdjustShrapnel);

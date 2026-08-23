@@ -36,6 +36,16 @@ public class ServerPacketHandler {
 
     public static final float TOO_FAR = 3 * 3;
 
+    public static void handleRagdoll(ServerboundRagdollPacket packet, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ServerPlayer sender = ctx.get().getSender();
+            if (sender == null) return;
+
+            PlayerHealthData.of(sender).ifPresent(data -> data.forceRagdoll(sender, packet.ragdoll()));
+        });
+        ctx.get().setPacketHandled(true);
+    }
+
     public static void handleAdjustShrapnel(ServerboundAdjustShrapnelPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
@@ -345,7 +355,7 @@ public class ServerPacketHandler {
 
             sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
                     .ifPresent(data -> {
-                        if (data.getConsciousness() <= 10) data.killPlayer(sender, true);
+                        if (data.getConsciousness() <= 10) data.kill(sender, true);
                     });
         });
         ctx.get().setPacketHandled(true);

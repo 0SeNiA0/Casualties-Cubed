@@ -6,7 +6,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +16,6 @@ import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
 import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
-import net.zaharenko424.casualties_cubed.client.gui.WidgetHelper;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodle;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
@@ -32,11 +30,14 @@ import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseMedItemPacket;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
+
+import static net.minecraft.util.FastColor.ARGB32.alpha;
 
 public class HealthScreen extends Screen {
 
@@ -300,26 +301,26 @@ public class HealthScreen extends Screen {
             for (int i = num2; i <= num3; i++) {
                 pixelGrid[writeX][i] = -1;
                 if (i + 1 < height) {
-                    pixelGrid[writeX][i + 1] = WidgetHelper.color(-1, Math.max(50, alpha(pixelGrid[writeX][i + 1])));
+                    pixelGrid[writeX][i + 1] = ColorUtil.colorWithAlpha(-1, Math.max(50, alpha(pixelGrid[writeX][i + 1])));
                 }
 
                 if (i - 1 >= 0) {
-                    pixelGrid[writeX][i - 1] = WidgetHelper.color(-1, Math.max(50, alpha(pixelGrid[writeX][i - 1])));
+                    pixelGrid[writeX][i - 1] = ColorUtil.colorWithAlpha(-1, Math.max(50, alpha(pixelGrid[writeX][i - 1])));
                 }
 
                 if (writeX + 1 < width) {
-                    pixelGrid[writeX + 1][i] = WidgetHelper.color(-1, Math.max(50, alpha(pixelGrid[writeX + 1][i])));
+                    pixelGrid[writeX + 1][i] = ColorUtil.colorWithAlpha(-1, Math.max(50, alpha(pixelGrid[writeX + 1][i])));
                 }
 
                 if (writeX - 1 >= 0) {
-                    pixelGrid[writeX - 1][i] = WidgetHelper.color(-1, Math.max(50, alpha(pixelGrid[writeX - 1][i])));
+                    pixelGrid[writeX - 1][i] = ColorUtil.colorWithAlpha(-1, Math.max(50, alpha(pixelGrid[writeX - 1][i])));
                 }
             }
 
             for (int j = 0; j < width; j++) {
                 for (int k = 0; k < height; k++) {
                     int color = pixelGrid[j][k];
-                    pixelGrid[j][k] = WidgetHelper.color(color, (byte) (alpha(color) * 0.985f));
+                    pixelGrid[j][k] = ColorUtil.colorWithAlpha(color, (byte) (alpha(color) * 0.985f));
                 }
             }
 
@@ -337,10 +338,6 @@ public class HealthScreen extends Screen {
                 }
             }
         });
-    }
-
-    private static int alpha(int packed) {
-        return FastColor.ARGB32.alpha(packed);
     }
 
     @Override

@@ -185,8 +185,20 @@ public class ModFluids {
     public static final RegistryObject<FluidType> GROUNDWATER_TYPE = FLUID_TYPES.register("groundwater", () -> new MedicalFluidType(MedicalEffects.GROUNDWATER, FastColor.ARGB32.color(255, 89, 138, 212)));
     public static final RegistryObject<MedicalFluid> GROUNDWATER = FLUIDS.register("groundwater", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.GROUNDWATER_TYPE, ModFluids.GROUNDWATER, ModFluids.GROUNDWATER)));
 
+    public static final RegistryObject<FluidType> LUMALGAE_TYPE = FLUID_TYPES.register("lumalgae", () -> new MedicalFluidType(MedicalEffects.LUMALGAE, FastColor.ARGB32.color(255, 33, 153, 0)));
+    public static final RegistryObject<MedicalFluid> LUMALGAE = FLUIDS.register("lumalgae", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LUMALGAE_TYPE, ModFluids.LUMALGAE, ModFluids.LUMALGAE)));
+
+    public static final RegistryObject<FluidType> OIL_TYPE = FLUID_TYPES.register("oil", () -> new MedicalFluidType(MedicalEffects.OIL, FastColor.ARGB32.color(255, 71, 50, 21)));
+    public static final RegistryObject<MedicalFluid> OIL = FLUIDS.register("oil", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.OIL_TYPE, ModFluids.OIL, ModFluids.OIL)));
+
     public static final RegistryObject<FluidType> SAP_TYPE = FLUID_TYPES.register("sap", () -> new MedicalFluidType(MedicalEffects.SAP, FastColor.ARGB32.color(255, 209, 190, 63)));
     public static final RegistryObject<MedicalFluid> SAP = FLUIDS.register("sap", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SAP_TYPE, ModFluids.SAP, ModFluids.SAP)));
+
+    public static final RegistryObject<FluidType> DIRTY_WATER_TYPE = FLUID_TYPES.register("dirty_water", () -> new MedicalFluidType(MedicalEffects.DIRTY_WATER, FastColor.ARGB32.color(255, 153, 126, 67)));
+    public static final RegistryObject<MedicalFluid> DIRTY_WATER = FLUIDS.register("dirty_water", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.DIRTY_WATER_TYPE, ModFluids.DIRTY_WATER, ModFluids.DIRTY_WATER)));
+
+    public static final RegistryObject<FluidType> FAT_TYPE = FLUID_TYPES.register("fat", () -> new MedicalFluidType(MedicalEffects.FAT, FastColor.ARGB32.color(255, 209, 190, 63)));
+    public static final RegistryObject<MedicalFluid> FAT = FLUIDS.register("fat", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.FAT_TYPE, ModFluids.FAT, ModFluids.FAT)));
 
     public static final RegistryObject<FluidType> SOAP_TYPE = FLUID_TYPES.register("soap", () -> new MedicalFluidType(MedicalEffects.SOAP, FastColor.ARGB32.color(255, 161, 255, 186)));
     public static final RegistryObject<MedicalFluid> SOAP = FLUIDS.register("soap", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SOAP_TYPE, ModFluids.SOAP, ModFluids.SOAP)));

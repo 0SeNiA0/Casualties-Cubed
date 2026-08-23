@@ -20,7 +20,7 @@ public class ImpairedSpeechMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.getLimb(Limb.HEAD).getDislocationTimer() > 0 || data.isMouthRemoved()) {
+        if (data.getLimb(Limb.HEAD).getDislocationTimer() > 0 || data.disfigured()) {
             setStatus(MoodleStatus.LIGHT_NEG);
         } else clearStatus();
     }

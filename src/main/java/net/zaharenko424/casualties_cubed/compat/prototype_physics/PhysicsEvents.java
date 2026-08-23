@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.compat.prototype_physics;
 
 import net.minecraft.Util;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.hitbox.HitboxEvents;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.adinvas.prototype_physics.RagdollPart;
 import net.adinvas.prototype_physics.events.PlayerPartHitEvent;
@@ -30,7 +31,7 @@ public class PhysicsEvents {
 
             float damage = vel * 1.5f;
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h ->
-                    h.handleBluntDamage(damage, player, limb));
+                    HitboxEvents.handleBluntDamage(h, damage, player, limb));
         }
     }
 }

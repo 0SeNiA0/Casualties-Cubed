@@ -46,7 +46,7 @@ public class ReducedContiousnessOverlay implements IOverlay {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
             intensity = (100 - h.getConsciousness()) / 100;
             dying = h.getBloodOxygen() < 4;
-            brain = h.getBrainHealth();
+            brain = h.brainHealth();
         });
     }
 }

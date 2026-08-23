@@ -85,8 +85,8 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
                 data.setRightEyeBlind(false);
             } else if (data.isLeftEyeBlind()) {
                 data.setLeftEyeBlind(false);
-            } else if (data.isMouthRemoved()) {
-                data.setMouthRemoved(false);
+            } else if (data.disfigured()) {
+                data.disfigured(false);
             }
         }
     }
@@ -104,7 +104,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
         float roll = random.nextFloat();
         if (roll <= .02) {
             data.getLimb(Limb.HEAD).setMuscleHealth(0);
-            data.setBrainHealth(29);
+            data.brainHealth(29);
         } else if (roll <= .1) {
             player.sendSystemMessage(Component.translatable("item.casualties_cubed.experimental_treatment.doom"), true);
             LimbStatistics stats;
@@ -154,7 +154,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
                 } else if (!data.isLeftEyeBlind()) {
                     data.setLeftEyeBlind(true);
                 } else {
-                    data.setMouthRemoved(true);
+                    data.disfigured(true);
                 }
             } else {
                 data.dismember(limb);
@@ -210,7 +210,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
     }
 
     public boolean hasAmputated(PlayerHealthData data) {
-        if (data.isMouthRemoved()) return true;
+        if (data.disfigured()) return true;
         if (data.isLeftEyeBlind()) return true;
         if (data.isRightEyeBlind()) return true;
 

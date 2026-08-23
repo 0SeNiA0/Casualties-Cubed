@@ -26,7 +26,7 @@ public class BrainDamageClientController {
         Player player = minecraft.player;
         if (player == null) return;
 
-        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
 
         if (brain < 95 && minecraft.level != null && minecraft.player != null) {
             if (minecraft.level.getGameTime() % 400 == 0 && Math.random() > 1 - brain / 120f) { // every 20s roughly
@@ -48,7 +48,7 @@ public class BrainDamageClientController {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null || minecraft.level == null) return;
 
-        float brain = minecraft.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brain = minecraft.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
         if (brain >= 95) return;
 
         // Delta time-like increment (ensures consistent speed)
@@ -100,7 +100,7 @@ public class BrainDamageClientController {
         if (player == null) return;
 
         float consciousness = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
-        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
 
         if (brain < 100) {
             sensitivityScale = 1 + Mth.sin(minecraft.level.getGameTime() * 0.1f) * 0.5f * (1 - brain / 100); // ±25%
@@ -116,7 +116,7 @@ public class BrainDamageClientController {
         Player player = Minecraft.getInstance().player;
         if (player == null || event.getItemStack().isEmpty()) return;
 
-        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
 
         if (brain <= 25) {
             event.getTooltipElements().clear();

@@ -1,7 +1,7 @@
 package net.zaharenko424.casualties_cubed.item.api;
 
 import net.minecraft.world.item.ItemStack;
-import net.zaharenko424.casualties_cubed.util.Util;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
 
@@ -14,7 +14,7 @@ public interface FluidTint {
             return defTint();
         }
 
-        return Util.mixColors(MultiTankHelper.getColorRatios(stack)) | 0xFF000000;//TODO add transparency to fluids & mix it
+        return ColorUtil.mixColors(MultiTankHelper.getColorRatios(stack)) | 0xFF000000;//TODO add transparency to fluids & mix it
     }
 
     default int defTint() {

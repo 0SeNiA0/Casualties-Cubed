@@ -1,6 +1,6 @@
 package net.zaharenko424.casualties_cubed.item.api;
 
-import net.zaharenko424.casualties_cubed.util.Util;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -59,7 +59,7 @@ public interface INbtDrivenDurability {
         float durability = durabilityScale * 100;
         return component
                 .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.translatable("casualties_cubed.tooltip.percent", durability < 1 ? "<1" : (int) durability).withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(durabilityScale))))
+                .append(Component.translatable("casualties_cubed.tooltip.percent", durability < 1 ? "<1" : (int) durability).withStyle(Style.EMPTY.withColor(ColorUtil.getRedToGreenColor(durabilityScale))))
                 .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
     }
 }

@@ -34,7 +34,7 @@ public class MakeshiftLRDItem extends LRDItem {
                 data.addCaffeinated(60);
                 stats.addInfection(-10 * stats.infectionSpeedMult);
                 stats.setDisinfectionTimerAtLeast(400);
-                data.setAdrenaline(data.getAdrenaline() + 60);
+                data.adrenaline(data.adrenaline() + 60);
                 data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));
 
                 for (Limb limb1 : limb.getConnectedLimbs()) {

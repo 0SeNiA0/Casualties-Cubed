@@ -201,14 +201,14 @@ public class ModCommands {
                                                                             h.setInternalBleeding(value);
                                                                     case "oxygen" -> h.setBloodOxygen(value);
                                                                     case "bloodviscosity" -> h.setBloodViscosity(value);
-                                                                    case "brainhealth" -> h.setBrainHealth(value);
+                                                                    case "brainhealth" -> h.brainHealth(value);
                                                                     case "dirtyness" -> h.setDirtiness(value);
                                                                     case "painshock" -> h.setShock(value);
                                                                     case "temperature" -> h.setTemperature(value);
                                                                     case "lefteyeblind" -> h.setLeftEyeBlind(value > 0);
                                                                     case "righteyeblind" ->
                                                                             h.setRightEyeBlind(value > 0);
-                                                                    case "mouthremoved" -> h.setMouthRemoved(value > 0);
+                                                                    case "mouthremoved" -> h.disfigured(value > 0);
                                                                     default ->
                                                                             ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", field));
                                                                 }

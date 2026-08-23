@@ -38,7 +38,7 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
                 stats.addInfection(-10 * stats.infectionSpeedMult);
                 stats.setDisinfectionTimerAtLeast(600);
                 data.addCaffeinated(60);
-                data.setAdrenaline(data.getAdrenaline() + 90);
+                data.adrenaline(data.adrenaline() + 90);
                 stats.setBleedRate(stats.getBleedRate() * 0.7f);
                 data.painkillers.addOpiates(10);
                 data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));

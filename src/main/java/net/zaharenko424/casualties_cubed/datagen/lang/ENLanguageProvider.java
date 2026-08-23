@@ -160,13 +160,18 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "A potent disinfecting gel. Stings a lot.");
         addMedicalFluidFromIdWDesc(ModFluids.GROUNDWATER, "Slightly dirty groundwater. Mostly safe to drink, though slightly sickening.");
+        addMedicalFluidFromIdWDesc(ModFluids.LUMALGAE, "Water with dense, bioluminescent algae growing in it. Very buoyant. Inedible.");
+        addMedicalFluidFromIdWDesc(ModFluids.OIL, "A thick, black tar. Difficult to move through. Inedible.");
         addMedicalFluidFromIdWDesc(ModFluids.SAP, "A thick, tasty sap, produced by jungle trees. Very sugary.");
+        addMedicalFluidFromIdWDesc(ModFluids.DIRTY_WATER, "At least it's not on your body anymore. Not safe to drink.");
+        addMedicalFluidFromIdWDesc(ModFluids.FAT, "Liquid animal fat, gotten from flesh. Can be eaten, though not particularly pleasant. Can be processed into soap.");
         addMedicalFluidFromIdWDesc(ModFluids.SOAP, "Soap made from animal fat. Can be used in the health panel to clean dirt off of you, and slightly disinfect wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.PRODUCE_JUICE, "A bunch of fruit, vegetables and whatever else you could find, mashed up and mixed with water. It tastes... interesting.");
         addMedicalFluidFromIdWDesc(ModFluids.REFINED_JUICE, "Cooked through, better mixed and mashed produce juice. Very tasty and nutritious!");
 
         add("key.casualties_cubed.open_pain_gui", "Open Health Screen");
         add("key.casualties_cubed.give_up", "Give Up");
+        add("key.casualties_cubed.ragdoll", "Ragdoll");
         add("key.categories.casualties_cubed", "Casualties: Cubed");
 
         addGuiO("tourniquet_button", "Remove Tourniquet");

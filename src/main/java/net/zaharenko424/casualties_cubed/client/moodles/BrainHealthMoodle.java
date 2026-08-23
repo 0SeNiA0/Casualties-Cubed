@@ -21,7 +21,7 @@ public class BrainHealthMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float brain = data.getBrainHealth();
+        float brain = data.brainHealth();
 
         if (brain <= 30) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);

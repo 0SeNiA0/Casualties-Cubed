@@ -1,7 +1,7 @@
 package net.zaharenko424.casualties_cubed.client.event;
 
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.util.Util;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.FluidTint;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
@@ -24,7 +24,7 @@ public class ColorsEvent {
                             if (MultiTankHelper.getFilledTotal(stack) <= 0) {
                                 return 0x00FFFFFF;
                             }
-                            return Util.mixColors(MultiTankHelper.getColorRatios(stack)); // return full ARGB or RGB color
+                            return ColorUtil.mixColors(MultiTankHelper.getColorRatios(stack)); // return full ARGB or RGB color
                         }
                     }
                     return 0xFFFFFFFF; // white = no tint

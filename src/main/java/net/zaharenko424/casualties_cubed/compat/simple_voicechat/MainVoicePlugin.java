@@ -84,7 +84,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
             out = applyEcho(out, 0.3f, 850);
         }
         ModNetwork.CHANNEL.sendToServer(new ServerboundTalkPacket());
-        boolean isBrainDamaged = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getBrainHealth() < 60).orElse(false);
+        boolean isBrainDamaged = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.brainHealth() < 60).orElse(false);
         if (getCons(player) < 10 || isBrainDamaged) {
             for (int i = 0; i < out.length; i++) {
                 out[i] *= 0;
@@ -94,7 +94,7 @@ public class MainVoicePlugin implements VoicechatPlugin {
     }
 
     private boolean sendDistorted(Player player) {
-        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(Limb.HEAD).getDislocationTimer() > 0 || data.isMouthRemoved()).orElse(false);
+        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(Limb.HEAD).getDislocationTimer() > 0 || data.disfigured()).orElse(false);
     }
 
     private short[] applyEcho(short[] in, float power, int delay) {

@@ -8,6 +8,7 @@
   "mixins": [
     "FoodDataMixin",
     "MessageArgumentMixin",
+    "ServerLevelMixin",
     "ServerPacketListenerMixin",
     "entity.ArrowMixin",
     "entity.BeeMixin",

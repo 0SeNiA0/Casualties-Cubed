@@ -153,9 +153,9 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         Minecraft mc = Minecraft.getInstance();
         guiGraphics.drawCenteredString(mc.font, target.getName(), 6 + 67, 6 + 8, glowColor);
 
-        renderTintedFilledImage(brainBarImg, guiGraphics, partialTick, glowColor, data.getBrainHealth() * 0.01f);
-        brainText.component(Component.literal("" + Math.round(data.getBrainHealth())));
-        renderFlashingText(brainText, guiGraphics, glowColor, data.getBrainHealth() < 50);
+        renderTintedFilledImage(brainBarImg, guiGraphics, partialTick, glowColor, data.brainHealth() * 0.01f);
+        brainText.component(Component.literal("" + Math.round(data.brainHealth())));
+        renderFlashingText(brainText, guiGraphics, glowColor, data.brainHealth() < 50);
 
         consciousnessText.component(Component.literal(Math.round(data.getConsciousness()) + "%"));
         renderFlashingText(consciousnessText, guiGraphics, glowColor, data.getConsciousness() < 40);

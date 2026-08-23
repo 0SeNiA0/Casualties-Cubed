@@ -21,7 +21,7 @@ public class DisfiguredMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.isMouthRemoved()) {
+        if (data.disfigured()) {
             setStatus(MoodleStatus.HEAVY_NEG);
         } else clearStatus();
     }

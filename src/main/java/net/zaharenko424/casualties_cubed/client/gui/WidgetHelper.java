@@ -133,8 +133,4 @@ public class WidgetHelper {
 
         guiGraphics.disableScissor();
     }
-
-    public static int color(int packed, int alpha) {
-        return alpha << 24 | (packed & 0x00FFFFFF);
-    }
 }

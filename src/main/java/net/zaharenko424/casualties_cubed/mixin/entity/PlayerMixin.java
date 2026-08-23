@@ -1,11 +1,13 @@
 package net.zaharenko424.casualties_cubed.mixin.entity;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,5 +31,14 @@ public abstract class PlayerMixin {
                 ci.cancel();
             }
         });
+    }
+
+    @ModifyReturnValue(at = @At("RETURN"), method = "isSleepingLongEnough")
+    private boolean modifySleepingLongEnough(boolean original) {
+        Player thisPl = (Player) (Object)this;
+        PlayerHealthData data = PlayerHealthData.of(thisPl).orElse(null);
+        if (data == null) return original;
+
+        return thisPl.isSleeping() && !thisPl.level().isDay() && data.getConsciousness() <= 10;
     }
 }

@@ -29,7 +29,9 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.LogicalSide;
@@ -125,6 +127,11 @@ public class CommonEvent {
             });
         });
         event.getOriginal().invalidateCaps();
+    }
+
+    @SubscribeEvent
+    public static void dontCheckSleepTime(SleepingTimeCheckEvent event) {
+        event.setResult(Event.Result.ALLOW);
     }
 
     @SubscribeEvent

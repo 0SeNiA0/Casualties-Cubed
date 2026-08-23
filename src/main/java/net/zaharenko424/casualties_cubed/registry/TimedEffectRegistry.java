@@ -71,7 +71,7 @@ public class TimedEffectRegistry {
             (player, data, effect) -> data.addRadiationSickness(0.0035f * effect.ml()));
 
     public static final RegistryObject<TimedEffectFunction> MERCURY = TIMED_EFFECTS.register("mercury", () ->
-            (player, data, effect) -> data.setBrainHealth(data.getBrainHealth() - 0.0005f * effect.ml()));
+            (player, data, effect) -> data.brainHealth(data.brainHealth() - 0.0005f * effect.ml()));
 
     public static final RegistryObject<TimedEffectFunction> BLEACH = TIMED_EFFECTS.register("bleach", () ->
             (player, data, effect) -> {
@@ -96,7 +96,7 @@ public class TimedEffectRegistry {
 
     public static final RegistryObject<TimedEffectFunction> BRAINGROW = TIMED_EFFECTS.register("braingrow", () ->
             (player, data, effect) -> {
-                data.setBrainHealth(data.getBrainHealth() + 0.005f * effect.ml());
+                data.brainHealth(data.brainHealth() + 0.005f * effect.ml());
                 data.addStrokeAmount(-1.5f);
             }
     );
@@ -117,7 +117,7 @@ public class TimedEffectRegistry {
 
     public static final RegistryObject<TimedEffectFunction> EPINEPHRINE = TIMED_EFFECTS.register("epinephrine", () ->
             (player, data, effect) -> {
-                data.setAdrenaline(100);
+                data.adrenaline(100);
 
                 if (player.isAlive() && data.isCardiacArrest() && player.getRandom().nextFloat() < 0.05f) {
                     data.setHeartRate(200);
@@ -166,7 +166,7 @@ public class TimedEffectRegistry {
             (player, data, effect) -> {
                 //+stamina
                 data.setConsciousness(data.getConsciousness() + 3.5f);
-                data.setAdrenaline(data.getAdrenaline() + 25);
+                data.adrenaline(data.adrenaline() + 25);
 
                 RandomSource random = player.getRandom();
                 //shakeIntensity
@@ -207,7 +207,7 @@ public class TimedEffectRegistry {
                 //+energy
                 data.addSickness(0.1f);
                 data.setInternalBleeding(data.getInternalBleeding() + 0.000528f);
-                data.setAdrenaline(data.getAdrenaline() + 7);
+                data.adrenaline(data.adrenaline() + 7);
 
                 RandomSource random = player.getRandom();
                 //shakeIntensity
@@ -220,7 +220,7 @@ public class TimedEffectRegistry {
                     //-stamina
                     //ragdoll
                     data.setInternalBleeding(data.getInternalBleeding() + 0.00132f);
-                    data.setBrainHealth(data.getBrainHealth() - 0.05f);
+                    data.brainHealth(data.brainHealth() - 0.05f);
 
                     LimbStatistics stats = data.getLimb(Limb.THORAX);
                     if (stats.getPain() < 60) {
@@ -245,7 +245,7 @@ public class TimedEffectRegistry {
                 data.setConsciousness(data.getConsciousness() + 1);
                 //+energy
                 data.addSickness(0.18f);
-                data.setAdrenaline(data.getAdrenaline() + 20);
+                data.adrenaline(data.adrenaline() + 20);
                 data.addTemperature(0.03f);
 
                 RandomSource random = player.getRandom();
@@ -269,12 +269,12 @@ public class TimedEffectRegistry {
                         data.vomiter.vomit(player);
                     }
                     if (random.nextFloat() < 0.02f) {
-                        data.setAdrenaline(0);
+                        data.adrenaline(0);
                     }
                     //control reverse
 
                     data.addTemperature(0.04f);
-                    data.setBrainHealth(data.getBrainHealth() - 0.08f);
+                    data.brainHealth(data.brainHealth() - 0.08f);
 
                     LimbStatistics stats = data.getLimb(Limb.THORAX);
                     if (stats.getPain() < 60) {

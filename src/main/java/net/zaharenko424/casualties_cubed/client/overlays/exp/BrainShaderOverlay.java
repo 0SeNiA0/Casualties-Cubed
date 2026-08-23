@@ -20,14 +20,14 @@ public class BrainShaderOverlay implements IShaderOverlay {
     @Override
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();
-        float brainHealth = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brainHealth = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
         return brainHealth< 100;
     }
 
     @Override
     public void render(@Nullable RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
         Minecraft mc = Minecraft.getInstance();
-        float brainHealth = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getBrainHealth).orElse(100f);
+        float brainHealth = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
         ShaderInstance shader = ClientShaderEvents.WARP_CHROMAABB;
         if (shader != null) {
             float intensity = Mth.clamp((100-brainHealth)/100f, 0f, 1f);

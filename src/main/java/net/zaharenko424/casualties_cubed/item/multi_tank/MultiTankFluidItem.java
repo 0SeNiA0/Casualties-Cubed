@@ -20,7 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.registries.RegistryObject;
-import net.zaharenko424.casualties_cubed.util.Util;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
@@ -86,7 +86,7 @@ public class MultiTankFluidItem extends Item {
         Component finalcomp = super.getName(pStack);
         finalcomp = Component.empty().append(finalcomp)
                 .append(Component.literal(" (").withStyle(ChatFormatting.GRAY))
-                .append(Component.translatable("casualties_cubed.tooltip.percent", (int) (scale * 100)).withStyle(Style.EMPTY.withColor(Util.getRedToGreenColor(scale))))
+                .append(Component.translatable("casualties_cubed.tooltip.percent", (int) (scale * 100)).withStyle(Style.EMPTY.withColor(ColorUtil.getRedToGreenColor(scale))))
                 .append(Component.literal(")").withStyle(ChatFormatting.GRAY));
         return finalcomp;
     }
