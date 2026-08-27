@@ -41,4 +41,9 @@ public abstract class PlayerMixin {
 
         return thisPl.isSleeping() && !thisPl.level().isDay() && data.getConsciousness() <= 10;
     }
+
+    @ModifyReturnValue(at = @At("RETURN"), method = "canEat")
+    private boolean alwaysCanEat(boolean original) {
+        return true;
+    }
 }

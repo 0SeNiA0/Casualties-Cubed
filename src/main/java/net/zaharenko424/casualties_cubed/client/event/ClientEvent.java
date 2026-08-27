@@ -92,7 +92,7 @@ public class ClientEvent {
             return;
         }
 
-        if (Keybinds.OPEN_PAIN_GUI.isDown() && !data.isConscious()) {
+        if (Keybinds.OPEN_PAIN_GUI.isDown() && data.isConscious()) {
             Keybinds.OPEN_PAIN_GUI.consumeClick();
             if (WaitTimer <= 0) {
                 Player target = CommonEvent.getLookedAtPlayer(player, 2);
@@ -218,6 +218,7 @@ public class ClientEvent {
         NamedGuiOverlay overlay = event.getOverlay();
         if (overlay != VanillaGuiOverlay.PLAYER_HEALTH.type()
                 && overlay != VanillaGuiOverlay.ARMOR_LEVEL.type()
+                && overlay != VanillaGuiOverlay.FOOD_LEVEL.type()
                 && overlay != VanillaGuiOverlay.AIR_LEVEL.type()) return;
 
         if (overlay != VanillaGuiOverlay.AIR_LEVEL.type()) {

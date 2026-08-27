@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public class InjectMingameScreen extends Screen {
+public class InjectMingameScreen extends Screen implements Minigame {
 
     private final Screen parent;
     private final Player target;

@@ -13,12 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
 import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
-import net.zaharenko424.casualties_cubed.client.moodles.AbstractMoodle;
-import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
+import net.zaharenko424.casualties_cubed.client.moodles.MoodleManager;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
@@ -35,7 +33,6 @@ import net.zaharenko424.casualties_cubed.util.ColorUtil;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Optional;
 
 import static net.minecraft.util.FastColor.ARGB32.alpha;
 
@@ -60,7 +57,6 @@ public class HealthScreen extends Screen {
 
     public boolean BGmode = false;
 
-    private final ImageButton healthPanelButton;
     private final RenderableImage mainRight = new RenderableImage(SWITCH_MAIN_HAND, 32, 32);
     private final RenderableImage mainLeft = new RenderableImage(SWITCHED_MAIN_HAND, 32, 32);
     private final ImageButton switchMainHandButton;
@@ -78,10 +74,6 @@ public class HealthScreen extends Screen {
         for (Limb limb : Limb.values()) {
             limbWidgets.put(limb, new LimbWidget(limb, data));
         }
-
-        healthPanelButton = new ImageButton(32, 32, MoodleController.HEALTH_PANEL_BUTTON, this::onClose);
-        healthPanelButton.tooltip(Component.translatable("tooltip.casualties_cubed.health_panel_button", Component.keybind(Keybinds.OPEN_PAIN_GUI.getName())));
-        healthPanelButton.image().offset.set(0);
 
         mainRight.offset.set(-4, -4, 0);
         mainLeft.offset.set(-4, -4, 0);
@@ -157,9 +149,8 @@ public class HealthScreen extends Screen {
 
         updateScreen();
 
-        int y = this.height - MoodleController.MOODLE_SIZE - 1;
-        healthPanelButton.offset.set(16, y + 1, 0);
-        addRenderableWidget(healthPanelButton);
+        int y = this.height - MoodleManager.MOODLE_SIZE - 1;
+        addWidget(MoodleManager.HEALTH_PANEL_BUTTON);
 
         switchMainHandButton.offset.set(width - 12, y - 32 - 2 - 32 - 2 - 12, 0);
         addRenderableWidget(switchMainHandButton);
@@ -169,9 +160,6 @@ public class HealthScreen extends Screen {
 
         workoutButton.offset.set(width - 16, y - 32 - 2 - 16, 0);
         addRenderableWidget(workoutButton);
-
-        MoodleController.TIME_WARP.offset.set(width - 32, y + 10, 0);
-        addRenderableOnly(MoodleController.TIME_WARP);
 
         healthbox.init(this);
     }
@@ -226,26 +214,7 @@ public class HealthScreen extends Screen {
             itemWidget.setBGMode(BGmode);
         }
 
-        // render moodles for self (ignoring hotbar constraints!)
-        List<AbstractMoodle> visible = MoodleController.updateAndGetToRender(localPlayer, true);
-
-        int x = 32 + 5; // center moodles
-        int y = this.height - MoodleController.MOODLE_SIZE - 2; // fixed height above bottom
-
-        AbstractMoodle hovered = null;
-        for (AbstractMoodle moodle : visible) {
-            moodle.render(graphics, pPartialTick, x, y);
-
-            if (moodle.isMouseOver(pMouseX, pMouseY, x, y)) {
-                hovered = moodle;
-            }
-
-            x += MoodleController.MOODLE_SIZE + MoodleController.PADDING;
-        }
-
-        if (hovered != null) {
-            graphics.renderTooltip(minecraft.font, hovered.getTooltip(localPlayer), Optional.empty(), pMouseX, pMouseY);
-        }
+        MoodleManager.render(graphics, pPartialTick, width, height, false, pMouseX, pMouseY);
 
         LimbWidget h = getHoveringWidget(pMouseX, pMouseY);
 
@@ -434,7 +403,6 @@ public class HealthScreen extends Screen {
     public void onClose() {
         super.onClose();
 
-        MoodleController.HEALTH_PANEL_BUTTON.tint = -1;
         ModNetwork.CHANNEL.sendToServer(new ServerboundGuiSyncTogglePacket(target.getId(), false));
         localPlayer.playSound(ModSounds.HEALTH_SCREEN_CLOSE.get());
     }

@@ -17,7 +17,7 @@ import org.joml.Vector2d;
 
 import java.util.Optional;
 
-public class DislocationMinigameScreen extends Screen {
+public class DislocationMinigameScreen extends Screen implements Minigame {
 
     private static final ResourceLocation BONE_TEX = CasualtiesCubed.resourceLoc("textures/gui/limbs/bone2.png");
 

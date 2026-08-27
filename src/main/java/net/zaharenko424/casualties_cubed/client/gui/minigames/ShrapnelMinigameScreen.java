@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ShrapnelMinigameScreen extends Screen {
+public class ShrapnelMinigameScreen extends Screen implements Minigame {
 
     private final Screen parent;
     private final Player target;

@@ -50,6 +50,8 @@ public class PhysicsUtil {
     }
 
     public static Vec3 getVel(RagdollPart part, ServerPlayer player) {
+        if (!isPhysicsLoaded() || !isPhysicsActivated(player)) return Vec3.ZERO;
+
         JbulletWorld world = JbulletWorld.get(player.serverLevel());
         PlayerPhysics physics = world.getPlayerPhys(player);
         if (physics.getMode() == PlayerPhysics.Mode.PRECISE) {

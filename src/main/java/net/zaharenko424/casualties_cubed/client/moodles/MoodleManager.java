@@ -3,27 +3,35 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.common.MinecraftForge;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.event.RegisterMoodlesEvent;
+import net.zaharenko424.casualties_cubed.client.gui.minigames.Minigame;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.client.gui.widget.ImageButton;
 import net.zaharenko424.casualties_cubed.client.gui.widget.RenderableImage;
 import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class MoodleController {
+public class MoodleManager {
 
     public static final int MOODLE_SIZE = 20;
     public static final int PADDING = 3;
 
-    public static final RenderableImage HEALTH_PANEL_BUTTON = new RenderableImage(CasualtiesCubed.texLoc("gui/health_panel"), 32, 32);
-    public static final RenderableImage TIME_WARP = new RenderableImage(CasualtiesCubed.texLoc("gui/time_warp"), 64, 16);
+    public static final ImageButton HEALTH_PANEL_BUTTON = new ImageButton(32, 32, new RenderableImage(CasualtiesCubed.texLoc("gui/health_panel"), 32, 32), () -> {
+        if (Minecraft.getInstance().screen instanceof HealthScreen screen) screen.onClose();
+    });
+    private static final RenderableImage TIME_WARP = new RenderableImage(CasualtiesCubed.texLoc("gui/time_warp"), 64, 16);
 
     private static final OverflowMoodle overflowMoodle = new OverflowMoodle();
 
@@ -53,6 +61,7 @@ public class MoodleController {
     }
 
     static {
+        HEALTH_PANEL_BUTTON.tooltip(Component.translatable("tooltip.casualties_cubed.health_panel_button", Component.keybind(Keybinds.OPEN_PAIN_GUI.getName())));
         List<AbstractMoodle> tmp = new ArrayList<>();
 
         tmp.add(new LifeSupportMoodle());//not in CU
@@ -125,41 +134,60 @@ public class MoodleController {
      * Render moodles as overlay (left-bottom, respecting hotbar)
      */
     public static void render(ForgeGui gui, GuiGraphics graphics, float partialTick, int width, int height) {
-        Minecraft minecraft = gui.getMinecraft();
-        if (minecraft.screen instanceof HealthScreen) return;//draw moodles inside health screen instead
+        Screen screen = gui.getMinecraft().screen;
+        if (screen instanceof HealthScreen || screen instanceof Minigame) return;
+        render(graphics, partialTick, width, height, true, 0, 0);
+    }
 
+    /**
+     * Render moodles as overlay (left-bottom, respecting hotbar)
+     */
+    public static void render(GuiGraphics graphics, float partialTick, int width, int height, boolean hotbar, int mouseX, int mouseY) {
+        Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
         if (player == null) return;
 
         ProfilerFiller profiler = minecraft.getProfiler();
         profiler.push(CasualtiesCubed.MOD_ID + ":moodles");
 
-        List<AbstractMoodle> visible = updateAndGetToRender(minecraft.player, false);
+        List<AbstractMoodle> visible = updateAndGetToRender(minecraft.player, !hotbar);
 
         PoseStack stack = graphics.pose();
         stack.pushPose();
-        stack.translate(0, 0, 150);
+        if (hotbar) stack.translate(0, 0, 150);
 
-        int hotbarLeft = (width / 2) - 91;
+        int hotbarLeft = hotbar ? (width / 2) - 91 : (int) (width * 0.667f);
         int x = 0;
         int y = height - MOODLE_SIZE - 2;
 
         HEALTH_PANEL_BUTTON.offset.set(16, height - 20, 0);
-        HEALTH_PANEL_BUTTON.render(graphics, 0, 0, partialTick);
+        HEALTH_PANEL_BUTTON.render(graphics, mouseX, mouseY, partialTick);
         x += 32 + 5;
 
+        AbstractMoodle hovered = null, moodle;
         for (int i = 0; i < visible.size(); i++) {
             if (x + MOODLE_SIZE + 16 > hotbarLeft) {
                 overflowMoodle.setLeftover(visible.size() - i);
                 overflowMoodle.render(graphics, partialTick, x, y);
                 break;
             }
-            visible.get(i).render(graphics, partialTick, x, y);
+
+            moodle = visible.get(i);
+            moodle.render(graphics, partialTick, x, y);
+
+            if (!hotbar && moodle.isMouseOver(mouseX, mouseY, x, y)) {
+                hovered = moodle;
+            }
+
             x += MOODLE_SIZE + PADDING;
         }
 
+        if (!hotbar && hovered != null) {
+            graphics.renderTooltip(minecraft.font, hovered.getTooltip(player), Optional.empty(), mouseX, mouseY);
+        }
+
         TIME_WARP.offset.set(width - 32, height - 11, 0);
-        TIME_WARP.render(graphics, 0, 0, partialTick);
+        TIME_WARP.render(graphics, mouseX, mouseY, partialTick);
 
         stack.popPose();
         profiler.pop();

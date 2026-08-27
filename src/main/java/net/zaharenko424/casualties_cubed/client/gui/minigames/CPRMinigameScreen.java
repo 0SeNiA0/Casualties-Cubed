@@ -14,7 +14,7 @@ import org.joml.Vector2d;
 
 import java.util.Optional;
 
-public class CPRMinigameScreen extends Screen {
+public class CPRMinigameScreen extends Screen implements Minigame {
     
     private final Screen parent;
     private final Player target;

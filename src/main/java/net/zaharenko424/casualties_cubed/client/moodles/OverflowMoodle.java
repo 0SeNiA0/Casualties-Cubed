@@ -2,8 +2,11 @@ package net.zaharenko424.casualties_cubed.client.moodles;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+
+import java.util.List;
 
 public class OverflowMoodle extends AbstractMoodle {
 
@@ -22,8 +25,13 @@ public class OverflowMoodle extends AbstractMoodle {
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
         Minecraft mc = Minecraft.getInstance();
         ms.pose().pushPose();
-        ms.pose().scale(0.8f,0.8f,0.8f);
-        ms.drawCenteredString(mc.font,"+"+leftover, (int) ((x+8)*1.25), (int) ((y+5)*1.25),0xFFFFFF);
+        ms.pose().scale(0.8f, 0.8f, 0.8f);
+        ms.drawCenteredString(mc.font, "+" + leftover, (int) ((x + 8) * 1.25), (int) ((y + 5) * 1.25), 0xFFFFFF);
         ms.pose().popPose();
+    }
+
+    @Override
+    public List<Component> getTooltip(Player player) {
+        return List.of(Component.literal("+" + leftover));
     }
 }

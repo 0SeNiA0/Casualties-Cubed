@@ -16,7 +16,7 @@ import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.util.Util;
 import org.joml.Vector2f;
 
-public abstract class MinigameScreen extends Screen {
+public abstract class MinigameScreen extends Screen implements Minigame {
 
     private final Screen parent;
 

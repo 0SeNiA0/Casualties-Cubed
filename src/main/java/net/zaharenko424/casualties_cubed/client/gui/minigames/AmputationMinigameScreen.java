@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 
-public class AmputationMinigameScreen extends Screen {
+public class AmputationMinigameScreen extends Screen implements Minigame {
 
     private final Screen parent;
     private final Player target;

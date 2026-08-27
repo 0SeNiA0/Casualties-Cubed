@@ -123,14 +123,6 @@ public class HitboxEvents {
         PlayerHealthData data = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).resolve().orElse(null);
         if (data == null) return;
 
-        if (src.is(DamageTypes.STARVE)) {
-            for (Limb limb : Limb.values()) {
-                data.getLimb(limb).addMuscleHealth(-5);
-            }
-            event.setAmount(0);
-            return;
-        }
-
         if (src.is(DamageTypes.CRAMMING)) {
             List<Limb> nonAmputated = new ArrayList<>();
             for (Limb limb : Limb.values()) {
@@ -199,16 +191,8 @@ public class HitboxEvents {
 
         if (isAnyProjectile(src)) {
             Entity directEntity = event.getSource().getDirectEntity();
-            if ((directEntity instanceof Projectile projectile)) {
-                Vec3 hitPos = sweepProjectileStep(projectile, player);
-            /*
-            if (event.getSource().getEntity() instanceof Player pp){
-                pp.sendSystemMessage(Component.literal("hitpos "+hitPos));
-                pp.sendSystemMessage(Component.literal("projspeed "+projectile.getDeltaMovement().length()));
-            }
-
-             */
-
+            if ((directEntity instanceof Projectile)) {
+                Vec3 hitPos = event.getSource().getSourcePosition();
 
                 // Your custom hit sector logic
                 HitSector hit = detectHit(player, hitPos);

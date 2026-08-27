@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.zaharenko424.casualties_cubed.client.Keybinds;
 import net.zaharenko424.casualties_cubed.client.gui.screen.*;
-import net.zaharenko424.casualties_cubed.client.moodles.MoodleController;
+import net.zaharenko424.casualties_cubed.client.moodles.MoodleManager;
 import net.zaharenko424.casualties_cubed.client.overlays.OverlayController;
 import net.zaharenko424.casualties_cubed.item.usable.ThermometerItem;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
@@ -28,7 +28,7 @@ public class ClientMod {
     public static void onRegisterOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAboveAll("overlay", OverlayController::render);
 
-        event.registerAboveAll("moodle", MoodleController::render);
+        event.registerAboveAll("moodle", MoodleManager::render);
     }
 
     @SubscribeEvent
