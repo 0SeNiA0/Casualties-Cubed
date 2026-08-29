@@ -655,6 +655,10 @@ public class PlayerHealthData {
         this.weightOffset += weightOffset;
     }
 
+    public float badSleepAmount() {
+        return badSleepAmount;
+    }
+
     public void tryStartFibrillation(boolean forced) {
         if (fibrillationProgress <= 0) {
             fibrillationProgress = 0.1f;

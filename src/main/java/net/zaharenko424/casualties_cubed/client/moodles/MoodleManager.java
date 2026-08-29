@@ -16,7 +16,6 @@ import net.zaharenko424.casualties_cubed.client.gui.minigames.Minigame;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
 import net.zaharenko424.casualties_cubed.client.gui.widget.ImageButton;
 import net.zaharenko424.casualties_cubed.client.gui.widget.RenderableImage;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.ArrayList;
@@ -48,10 +47,9 @@ public class MoodleManager {
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
         if (data == null) return toRender;
 
-        ChipState state = data.getChip();
         for (AbstractMoodle moodle : moodles) {
             if (moodle.isSideMoodle() && !sideMoodles) continue;
-            if (!moodle.shouldBeDisplayed(state)) continue;
+            if (!moodle.shouldBeDisplayed(data)) continue;
 
             moodle.update(player, data);
             if (moodle.shouldRender()) toRender.add(moodle);
@@ -77,7 +75,7 @@ public class MoodleManager {
         tmp.add(new LungFailureMoodle());
         tmp.add(new HemothoraxMoodle());
         tmp.add(new OxygenMoodle());
-        //irradiated
+        tmp.add(new IrradiatedMoodle());
         tmp.add(new PainMoodle());
         tmp.add(new OpiateMoodle());
         tmp.add(new WithdrawalMoodle());
@@ -89,7 +87,7 @@ public class MoodleManager {
         tmp.add(new DrugOverdoseMoodle());
         tmp.add(new InternalBleedingMoodle());
         tmp.add(new BleedingMoodle());
-        //exertion (stamina)
+        tmp.add(new StaminaMoodle());
         tmp.add(new FractureMoodle());
         tmp.add(new DislocationMoodle());
         tmp.add(new FracturedNeckMoodle());
@@ -99,13 +97,12 @@ public class MoodleManager {
         tmp.add(new InfectionMoodle());
         tmp.add(new SepsisMoodle());
         tmp.add(new ToxicosisMoodle());
-        //tiredness (energy)
+        tmp.add(new EnergyMoodle());
         tmp.add(new HungerMoodle());
-        //thirst
-        //overhydration
+        tmp.add(new ThirstMoodle());
         tmp.add(new SicknessMoodle());
         tmp.add(new TemperatureMoodle());
-        //happiness
+        tmp.add(new HappinessMoodle());
         //claw health
         tmp.add(new HearingLossMoodle());
         tmp.add(new DirtinessMoodle());
@@ -113,10 +110,10 @@ public class MoodleManager {
         tmp.add(new WetnessMoodle());
         tmp.add(new ImmunityMoodle());
         //keratin booster
-        //under/overweight
+        tmp.add(new WeightMoodle());
         //trauma
         tmp.add(new EnergizedMoodle());
-        //bad sleep
+        tmp.add(new BadSleepMoodle());
         tmp.add(new ImpairedSpeechMoodle());
         tmp.add(new BrainGrowSicknessMoodle());
         tmp.add(new DisfiguredMoodle());

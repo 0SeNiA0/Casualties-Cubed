@@ -6,7 +6,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ public class InfectionMoodle extends AbstractMoodle {
     private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/infection_moodle.png");
 
     @Override
-    public boolean shouldBeDisplayed(ChipState state) {
-        return state.isActive() || getMoodleStatus() != MoodleStatus.LIGHT_NEG;
+    public boolean shouldBeDisplayed(PlayerHealthData data) {
+        return data.getChip().isActive() || data.getMaxInfection() > 25;
     }
 
     @Override

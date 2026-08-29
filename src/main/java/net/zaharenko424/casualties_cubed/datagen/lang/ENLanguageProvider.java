@@ -252,6 +252,15 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("toxicosis.title4", "Toxic crisis");
         addMoodle("toxicosis.description4", "Your blood more closely resembles marmalade than something that can upkeep life.");
 
+        addMoodle("energy.title1", "Drowsy");
+        addMoodle("energy.description1", "Getting sleepy.");
+        addMoodle("energy.title2", "Tired");
+        addMoodle("energy.description2", "It's nap time.");
+        addMoodle("energy.title3", "Very tired");
+        addMoodle("energy.description3", "It's REALLY nap time.");
+        addMoodle("energy.title4", "Half-asleep");
+        addMoodle("energy.description4", "Barely awake, about to collapse from exhaustion.");
+
         addMoodle("hunger.title1", "Peckish");
         addMoodle("hunger.description1", "Could do with a bite to eat.");
         addMoodle("hunger.title2", "Hungry");
@@ -264,6 +273,22 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("hunger.description5", "Eating good today! Lowered weight loss rate and mobility. Slight happiness increase.");
         addMoodle("hunger.title6", "Full");
         addMoodle("hunger.description6", "Stomach totally stuffed with food! Any more and you'll be sick. Greatly lowered weight loss rate and mobility. Happiness increase.");
+
+        addMoodle("thirst_low.title1", "Thirsty");
+        addMoodle("thirst_low.description1", "Feeling a little thirsty.");
+        addMoodle("thirst_low.title2", "Dehydrated");
+        addMoodle("thirst_low.description2", "Low body water volume. Very thirsty.");
+        addMoodle("thirst_low.title3", "Parched");
+        addMoodle("thirst_low.description3", "Body drying out, in desperate need of water. Mind consumed by thirst.");
+        addMoodle("thirst_low.title4", "Desiccated");
+        addMoodle("thirst_low.description4", "Blood volume dangerously low and thick due to lack of fluids. §oYour dust is becoming one with the earth...");
+
+        addMoodle("thirst_high.title1", "Slaked");
+        addMoodle("thirst_high.description1", "Your thirst is fully satiated - you won't need water for a while. Thirst rate doubled. Blood pressure increased.");
+        addMoodle("thirst_high.title2", "Overhydrated");
+        addMoodle("thirst_high.description2", "You've drank considerably more than needed. Movement slightly impaired. Thirst rate doubled. Blood pressure increased.");
+        addMoodle("thirst_high.title3", "Water-intoxicated");
+        addMoodle("thirst_high.description3", "Excessive water intake. Your cells are swelling, causing high intracranial pressure, interrupting blood flow to the brain. Your head hurts... Thirst rate doubled. Blood pressure highly increased.");
 
         addMoodle("sickness.title1", "Queasy");
         addMoodle("sickness.description1", "Feeling discomfort. Minorly sick.");
@@ -284,6 +309,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("wetness.description4", "Completely drenched! The water is weighing you down. Temperature and comfort highly decreased.");
 
 
+        addMoodleO("internal_bleeding.title3", "Internal Bleeding");
+        addMoodleO("internal_bleeding.description3", "Turns out your guts and lungs are NOT where the blood is supposed to be. Treatment recommended.");
+
         addMoodleO("bleeding.title1", "Minor Bleeding");
         addMoodleO("bleeding.description1", "Blood is oozing out of a relatively small wound. There is no immediate danger.");
         addMoodleO("bleeding.title2", "Bleeding");
@@ -293,8 +321,14 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("bleeding.title4", "Catastrophic bleeding");
         addMoodleO("bleeding.description4", "§oAs your life gushes out behind you, you remember that you are mortal.");
 
-        addMoodleO("internal_bleeding.title3", "Internal Bleeding");
-        addMoodleO("internal_bleeding.description3", "Turns out your guts and lungs are NOT where the blood is supposed to be. Treatment recommended.");
+        addMoodle("stamina.title1", "Slightly exerted");
+        addMoodle("stamina.description1", "Mildly physically strained. (%1$s%)");
+        addMoodle("stamina.title2", "Exerted");
+        addMoodle("stamina.description2", "Uncomfortably exerted, struggling to move and work. (%1$s%)");
+        addMoodle("stamina.title3", "Highly exerted");
+        addMoodle("stamina.description3", "Barely able to move, highly physically exerted. (%1$s%)");
+        addMoodle("stamina.title4", "Totally exhausted");
+        addMoodle("stamina.description4", "Barely able to breathe. (%1$s%)");
 
         addMoodleO("brain_health.title1", "Cognitive impairment");
         addMoodleO("brain_health.description1", "Mentally impaired from damage to the brain. You feel weirdly confused...");
@@ -402,6 +436,15 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("oxygen.title4", "Critical hypoxemia");
         addMoodleO("oxygen.description4", "SpO2 below 45%. Something in your body has gone horribly, horribly wrong. Lethal if left to progress.");
 
+        addMoodle("irradiated.title1", "Uncomfortable");
+        addMoodle("irradiated.description1", "Feeling weirdly irritated and uncomfortable.");
+        addMoodle("irradiated.title2", "Radiation sickness");
+        addMoodle("irradiated.description2", "Feverish and nauseous. Your skin feels hot and painful. Something is very wrong. It's terrifying.");
+        addMoodle("irradiated.title3", "Severe radiation sickness");
+        addMoodle("irradiated.description3", "Horribly sick and aching all over. Breathing and thinking is extremely difficult. You feel abhorrent.");
+        addMoodle("irradiated.title4", "Chernobyl wannabe");
+        addMoodle("irradiated.description4", "§oNot going gently into that good night...");
+
         addMoodleO("pain.title1", "Discomfort");
         addMoodleO("pain.description1", "Feeling mild pain.");
         addMoodleO("pain.title2", "Pain");
@@ -431,6 +474,24 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("high_temp.description3", "Dangerously hot. You're struggling to go on in the heat... Thirst highly increased.");
         addMoodleO("high_temp.title4", "Heatstroke");
         addMoodleO("high_temp.description4", "Cells are starting to die from the intense heat. Irreversible organ damage imminent.");
+
+        addMoodle("happiness_low.title1", "Feeling down");
+        addMoodle("happiness_low.description1", "Starting to realize the gravity of your situation. Try to distract yourself.");
+        addMoodle("happiness_low.title2", "Gloomy");
+        addMoodle("happiness_low.description2", "Lacking the motivation to go on, struggling with emotions. Things really aren't looking up. Find a way to distract yourself.");
+        addMoodle("happiness_low.title3", "Depressed");
+        addMoodle("happiness_low.description3", "Barely willing to do anything. Your mind, ravaged by desperation. Maybe it will all be over soon?");
+        addMoodle("happiness_low.title4", "Miserable");
+        addMoodle("happiness_low.description4", "§oHow does it feel, knowing you're not coming back up..?");
+
+        addMoodle("happiness_high.title1", "Satisfied");
+        addMoodle("happiness_high.description1", "Content with your current predicament.");
+        addMoodle("happiness_high.title2", "Excited");
+        addMoodle("happiness_high.description2", "Looking forward to what's around the corner.");
+        addMoodle("happiness_high.title3", "Happy");
+        addMoodle("happiness_high.description3", "You've found peace in this strange land.");
+        addMoodle("happiness_high.title4", "Gleeful");
+        addMoodle("happiness_high.description4", "You're at the top of the world, shaping the way forward at your will. Nothing can stop you!");
 
         addMoodleO("withdrawal.title1", "Opioid craving");
         addMoodleO("withdrawal.description1", "You really want another shot.");
@@ -473,8 +534,29 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodle("braingrow_sickness.title", "Rapid neuron regeneration sickness");
         addMoodle("braingrow_sickness.description", "Neural shock caused by a sudden and rapid regeneration of brain tissue. While you'll adjust after some time, you might not want to take another dose for now. (%1$ss)");
 
+        addMoodle("weight_low.title1", "Underweight");
+        addMoodle("weight_low.description1", "Try to pack on a few kilos.");
+        addMoodle("weight_low.title2", "Skinny");
+        addMoodle("weight_low.description2", "Unhealthily underweight considering your species. Weaker than normal. Lowered carrying capacity.");
+        addMoodle("weight_low.title3", "Malnourished");
+        addMoodle("weight_low.description3", "You're dangerously thin and frail. Way weaker than normal, prone to being tired and lethargic. Lowered carrying capacity.");
+        addMoodle("weight_low.title4", "Emaciated");
+        addMoodle("weight_low.description4", "You're excessively skinny. You can easily see and feel your bones. At high risk of heart failure.");
+
+        addMoodle("weight_high.title1", "Chubby");
+        addMoodle("weight_high.description1", "Try to lose a few kilos.");
+        addMoodle("weight_high.title2", "Overweight");
+        addMoodle("weight_high.description2", "Unhealthily overweight, though you look about average compared to other species. Clumsier, you get tired quicker.");
+        addMoodle("weight_high.title3", "Fat");
+        addMoodle("weight_high.description3", "Dangerously wide and soft. Way clumsier and more prone to exhaustion.");
+        addMoodle("weight_high.title4", "Obese");
+        addMoodle("weight_high.description4", "Life-threateningly obese. It's like you stuffed a bag of fur with pure fat and hunger. At high risk of heart failure.");
+
         addMoodle("energized.title", "Energized");
         addMoodle("energized.description", "Stamina loss and sleepiness decreased. (%1$ss)");
+
+        addMoodle("bad_sleep.title", "Bad sleep");
+        addMoodle("bad_sleep.description", "Your back really isn't appreciating your choice of where you slept. Try picking a less harsh surface next time. Consciousness decreased.");
 
         addMoodle("impaired_speech.title", "Impaired speech");
         addMoodle("impaired_speech.description", "Something is making speaking difficult... You might have trouble communicating with others.");

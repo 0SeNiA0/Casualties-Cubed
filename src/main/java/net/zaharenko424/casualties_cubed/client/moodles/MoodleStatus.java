@@ -10,7 +10,8 @@ public enum MoodleStatus {
     CRITICAL_NEG(CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_critical.png")),
     LIGHT_POS(CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_light_pos.png")),
     NORMAL_POS(CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_normal_pos.png")),
-    HIGH_POS(CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_high_pos.png"));
+    HIGH_POS(CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_high_pos.png")),
+    CRITICAL_POS(CasualtiesCubed.resourceLoc("textures/gui/moodles/moodle_critical_pos.png"));
 
     public final ResourceLocation tex;
     

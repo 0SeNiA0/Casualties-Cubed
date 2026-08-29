@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.zaharenko424.casualties_cubed.limbs.ChipState;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.Collections;
@@ -38,8 +37,8 @@ public abstract class AbstractMoodle {
         return sideMoodle;
     }
 
-    public boolean shouldBeDisplayed(ChipState state) {
-        return !chipRequired || state.isActive();
+    public boolean shouldBeDisplayed(PlayerHealthData data) {
+        return !chipRequired || data.getChip().isActive();
     }
 
     public boolean shouldRender() {
