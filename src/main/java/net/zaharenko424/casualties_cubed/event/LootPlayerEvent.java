@@ -16,12 +16,12 @@ import net.minecraftforge.network.NetworkHooks;
 public class LootPlayerEvent {
 
     @SubscribeEvent
-    public static void onPlayerInteract(PlayerInteractEvent.EntityInteract event){
+    public static void onPlayerInteract(PlayerInteractEvent.EntityInteract event) {
         if (!(event.getTarget() instanceof Player target)) return;
 
-        if (!target.level().getGameRules().getBoolean(ModGameRules.INVENTORY_STEAL))return;
+        if (!target.level().getGameRules().getBoolean(ModGameRules.INVENTORY_STEAL)) return;
         Player actor = event.getEntity();
-        if (actor.isShiftKeyDown()) return;
+        if (!actor.isShiftKeyDown()) return;
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
             if (h.getConsciousness() <= 4) {

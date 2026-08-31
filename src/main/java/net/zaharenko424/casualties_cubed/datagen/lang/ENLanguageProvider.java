@@ -4,6 +4,7 @@ import net.minecraft.data.PackOutput;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.ModDamageTypes;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.limbs.SleepQuality;
 import net.zaharenko424.casualties_cubed.registry.ModBlocks;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
@@ -23,6 +24,14 @@ public class ENLanguageProvider extends LanguageProvider {
     protected void addLimbs() {
         for (Limb limb : Limb.values()) {
             add(CasualtiesCubed.MOD_ID + ".limb." + limb.name().toLowerCase(), Arrays.stream(limb.name().toLowerCase().split("_"))
+                    .map(word -> word.substring(0, 1).toUpperCase(Locale.ROOT) + word.substring(1))
+                    .collect(Collectors.joining(" ")));
+        }
+    }
+
+    protected void addSleepQuality() {
+        for (SleepQuality quality : SleepQuality.values()) {
+            addGui("sleep_quality." + quality.name().toLowerCase(), Arrays.stream(quality.name().toLowerCase().split("_"))
                     .map(word -> word.substring(0, 1).toUpperCase(Locale.ROOT) + word.substring(1))
                     .collect(Collectors.joining(" ")));
         }
@@ -106,16 +115,17 @@ public class ENLanguageProvider extends LanguageProvider {
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "doom"), "You feel a sudden sense of Doom");
 
         addMedicalFluidFromIdWDesc(ModFluids.CLEAN_WATER, "Clean, filtered water. Safe, but tastes like nothing.");
-        addMedicalFluidWDesc(ModFluids.LRD_SERUM, "LRD Serum", "Special mixture used by a Localized Resuscitation Device. Does nothing when injected with other means. Unpleasant taste.");
-        addMedicalFluidFromIdWDesc(ModFluids.MORPHINE, "A strong opiate, lesser effect when taken orally");
+        addMedicalFluidFromIdWDesc(ModFluids.CARBONATED_WATER, "It's spicy water. You like the fizz.");
+        addMedicalFluidWDesc(ModFluids.LRD_SERUM, "LRD Serum", "Special mixture used by a Localised Resuscitation Device. Does nothing if injected via other tools.");
+        addMedicalFluidFromIdWDesc(ModFluids.MORPHINE, "Strong opiate for pain relief. Lesser effect when taken orally.");
         addMedicalFluidWDesc(ModFluids.BIO_CHEM, "Bio-chem Fluid", "Advanced chemical compound that greatly promotes chemical reactions and is able to mend certain materials together, or even melt them. Very commonly used in crafting.");
-        addMedicalFluidFromIdWDesc(ModFluids.OPIUM, "A light opiate, lesser effect when taken orally");
-        addMedicalFluidFromIdWDesc(ModFluids.PAINKILLERS, "Medication for pain relief. Overdose at 80ml");
-        addMedicalFluidFromIdWDesc(ModFluids.HEROIN, "A very strong opiate. Very addicting");
-        addMedicalFluidFromIdWDesc(ModFluids.NALOXONE, "A common opiate antagonist. Used to reverse opioid overdose.");
+        addMedicalFluidFromIdWDesc(ModFluids.OPIUM, "Mild opiate for pain relief. Lesser effect when taken orally.");
+        addMedicalFluidFromIdWDesc(ModFluids.PAINKILLERS, "Opioid pills used to treat pain. Overdose at 60ml.");
+        addMedicalFluidFromIdWDesc(ModFluids.HEROIN, "Very strong opiate for pain relief. You know little about it.");
+        addMedicalFluidFromIdWDesc(ModFluids.NALOXONE, "Opioid antagonist, used in treatment of opiate overdose. Quick treatment might save your life during accidental overdose.");
         addMedicalFluidFromIdWDesc(ModFluids.NALTREXONE, "Pills used to treat general ailments like sickness or opiate abuse. Lowers happiness and may cause vomiting.");
-        addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Very advanced form of injected antibiotic. May cause excruciating chest pain.");
-        addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly dangerous opiate. 100 times stronger than morphine");
+        addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Third-generation cephalosporin antibiotic used for the treatment of infections. Increases body immunity for some time, but causes pain.");
+        addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly potent opioid, 100 times stronger than morphine. Consider diluting it.");
         addMedicalFluidFromIdWDesc(ModFluids.KETCHUP, "Sweet and sour tomato paste. Slightly disgusting to drink by itself.");
         add("medical_fluid." + modid + ".milk", "White liquid food produced by the mammary glands of mammals. Tasty and filling!");
         addMedicalFluidFromIdWDesc(ModFluids.CHLOROFORM, "A volatile, colorless, sweet-smelling, dense liquid produced on a large scale as a precursor to refrigerants and polytetrafluoroethylene. In practical use, it's very useful at knocking people out.");
@@ -127,7 +137,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.LEMONADE, "Sweetened lemon-flavored drink. Tasty!");
         addMedicalFluidFromIdWDesc(ModFluids.ICE_TEA, "Cold, sweetened decaffeinated tea. Tasty!");
         addMedicalFluidFromIdWDesc(ModFluids.SOUP, "Unidentifiable soup, though still tasty and filling.");
-        addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "Who doesn't like chocolate milk?");
+        addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "A type of flavoured milk made by mixing it with cocoa solids. Very sweet and tasty, but toxic for certain species. Increases happiness, consume with caution.");
         addMedicalFluidFromIdWDesc(ModFluids.CEREAL, "The world's greatest invention - milk and cereal. Very tasty and filling.");
         addMedicalFluidFromIdWDesc(ModFluids.COFFEE, "Beverage brewed from roasted coffee beans. Tasty and stimulating, but can be rather toxic to some due to the caffeine content.");
         addMedicalFluidFromIdWDesc(ModFluids.ENERGY_DRINK, "Tasty, caffeinated drink. Tasty and stimulating, but can be slightly toxic for certain species.");
@@ -141,24 +151,24 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.RAD_WATER, "Clean, filtered water. Safe, but tastes like nothing... On further inspection, it seems mildly radioactive.");
         addMedicalFluidFromIdWDesc(ModFluids.MERCURY, "Liquid metal. Great for skin care, not so great for your bodily functions.");
         addMedicalFluidFromIdWDesc(ModFluids.SODA, "Tasty, sugary drink. Good in moderation.");
-        addMedicalFluidFromIdWDesc(ModFluids.ALCOHOL, "Highly distilled spirit. Useful for disinfecting wounds.");
+        addMedicalFluidFromIdWDesc(ModFluids.ALCOHOL, "Unlabeled alcohol. Useful for disinfecting wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.BLEACH, "Chemical product used to remove color from fiber, or to disinfect. Can be used to disinfect wounds. Drinking is lethal.");
-        addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "A slightly antiseptic cream with soothing properties.");
+        addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "Mix of chemicals and drugs that instantly relieves pain and disinfects wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.WOUND_GLUE, "A hemostatic, antibiotic glue-like substance. Fights infection, promotes healing and is very effective at sealing bleeding wounds. Might cause circulation problems - use with care.");
-        addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special medicine used for heavy concussions and brain trauma. May cause discomfort. Meant to be taken orally.");
-        addMedicalFluidFromIdWDesc(ModFluids.ANTIBIOTICS, "Pills that increase your immunity to infection. For some reason they taste like nickels.");
+        addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special orally-taken medicine that stimulates brain regrowth. Increases brain integrity, but often has serious side effects.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTIBIOTICS, "Pills which increase your immunity for some time, counteracting all infections. Upsetting taste.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");
-        addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies. Helps when fighting infections. Slightly increases blood volume.");
-        addMedicalFluidFromIdWDesc(ModFluids.PROCOAGULANT, "A simple blood-clotting agent. Decreases bleeding overall but causes clotting. Dangerous in excess.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies to fight off most common infections. Increases immunity and helps reduce sepsis. Slightly increases blood volume.");
+        addMedicalFluidFromIdWDesc(ModFluids.PROCOAGULANT, "Chemical which promotes blood clotting. Globally slows down blood loss, including internal bleeding. Will cause complications if overused.");
         addMedicalFluidFromIdWDesc(ModFluids.EPINEPHRINE, "Pure adrenaline. Reduces pain for a while and has a low chance to restart the heart if it stops. Going over 40ml will cause fibrillation.");
         addMedicalFluidFromIdWDesc(ModFluids.OXYLINE, "Synthesized reagent that quickly reoxygenates the bloodstream when injected, also stabilizing fibrillation and promoting hemoglobin production. Has explosive tendencies when mixed with stomach acid.");
         addMedicalFluidFromIdWDesc(ModFluids.SODIUM_NITROPRUSSIDE, "A medication used to lower blood pressure, useful for avoiding hypertensive crisis. Only works intravenously. 10ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.VASOPRESSIN, "A hormone used to increase blood pressure, useful for avoiding lethal hypotension. Only works intravenously. 10ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.AMIODARONE, "An antiarrhythmic medication used to treat and prevent fibrillation from occurring. Will cause most arrhythmias to slowly regress, but causes mild internal damage. Only works intravenously. 20ml per minute.");
-        addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "A blood thinner. Decreases blood clotting. May cause increased bleeding.");
-        addMedicalFluidFromIdWDesc(ModFluids.SALINE, "A mix of water, salt, and minerals. Useful for thirst and regaining body liquid.");
+        addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "Blood thinner. Strongly reduces blood viscosity and breaks down clots.");
+        addMedicalFluidFromIdWDesc(ModFluids.SALINE, "Mixture of salt and water, often used in treating hypovolemia and thirst.");
         addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");
-        addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "A potent disinfecting gel. Stings a lot.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "Basic antiseptic fluid. Counteracts infections and stings a little.");
         addMedicalFluidFromIdWDesc(ModFluids.GROUNDWATER, "Slightly dirty groundwater. Mostly safe to drink, though slightly sickening.");
         addMedicalFluidFromIdWDesc(ModFluids.LUMALGAE, "Water with dense, bioluminescent algae growing in it. Very buoyant. Inedible.");
         addMedicalFluidFromIdWDesc(ModFluids.OIL, "A thick, black tar. Difficult to move through. Inedible.");
@@ -582,8 +592,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addTooltip("switch_main_hand_button.description", "Switch main hand between the Right/Left\nUse this to dig with your second arm if the main one is broken\nYour left arm is slightly weaker than the right");
         addTooltip("workout_button.title", "Do some working out");
         addTooltip("workout_button.description", "Gives experience in STR/RES at the cost of some time and energy. Good to pass the time, though it will hurt if you're seriously injured.");
-        addTooltip("sleep_button.title", "Sleep");
+        addTooltip("sleep_button.title", "Sleep (%s)");
         addTooltip("sleep_button.description", "Sleep quality is determined by the ground you sleep on\nCan't sleep if in pain/sick/not tired");
+        addSleepQuality();
 
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "extra_note"), "A small line on the bottom says: \"If found return to Doctor Ry**\" the rest is not readable.");
 

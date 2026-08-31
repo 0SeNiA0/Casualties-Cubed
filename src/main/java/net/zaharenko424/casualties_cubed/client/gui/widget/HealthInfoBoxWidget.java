@@ -12,6 +12,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.limbs.*;
 import net.zaharenko424.casualties_cubed.util.Util;
 
@@ -32,6 +33,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
     private final RenderableImage waterBarOverfillImg = new RenderableImage(waterBarOrange, 49, 1).offsetMode(OffsetMode.TOP_LEFT).fillMode(RenderableImage.FillMode.RIGHT_TO_LEFT);
     private final RenderableImage foodBarImg = new RenderableImage(foodBar, 61, 1).offsetMode(OffsetMode.TOP_LEFT);
     private final RenderableImage foodBarOverfillImg = new RenderableImage(foodBarOrange, 61, 1).offsetMode(OffsetMode.TOP_LEFT).fillMode(RenderableImage.FillMode.RIGHT_TO_LEFT);
+    private final RenderableImage happinessImg = new RenderableImage(happiness[2], 11, 11).offsetMode(OffsetMode.TOP_LEFT);
     private final RenderableImage staminaRight = new RenderableImage(lungFillR, 7, 15).offsetMode(OffsetMode.TOP_LEFT).fillMode(RenderableImage.FillMode.BOTTOM_TO_TOP);
     private final RenderableImage staminaLeft = new RenderableImage(lungFillL, 7, 15).offsetMode(OffsetMode.TOP_LEFT).fillMode(RenderableImage.FillMode.BOTTOM_TO_TOP);
     private final RenderableImage hemothoraxFillImg = new RenderableImage(hemothoraxFill, 22, 17).offsetMode(OffsetMode.TOP_LEFT).fillMode(RenderableImage.FillMode.BOTTOM_TO_TOP);
@@ -95,6 +97,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         waterBarOverfillImg.offset.set(waterBarImg.offset);
         foodBarImg.offset.set(6 + 4 + 15, 6 + 31 + 59, 0);
         foodBarOverfillImg.offset.set(foodBarImg.offset);
+        happinessImg.offset.set(6 + 4 + 112, 6 + 31 + 62, 0);
         staminaRight.offset.set(6 + 4 + 5, 6 + 31 + 93, 0);
         staminaLeft.offset.set(6 + 4 + 18, 6 + 31 + 93, 0);
         hemothoraxFillImg.offset.set(6 + 4 + 4, 6 + 31 + 92, 0);
@@ -142,7 +145,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        int glowColor = FastColor.ARGB32.color(255, 47, 224, 129);
+        int glowColor = ClientConfig.UI_GLOW_COLOR.get();
 
         background.render(guiGraphics, partialTick);
         glow.tint = glowColor;
@@ -205,8 +208,22 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         weightText.component(Component.literal(Util.ONE_OPTIONAL.format(data.weightOffset() * 0.34f + 50) + "kg"));
         renderFlashingText(weightText, guiGraphics, glowColor, Math.abs(data.weightOffset()) > 55);
 
-        happinessText.component(Component.literal(String.format("%.2f", data.happiness())));
-        renderFlashingText(happinessText, guiGraphics, glowColor, data.happiness() <= -75);
+        float happiness = data.totalHappiness();
+        if (happiness > 50) {
+            happinessImg.texture(HealthInfoBoxWidget.happiness[0]);
+        } else if (happiness > 10) {
+            happinessImg.texture(HealthInfoBoxWidget.happiness[1]);
+        } else if (happiness > -10) {
+            happinessImg.texture(HealthInfoBoxWidget.happiness[2]);
+        } else if (happiness > -40) {
+            happinessImg.texture(HealthInfoBoxWidget.happiness[3]);
+        } else if (happiness > -75) {
+            happinessImg.texture(HealthInfoBoxWidget.happiness[4]);
+        } else happinessImg.texture(HealthInfoBoxWidget.happiness[5]);
+        happinessImg.tint = glowColor;
+        happinessImg.render(guiGraphics, partialTick);
+        happinessText.component(Component.literal(String.format("%.2f", happiness)));
+        renderFlashingText(happinessText, guiGraphics, glowColor, happiness <= -75);
 
         energyText.component(Component.literal(Math.round(data.energy()) + "%"));
         renderFlashingText(energyText, guiGraphics, glowColor, data.energy() < 5);
@@ -359,7 +376,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
     }
 
     private void renderFlashingText(RenderableText text, GuiGraphics graphics, int color, boolean flashing) {
-        if (flashing && Math.sin(System.currentTimeMillis() / 1000f * 20) <= 0) return;
+        if (flashing && Math.sin(System.currentTimeMillis() / 1000d * 20) <= 0) return;
 
         text.color = flashing ? flashingColor : color;
         text.render(graphics);
@@ -378,6 +395,14 @@ public class HealthInfoBoxWidget extends AbstractWidget {
     private static final ResourceLocation waterBarOrange = CasualtiesCubed.texLoc("gui/bar_water_orange");
     private static final ResourceLocation foodBar = CasualtiesCubed.texLoc("gui/bar_food");
     private static final ResourceLocation foodBarOrange = CasualtiesCubed.texLoc("gui/bar_food_orange");
+    private static final ResourceLocation[] happiness = new ResourceLocation[] {
+            CasualtiesCubed.texLoc("gui/veryhappy"),
+            CasualtiesCubed.texLoc("gui/happy"),
+            CasualtiesCubed.texLoc("gui/neutral"),
+            CasualtiesCubed.texLoc("gui/sad"),
+            CasualtiesCubed.texLoc("gui/verysad"),
+            CasualtiesCubed.texLoc("gui/miserable")
+    };
     private static final ResourceLocation lungFillR = CasualtiesCubed.texLoc("gui/lung_fill_right");
     private static final ResourceLocation lungFillL = CasualtiesCubed.texLoc("gui/lung_fill_left");
     private static final ResourceLocation hemothoraxFill = CasualtiesCubed.texLoc("gui/hemothorax_fill");

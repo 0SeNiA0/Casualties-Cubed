@@ -81,9 +81,8 @@ public class DislocationMinigameScreen extends Screen implements Minigame {
                 boneObject.onHit(vel, target, limb);
             }
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getConsciousness() <= 10)
-                onClose();
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!data.isConscious()) onClose();
         });
 
         if (boneObject.isEndCondition()) {

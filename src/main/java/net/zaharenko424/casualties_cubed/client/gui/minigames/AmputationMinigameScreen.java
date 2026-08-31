@@ -117,8 +117,8 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getConsciousness()<=10)
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data->{
+            if (!data.isConscious())
                 onClose();
         });
 

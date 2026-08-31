@@ -9,13 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.zaharenko424.casualties_cubed.client.gui.WidgetHelper;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class RenderableImage implements Renderable {
 
-    public final ResourceLocation texture;
+    protected ResourceLocation texture;
     public final int uOffset, u;
     public final int vOffset, v;
     public final int texWidth, texHeight;
@@ -42,6 +43,11 @@ public class RenderableImage implements Renderable {
         this.v = v;
         this.texWidth = texWidth;
         this.texHeight = texHeight;
+    }
+
+    public RenderableImage texture(@NotNull ResourceLocation texture) {
+        this.texture = texture;
+        return this;
     }
 
     public RenderableImage fillMode(FillMode mode) {

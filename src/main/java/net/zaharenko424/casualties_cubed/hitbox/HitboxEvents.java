@@ -675,20 +675,9 @@ public class HitboxEvents {
         for (Limb limb : Limb.values()) {
             stats = data.getLimb(limb);
             if (stats.isAmputated()) continue;
-            if (stats.getBleedRate() > 0) stats.setBleedRate(Math.max(0, stats.getBleedRate() - 0.00005f * healAmount));
-            stats.setSkinHealth(Math.min(100, stats.getSkinHealth() + 2 * healAmount));
-            stats.setMuscleHealth(Math.min(100, stats.getMuscleHealth() + 2 * healAmount));
-        }
-
-        float blood = data.getBloodVolume();
-        if (blood < 5) {
-            data.setBloodVolume(Math.min(5, blood + 0.02f * healAmount));
-        } else if (blood > 5) {
-            data.setBloodVolume(Math.max(5, blood - (0.02f * healAmount)));
-        }
-
-        if (data.getBloodViscosity() > 10) {
-            data.setBloodViscosity(data.getBloodViscosity() - 1 * amount);
+            if (stats.getBleedRate() > 0) {
+                stats.setBleedRate(Math.max(0, stats.getBleedRate() - 0.00005f * healAmount));
+            } else stats.addSkinHealth(healAmount);
         }
     }
 
@@ -770,8 +759,8 @@ public class HitboxEvents {
         // Only when sneaking
         if (!actor.isShiftKeyDown()) return;
 
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getConsciousness() <= 4) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!data.isConscious()) {
                 // Vector from target → actor
                 double dx = actor.getX() - target.getX();
                 double dz = actor.getZ() - target.getZ();

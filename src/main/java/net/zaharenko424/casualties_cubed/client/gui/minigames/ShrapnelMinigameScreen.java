@@ -156,8 +156,7 @@ public class ShrapnelMinigameScreen extends Screen implements Minigame {
             handObject.setStiffness(consscale);
         }
         Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (data.getConsciousness() <= 10)
-                onClose();
+            if (!data.isConscious()) onClose();
         });
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {

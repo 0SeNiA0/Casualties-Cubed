@@ -15,7 +15,7 @@ public class SleepMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (player.isSleeping()) {
+        if (data.isSleeping(player)) {
             setStatus(MoodleStatus.LIGHT_POS);
         } else clearStatus();
     }

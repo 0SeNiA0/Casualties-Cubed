@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.ModDamageTypes;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
@@ -37,8 +38,10 @@ import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.compat.serene_seasons.SereneSeasonsUtil;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.network.MedicalAction;
+import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.SyncTracker;
 import net.zaharenko424.casualties_cubed.network.packet.ClientboundHeartThumpPacket;
+import net.zaharenko424.casualties_cubed.network.packet.ClientboundTriggerLastStandPacket;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import net.zaharenko424.casualties_cubed.registry.TimedEffectRegistry;
@@ -163,6 +166,7 @@ public class PlayerHealthData {
     private float weightOffset = 0;
     private float badSleepAmount = 0;
     private int goodSleepTime = 0;
+    private boolean sleeping;
     private SleepQuality curSleep = SleepQuality.OKAY;
 
     public final Painkillers painkillers = new Painkillers(this);
@@ -703,7 +707,24 @@ public class PlayerHealthData {
         return Math.max(infection, 0);
     }
 
+    public boolean isSleeping(Player player) {
+        return sleeping || player.isSleeping();
+    }
+
+    public boolean canTakeNap() {
+        return (this.energy < 35f && averagePain < 31f && sickness < 80f)/* || sleeping pills*/
+                || ServerConfig.NO_SLEEP_RESTRICTIONS.get();
+    }
+
+    public void sleep(ServerPlayer player) {
+        if (!canTakeNap()) return;
+        consciousness = 10;
+        sleeping = true;
+        PhysicsUtil.setPhysics(true, player, 0, 10);
+    }
+
     public void wakeUp(ServerPlayer player) {
+        sleeping = false;
         player.stopSleeping();
 
         if (curSleep == SleepQuality.MEDIOCRE) {
@@ -757,8 +778,8 @@ public class PlayerHealthData {
 
         updateStability(player);
         if (ragdolled()) ragdollTime += Util.TICK_TO_SEC;
-        if (ragdollTime > 60
-                || (shock < 10f && PhysicsUtil.getVel(player).length() < 0.5f && Stability > 50)) {
+        if (!isSleeping(player) && (ragdollTime > 60
+                || (shock < 10f && PhysicsUtil.getVel(player).length() < 0.5f && Stability > 50))) {
             standUp(player);
             ragdollTime = 0;
         }
@@ -786,7 +807,7 @@ public class PlayerHealthData {
         }
 
         if (Math.abs(lastPos.y - player.getY()) > (double)1.0F && player.fallDistance > 2) {
-            DefaultChange -= 5.0F;
+            DefaultChange -= 7.5F;
         }
 
         if (player.getPose() == Pose.CROUCHING) {
@@ -837,7 +858,7 @@ public class PlayerHealthData {
     }
 
     public void ragdoll(ServerPlayer player) {
-        if (player.isSleeping() && player.getSleepingPos().map(pos -> player.level().getBlockState(pos).is(BlockTags.BEDS)).orElse(false)) return;
+        if (isSleeping(player) && player.getSleepingPos().map(pos -> player.level().getBlockState(pos).is(BlockTags.BEDS)).orElse(false)) return;
         if (shock < 20) {
             shock = 20;
         }
@@ -964,7 +985,7 @@ public class PlayerHealthData {
                 Util.remap(bloodPressure, 60, 110, 30, 100),
                 Util.remap(bloodPressure, 140, 200, 100, 30),
                 150 - sickness,
-                player.isSleeping() ? 10 : 100,//might be an issue
+                isSleeping(player) ? 10 : 100,
                 brainHealth,
                 Mth.clamp(energy * 4.2f, 31, 100),
                 150 - averagePain,
@@ -993,7 +1014,7 @@ public class PlayerHealthData {
             if (player.isAlive()) {//update healthData when dead as well then?
                 energy += Util.TICK_TO_SEC * 0.4f * curSleep.regen * ServerConfig.SLEEP_CYCLE_SPEED.get().floatValue();
 
-                if (player.isSleeping()) {
+                if (isSleeping(player)) {
                     happiness = Util.moveTowards(Util.TICK_TO_SEC * 0.01f * (happiness < 0 ? 1 : 0.5f) * ServerConfig.MOOD_NORMALIZATION_RATE.get().floatValue(), happiness, 0);
                 }
 
@@ -1034,11 +1055,11 @@ public class PlayerHealthData {
             energy = 0;
             if (ServerConfig.FORCE_SLEEP.get()) {
                 consciousness = Math.min(consciousness, 10);
-                if (player.onGround()) player.startSleeping(player.getOnPos());
+                sleep(player);
             }
         }
 
-        if (player.isSleeping() && (energy >= 99 || (curSleep == SleepQuality.MEDIOCRE && energy >= 85)
+        if (isSleeping(player) && (energy >= 99 || (curSleep == SleepQuality.MEDIOCRE && energy >= 85)
                 || (curSleep == SleepQuality.BAD && energy > 70) || (energy > 1 && averagePain > 31) || (sickness > 55 && energy > 40)
                 || (energy > 50 && (totalHappiness() < -50 || hunger < 35 || thirst < 35 || sepsis > 35 || temperature < 30 || temperature > 40.5f))
                 || (energy > 4 && player.isInFluidType()) || temperature < 30) && (energy > 99 || !ServerConfig.NO_SLEEP_RESTRICTIONS.get())) {
@@ -1189,6 +1210,8 @@ public class PlayerHealthData {
 
         painkillers.reset();
         effects.clear();
+
+        ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new ClientboundTriggerLastStandPacket());
 
         successfullyRolledLastStand = true;
 
@@ -1729,20 +1752,7 @@ public class PlayerHealthData {
     }
 
     private void updateSleepQuality(ServerPlayer player) {
-        if (player.isSleeping()) {
-            BlockState state = player.getSleepingPos().map(pos -> player.level().getBlockState(pos)).orElse(null);
-            if (state != null && state.is(BlockTags.BEDS)) {
-                curSleep = SleepQuality.GOOD;
-                return;
-            }
-
-            state = player.getBlockStateOn();
-            if (state.is(BlockTags.BEDS) || state.is(BlockTags.WOOL)) {
-                curSleep = SleepQuality.GOOD;
-            } else if (state.is(BlockTags.WOOL_CARPETS)) {
-                curSleep = SleepQuality.OKAY;
-            } else curSleep = SleepQuality.BAD;
-        }
+        if (isSleeping(player)) curSleep = SleepQuality.currentSleepQuality(player);
     }
 
     private void maybeRegrowLimbs(ServerPlayer player) {
@@ -2007,7 +2017,7 @@ public class PlayerHealthData {
     public void kill(ServerPlayer player, boolean gaveUp) {
         boolean bleedout = blood < 3.5f;
         boolean internalBleed = hemothorax > 50;
-        boolean overdose = painkillers.currentOpiateReception() > 100;
+        boolean overdose = painkillers.currentOpiateReception() > 80;
         boolean bleedoutHeavy = totalBleedSpeed() > 2f / 20f / 60f;
 
         DamageSource src = ModDamageTypes.oxygen(player.serverLevel());
@@ -2198,6 +2208,7 @@ public class PlayerHealthData {
         nbt.putFloat("weightOffset", weightOffset);
         nbt.putFloat("badSleepAmount", badSleepAmount);
         nbt.putInt("goodSleepTime", goodSleepTime);
+        nbt.putBoolean("sleeping", sleeping);
         nbt.putString("curSleep", curSleep.name());
 
         // Serialize limb data as a list
@@ -2330,6 +2341,7 @@ public class PlayerHealthData {
         weightOffset = nbt.getFloat("weightOffset");
         badSleepAmount = nbt.getFloat("badSleepAmount");
         goodSleepTime = nbt.getInt("goodSleepTime");
+        sleeping = nbt.getBoolean("sleeping");
         curSleep = nbt.contains("curSleep", Tag.TAG_STRING) ? SleepQuality.valueOf(nbt.getString("curSleep")) : SleepQuality.OKAY;
 
         ListTag limbList = nbt.getList("LimbStats", Tag.TAG_COMPOUND);

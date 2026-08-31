@@ -19,14 +19,14 @@ public abstract class PlayerMixin {
     @Inject(method = "updatePlayerPose", at = @At("HEAD"), cancellable = true)
     private void forceLaydownPose(CallbackInfo ci) {
         Player self = (Player) (Object) this;
-        self.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getConsciousness() <= 10) {
+        self.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!data.isConscious()) {
                 if (!(PhysicsUtil.isPhysicsLoaded() && ServerConfig.PHYS_INTEGRATION.get())) {
                     self.setPose(Pose.SWIMMING);
                     ci.cancel(); // prevent vanilla from picking another pose
                 }
             }
-            if (h.isAmputated(Limb.UPPER_RIGHT_LEG) && h.isAmputated(Limb.UPPER_LEFT_LEG) && !self.isPassenger()) {
+            if (data.isAmputated(Limb.UPPER_RIGHT_LEG) && data.isAmputated(Limb.UPPER_LEFT_LEG) && !self.isPassenger()) {
                 self.setPose(Pose.SWIMMING);
                 ci.cancel();
             }

@@ -49,6 +49,9 @@ public class ModNetwork {
         registerServerbound(ServerboundRagdollPacket.class, ServerboundRagdollPacket::encode,
                 ServerboundRagdollPacket::new, ServerPacketHandler::handleRagdoll);
 
+        registerServerbound(ServerboundSleepPacket.class, ServerboundSleepPacket::encode,
+                ServerboundSleepPacket::new, ServerPacketHandler::handleSleep);
+
         registerServerbound(ServerboundAdjustShrapnelPacket.class, ServerboundAdjustShrapnelPacket::encode,
                 ServerboundAdjustShrapnelPacket::new, ServerPacketHandler::handleAdjustShrapnel);
 

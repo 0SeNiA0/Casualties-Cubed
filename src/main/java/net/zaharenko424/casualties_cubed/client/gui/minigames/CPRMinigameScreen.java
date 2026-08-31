@@ -90,9 +90,8 @@ public class CPRMinigameScreen extends Screen implements Minigame {
             rightHandObject.setShakeScale(painscale);
             rightHandObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getConsciousness()<=10)
-                onClose();
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data->{
+            if (!data.isConscious()) onClose();
         });
         super.tick();
     }

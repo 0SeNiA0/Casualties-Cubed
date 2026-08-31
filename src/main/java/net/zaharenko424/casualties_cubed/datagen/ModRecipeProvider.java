@@ -265,6 +265,22 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
 
         MedicalMixerRecipeBuilder.mixer()
+                .inputFluid(Fluids.WATER, 1000)
+                .input(Items.PAPER)
+                .input(Items.CHARCOAL)
+                .outputFluid(ModFluids.CLEAN_WATER, 1000)
+                .save(consumer, CasualtiesCubed.resourceLoc("clean_water_vanilla"));
+
+        MedicalMixerRecipeBuilder.mixer()
+                .inputFluid(ModFluids.GROUNDWATER, 1000)
+                .input(Items.PAPER)
+                .input(Items.CHARCOAL)
+                .outputFluid(ModFluids.CLEAN_WATER, 1000)
+                .save(consumer, CasualtiesCubed.resourceLoc("clean_water"));
+
+
+
+        MedicalMixerRecipeBuilder.mixer()
                 .inputFluid(Fluids.WATER, 10)
                 .input(ModItems.GLOW_FRUIT.get())
                 .outputFluid(ModFluids.BIO_CHEM.get(), 10)

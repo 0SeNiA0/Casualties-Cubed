@@ -11,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
@@ -42,6 +41,16 @@ public class ServerPacketHandler {
             if (sender == null) return;
 
             PlayerHealthData.of(sender).ifPresent(data -> data.forceRagdoll(sender, packet.ragdoll()));
+        });
+        ctx.get().setPacketHandled(true);
+    }
+
+    public static void handleSleep(ServerboundSleepPacket packet, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ServerPlayer sender = ctx.get().getSender();
+            if (sender == null) return;
+
+            PlayerHealthData.of(sender).ifPresent(data -> data.sleep(sender));
         });
         ctx.get().setPacketHandled(true);
     }
@@ -394,7 +403,7 @@ public class ServerPacketHandler {
     public static void handleLegUse(ServerboundLegUsePacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player == null) return;
+            if (player == null || player.isPassenger() || player.isFallFlying() || player.getAbilities().flying) return;
 
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
                     .ifPresent(PlayerHealthData::onLegUse);
@@ -423,7 +432,6 @@ public class ServerPacketHandler {
 
             List<FluidStack> drained = MultiTankHelper.drain(fromStack, toTransfer, false);
             for (FluidStack stack : drained) {
-                CasualtiesCubed.LOGGER.info("fluid {}, amount {}", stack.getFluid(), stack.getAmount());
                 MultiTankHelper.addFluid(toStack, stack.getAmount(), stack);
             }
 

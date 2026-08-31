@@ -155,9 +155,8 @@ public class InjectMingameScreen extends Screen implements Minigame {
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getConsciousness() <= 10)
-                onClose();
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!data.isConscious()) onClose();
         });
         super.tick();
     }

@@ -21,10 +21,9 @@ public abstract class MouseHandlerMixin {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
         if (!(PhysicsUtil.isPhysicsLoaded() && ServerConfig.SPEC.isLoaded() && ServerConfig.PHYS_INTEGRATION.get())) {
-            mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                if (h.getConsciousness() <= 10) {
-                    ci.cancel();
-                }
+            mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                if (!data.isConscious()) ci.cancel();
+
             });
         }
     }

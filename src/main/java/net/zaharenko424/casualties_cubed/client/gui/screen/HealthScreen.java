@@ -23,9 +23,11 @@ import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.limbs.SleepQuality;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
+import net.zaharenko424.casualties_cubed.network.packet.ServerboundSleepPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseMedItemPacket;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import net.zaharenko424.casualties_cubed.util.ColorUtil;
@@ -87,9 +89,12 @@ public class HealthScreen extends Screen {
         workoutButton = new ImageButton(32, 32, new RenderableImage(WORKOUT, 32, 32), () -> {});
         workoutButton.tooltip(Component.translatable("tooltip.casualties_cubed.workout_button.title"), Component.translatable("tooltip.casualties_cubed.workout_button.description"));
 
-        sleepButton = new ImageButton(32, 32, new RenderableImage(NAP_BUTTON, 32, 32), () -> {});
-        sleepButton.tooltip(Component.translatable("tooltip.casualties_cubed.sleep_button.title"), Component.translatable("tooltip.casualties_cubed.sleep_button.description"));
-        sleepButton.active(false);//TODO add sleep anywhere?
+        sleepButton = new ImageButton(32, 32, new RenderableImage(NAP_BUTTON, 32, 32), () -> {
+            ModNetwork.CHANNEL.sendToServer(new ServerboundSleepPacket());
+            onClose();
+        });
+        sleepButton.tooltip(Component.translatable("tooltip.casualties_cubed.sleep_button.title", SleepQuality.currentSleepQuality(localPlayer).comp), Component.translatable("tooltip.casualties_cubed.sleep_button.description"));
+        sleepButton.active(data.canTakeNap());
     }
 
     @Override
@@ -331,12 +336,20 @@ public class HealthScreen extends Screen {
 
         if (!BGmode) {
             UpdateButtons(lastClicked);
-            Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                if (h.getConsciousness() <= 4)
-                    onClose();
+            Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                if (!data.isConscious()) onClose();
             });
         }
+
+        PlayerHealthData data = PlayerHealthData.of(localPlayer).orElse(null);
+        if (data == null) {
+            onClose();
+            return;
+        }
+
         switchMainHandButton.image(localPlayer.getMainArm() == HumanoidArm.RIGHT ? mainRight : mainLeft);
+        sleepButton.tooltip(Component.translatable("tooltip.casualties_cubed.sleep_button.title", SleepQuality.currentSleepQuality(localPlayer).comp), Component.translatable("tooltip.casualties_cubed.sleep_button.description"));
+        sleepButton.active(data.canTakeNap());
     }
 
     @Override
