@@ -22,7 +22,7 @@ public abstract class CaveSpiderMixin {
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
         if (data == null) return true;
 
-        data.addVenom(switch (instance.level().getDifficulty()) {
+        data.addVenomTotal(switch (instance.level().getDifficulty()) {
             case PEACEFUL -> 0;
             case EASY -> 10;
             case NORMAL -> 15;

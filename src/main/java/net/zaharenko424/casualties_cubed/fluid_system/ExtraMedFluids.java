@@ -28,7 +28,7 @@ public class ExtraMedFluids {
         event.enqueueWork(() -> {
             Map<FluidType, ExtraMedFluids.Data> map = new HashMap<>();
             map.put(ForgeMod.WATER_TYPE.get(), new Data(MedicalEffects.GROUNDWATER, 0x5276d1, Component.translatable("medical_fluid.casualties_cubed.groundwater.description")));
-            if (ForgeMod.MILK_TYPE.isPresent()) map.put(ForgeMod.MILK_TYPE.get(), new Data(MedicalEffects.MILK, -1, Component.translatable("medical_fluid.casualties_cubed.milk")));
+            if (ForgeMod.MILK_TYPE.isPresent()) map.put(ForgeMod.MILK_TYPE.get(), new Data(MedicalEffects.MILK, -1, Component.translatable("medical_fluid.casualties_cubed.milk.description")));
             map.put(ForgeMod.LAVA_TYPE.get(), new Data(MedicalEffects.LAVA, 0xff6600, Component.empty()));
             MinecraftForge.EVENT_BUS.post(new RegisterMedicalEffectsEvent(map));
             EXTRA_MED_FLUIDS = Map.copyOf(map);

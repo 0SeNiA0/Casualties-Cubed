@@ -17,7 +17,7 @@ public class HearingLossMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float status = data.getHearingLoss();
+        float status = data.hearingLoss();
 
         if (status > 0.7) {
             setStatus(MoodleStatus.HEAVY_NEG);

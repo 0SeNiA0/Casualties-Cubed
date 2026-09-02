@@ -20,7 +20,7 @@ public class ColdOverlay implements IShaderOverlay {
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();
         float temp = (float)(mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getTemperature).orElse(36.6f) );
+                .map(PlayerHealthData::temperature).orElse(36.6f) );
 
         return temp<32;
     }
@@ -36,7 +36,7 @@ public class ColdOverlay implements IShaderOverlay {
 
         // interpolate between last tick and current tick values
         float temp = (mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getTemperature).orElse(36.6f) );
+                .map(PlayerHealthData::temperature).orElse(36.6f) );
 
         temp = Mth.clamp(1-(temp-28)/4, 0f, 1f);
 

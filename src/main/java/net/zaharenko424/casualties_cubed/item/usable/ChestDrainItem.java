@@ -56,7 +56,7 @@ public class ChestDrainItem extends Item implements ISimpleMedicalUsable, IAllow
 
         PlayerHealthData.of(target).ifPresent(data -> {
             data.getLimb(Limb.THORAX).addBleedRate(0.036f);
-            data.setHemothorax(data.getHemothorax() - 35);
+            data.hemothorax(data.hemothorax() - 35);
         });
 
         source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

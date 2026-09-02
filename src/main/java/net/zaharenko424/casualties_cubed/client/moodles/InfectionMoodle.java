@@ -17,7 +17,7 @@ public class InfectionMoodle extends AbstractMoodle {
 
     @Override
     public boolean shouldBeDisplayed(PlayerHealthData data) {
-        return data.getChip().isActive() || data.getMaxInfection() > 25;
+        return data.chip().isActive() || data.getMaxInfection() > 25;
     }
 
     @Override

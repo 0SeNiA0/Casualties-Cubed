@@ -45,7 +45,7 @@ public class OldRagItem extends AbstractBandage {
 
         if (level.isClientSide) return InteractionResultHolder.success(player.getItemInHand(pUsedHand));
 
-        PlayerHealthData.of(player).ifPresent(data -> data.setWetness(data.getWetness() * 0.5f));
+        PlayerHealthData.of(player).ifPresent(data -> data.wetness(data.wetness() * 0.5f));
         subNbtDurability(player.getItemInHand(pUsedHand), 5);
         level.playSound(null, player.getOnPos(), SoundEvents.DYE_USE, SoundSource.PLAYERS);
 

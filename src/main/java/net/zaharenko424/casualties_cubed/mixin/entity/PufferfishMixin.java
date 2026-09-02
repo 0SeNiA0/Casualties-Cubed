@@ -16,7 +16,7 @@ public abstract class PufferfishMixin {
     @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z"),
             method = "playerTouch")
     private boolean replacePoisonWithVenom(Player instance, MobEffectInstance mobEffectInstance, Entity entity, Operation<Boolean> original) {
-        PlayerHealthData.of(instance).ifPresent(data -> data.addVenom(30));
+        PlayerHealthData.of(instance).ifPresent(data -> data.addVenomTotal(30));
         return true;
     }
 }

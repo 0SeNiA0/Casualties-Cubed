@@ -33,7 +33,7 @@ public abstract class BeeMixin extends Animal {
         if (data == null) return true;
 
         float diffScale = level().getDifficulty() == Difficulty.NORMAL ? 0.75f : 1;
-        data.addVenom(5 * diffScale);
+        data.addVenomTotal(5 * diffScale);
         data.getLimb(Util.getRandom(Limb.values(), player.getRandom())).addPain(15 * diffScale);
         return false;
     }

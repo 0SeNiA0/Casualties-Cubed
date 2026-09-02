@@ -44,7 +44,7 @@ public class MedicalFluidType extends FluidType {
         if (injectionSickness > 0) {
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addSickness(0.3f * injectionSickness * ml);
-                data.setBloodViscosity(data.getBloodViscosity() - 0.1f * injectionSickness);//might be a bug but in CU viscosity penalty doesnt scale with ml
+                data.bloodViscosity(data.bloodViscosity() - 0.1f * injectionSickness);//might be a bug but in CU viscosity penalty doesnt scale with ml
             });
         }
 

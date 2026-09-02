@@ -194,17 +194,17 @@ public class ModCommands {
                                                             // Access the player's capability or component that stores these stats
                                                             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                                                                 switch (field) {
-                                                                    case "blood" -> h.setBloodVolume(value);
-                                                                    case "contiousness" -> h.setConsciousness(value);
-                                                                    case "hemothorax" -> h.setHemothorax(value);
+                                                                    case "blood" -> h.bloodVolume(value);
+                                                                    case "contiousness" -> h.consciousness(value);
+                                                                    case "hemothorax" -> h.hemothorax(value);
                                                                     case "internalbleeding" ->
-                                                                            h.setInternalBleeding(value);
-                                                                    case "oxygen" -> h.setBloodOxygen(value);
-                                                                    case "bloodviscosity" -> h.setBloodViscosity(value);
+                                                                            h.internalBleeding(value);
+                                                                    case "oxygen" -> h.bloodOxygen(value);
+                                                                    case "bloodviscosity" -> h.bloodViscosity(value);
                                                                     case "brainhealth" -> h.brainHealth(value);
-                                                                    case "dirtyness" -> h.setDirtiness(value);
-                                                                    case "painshock" -> h.setShock(value);
-                                                                    case "temperature" -> h.setTemperature(value);
+                                                                    case "dirtyness" -> h.dirtiness(value);
+                                                                    case "painshock" -> h.shock(value);
+                                                                    case "temperature" -> h.temperature(value);
                                                                     case "lefteyeblind" -> h.setLeftEyeBlind(value > 0);
                                                                     case "righteyeblind" ->
                                                                             h.setRightEyeBlind(value > 0);
@@ -295,7 +295,7 @@ public class ModCommands {
                 for (Limb limb : Limb.values()) {
                     data.getLimb(limb).setBleedRate(0);
                 }
-                data.setInternalBleeding(0);
+                data.internalBleeding(0);
             });
         }
 

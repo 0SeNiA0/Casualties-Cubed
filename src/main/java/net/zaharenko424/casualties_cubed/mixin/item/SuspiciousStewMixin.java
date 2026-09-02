@@ -33,7 +33,7 @@ public abstract class SuspiciousStewMixin {
             if (data == null) return;
 
             if (eff == MobEffects.POISON) {
-                data.addVenom(Math.max(10, effect.getDuration() * Util.TICK_TO_SEC * (1 + effect.getAmplifier())));
+                data.addVenomTotal(Math.max(10, effect.getDuration() * Util.TICK_TO_SEC * (1 + effect.getAmplifier())));
             } else data.addSickness(effect.getDuration() * Util.TICK_TO_SEC * 0.5f * (1 + effect.getAmplifier()));
         };
     }

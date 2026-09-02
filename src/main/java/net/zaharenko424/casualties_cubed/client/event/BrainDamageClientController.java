@@ -99,7 +99,7 @@ public class BrainDamageClientController {
         Player player = minecraft.player;
         if (player == null) return;
 
-        float consciousness = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
+        float consciousness = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::consciousness).orElse(100f);
         float brain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
 
         if (brain < 100) {

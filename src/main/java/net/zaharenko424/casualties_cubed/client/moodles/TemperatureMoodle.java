@@ -20,7 +20,7 @@ public class TemperatureMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float temp = data.getTemperature();
+        float temp = data.temperature();
         low = temp < 36.6;
 
         if (temp <= 28 || temp >= 41.5) {

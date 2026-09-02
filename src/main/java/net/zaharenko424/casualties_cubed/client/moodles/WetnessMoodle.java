@@ -16,7 +16,7 @@ public class WetnessMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float wetness = data.getWetness();
+        float wetness = data.wetness();
 
         if (wetness > 70) {
             setStatus(MoodleStatus.CRITICAL_NEG);

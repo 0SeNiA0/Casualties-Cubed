@@ -33,8 +33,8 @@ public class BloodBagItem extends AutoInjectorItem implements FluidTint {
 
         if (!pLevel.isClientSide) {
             PlayerHealthData data = PlayerHealthData.of(pPlayer).orElse(null);
-            canInsert = data.getBloodVolume() * 1000 < canInsert ? (int) Math.floor(data.getBloodVolume() * 1000) : canInsert;
-            data.setBloodVolume(data.getBloodVolume() - canInsert / 1000f);
+            canInsert = data.bloodVolume() * 1000 < canInsert ? (int) Math.floor(data.bloodVolume() * 1000) : canInsert;
+            data.bloodVolume(data.bloodVolume() - canInsert / 1000f);
             addFluid(stack, ModFluids.BLOOD, canInsert);
             handler.fill(new FluidStack(ModFluids.BLOOD.get(), canInsert), IFluidHandler.FluidAction.EXECUTE);
         }

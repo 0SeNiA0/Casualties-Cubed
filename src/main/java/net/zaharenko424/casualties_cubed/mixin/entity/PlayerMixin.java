@@ -39,7 +39,7 @@ public abstract class PlayerMixin {
         PlayerHealthData data = PlayerHealthData.of(thisPl).orElse(null);
         if (data == null) return original;
 
-        return thisPl.isSleeping() && !thisPl.level().isDay() && data.getConsciousness() <= 10;
+        return thisPl.isSleeping() && !thisPl.level().isDay() && data.consciousness() <= 10;
     }
 
     @ModifyReturnValue(at = @At("RETURN"), method = "canEat")

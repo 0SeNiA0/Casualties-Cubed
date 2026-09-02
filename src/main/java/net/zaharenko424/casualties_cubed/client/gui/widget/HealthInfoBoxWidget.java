@@ -160,15 +160,15 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         brainText.component(Component.literal("" + Math.round(data.brainHealth())));
         renderFlashingText(brainText, guiGraphics, glowColor, data.brainHealth() < 50);
 
-        consciousnessText.component(Component.literal(Math.round(data.getConsciousness()) + "%"));
-        renderFlashingText(consciousnessText, guiGraphics, glowColor, data.getConsciousness() < 40);
+        consciousnessText.component(Component.literal(Math.round(data.consciousness()) + "%"));
+        renderFlashingText(consciousnessText, guiGraphics, glowColor, data.consciousness() < 40);
 
-        avgPainText.component(Component.literal(Math.round(data.getAveragePain()) + "%"));
-        renderFlashingText(avgPainText, guiGraphics, glowColor, data.getAveragePain() > 75);
+        avgPainText.component(Component.literal(Math.round(data.averagePain()) + "%"));
+        renderFlashingText(avgPainText, guiGraphics, glowColor, data.averagePain() > 75);
 
-        renderTintedFilledImage(bloodBarImg, guiGraphics, partialTick, glowColor, data.getBloodVolume() / 5);
-        bloodText.component(Component.translatable("casualties_cubed.gui.health.blood_volume", String.format("%.2f", data.getBloodVolume())));
-        renderFlashingText(bloodText, guiGraphics, glowColor, data.getBloodVolume() < Util.CUBloodPointsToL(25));
+        renderTintedFilledImage(bloodBarImg, guiGraphics, partialTick, glowColor, data.bloodVolume() / 5);
+        bloodText.component(Component.translatable("casualties_cubed.gui.health.blood_volume", String.format("%.2f", data.bloodVolume())));
+        renderFlashingText(bloodText, guiGraphics, glowColor, data.bloodVolume() < Util.CUBloodPointsToL(25));
 
         //blood loss bleed * 20 * 60
         float totalBleed = data.totalBleedSpeed() * 20;
@@ -177,12 +177,12 @@ public class HealthInfoBoxWidget extends AbstractWidget {
             renderFlashingText(bleedText, guiGraphics, glowColor, totalBleed > Util.CUBloodPointsToL(0.06f));
         }
 
-        immunityText.component(Component.literal(Math.round(data.getImmunity()) + "%"));
-        renderFlashingText(immunityText, guiGraphics, glowColor, data.getImmunity() < 50);
+        immunityText.component(Component.literal(Math.round(data.immunity()) + "%"));
+        renderFlashingText(immunityText, guiGraphics, glowColor, data.immunity() < 50);
 
-        renderTintedFilledImage(thermometerBarImg, guiGraphics, partialTick, glowColor, (data.getTemperature() - 28) * 0.08f);
-        temperatureText.component(Component.literal(String.format("%.1f", data.getTemperature()) + "°c"));
-        renderFlashingText(temperatureText, guiGraphics, glowColor, data.getTemperature() < 30 || data.getTemperature() > 41);
+        renderTintedFilledImage(thermometerBarImg, guiGraphics, partialTick, glowColor, (data.temperature() - 28) * 0.08f);
+        temperatureText.component(Component.literal(String.format("%.1f", data.temperature()) + "°c"));
+        renderFlashingText(temperatureText, guiGraphics, glowColor, data.temperature() < 30 || data.temperature() > 41);
 
         renderTintedFilledImage(waterBarImg, guiGraphics, partialTick, glowColor, data.thirst() * 0.01f);
         waterBarOverfillImg.fillAmount = (data.thirst() - 100) * 0.01f;
@@ -199,11 +199,11 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         renderTintedFilledImage(staminaRight, guiGraphics, partialTick, glowColor, data.stamina() / 50);
         renderTintedFilledImage(staminaLeft, guiGraphics, partialTick, glowColor,  (data.stamina() - 50) / 50);
 
-        hemothoraxFillImg.fillAmount = data.getHemothorax() * 0.01f;
+        hemothoraxFillImg.fillAmount = data.hemothorax() * 0.01f;
         hemothoraxFillImg.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        sicknessText.component(Component.literal(Math.round(data.getSickness()) + "%"));
-        renderFlashingText(sicknessText, guiGraphics, glowColor, data.getSickness() > 70);
+        sicknessText.component(Component.literal(Math.round(data.sickness()) + "%"));
+        renderFlashingText(sicknessText, guiGraphics, glowColor, data.sickness() > 70);
 
         weightText.component(Component.literal(Util.ONE_OPTIONAL.format(data.weightOffset() * 0.34f + 50) + "kg"));
         renderFlashingText(weightText, guiGraphics, glowColor, Math.abs(data.weightOffset()) > 55);
@@ -235,11 +235,11 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         renderFlashingText(radText, guiGraphics, glowColor, data.radiationSickness() > 25);
 
         float bloodPressure = data.bloodPressure();
-        heartRatePressureText.component(Component.literal(Math.round(data.getHeartRate()) + " | " + Math.round(bloodPressure) + "/" + Math.round(bloodPressure * 0.66f)));
+        heartRatePressureText.component(Component.literal(Math.round(data.heartRate()) + " | " + Math.round(bloodPressure) + "/" + Math.round(bloodPressure * 0.66f)));
         renderFlashingText(heartRatePressureText, guiGraphics, glowColor, data.isCardiacArrest() || data.fibrillationRising() || bloodPressure > 160 || bloodPressure < 75);
 
-        oxygenText.component(Component.literal(Math.round(data.getBloodOxygen()) + "%"));
-        renderFlashingText(oxygenText, guiGraphics, glowColor, data.getBloodOxygen() < 70);
+        oxygenText.component(Component.literal(Math.round(data.bloodOxygen()) + "%"));
+        renderFlashingText(oxygenText, guiGraphics, glowColor, data.bloodOxygen() < 70);
 
 
         //Limb stats

@@ -21,7 +21,7 @@ public class OxygenMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float ox = data.getBloodOxygen();
+        float ox = data.bloodOxygen();
 
         if (ox < 45) {
             setStatus(MoodleStatus.CRITICAL_NEG);

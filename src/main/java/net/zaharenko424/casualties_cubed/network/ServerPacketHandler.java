@@ -310,9 +310,9 @@ public class ServerPacketHandler {
                 switch (packet.success()) {
                     case LOW -> {
                         if (chest.getMuscleHealth() <= 5)
-                            targetData.setBloodOxygen(Math.max(targetData.getBloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 3));
+                            targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 3));
                         else
-                            targetData.setBloodOxygen(Math.max(targetData.getBloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
+                            targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
 
                         chest.addPain((random.nextFloat() + 0.5f) * 30);
                         if (random.nextInt(8) == 0) {
@@ -324,9 +324,9 @@ public class ServerPacketHandler {
                     }
                     case MEDIUM -> {
                         if (chest.getMuscleHealth() <= 5)
-                            targetData.setBloodOxygen(Math.max(targetData.getBloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 4));
+                            targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 4));
                         else
-                            targetData.setBloodOxygen(Math.max(targetData.getBloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 8));
+                            targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 8));
 
                         chest.addPain((random.nextFloat() + 0.5f) * 20);
                         if (random.nextInt(6) == 0) {
@@ -338,9 +338,9 @@ public class ServerPacketHandler {
                     }
                     case HIGH -> {
                         if (chest.getMuscleHealth() <= 5)
-                            targetData.setBloodOxygen(Math.max(targetData.getBloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
+                            targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
                         else
-                            targetData.setBloodOxygen(Math.max(targetData.getBloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 12));
+                            targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 12));
 
                         chest.addPain((random.nextFloat() + 0.5f) * 10);
                         if (random.nextInt(4) == 0) {
@@ -351,7 +351,7 @@ public class ServerPacketHandler {
                         }
                     }
                 }
-                targetData.setConsciousness(targetData.getConsciousness() - 5);
+                targetData.consciousness(targetData.consciousness() - 5);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -364,7 +364,7 @@ public class ServerPacketHandler {
 
             sender.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
                     .ifPresent(data -> {
-                        if (data.getConsciousness() <= 10) data.kill(sender, true);
+                        if (data.consciousness() <= 10) data.kill(sender, true);
                     });
         });
         ctx.get().setPacketHandled(true);

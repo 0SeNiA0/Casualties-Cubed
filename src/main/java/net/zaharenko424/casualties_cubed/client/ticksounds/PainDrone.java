@@ -45,10 +45,10 @@ public class PainDrone extends AbstractTickableSoundInstance {
 
     public void update(Player player){
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            float painscale = (h.getAveragePain())/100f;
-            float cons = h.getConsciousness();
+            float painscale = (h.averagePain())/100f;
+            float cons = h.consciousness();
             painscale = Mth.clamp(painscale,0.6f,1.1f);
-            if (h.getAveragePain() < 50) {
+            if (h.averagePain() < 50) {
                 this.targetVol = 0;
                 return;
             }

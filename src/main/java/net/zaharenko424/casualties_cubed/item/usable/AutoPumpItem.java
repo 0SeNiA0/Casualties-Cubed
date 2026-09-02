@@ -30,7 +30,7 @@ public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowIn
         if (limb != Limb.THORAX) return;
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                data.setLifeSupportTimer(5 * 60 * 20));
+                data.lifeSupportTimer(5 * 60 * 20));
 
         if (!source.isCreative()) stack.shrink(1);
         source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

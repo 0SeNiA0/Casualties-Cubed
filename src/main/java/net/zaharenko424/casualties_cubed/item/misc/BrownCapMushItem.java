@@ -92,7 +92,7 @@ public class BrownCapMushItem extends Item {
 
         if (maineffect <= .1) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setConsciousness(0);
+                h.consciousness(0);
             });
         } else if (maineffect <= .15) {
             player.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 4));
@@ -100,7 +100,7 @@ public class BrownCapMushItem extends Item {
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 4));
         } else if (maineffect <= .31) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature() - 4.5f);
+                h.temperature(h.temperature() - 4.5f);
             });
         } else if (maineffect <= .39) {
             player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() + 10);
@@ -110,7 +110,7 @@ public class BrownCapMushItem extends Item {
             player.getFoodData().setSaturation(player.getFoodData().getSaturationLevel() - 20);
         } else if (maineffect <= .57) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature() + 4.5f);
+                h.temperature(h.temperature() + 4.5f);
             });
         }
     }

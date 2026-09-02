@@ -148,7 +148,7 @@ public class HealthScreen extends Screen {
         addRenderableWidget(RightItem);
         addRenderableWidget(healthbox);
         addRenderableWidget(cprButton);
-        cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getConsciousness() < 10).orElse(false);
+        cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.consciousness() < 10).orElse(false);
 
         ModNetwork.CHANNEL.sendToServer(new ServerboundGuiSyncTogglePacket(target.getId(), true));
 
@@ -317,7 +317,7 @@ public class HealthScreen extends Screen {
     @Override
     public void tick() {
         super.tick();
-        cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.getConsciousness() < 10).orElse(false) && (target != Minecraft.getInstance().player);
+        cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.consciousness() < 10).orElse(false) && (target != Minecraft.getInstance().player);
 
         if (!target.isAlive()) {
             onClose(); // target gone

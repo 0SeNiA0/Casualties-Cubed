@@ -21,7 +21,7 @@ public class InternalBleedingMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float bleed = data.getInternalBleeding();
+        float bleed = data.internalBleeding();
 
         if (bleed > 0.6498) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);

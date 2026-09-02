@@ -29,7 +29,7 @@ public class BoneWeldingItem extends Item implements ISimpleMedicalUsable, IAllo
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setBloodViscosity(data.getBloodViscosity() + 2);
+            data.bloodViscosity(data.bloodViscosity() + 2);
             LimbStatistics stats = data.getLimb(limb);
 
             stats.addSkinHealth(-25);

@@ -23,8 +23,8 @@ public class LootPlayerEvent {
         Player actor = event.getEntity();
         if (!actor.isShiftKeyDown()) return;
 
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-            if (h.getConsciousness() <= 4) {
+        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!data.isConscious()) {
                 if (!actor.level().isClientSide) {
                     NetworkHooks.openScreen(
                             (ServerPlayer) actor,

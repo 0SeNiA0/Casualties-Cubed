@@ -20,7 +20,7 @@ public class ToxicosisMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float venom = data.getVenom();
+        float venom = data.venomCurrent();
 
         if (venom > 80) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);

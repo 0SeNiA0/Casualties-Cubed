@@ -27,7 +27,7 @@ public class HeatPackItem extends Item implements ISimpleMedicalUsable, IAllowIn
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setTemperature(data.getTemperature() + 1f);
+            data.temperature(data.temperature() + 1f);
             LimbStatistics stats = data.getLimb(limb);
 
             stats.addMuscleHealth(20);

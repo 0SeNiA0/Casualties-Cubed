@@ -17,7 +17,7 @@ public class PainMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float totalPain = data.getAveragePain();
+        float totalPain = data.averagePain();
 
         if (totalPain > 80) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);

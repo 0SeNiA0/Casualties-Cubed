@@ -232,17 +232,17 @@ public class ClientEvent {
         if (player == null) return;
 
         float Oxygen = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getBloodOxygen)
+                .map(PlayerHealthData::bloodOxygen)
                 .orElse(0f);
 
         float stab = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getStability)
+                .map(PlayerHealthData::stability)
                 .orElse(100f);
 
         lastStab = Mth.lerp(0.1f, lastStab, stab);
 
         double Pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                        .map(PlayerHealthData::getAveragePain)
+                        .map(PlayerHealthData::averagePain)
                                 .orElse(0f);
 
         GuiGraphics gui = event.getGuiGraphics();
@@ -285,7 +285,7 @@ public class ClientEvent {
         Minecraft mc =  Minecraft.getInstance();
         if (mc.player == null) return;
 
-        float soundPenalty = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getHearingLoss).orElse(0f);
+        float soundPenalty = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::hearingLoss).orElse(0f);
         if (soundPenalty <= 0) return;
 
         event.setNewVolume(event.getOriginalVolume() * (1 - soundPenalty));

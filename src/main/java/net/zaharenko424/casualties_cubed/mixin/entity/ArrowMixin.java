@@ -21,7 +21,7 @@ public abstract class ArrowMixin {
     private boolean replacePoison(LivingEntity instance, MobEffectInstance pEffectInstance, Entity pEntity, Operation<Boolean> original) {
         if (pEffectInstance.getEffect() != MobEffects.POISON || !(instance instanceof ServerPlayer player)) return original.call(instance, pEffectInstance, pEntity);
 
-        PlayerHealthData.of(player).ifPresent(data -> data.addVenom(pEffectInstance.getDuration() * Util.TICK_TO_SEC * Math.max(1 ,pEffectInstance.getAmplifier() * 10)));
+        PlayerHealthData.of(player).ifPresent(data -> data.addVenomTotal(pEffectInstance.getDuration() * Util.TICK_TO_SEC * Math.max(1 ,pEffectInstance.getAmplifier() * 10)));
         return true;
     }
 }

@@ -26,7 +26,7 @@ public class IcePackItem extends Item implements ISimpleMedicalUsable, IAllowInM
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            data.setTemperature(data.getTemperature() - 1);
+            data.temperature(data.temperature() - 1);
             data.getLimb(limb).setChilled();
         });
 

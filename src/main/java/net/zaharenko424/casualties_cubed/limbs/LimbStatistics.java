@@ -375,8 +375,8 @@ public class LimbStatistics {
 
     public float totalForce() {
         return muscleHealth * 0.01f * (dislocationTimer > 0 || boneHealTimer > 0 || hasSplint ? 0 : 1) * (amputated ? 0 : 1)
-                * Mth.clamp(1 - (Math.max(pain, data.getAveragePain()) - data.currentAdrenaline() * 0.5f) * 0.007f, 0, 1)
-                * data.getBloodOxygen() * 0.01f;//+ strokeAffected?
+                * Mth.clamp(1 - (Math.max(pain, data.averagePain()) - data.currentAdrenaline() * 0.5f) * 0.007f, 0, 1)
+                * data.bloodOxygen() * 0.01f;//+ strokeAffected?
     }
 
     boolean sync() {
@@ -403,11 +403,11 @@ public class LimbStatistics {
 
         if (burn > 0) burn -= Math.min(burn, 0.1f * Util.TICK_TO_SEC);// 0.1/s -> 100 to 0 in ~16min
 
-        data.setBloodVolume(data.getBloodVolume() - bleedRate);
+        data.bloodVolume(data.bloodVolume() - bleedRate);
 
         float newPain = 15 - skinHealth * 0.15f + infection * 0.1f;
         setPain(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain));
-        if (data.getTemperature() < 32) {
+        if (data.temperature() < 32) {
             addPain(-Util.TICK_TO_SEC * 5);
         }
 
@@ -416,7 +416,7 @@ public class LimbStatistics {
 
         //CU uses dislocated/broken booleans which is effectively respective healTimer > 0
 
-        if (shrapnel == 0 && bleedRate > 0 && data.getVenom() < 20) {
+        if (shrapnel == 0 && bleedRate > 0 && data.venomCurrent() < 20) {
             /*mul twice as bleed is per tick TODO make per second or smth*/
             addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(data.bleedClottingSpeed() * ServerConfig.HEALING_RATE.get().floatValue() * bleedSpeedMult()));
             if (bandageSlowAmount > 0) addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(1.25f * bleedSpeedMult()));
@@ -439,7 +439,7 @@ public class LimbStatistics {
             float infectionSpeed = infectionSpeed();
             addInfection(infectionSpeed * Util.TICK_TO_SEC / 60 * ServerConfig.INFECTION_RATE.get().floatValue());
 
-            if (data.getTemperature() < 40.5f) {
+            if (data.temperature() < 40.5f) {
                 data.addTemperature(0.02f * Util.TICK_TO_SEC);
             }
         }
@@ -470,7 +470,7 @@ public class LimbStatistics {
         if (muscleHealth <= muscleDeathThreshold) {
             if (limb == Limb.THORAX) {
                 data.respiratoryRate(0);
-                data.setInternalBleeding(data.getInternalBleeding() + 0.2f * Util.TICK_TO_SEC);
+                data.internalBleeding(data.internalBleeding() + 0.2f * Util.TICK_TO_SEC);
             }
         }
 
@@ -483,7 +483,7 @@ public class LimbStatistics {
             addBurn(-0.5f * Util.TICK_TO_SEC);
         }
 
-        if (data.getBloodOxygen() <= 5 || data.bloodPressure() < 20) {
+        if (data.bloodOxygen() <= 5 || data.bloodPressure() < 20) {
             addMuscleHealth(-0.6f * Util.TICK_TO_SEC);
         }
 

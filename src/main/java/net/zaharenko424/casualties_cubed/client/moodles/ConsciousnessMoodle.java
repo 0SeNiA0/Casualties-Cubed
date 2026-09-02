@@ -20,7 +20,7 @@ public class ConsciousnessMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float consciousness = data.getConsciousness();
+        float consciousness = data.consciousness();
 
         if (consciousness < 20) {
             fullyUNC = true;

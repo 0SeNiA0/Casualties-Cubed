@@ -72,8 +72,8 @@ public class ConsciousnessOverlay implements IOverlay {
 
     public void calculate(Player player) {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            intensity = (70 - Math.max(data.getConsciousness() - 30, 0)) / 70;
-            dying = data.getBloodOxygen() < 4;
+            intensity = (70 - Math.max(data.consciousness() - 30, 0)) / 70;
+            dying = data.bloodOxygen() < 4;
             brain = data.brainHealth();
         });
     }

@@ -16,7 +16,7 @@ public class SicknessMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float sickness = data.getSickness();
+        float sickness = data.sickness();
 
         if (sickness > 75) {
             setStatus(MoodleStatus.CRITICAL_NEG, sickness > 95);

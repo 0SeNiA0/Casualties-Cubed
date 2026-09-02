@@ -197,13 +197,13 @@ public class CommonEvent {
     public static void onFoodEaten(LivingEntityUseItemEvent.Finish event) {
         if (!(event.getEntity() instanceof Player player)) return;
         ItemStack stack = event.getItem();
-        FoodAndDrinkCompat.FoodEntry data = FoodAndDrinkCompat.get(stack.getItem());
-        if (data != null)
-            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                h.setTemperature(h.getTemperature() + data.temperature);
-                //TODO thirst
-                //TODO sickness
-
+        FoodAndDrinkCompat.FoodEntry foodEntry = FoodAndDrinkCompat.get(stack.getItem());
+        if (foodEntry != null)
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.temperature(data.temperature() + foodEntry.temperature);
+                data.addTemperature(foodEntry.temperature);
+                data.addSickness(foodEntry.sickness);
+                data.drink(foodEntry.thirst);
             });
     }
 
@@ -245,7 +245,7 @@ public class CommonEvent {
 
             if (item.isEdible()) {
                 if (head.getDislocationTimer() > 0) {
-                    head.addDislocationTimer(25);
+                    head.addDislocationTimer(5);
                 }
             }
         });
@@ -335,6 +335,7 @@ public class CommonEvent {
         double dist;
         float distScale;
         for (Player player : level.getEntitiesOfClass(Player.class, checkBounds)) {
+            if (player.getAbilities().invulnerable) continue;
 
             // 4. Check the precise spherical distance
             dist = player.position().distanceTo(explosionPos);
@@ -359,9 +360,9 @@ public class CommonEvent {
 
             if (distScale > 0.1) {
                 player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                    data.setConsciousness(data.getConsciousness() - (100 * finalDistanceScale));
-                    data.setHearingLoss((float) (data.getHearingLoss() + Math.max(0.05, finalDistanceScale / 2f)));
-                    data.setFlashHearingLoss(data.getFlashHearingLoss() + Math.min(0.25f, finalDistanceScale * 4));
+                    data.consciousness(data.consciousness() - (100 * finalDistanceScale));
+                    data.hearingLoss((float) (data.hearingLoss() + Math.max(0.05, finalDistanceScale / 2f)));
+                    data.flashHearingLoss(data.flashHearingLoss() + Math.min(0.25f, finalDistanceScale * 4));
                 });
             }
         }

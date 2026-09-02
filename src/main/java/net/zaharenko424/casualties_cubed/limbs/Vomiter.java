@@ -24,10 +24,10 @@ public class Vomiter {
     }
 
     public void update(ServerPlayer player) {
-        if (data.getSickness() > 50) {
-            vomitTime += Util.TICK_TO_SEC * data.getSickness() * 0.01f;
+        if (data.sickness() > 50) {
+            vomitTime += Util.TICK_TO_SEC * data.sickness() * 0.01f;
         } else {
-            vomitTime += Util.TICK_TO_SEC * data.getSickness() * 0.0025f;
+            vomitTime += Util.TICK_TO_SEC * data.sickness() * 0.0025f;
         }
 
         Painkillers painkillers = data.painkillers;
@@ -35,7 +35,7 @@ public class Vomiter {
             vomitTime -= Mth.clamp(painkillers.currentOpiateReception(), -25, 0) * Util.TICK_TO_SEC * 0.02f;
         }
 
-        bloodVomitTime += Util.TICK_TO_SEC * data.getInternalBleedingCapped() * 1.25f;
+        bloodVomitTime += Util.TICK_TO_SEC * data.internalBleedingCapped() * 1.25f;
 
         if (bloodVomitTime > 15) {
             bloodVomitTime = 0;
@@ -65,7 +65,7 @@ public class Vomiter {
         if (vomitProgress < 5 * 20) {// 5s
             data.temporarySlowdown = Math.max(data.temporarySlowdown, vomitProgress / 20 * 0.15f);
             vomitProgress++;
-            data.setConsciousness(Math.min(data.getConsciousness(), 100 - vomitProgress * Util.TICK_TO_SEC * 13.5f));
+            data.consciousness(Math.min(data.consciousness(), 100 - vomitProgress * Util.TICK_TO_SEC * 13.5f));
             return;
         }
 
@@ -73,11 +73,11 @@ public class Vomiter {
         data.addHunger(-(17 + vomitPower * 5));
         data.drink(-(10 + vomitPower * 5));
         data.addSickness(-8 - vomitPower * 5);
-        data.setBloodVolume(data.getBloodVolume() - Util.CU_BLOOD_POINT_AS_L);
+        data.bloodVolume(data.bloodVolume() - Util.CU_BLOOD_POINT_AS_L);
 
         if (vomitPower > 0) {
             //extra particles
-            data.setInternalBleeding(data.getInternalBleeding() + vomitPower * Util.CUBloodPointsToL(10));
+            data.internalBleeding(data.internalBleeding() + vomitPower * Util.CUBloodPointsToL(10));
         }
 
         data.temporarySlowdown = Math.max(data.temporarySlowdown, 0.95f);
@@ -102,14 +102,14 @@ public class Vomiter {
         if (bloodVomitProgress < 5 * 20) {
             data.temporarySlowdown = Math.max(data.temporarySlowdown, bloodVomitProgress / 20 * 0.15f);
             bloodVomitProgress++;
-            data.setConsciousness(Math.min(data.getConsciousness(), 100 - bloodVomitProgress * Util.TICK_TO_SEC * 10));
+            data.consciousness(Math.min(data.consciousness(), 100 - bloodVomitProgress * Util.TICK_TO_SEC * 10));
             return;
         }
 
         data.addHappiness(-0.8f);
         data.temporarySlowdown = Math.max(data.temporarySlowdown, 0.6f);
         data.drink(-1);
-        data.setBloodVolume(data.getBloodVolume() - Util.CU_BLOOD_POINT_AS_L);
+        data.bloodVolume(data.bloodVolume() - Util.CU_BLOOD_POINT_AS_L);
 
         player.serverLevel().playSound(null, player,ModSounds.VOMIT.get(), SoundSource.PLAYERS, 1, 1);
         if (player.isSleeping()) {//if sleeping without pills wake up

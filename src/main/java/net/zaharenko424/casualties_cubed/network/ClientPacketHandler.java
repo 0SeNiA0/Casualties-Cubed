@@ -66,7 +66,7 @@ public class ClientPacketHandler {
             float volume = 1 - (targetData.fibrillationProgress() - 50) / 80;
             RegistryObject<SoundEvent> sound;
             if (criticallyDying) {
-                sound = isScreenActive && targetData.getChip().isActive()
+                sound = isScreenActive && targetData.chip().isActive()
                         ? ModSounds.HEART_THUMP_HEAVY_MONITOR
                         : ModSounds.HEART_THUMP_HEAVY;
             } else sound = ModSounds.HEART_THUMP;

@@ -129,23 +129,23 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
         } else if (roll <= .39) {
             data.painkillers.addOpiates(100);
         } else if (roll <= .54) {
-            data.setTemperature(43);
+            data.temperature(43);
         } else if (roll <= .59) {
-            data.setTemperature(25);
+            data.temperature(25);
         } else if (roll <= .64) {
-            data.setHearingLoss(1);
-            data.setFlashHearingLoss(1);
+            data.hearingLoss(1);
+            data.flashHearingLoss(1);
         } else if (roll <= .79) {
             LimbStatistics stats = data.getLimb(Limb.weigtedRandomLimb());
             stats.setPain(150);
             stats.setSkinHealth(0);
             stats.setMuscleHealth(0);
         } else if (roll <= .84) {
-            data.setShock(1);
+            data.shock(1);
         } else if (roll <= .94) {
-            data.setInternalBleeding(0.2f / 20f / 60f);
+            data.internalBleeding(0.2f / 20f / 60f);
         } else if (roll <= .99) {
-            data.setBloodVolume(3f);
+            data.bloodVolume(3f);
         } else {
             Limb limb = AMPUTATABLE.get(random.nextInt(AMPUTATABLE.size()));
             if (limb == Limb.HEAD) {
@@ -171,12 +171,12 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
         } else if (roll < 25) {
             player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 200, 5));
         } else if (roll < 35) {
-            data.setBloodVolume(5);
-            data.setBloodViscosity(0);
+            data.bloodVolume(5);
+            data.bloodViscosity(0);
             for (Limb limb : Limb.values()) {
                 data.getLimb(limb).setBleedRate(0);
             }
-            data.setInternalBleeding(0);
+            data.internalBleeding(0);
         } else if (roll < 45) {
             data.painkillers.reset();
         } else if (roll < 55) {
@@ -192,16 +192,16 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
                 data.getLimb(limb).setMuscleHealth(100);
             }
         } else if (roll < 77) {
-            data.setTemperature(36.6f);
+            data.temperature(36.6f);
         } else if (roll < 87) {
-            data.setTriedRollingLastStand(false);
+            data.triedRollingLastStand(false);
         } else if (roll < 90) {
             for (Limb limb : Limb.values()) {
                 data.getLimb(limb).setDisinfectionTimerAtLeast(10 * 60 * 20);
             }
-            data.setAntibioticTimer(10 * 60 * 20);
+            data.antibioticTimer(10 * 60 * 20);
         } else if (roll < 95) {
-            data.setHearingLoss(0);
+            data.hearingLoss(0);
         } else {
             for (Limb limb : Limb.values()) {
                 data.getLimb(limb).setInfection(0);

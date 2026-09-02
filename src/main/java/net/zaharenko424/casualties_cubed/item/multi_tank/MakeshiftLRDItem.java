@@ -35,7 +35,7 @@ public class MakeshiftLRDItem extends LRDItem {
                 stats.addInfection(-10 * stats.infectionSpeedMult);
                 stats.setDisinfectionTimerAtLeast(400);
                 data.adrenaline(data.adrenaline() + 60);
-                data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));
+                data.venomTotal(Util.moveTowards(12, data.venomTotal(), 0));
 
                 for (Limb limb1 : limb.getConnectedLimbs()) {
                     stats = data.getLimb(limb1);
@@ -45,7 +45,7 @@ public class MakeshiftLRDItem extends LRDItem {
                     stats.setDisinfectionTimerAtLeast(300);
                 }
 
-                if (limb == Limb.THORAX) data.setInternalBleeding(data.getInternalBleeding() * 0.75f);
+                if (limb == Limb.THORAX) data.internalBleeding(data.internalBleeding() * 0.75f);
             });
 
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

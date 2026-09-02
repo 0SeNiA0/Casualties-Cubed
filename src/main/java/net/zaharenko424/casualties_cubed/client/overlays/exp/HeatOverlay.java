@@ -19,7 +19,7 @@ public class HeatOverlay implements IShaderOverlay {
     public boolean shouldRender() {
         Minecraft mc = Minecraft.getInstance();
         float temp = (float)(mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getTemperature).orElse(36.6f) );
+                .map(PlayerHealthData::temperature).orElse(36.6f) );
 
         return temp>40;
     }
@@ -35,7 +35,7 @@ public class HeatOverlay implements IShaderOverlay {
 
         // interpolate between last tick and current tick values
         float temp = (mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(PlayerHealthData::getTemperature).orElse(36.6f) );
+                .map(PlayerHealthData::temperature).orElse(36.6f) );
 
         temp = Mth.clamp((temp-40)/2, 0f, 1f);
 

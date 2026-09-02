@@ -67,8 +67,8 @@ public class PainOverlay implements IOverlay {
 
     public void calculate(Player player) {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            if (h.getConsciousness()>5){
-                setIntensity(h.getAveragePain()/100f);
+            if (h.consciousness()>5){
+                setIntensity(h.averagePain()/100f);
             }else {
                 setIntensity(0);
             }

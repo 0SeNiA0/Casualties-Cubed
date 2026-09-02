@@ -152,7 +152,7 @@ public class HitboxEvents {
         }
 
         if (src.is(DamageTypes.FREEZE)) {
-            data.setTemperature(data.getTemperature() - damageamount * 1.8f);
+            data.temperature(data.temperature() - damageamount * 1.8f);
             event.setAmount(0);
             return;
         }
@@ -289,9 +289,9 @@ public class HitboxEvents {
         }
 
         data.brainHealth(data.brainHealth() - .5f * damage);//200 sonic boom damage will insta kill
-        data.setHearingLoss(Math.max(.06f * damage, data.getHearingLoss()));
-        data.setConsciousness(data.getConsciousness() - 6.9f * damage);
-        data.setInternalBleeding(data.getInternalBleeding() + (0.0171f + 0.00855f * random.nextFloat()) * damage);
+        data.hearingLoss(Math.max(.06f * damage, data.hearingLoss()));
+        data.consciousness(data.consciousness() - 6.9f * damage);
+        data.internalBleeding(data.internalBleeding() + (0.0171f + 0.00855f * random.nextFloat()) * damage);
     }
 
     private static final float[][] FALL_DAMAGE_STAGES = {
@@ -379,7 +379,7 @@ public class HitboxEvents {
 
     private static void applyConcussion(PlayerHealthData data, Limb limb, float damage) {
         if (limb == Limb.HEAD) {
-            data.setConsciousness(data.getConsciousness() - (Math.max(damage * 2, 10)));
+            data.consciousness(data.consciousness() - (Math.max(damage * 2, 10)));
         }
     }
 

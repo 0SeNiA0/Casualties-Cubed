@@ -70,8 +70,8 @@ public class DislocationMinigameScreen extends Screen implements Minigame {
         boneObject.update();
         Player player = Minecraft.getInstance().player;
         if (player != null) {
-            Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness);
-            Optional<Float> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getAveragePain);
+            Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::consciousness);
+            Optional<Float> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::averagePain);
             float consscale = (cons.orElse(100f) / 100) * 0.15f;
             float painscale = pain.orElse(0f) / 100;
             handObject.setShakeScale(painscale);

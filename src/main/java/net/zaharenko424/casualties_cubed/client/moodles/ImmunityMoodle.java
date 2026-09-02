@@ -23,7 +23,7 @@ public class ImmunityMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float immunity = data.getImmunity();
+        float immunity = data.immunity();
 
         if (immunity > 150) {
             high = true;

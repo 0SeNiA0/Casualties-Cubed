@@ -21,7 +21,7 @@ public class HemothoraxMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float hemothorax = data.getHemothorax();
+        float hemothorax = data.hemothorax();
 
         if (hemothorax > 40) {
             setStatus(MoodleStatus.NORMAL_NEG, hemothorax > 70);

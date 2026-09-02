@@ -127,7 +127,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.CEFTRIAXONE, "Third-generation cephalosporin antibiotic used for the treatment of infections. Increases body immunity for some time, but causes pain.");
         addMedicalFluidFromIdWDesc(ModFluids.FENTANYL, "Highly potent opioid, 100 times stronger than morphine. Consider diluting it.");
         addMedicalFluidFromIdWDesc(ModFluids.KETCHUP, "Sweet and sour tomato paste. Slightly disgusting to drink by itself.");
-        add("medical_fluid." + modid + ".milk", "White liquid food produced by the mammary glands of mammals. Tasty and filling!");
+        add("medical_fluid." + modid + ".milk.description", "White liquid food produced by the mammary glands of mammals. Tasty and filling!");
         addMedicalFluidFromIdWDesc(ModFluids.CHLOROFORM, "A volatile, colorless, sweet-smelling, dense liquid produced on a large scale as a precursor to refrigerants and polytetrafluoroethylene. In practical use, it's very useful at knocking people out.");
         addMedicalFluidWDesc(ModFluids.HIGH_GRADE_STIMULANT, "Medical-Grade Stimulant", "Medical stimulant drug. Gives you a very good kick for a pretty long while, and is generally safe to use. Overdose generally entails weakness, with a negligible crash. Dosage is 100ml.");
         addMedicalFluidWDesc(ModFluids.MID_GRADE_STIMULANT, "Hard Stimulant", "Decently refined stimulating hard drug. Only works intravenously. Will give you a pretty good kick for a short while, but has some side effects. Overdose entails weakness and internal bleeding. Dosage is 50ml.");

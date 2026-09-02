@@ -38,7 +38,7 @@ public abstract class AbstractMoodle {
     }
 
     public boolean shouldBeDisplayed(PlayerHealthData data) {
-        return !chipRequired || data.getChip().isActive();
+        return !chipRequired || data.chip().isActive();
     }
 
     public boolean shouldRender() {

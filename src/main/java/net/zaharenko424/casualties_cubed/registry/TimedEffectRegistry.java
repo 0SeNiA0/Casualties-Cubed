@@ -49,20 +49,20 @@ public class TimedEffectRegistry {
             (player, data, effect) -> data.addSickness(-1));
 
     public static final RegistryObject<TimedEffectFunction> CHLOROFORM = TIMED_EFFECTS.register("chloroform", () ->
-            (player, data, effect) -> data.setConsciousness(Util.moveTowards(8, data.getConsciousness(), 0)));
+            (player, data, effect) -> data.consciousness(Util.moveTowards(8, data.consciousness(), 0)));
 
     public static final RegistryObject<TimedEffectFunction> HOT_SAUCE = TIMED_EFFECTS.register("hot_sauce", () ->
             (player, data, effect) -> {
-                if (data.getTemperature() < 41) {
-                    data.setTemperature(data.getTemperature() + 0.2f);
+                if (data.temperature() < 41) {
+                    data.temperature(data.temperature() + 0.2f);
                 }
             }
     );
 
     public static final RegistryObject<TimedEffectFunction> ICE_CREAM = TIMED_EFFECTS.register("ice_cream", () ->
             (player, data, effect) -> {
-                if (data.getTemperature() > 28.5f) {
-                    data.setTemperature(data.getTemperature() - 0.2f);
+                if (data.temperature() > 28.5f) {
+                    data.temperature(data.temperature() - 0.2f);
                 }
             }
     );
@@ -103,8 +103,8 @@ public class TimedEffectRegistry {
 
     public static final RegistryObject<TimedEffectFunction> PROCOAGULANT = TIMED_EFFECTS.register("procoagulant", () ->
             (player, data, effect) -> {
-                data.setInternalBleeding(data.getInternalBleeding() * 0.95f);
-                data.setBloodViscosity(data.getBloodViscosity() + 1.75f);
+                data.internalBleeding(data.internalBleeding() * 0.95f);
+                data.bloodViscosity(data.bloodViscosity() + 1.75f);
                 data.addStrokeAmount(-10);
 
                 LimbStatistics stats;
@@ -120,8 +120,8 @@ public class TimedEffectRegistry {
                 data.adrenaline(100);
 
                 if (player.isAlive() && data.isCardiacArrest() && player.getRandom().nextFloat() < 0.05f) {
-                    data.setHeartRate(200);
-                    data.setFibrillationProgress(50);
+                    data.heartRate(200);
+                    data.fibrillationProgress(50);
                 }
 
                 if (effect.duration() > 240) {
@@ -136,24 +136,24 @@ public class TimedEffectRegistry {
                 stats.addPain(8);
                 stats.addMuscleHealth(-2.5f);
 
-                data.setShock(data.getShock() + 28);
+                data.shock(data.shock() + 28);
             }
     );
 
     public static final RegistryObject<TimedEffectFunction> OXYLINE = TIMED_EFFECTS.register("oxyline", () ->
             (player, data, effect) -> {
                 data.addRespiratoryRate(2.5f);
-                data.setBloodOxygen(data.getBloodOxygen() + 1.666f);
+                data.bloodOxygen(data.bloodOxygen() + 1.666f);
                 //+2.5 stamina
-                data.setFibrillationProgress(data.fibrillationProgress() - 1.2f);
-                data.setBloodVolume(data.getBloodVolume() + 0.0025f);
+                data.fibrillationProgress(data.fibrillationProgress() - 1.2f);
+                data.bloodVolume(data.bloodVolume() + 0.0025f);
             }
     );
 
     public static final RegistryObject<TimedEffectFunction> AMIODARONE = TIMED_EFFECTS.register("amiodarone", () ->
             (player, data, effect) -> {
                 if (data.fibrillationProgress() > 0) {
-                    data.setFibrillationProgress(Util.moveTowards(2, data.fibrillationProgress(), 0));
+                    data.fibrillationProgress(Util.moveTowards(2, data.fibrillationProgress(), 0));
                 }
 
                 data.getLimb(Limb.HEAD).addMuscleHealth(-0.25f);
@@ -165,7 +165,7 @@ public class TimedEffectRegistry {
     public static final RegistryObject<TimedEffectFunction> HIGH_GRADE_STIMULANT = TIMED_EFFECTS.register("high_grade_stimulant", () ->
             (player, data, effect) -> {
                 //+stamina
-                data.setConsciousness(data.getConsciousness() + 3.5f);
+                data.consciousness(data.consciousness() + 3.5f);
                 data.adrenaline(data.adrenaline() + 25);
 
                 RandomSource random = player.getRandom();
@@ -178,7 +178,7 @@ public class TimedEffectRegistry {
                     //more shakeIntensity
                     //ragdoll
                     if (random.nextFloat() < 0.05f) {
-                        data.setConsciousness(data.getConsciousness() - 50);
+                        data.consciousness(data.consciousness() - 50);
                     }
                     if (random.nextFloat() < 0.05f) {
                         data.addTemperature(-1);
@@ -203,10 +203,10 @@ public class TimedEffectRegistry {
     public static final RegistryObject<TimedEffectFunction> MID_GRADE_STIMULANT = TIMED_EFFECTS.register("mid_grade_stimulant", () ->
             (player, data, effect) -> {
                 //+stamina
-                data.setConsciousness(data.getConsciousness() + 2);
+                data.consciousness(data.consciousness() + 2);
                 //+energy
                 data.addSickness(0.1f);
-                data.setInternalBleeding(data.getInternalBleeding() + 0.000528f);
+                data.internalBleeding(data.internalBleeding() + 0.000528f);
                 data.adrenaline(data.adrenaline() + 7);
 
                 RandomSource random = player.getRandom();
@@ -219,7 +219,7 @@ public class TimedEffectRegistry {
                     //more shakeIntensity
                     //-stamina
                     //ragdoll
-                    data.setInternalBleeding(data.getInternalBleeding() + 0.00132f);
+                    data.internalBleeding(data.internalBleeding() + 0.00132f);
                     data.brainHealth(data.brainHealth() - 0.05f);
 
                     LimbStatistics stats = data.getLimb(Limb.THORAX);
@@ -242,7 +242,7 @@ public class TimedEffectRegistry {
     public static final RegistryObject<TimedEffectFunction> LOW_GRADE_STIMULANT = TIMED_EFFECTS.register("low_grade_stimulant", () ->
             (player, data, effect) -> {
                 //+stamina
-                data.setConsciousness(data.getConsciousness() + 1);
+                data.consciousness(data.consciousness() + 1);
                 //+energy
                 data.addSickness(0.18f);
                 data.adrenaline(data.adrenaline() + 20);
@@ -259,11 +259,11 @@ public class TimedEffectRegistry {
                     //-stamina
                     //-energy
                     if (random.nextFloat() < 0.075f) {
-                        data.setBloodOxygen(data.getBloodOxygen() - 3);
+                        data.bloodOxygen(data.bloodOxygen() - 3);
                     }
                     //ragdoll
                     if (random.nextFloat() < 0.06f) {
-                        data.setConsciousness(0);
+                        data.consciousness(0);
                     }
                     if (random.nextFloat() < 0.035f) {
                         data.vomiter.vomit(player);
@@ -289,13 +289,13 @@ public class TimedEffectRegistry {
                 }
 
                 if (effect.highestDuration() > 50) {
-                    if (effect.duration() < 25 && data.getConsciousness() > effect.duration() * 4) {
-                        data.setConsciousness(effect.duration() * 4);
+                    if (effect.duration() < 25 && data.consciousness() > effect.duration() * 4) {
+                        data.consciousness(effect.duration() * 4);
                     }
 
                     if (effect.duration() <= 1) {
                         //-energy
-                        data.setConsciousness(0);
+                        data.consciousness(0);
                         data.vomiter.vomit(player);
                     }
                 }

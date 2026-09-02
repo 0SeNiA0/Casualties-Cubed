@@ -17,7 +17,7 @@ public class ShockMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.getPainShock() > 0.3) {
+        if (data.painShock() > 0.3) {
             setStatus(MoodleStatus.HEAVY_NEG);
         } else clearStatus();
     }

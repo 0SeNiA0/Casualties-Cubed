@@ -55,7 +55,7 @@ public abstract class MinigameScreen extends Screen implements Minigame {
     public void tick() {
         parent.tick();
 
-        float consciousness = PlayerHealthData.of(target).map(PlayerHealthData::getConsciousness).orElse(0f);
+        float consciousness = PlayerHealthData.of(target).map(PlayerHealthData::consciousness).orElse(0f);
         float f = 75;
         float ff = 0.25f;
         float fff = 4;//+ skill

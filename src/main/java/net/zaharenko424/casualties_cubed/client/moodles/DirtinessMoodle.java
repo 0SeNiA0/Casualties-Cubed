@@ -17,7 +17,7 @@ public class DirtinessMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float dirt = data.getDirtiness();
+        float dirt = data.dirtiness();
 
         if (dirt > 80) {
             setStatus(MoodleStatus.NORMAL_NEG);

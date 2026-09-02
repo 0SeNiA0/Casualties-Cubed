@@ -39,7 +39,7 @@ public class TinnitusSound extends AbstractTickableSoundInstance {
 
     public void update(Player player){
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h->{
-            float painscale = h.getFlashHearingLoss();
+            float painscale = h.flashHearingLoss();
             if (painscale>0){
                 this.volume = 1;
             }

@@ -17,7 +17,7 @@ public class LifeSupportMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.getLifeSupportTimer() > 0) {
+        if (data.lifeSupportTimer() > 0) {
             setStatus(MoodleStatus.LIGHT_NEG);
         } else clearStatus();
     }

@@ -62,14 +62,14 @@ public class MainVoicePlugin implements VoicechatPlugin {
     }
 
     private float getCons(Player player) {
-        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getConsciousness).orElse(100f);
+        return player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::consciousness).orElse(100f);
     }
 
     private short[] applyAllInMods(short[] in) {
         short[] out;
         Player player = Minecraft.getInstance().player;
         float cons = getCons(player);
-        float hearingloss = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::getHearingLoss).orElse(0f);
+        float hearingloss = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::hearingLoss).orElse(0f);
         float hearing_scale = Math.max((100f - cons) / 100f, hearingloss);
         out = applyMuffle(in, hearing_scale);
         return out;

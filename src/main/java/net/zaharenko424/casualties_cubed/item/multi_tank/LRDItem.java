@@ -41,7 +41,7 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
                 data.adrenaline(data.adrenaline() + 90);
                 stats.setBleedRate(stats.getBleedRate() * 0.7f);
                 data.painkillers.addOpiates(10);
-                data.setVenom(Util.moveTowards(12, data.getVenomTotal(), 0));
+                data.venomTotal(Util.moveTowards(12, data.venomTotal(), 0));
 
                 for (Limb limb1 : limb.getConnectedLimbs()) {
                     stats = data.getLimb(limb1);
@@ -52,7 +52,7 @@ public class LRDItem extends MultiTankFluidItem implements ISimpleMedicalUsable,
                     stats.setBleedRate(stats.getBleedRate() * 0.85f);
                 }
 
-                if (limb == Limb.THORAX) data.setInternalBleeding(data.getInternalBleeding() * 0.45f);
+                if (limb == Limb.THORAX) data.internalBleeding(data.internalBleeding() * 0.45f);
             });
 
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

@@ -286,5 +286,6 @@ public class LimbWidget extends AbstractWidget {
         setSubSpriteVisible(StatusSprites.SPLINT, stats.hasSplint());
         setSubSpriteVisible(StatusSprites.DISLOCATION, stats.getDislocationTimer() > 0);
         setSubSpriteVisible(StatusSprites.TOURNIQUET, stats.isTourniquet());
+        setSubSpriteVisible(StatusSprites.CHILLED, stats.isChilled());
     }
 }

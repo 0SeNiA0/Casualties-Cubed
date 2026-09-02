@@ -13,7 +13,8 @@ public enum StatusSprites {
     SHRAPNEL(CasualtiesCubed.resourceLoc("textures/gui/icons/shrapnel.png"), 1.2f, Component.translatable("casualties_cubed.gui.shrapnel_button")),
     SPLINT(CasualtiesCubed.resourceLoc("textures/gui/icons/splint.png"), 1.6f, Component.translatable("casualties_cubed.gui.splint_button")),
     DISINFECTION(CasualtiesCubed.resourceLoc("textures/gui/icons/disinfection.png"), 1.5f),
-    TOURNIQUET(CasualtiesCubed.resourceLoc("textures/gui/icons/tourniquet.png"), 2, Component.translatable("casualties_cubed.gui.tourniquet_button"));
+    TOURNIQUET(CasualtiesCubed.resourceLoc("textures/gui/icons/tourniquet.png"), 2, Component.translatable("casualties_cubed.gui.tourniquet_button")),
+    CHILLED(CasualtiesCubed.texLoc("gui/icons/chilled"));
 
     public final ResourceLocation tex;
     public final float scale;

@@ -19,7 +19,7 @@ public class SoundManager {
         if (!ClientConfig.EXPERIMENTAL_SOUNDS.get())return;
 
         boolean shouldPlay = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(h -> h.getAveragePain() > 50)
+                .map(h -> h.averagePain() > 50)
                 .orElse(false);
 
         if (shouldPlay && (painDrone == null || painDrone.isStopped())) {
@@ -28,7 +28,7 @@ public class SoundManager {
         }
 
         shouldPlay = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(h -> h.getFlashHearingLoss() > 0)
+                .map(h -> h.flashHearingLoss() > 0)
                 .orElse(false);
         if (shouldPlay && (tinnitusSound == null || tinnitusSound.isStopped())) {
             tinnitusSound = new TinnitusSound(ModSounds.RINGING.get());

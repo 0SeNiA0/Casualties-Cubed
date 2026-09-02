@@ -29,7 +29,7 @@ public abstract class LivingEntityMixin {
         if (data == null) return true;
 
         if (effect == MobEffects.POISON && !food.is(Items.POISONOUS_POTATO)) {
-            data.addVenom((food.is(Items.SPIDER_EYE) ? 6 : 2) * pEffectInstance.getDuration() * Util.TICK_TO_SEC * (1 + pEffectInstance.getAmplifier()));
+            data.addVenomTotal((food.is(Items.SPIDER_EYE) ? 6 : 2) * pEffectInstance.getDuration() * Util.TICK_TO_SEC * (1 + pEffectInstance.getAmplifier()));
         } else data.addSickness((food.is(Items.POISONOUS_POTATO) ? 1200 : pEffectInstance.getDuration()) * Util.TICK_TO_SEC * 0.5f * (1 + pEffectInstance.getAmplifier()));
         return true;
     }
