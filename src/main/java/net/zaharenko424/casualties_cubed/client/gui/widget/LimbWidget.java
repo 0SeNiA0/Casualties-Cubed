@@ -1,6 +1,10 @@
 package net.zaharenko424.casualties_cubed.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -12,13 +16,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 public class LimbWidget extends AbstractWidget {
 
     private final Limb limb;
+    private final Player target;
     private final PlayerHealthData data;
+    private final BooleanSupplier woundMode;
     private final LimbStatistics stats;
     private final ResourceLocation borderTxt;
     private final ResourceLocation baseTxt;
@@ -58,10 +66,12 @@ public class LimbWidget extends AbstractWidget {
     private final Map<StatusSprites, SubSprite> subSprites = new EnumMap<>(StatusSprites.class);
     private boolean expanded = false;
 
-    public LimbWidget(Limb limb, PlayerHealthData data) {
+    public LimbWidget(Limb limb, Player target, PlayerHealthData data, BooleanSupplier woundMode) {
         super(0, 0, 0, 0, Component.empty());
         this.limb = limb;
+        this.target = target;
         this.data = data;
+        this.woundMode = woundMode;
         stats = data.getLimb(limb);
         switch (limb) {
             case RIGHT_FOOT, LEFT_FOOT, RIGHT_HAND, LEFT_HAND -> {
@@ -165,6 +175,28 @@ public class LimbWidget extends AbstractWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         if (amputated) return;
         Minecraft mc = Minecraft.getInstance();
+
+        if (!woundMode.getAsBoolean()) {
+            ItemStack stack = target.getItemBySlot(limb.slot);
+            int protection;
+            if (stack.isEmpty() || !(stack.getItem() instanceof ArmorItem armor)) {
+                protection = 0;
+            } else {
+                protection = armor.getDefense();
+            }
+
+            int color = ColorUtil.getRedToGreenColor((float) protection / limb.maxProtection());
+            RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255f, FastColor.ARGB32.green(color) / 255f, FastColor.ARGB32.blue(color) / 255f, 1F);
+            guiGraphics.blit(baseTxt, getX(), getY(), 0, 0, this.width, this.height, this.txt_width, this.txt_height);
+
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            guiGraphics.blit(borderTxt, getX(), getY(), 0, 0, this.width, this.height, txt_width, txt_height);
+
+            String str = String.valueOf(protection);
+            guiGraphics.drawString(mc.font, str, getX() + width / 2 - mc.font.width(str) / 2, getY() + height / 2 - mc.font.lineHeight / 2, -16777216, false);
+            return;
+        }
+
         mc.getTextureManager().bindForSetup(baseTxt);
 
         float shakex = getX() + ((random.nextFloat() * 2 - 1) * 2);
@@ -206,6 +238,7 @@ public class LimbWidget extends AbstractWidget {
     }
 
     public void renderSprites(GuiGraphics guiGraphics) {
+        if (!woundMode.getAsBoolean()) return;
         for (SubSprite sprite : subSprites.values()) {
             sprite.render(guiGraphics);
         }

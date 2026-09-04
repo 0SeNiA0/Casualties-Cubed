@@ -17,6 +17,7 @@ import net.zaharenko424.casualties_cubed.client.MinigameOpener;
 import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleManager;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
@@ -59,8 +60,8 @@ public class HealthScreen extends Screen {
 
     public boolean BGmode = false;
 
-    private final RenderableImage mainRight = new RenderableImage(SWITCH_MAIN_HAND, 32, 32);
-    private final RenderableImage mainLeft = new RenderableImage(SWITCHED_MAIN_HAND, 32, 32);
+    private final ImageButton switchMode;
+    private boolean woundMode = true;
     private final ImageButton switchMainHandButton;
     private final ImageButton sleepButton;
     private final ImageButton workoutButton;
@@ -74,17 +75,23 @@ public class HealthScreen extends Screen {
         healthbox = new HealthInfoBoxWidget(0, 0, 128, 196, target, data);
 
         for (Limb limb : Limb.values()) {
-            limbWidgets.put(limb, new LimbWidget(limb, data));
+            limbWidgets.put(limb, new LimbWidget(limb, target, data, () -> woundMode));
         }
 
-        mainRight.offset.set(-4, -4, 0);
-        mainLeft.offset.set(-4, -4, 0);
+        switchMode = new ImageButton(22, 48, new RenderableImage(MODE_WOUND, 22, 48), button -> {
+            woundMode = !woundMode;
+            button.image().texture(woundMode ? MODE_WOUND : MODE_ARMOR);
+            localPlayer.playSound(ModSounds.SMALL_CLICK.get());
+        });
+        switchMode.holdingTint = -1;
+
         switchMainHandButton = new ImageButton(24, 24, new RenderableImage(SWITCH_MAIN_HAND, 32, 32), () -> {
             localPlayer.setMainArm(localPlayer.getMainArm().getOpposite());
             localPlayer.playSound(ModSounds.CLICK.get());
         });
         switchMainHandButton.tooltip(Component.translatable("tooltip.casualties_cubed.switch_main_hand_button.title"), Component.translatable("tooltip.casualties_cubed.switch_main_hand_button.description"));
-        switchMainHandButton.image(localPlayer.getMainArm() == HumanoidArm.RIGHT ? mainRight : mainLeft);
+        switchMainHandButton.image().offset.set(-4, -4, 0);
+        switchMainHandButton.image().texture(localPlayer.getMainArm() == HumanoidArm.RIGHT ? SWITCH_MAIN_HAND : SWITCHED_MAIN_HAND);
 
         workoutButton = new ImageButton(32, 32, new RenderableImage(WORKOUT, 32, 32), () -> {});
         workoutButton.tooltip(Component.translatable("tooltip.casualties_cubed.workout_button.title"), Component.translatable("tooltip.casualties_cubed.workout_button.description"));
@@ -157,6 +164,9 @@ public class HealthScreen extends Screen {
         int y = this.height - MoodleManager.MOODLE_SIZE - 1;
         addWidget(MoodleManager.HEALTH_PANEL_BUTTON);
 
+        switchMode.offset.set(6 + 11 + 134, 6 + 24 + 203, 0);
+        addRenderableWidget(switchMode);
+
         switchMainHandButton.offset.set(width - 12, y - 32 - 2 - 32 - 2 - 12, 0);
         addRenderableWidget(switchMainHandButton);
 
@@ -206,7 +216,11 @@ public class HealthScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         renderBackground(graphics);
+        switchMode.image().tint = ClientConfig.UI_GLOW_COLOR.get();
+        switchMode.hoveringTint = ColorUtil.avg(switchMode.image().tint, -1);
+
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
+
         limbWidgets.values().forEach(widget -> widget.renderSprites(graphics));
         LeftItem.setBGMode(BGmode);
         RightItem.setBGMode(BGmode);
@@ -347,7 +361,7 @@ public class HealthScreen extends Screen {
             return;
         }
 
-        switchMainHandButton.image(localPlayer.getMainArm() == HumanoidArm.RIGHT ? mainRight : mainLeft);
+        switchMainHandButton.image().texture(localPlayer.getMainArm() == HumanoidArm.RIGHT ? SWITCH_MAIN_HAND : SWITCHED_MAIN_HAND);
         sleepButton.tooltip(Component.translatable("tooltip.casualties_cubed.sleep_button.title", SleepQuality.currentSleepQuality(localPlayer).comp), Component.translatable("tooltip.casualties_cubed.sleep_button.description"));
         sleepButton.active(data.canTakeNap());
     }
@@ -551,6 +565,8 @@ public class HealthScreen extends Screen {
         }
     }
 
+    private static final ResourceLocation MODE_WOUND = CasualtiesCubed.texLoc("gui/mode_wound");
+    private static final ResourceLocation MODE_ARMOR = CasualtiesCubed.texLoc("gui/mode_armor");
     private static final ResourceLocation SWITCH_MAIN_HAND = CasualtiesCubed.texLoc("gui/switch_main_hand");
     private static final ResourceLocation SWITCHED_MAIN_HAND = CasualtiesCubed.texLoc("gui/switched_main_hand");
     private static final ResourceLocation WORKOUT = CasualtiesCubed.texLoc("gui/workout");

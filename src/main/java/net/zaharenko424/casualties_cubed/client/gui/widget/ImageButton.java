@@ -11,15 +11,20 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ImageButton implements Renderable, GuiEventListener, NarratableEntry {
 
-    private final Runnable onClick;
+    private final Consumer<ImageButton> onClick;
     public final Vector3f offset = new Vector3f();
+    public int inactiveTint = FastColor.ARGB32.color(255, 102, 102, 102);
+    public int hoveringTint = FastColor.ARGB32.color(255, 214, 214, 214);
+    public int holdingTint = FastColor.ARGB32.color(255, 168, 168, 168);
 
     private int width, height;
     private RenderableImage image;
@@ -30,6 +35,10 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
     private boolean holding;
 
     public ImageButton(int width, int height, RenderableImage img, Runnable onClick) {
+        this(width, height, img, button -> onClick.run());
+    }
+
+    public ImageButton(int width, int height, RenderableImage img, Consumer<ImageButton> onClick) {
         this.image = img;
         this.onClick = onClick;
         this.width = width;
@@ -40,7 +49,7 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
         return image;
     }
 
-    public void image(RenderableImage image) {
+    public void image(@NotNull RenderableImage image) {
         this.image = image;
     }
 
@@ -87,14 +96,16 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
         stack.pushPose();
         stack.translate(offset.x, offset.y, offset.z);
 
+        int tint = image.tint;
         if (!active) {
-            image.tint = FastColor.ARGB32.color(255, 102, 102, 102);
+            image.tint = inactiveTint;
         } else if (holding) {
-            image.tint = FastColor.ARGB32.color(255, 168, 168, 168);
+            image.tint = holdingTint;
         } else if (hovering) {
-            image.tint = FastColor.ARGB32.color(255, 214, 214, 214);
-        } else image.tint = -1;
+            image.tint = hoveringTint;
+        }
         image.render(graphics, mouseX, mouseY, pPartialTick);
+        image.tint = tint;
 
         stack.popPose();
 
@@ -124,7 +135,7 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
         holding = false;
 
         if (active && hovering) {
-            onClick.run();
+            onClick.accept(this);
             return true;
         }
 

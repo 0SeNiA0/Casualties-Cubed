@@ -1,11 +1,22 @@
 package net.zaharenko424.casualties_cubed.util;
 
+import net.minecraft.util.FastColor;
+
 import java.util.Map;
 
 public class ColorUtil {
 
     public static int colorWithAlpha(int packed, int alpha) {
         return alpha << 24 | (packed & 0x00FFFFFF);
+    }
+
+    public static int avg(int color1, int color2) {
+        return FastColor.ARGB32.color(
+                Math.round((FastColor.ARGB32.alpha(color1) + FastColor.ARGB32.alpha(color2)) / 2f),
+                Math.round((FastColor.ARGB32.red(color1) + FastColor.ARGB32.red(color2)) / 2f),
+                Math.round((FastColor.ARGB32.green(color1) + FastColor.ARGB32.green(color2)) / 2f),
+                Math.round((FastColor.ARGB32.blue(color1) + FastColor.ARGB32.blue(color2)) / 2f)
+        );
     }
 
     public static int mixColors(Map<Integer, Float> colorRatios) {

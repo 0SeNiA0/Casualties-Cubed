@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.limbs;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 
@@ -9,26 +10,28 @@ import java.util.List;
 import java.util.Random;
 
 public enum Limb {
-    HEAD(Component.translatable("casualties_cubed.limb.head")),
-    THORAX(Component.translatable("casualties_cubed.limb.thorax")),
-    ABDOMEN(Component.translatable("casualties_cubed.limb.abdomen")),
-    UPPER_RIGHT_ARM(Component.translatable("casualties_cubed.limb.upper_right_arm")),
-    LOWER_RIGHT_ARM(Component.translatable("casualties_cubed.limb.lower_right_arm")),
-    UPPER_LEFT_ARM(Component.translatable("casualties_cubed.limb.upper_left_arm")),
-    LOWER_LEFT_ARM(Component.translatable("casualties_cubed.limb.lower_left_arm")),
-    RIGHT_HAND(Component.translatable("casualties_cubed.limb.right_hand")),
-    LEFT_HAND(Component.translatable("casualties_cubed.limb.left_hand")),
-    UPPER_RIGHT_LEG(Component.translatable("casualties_cubed.limb.upper_right_leg")),
-    LOWER_RIGHT_LEG(Component.translatable("casualties_cubed.limb.lower_right_leg")),
-    UPPER_LEFT_LEG(Component.translatable("casualties_cubed.limb.upper_left_leg")),
-    LOWER_LEFT_LEG(Component.translatable("casualties_cubed.limb.lower_left_leg")),
-    LEFT_FOOT(Component.translatable("casualties_cubed.limb.left_foot")),
-    RIGHT_FOOT(Component.translatable("casualties_cubed.limb.right_foot"));
+    HEAD(Component.translatable("casualties_cubed.limb.head"), EquipmentSlot.HEAD),
+    THORAX(Component.translatable("casualties_cubed.limb.thorax"), EquipmentSlot.CHEST),
+    ABDOMEN(Component.translatable("casualties_cubed.limb.abdomen"), EquipmentSlot.CHEST),
+    UPPER_RIGHT_ARM(Component.translatable("casualties_cubed.limb.upper_right_arm"), EquipmentSlot.CHEST),
+    LOWER_RIGHT_ARM(Component.translatable("casualties_cubed.limb.lower_right_arm"), EquipmentSlot.CHEST),
+    UPPER_LEFT_ARM(Component.translatable("casualties_cubed.limb.upper_left_arm"), EquipmentSlot.CHEST),
+    LOWER_LEFT_ARM(Component.translatable("casualties_cubed.limb.lower_left_arm"), EquipmentSlot.CHEST),
+    RIGHT_HAND(Component.translatable("casualties_cubed.limb.right_hand"), EquipmentSlot.CHEST),
+    LEFT_HAND(Component.translatable("casualties_cubed.limb.left_hand"), EquipmentSlot.CHEST),
+    UPPER_RIGHT_LEG(Component.translatable("casualties_cubed.limb.upper_right_leg"), EquipmentSlot.LEGS),
+    LOWER_RIGHT_LEG(Component.translatable("casualties_cubed.limb.lower_right_leg"), EquipmentSlot.LEGS),
+    UPPER_LEFT_LEG(Component.translatable("casualties_cubed.limb.upper_left_leg"), EquipmentSlot.LEGS),
+    LOWER_LEFT_LEG(Component.translatable("casualties_cubed.limb.lower_left_leg"), EquipmentSlot.LEGS),
+    LEFT_FOOT(Component.translatable("casualties_cubed.limb.left_foot"), EquipmentSlot.FEET),
+    RIGHT_FOOT(Component.translatable("casualties_cubed.limb.right_foot"), EquipmentSlot.FEET);
 
     public final Component comp;
+    public final EquipmentSlot slot;
 
-    Limb(Component comp) {
+    Limb(Component comp, EquipmentSlot slot) {
         this.comp = comp;
+        this.slot = slot;
     }
 
     public static final List<Limb> ARM_LIMBS_RIGHT = List.of(
@@ -51,6 +54,16 @@ public enum Limb {
             UPPER_RIGHT_LEG, LOWER_RIGHT_LEG, RIGHT_FOOT,
             UPPER_LEFT_LEG, LOWER_LEFT_LEG, LEFT_FOOT
     );
+
+    public int maxProtection() {
+        return switch (slot) {
+            case HEAD -> 3;
+            case CHEST -> 8;
+            case LEGS -> 6;
+            case FEET -> 3;
+            default -> 5;
+        };
+    }
 
     public static Limb getFromHand(InteractionHand hand, Player player) {
         HumanoidArm arm = player.getMainArm();
