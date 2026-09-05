@@ -20,19 +20,20 @@ import java.util.function.Consumer;
 
 public class ImageButton implements Renderable, GuiEventListener, NarratableEntry {
 
-    private final Consumer<ImageButton> onClick;
+    protected final Consumer<ImageButton> onClick;
     public final Vector3f offset = new Vector3f();
     public int inactiveTint = FastColor.ARGB32.color(255, 102, 102, 102);
     public int hoveringTint = FastColor.ARGB32.color(255, 214, 214, 214);
     public int holdingTint = FastColor.ARGB32.color(255, 168, 168, 168);
 
-    private int width, height;
-    private RenderableImage image;
-    private boolean active = true;
-    private List<Component> tooltip = List.of();
+    protected int width, height;
+    protected RenderableImage image;
+    protected boolean visible = true;
+    protected boolean active = true;
+    protected List<Component> tooltip = List.of();
 
-    private boolean hovering;
-    private boolean holding;
+    protected boolean hovering;
+    protected boolean holding;
 
     public ImageButton(int width, int height, RenderableImage img, Runnable onClick) {
         this(width, height, img, button -> onClick.run());
@@ -56,6 +57,14 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
     public void size(int width, int height) {
         this.width = width;
         this.height = height;
+    }
+
+    public boolean visible() {
+        return visible;
+    }
+
+    public void visible(boolean visible) {
+        this.visible = visible;
     }
 
     public boolean active() {
@@ -90,6 +99,8 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float pPartialTick) {
+        if (!visible()) return;
+
         hovering = isMouseOver(mouseX, mouseY);
 
         PoseStack stack = graphics.pose();
@@ -97,7 +108,7 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
         stack.translate(offset.x, offset.y, offset.z);
 
         int tint = image.tint;
-        if (!active) {
+        if (!active()) {
             image.tint = inactiveTint;
         } else if (holding) {
             image.tint = holdingTint;
@@ -122,7 +133,7 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (active && hovering) {
+        if (visible() && active() && hovering) {
             holding = true;
             return true;
         }
@@ -134,7 +145,7 @@ public class ImageButton implements Renderable, GuiEventListener, NarratableEntr
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
         holding = false;
 
-        if (active && hovering) {
+        if (visible() && active() && hovering) {
             onClick.accept(this);
             return true;
         }

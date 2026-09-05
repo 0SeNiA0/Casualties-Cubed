@@ -167,7 +167,9 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.AMIODARONE, "An antiarrhythmic medication used to treat and prevent fibrillation from occurring. Will cause most arrhythmias to slowly regress, but causes mild internal damage. Only works intravenously. 20ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "Blood thinner. Strongly reduces blood viscosity and breaks down clots.");
         addMedicalFluidFromIdWDesc(ModFluids.SALINE, "Mixture of salt and water, often used in treating hypovolemia and thirst.");
+        addMedicalFluidFromIdWDesc(ModFluids.YELLOW_BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");
+        addMedicalFluidFromIdWDesc(ModFluids.ALIEN_BLOOD, "Yellow blood from an alien. Shouldn't be too bad to use as replacement blood, though.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "Basic antiseptic fluid. Counteracts infections and stings a little.");
         addMedicalFluidFromIdWDesc(ModFluids.GROUNDWATER, "Slightly dirty groundwater. Mostly safe to drink, though slightly sickening.");
         addMedicalFluidFromIdWDesc(ModFluids.LUMALGAE, "Water with dense, bioluminescent algae growing in it. Very buoyant. Inedible.");
@@ -184,10 +186,10 @@ public class ENLanguageProvider extends LanguageProvider {
         add("key.casualties_cubed.ragdoll", "Ragdoll");
         add("key.categories.casualties_cubed", "Casualties: Cubed");
 
-        addGuiO("tourniquet_button", "Remove Tourniquet");
-        addGuiO("dislocation_button", "Fix Dislocation");
-        addGuiO("shrapnel_button", "Remove Shrapnel");
-        addGuiO("splint_button", "Remove Splint");
+        addGuiO("tourniquet_button", "Remove tourniquet");
+        addGuiO("dislocation_button", "Fix dislocation");
+        addGuiO("shrapnel_button", "Remove shrapnel");
+        addGuiO("splint_button", "Remove splint");
         addGuiO("inject", "Inject");
         addGuiO("transfer", "Transfer");
         addGuiO("give_up", "Press %1$s to Give Up.");

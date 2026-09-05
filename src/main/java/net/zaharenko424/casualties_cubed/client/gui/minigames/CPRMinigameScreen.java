@@ -1,5 +1,6 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
@@ -135,7 +136,12 @@ public class CPRMinigameScreen extends Screen implements Minigame {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        PoseStack stack = guiGraphics.pose();
+        stack.pushPose();
+        stack.translate(0, 0, -10);
         parent.render(guiGraphics, mouseX, mouseY, partialTicks);
+        stack.popPose();
+
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.fill(0,0,width,height,0x88000000);
         Minecraft mc = Minecraft.getInstance();

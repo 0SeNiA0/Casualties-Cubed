@@ -138,7 +138,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         limbBleed.offset.set(6 + 4 + 110, 6 + 31 + 209, 0);
     }
 
-    public void setSelectedLimb(Limb limb) {
+    public void selectLimb(Limb limb) {
         this.selectedLimb = limb;
         limbText.component(limb.comp.copy().withStyle(ChatFormatting.BOLD));
     }

@@ -1015,19 +1015,72 @@ public class MedicalEffects {
         }
     };
 
+    public static final MedicalEffect YELLOW_BLOOD = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            drinkBlood(player, ml, true);
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            injectBlood(player, ml, limb, true);
+        }
+    };
+
     public static final MedicalEffect BLOOD = new MedicalEffect() {
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
+            drinkBlood(player, ml, false);
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            injectBlood(player, ml, limb, false);
+        }
+    };
+
+    private static void drinkBlood(ServerPlayer player, float ml, boolean yellow) {
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            float mlScaled = ml / 750;
+            data.drink(20 * mlScaled);
+            data.addSickness((ServerConfig.EXPIE_MODE.get() == yellow ? 60 : 70) * mlScaled);
+            data.addHappiness(-7 * mlScaled);
+        });
+    }
+
+    private static void injectBlood(ServerPlayer player, float ml, Limb limb, boolean yellow) {
+        player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            data.bloodVolume(data.bloodVolume() + ml * 0.001f);
+            if (ServerConfig.EXPIE_MODE.get() != yellow) {
+                float mlScaled = ml / 750;
+                data.addSickness(50 * mlScaled);
+                data.sepsis(data.sepsis() + 40 * mlScaled);
+                data.getLimb(limb).addMuscleHealth(-30 * mlScaled);
+            }
+        });
+    }
+
+    public static final MedicalEffect ALIEN_BLOOD = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.addSickness(0.08f * ml);
+                float mlScaled = ml / 750;
+                data.drink(20 * mlScaled);
+                data.addSickness(60 * mlScaled);
+                data.addHappiness(-7 * mlScaled);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.bloodVolume(data.bloodVolume() + ml * 0.001f);
+                data.bloodVolume(data.bloodVolume() + 0.000875f * ml);
+                float mlScaled = ml / 750;
+                data.sepsis(data.sepsis() + 10 * mlScaled);
+                data.addSickness(20 * mlScaled);
             });
         }
     };

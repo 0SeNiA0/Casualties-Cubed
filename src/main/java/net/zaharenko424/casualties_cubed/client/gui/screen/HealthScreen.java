@@ -14,7 +14,6 @@ import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.MinigameOpener;
-import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
 import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleManager;
 import net.zaharenko424.casualties_cubed.config.ClientConfig;
@@ -47,16 +46,11 @@ public class HealthScreen extends Screen {
     private final List<ItemWidget> RightItemsubWidgets = new ArrayList<>();
     private ItemWidget LeftItem;
     private final List<ItemWidget> LeftItemsubWidgets = new ArrayList<>();
-    private final HealthInfoBoxWidget healthbox;
+    private final HealthInfoBoxWidget healthBox;
+    private final SpecialUseButton specialUseButton;
     private CPRButton cprButton;
     private final Player target;
     private final Player localPlayer;
-
-    private List<CustomButton> buttonList = new ArrayList<>();
-    private int listStartX = 5;
-    private int listStartY = height / 4 * 3;
-
-    private LimbWidget lastClicked;
 
     public boolean BGmode = false;
 
@@ -72,11 +66,13 @@ public class HealthScreen extends Screen {
         this.localPlayer = Minecraft.getInstance().player;
 
         PlayerHealthData data = PlayerHealthData.of(target).orElse(new PlayerHealthData());
-        healthbox = new HealthInfoBoxWidget(0, 0, 128, 196, target, data);
+        healthBox = new HealthInfoBoxWidget(0, 0, 128, 196, target, data);
 
         for (Limb limb : Limb.values()) {
             limbWidgets.put(limb, new LimbWidget(limb, target, data, () -> woundMode));
         }
+
+        specialUseButton = new SpecialUseButton(localPlayer, target, data);
 
         switchMode = new ImageButton(22, 48, new RenderableImage(MODE_WOUND, 22, 48), button -> {
             woundMode = !woundMode;
@@ -109,8 +105,6 @@ public class HealthScreen extends Screen {
         super.init();
         int start_x = (this.width / 2) - 16;
         int start_y = (this.height / 4) - 25;
-        listStartX = 1;
-        listStartY = 196 + 2;
         limbWidgets.get(Limb.HEAD).setPosition(start_x, start_y);
         limbWidgets.get(Limb.THORAX).setPosition(start_x, start_y + 32);
         limbWidgets.get(Limb.ABDOMEN).setPosition(start_x, start_y + 64);
@@ -153,7 +147,8 @@ public class HealthScreen extends Screen {
         }
         addRenderableWidget(LeftItem);
         addRenderableWidget(RightItem);
-        addRenderableWidget(healthbox);
+        addRenderableWidget(healthBox);
+        addRenderableWidget(specialUseButton);
         addRenderableWidget(cprButton);
         cprButton.visible = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> h.consciousness() < 10).orElse(false);
 
@@ -176,7 +171,7 @@ public class HealthScreen extends Screen {
         workoutButton.offset.set(width - 16, y - 32 - 2 - 16, 0);
         addRenderableWidget(workoutButton);
 
-        healthbox.init(this);
+        healthBox.init(this);
     }
 
     private void maybeSetupBagItems(int start_x, int start_y, boolean right) {
@@ -235,10 +230,15 @@ public class HealthScreen extends Screen {
 
         MoodleManager.render(graphics, pPartialTick, width, height, false, pMouseX, pMouseY);
 
-        LimbWidget h = getHoveringWidget(pMouseX, pMouseY);
+        if (!specialUseButton.visible() || !specialUseButton.isMouseOver(pMouseX, pMouseY)) {
+            LimbWidget h = getHoveringWidget(pMouseX, pMouseY);
 
-        if (h != null) {
-            if (!BGmode) healthbox.setSelectedLimb(h.getLimb());
+            if (h != null) {
+                if (!BGmode) {
+                    healthBox.selectLimb(h.getLimb());
+                    specialUseButton.selectLimb(h);
+                }
+            }
         }
 
         graphics.pose().pushPose();
@@ -349,7 +349,6 @@ public class HealthScreen extends Screen {
         UpdateSubStacks();
 
         if (!BGmode) {
-            UpdateButtons(lastClicked);
             Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 if (!data.isConscious()) onClose();
             });
@@ -518,51 +517,13 @@ public class HealthScreen extends Screen {
         return null;
     }
 
-    private CustomButton getHoveringWidgetCustomButton(double pMouseX, double pMouseY) {
-        for (GuiEventListener child : this.children()) {
-            if (child instanceof CustomButton limbwidget) {
-                if (limbwidget.isMouseOver(pMouseX, pMouseY)) return limbwidget;
-            }
-        }
-        return null;
-    }
-
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
-        if (widget != null) {
-            if (!widget.isAmputated()) {
-                UpdateButtons(widget);
-            }
+        if (specialUseButton.visible() && specialUseButton.isMouseOver(pMouseX, pMouseY)) {
+            return specialUseButton.mouseClicked(pMouseX, pMouseY, pButton);
         }
 
-        CustomButton button = getHoveringWidgetCustomButton(pMouseX, pMouseY);
-        if (button != null) {
-            if (!BGmode)
-                UpdateButtons(lastClicked);
-        }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
-    }
-
-    public void UpdateButtons(LimbWidget widget) {
-        List<StatusSprites> statusList = new ArrayList<>();
-        if (widget != null) {
-            for (CustomButton button : buttonList) {
-                removeWidget(button);
-            }
-            buttonList = new ArrayList<>();
-            if (widget.isSpritePresent(StatusSprites.SHRAPNEL)) statusList.add(StatusSprites.SHRAPNEL);
-            if (widget.isSpritePresent(StatusSprites.DISLOCATION)) statusList.add(StatusSprites.DISLOCATION);
-            if (widget.isSpritePresent(StatusSprites.TOURNIQUET)) statusList.add(StatusSprites.TOURNIQUET);
-            if (widget.isSpritePresent(StatusSprites.SPLINT)) statusList.add(StatusSprites.SPLINT);
-            int i = 0;
-            for (StatusSprites sprite : statusList) {
-                buttonList.add(new CustomButton(listStartX, listStartY + (16 * i), sprite, widget.getLimb(), target));
-                addRenderableWidget(buttonList.get(i));
-                i++;
-            }
-            lastClicked = widget;
-        }
     }
 
     private static final ResourceLocation MODE_WOUND = CasualtiesCubed.texLoc("gui/mode_wound");

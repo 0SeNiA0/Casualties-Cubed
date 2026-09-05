@@ -701,7 +701,7 @@ public class PlayerHealthData {
         }
     }
 
-    public double getMaxInfection() {
+    public double maxInfection() {
         double infection = limbStats.values().stream().mapToDouble(LimbStatistics::getInfection).max().orElse(0d);
         return Math.max(infection, 0);
     }
@@ -784,7 +784,7 @@ public class PlayerHealthData {
         }
         lastPos = player.position();
         
-        if (brainHealth <= 0) {
+        if (brainHealth <= 0 || getLimb(Limb.THORAX).isAmputated() || getLimb(Limb.ABDOMEN).isAmputated()) {
             kill(player, false);
         }
     }

@@ -5,8 +5,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.item.api.FluidTint;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
@@ -35,8 +34,7 @@ public class BloodBagItem extends AutoInjectorItem implements FluidTint {
             PlayerHealthData data = PlayerHealthData.of(pPlayer).orElse(null);
             canInsert = data.bloodVolume() * 1000 < canInsert ? (int) Math.floor(data.bloodVolume() * 1000) : canInsert;
             data.bloodVolume(data.bloodVolume() - canInsert / 1000f);
-            addFluid(stack, ModFluids.BLOOD, canInsert);
-            handler.fill(new FluidStack(ModFluids.BLOOD.get(), canInsert), IFluidHandler.FluidAction.EXECUTE);
+            addFluid(stack, ServerConfig.EXPIE_MODE.get() ? ModFluids.YELLOW_BLOOD : ModFluids.BLOOD, canInsert);
         }
 
         return InteractionResultHolder.success(stack);
@@ -49,6 +47,6 @@ public class BloodBagItem extends AutoInjectorItem implements FluidTint {
 
     @Override
     public ItemStack withDefFluid() {
-        return withFluid(ModFluids.BLOOD);
+        return withFluid(ServerConfig.EXPIE_MODE.get() ? ModFluids.YELLOW_BLOOD : ModFluids.BLOOD);
     }
 }

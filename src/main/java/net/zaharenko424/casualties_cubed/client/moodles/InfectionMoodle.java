@@ -17,12 +17,12 @@ public class InfectionMoodle extends AbstractMoodle {
 
     @Override
     public boolean shouldBeDisplayed(PlayerHealthData data) {
-        return data.chip().isActive() || data.getMaxInfection() > 25;
+        return data.chip().isActive() || data.maxInfection() > 25;
     }
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        double maxInfection = data.getMaxInfection();
+        double maxInfection = data.maxInfection();
 
         if (maxInfection > 80) {
             setStatus(MoodleStatus.CRITICAL_NEG);

@@ -176,8 +176,14 @@ public class ModFluids {
     public static final RegistryObject<FluidType> SALINE_TYPE = FLUID_TYPES.register("saline", () -> new MedicalFluidType(MedicalEffects.SALINE, 0xc9c8c5));
     public static final RegistryObject<MedicalFluid> SALINE = FLUIDS.register("saline", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SALINE_TYPE, ModFluids.SALINE, ModFluids.SALINE)));
 
-    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(MedicalEffects.BLOOD, FastColor.ARGB32.color(255, 201, 0, 255)));
+    public static final RegistryObject<FluidType> YELLOW_BLOOD_TYPE = FLUID_TYPES.register("yellow_blood", () -> new MedicalFluidType(MedicalEffects.YELLOW_BLOOD, FastColor.ARGB32.color(255, 255, 201, 0)));
+    public static final RegistryObject<MedicalFluid> YELLOW_BLOOD = FLUIDS.register("yellow_blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.YELLOW_BLOOD_TYPE, ModFluids.YELLOW_BLOOD, ModFluids.YELLOW_BLOOD)));
+
+    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(MedicalEffects.BLOOD, FastColor.ARGB32.color(255, 199, 10, 10)));
     public static final RegistryObject<MedicalFluid> BLOOD = FLUIDS.register("blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.BLOOD)));
+
+    public static final RegistryObject<FluidType> ALIEN_BLOOD_TYPE = FLUID_TYPES.register("alien_blood", () -> new MedicalFluidType(MedicalEffects.ALIEN_BLOOD, FastColor.ARGB32.color(255, 255, 235, 18)));
+    public static final RegistryObject<MedicalFluid> ALIEN_BLOOD = FLUIDS.register("alien_blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ALIEN_BLOOD_TYPE, ModFluids.ALIEN_BLOOD, ModFluids.ALIEN_BLOOD)));
 
     public static final RegistryObject<FluidType> ANTISEPTIC_TYPE = FLUID_TYPES.register("antiseptic", () -> new MedicalFluidType(MedicalEffects.ANTISEPTIC, 0x5a6b45));
     public static final RegistryObject<MedicalFluid> ANTISEPTIC = FLUIDS.register("antiseptic", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTISEPTIC_TYPE, ModFluids.ANTISEPTIC, ModFluids.ANTISEPTIC)));

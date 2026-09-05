@@ -1,6 +1,7 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -105,7 +106,12 @@ public class InjectMingameScreen extends Screen implements Minigame {
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        PoseStack stack = pGuiGraphics.pose();
+        stack.pushPose();
+        stack.translate(0, 0, -10);
         parent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        stack.popPose();
+
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         pGuiGraphics.fill(0, 0, width, height, 0x88000000);
         pGuiGraphics.fill(0, height / 6 + 158, width, height / 6 + 161, 0xFFFFFFFF);

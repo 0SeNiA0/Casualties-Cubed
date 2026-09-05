@@ -46,7 +46,12 @@ public abstract class MinigameScreen extends Screen implements Minigame {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack stack = graphics.pose();
+        stack.pushPose();
+        stack.translate(0, 0, -10);
         parent.render(graphics, mouseX, mouseY, partialTick);
+        stack.popPose();
+
         super.render(graphics, mouseX, mouseY, partialTick);
         graphics.fill(0, 0, width, height, 0x88000000);
     }

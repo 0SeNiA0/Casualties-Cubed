@@ -1,6 +1,7 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -69,11 +70,16 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        parent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        pGuiGraphics.fill(0,0,width,height,0x88000000);
-        pGuiGraphics.fill(0,height/6+158,width,height/6+162,0xFFFFFFFF);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack stack = guiGraphics.pose();
+        stack.pushPose();
+        stack.translate(0, 0, -10);
+        parent.render(guiGraphics, mouseX, mouseY, partialTick);
+        stack.popPose();
+
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.fill(0,0,width,height,0x88000000);
+        guiGraphics.fill(0,height/6+158,width,height/6+162,0xFFFFFFFF);
 
         Minecraft mc = Minecraft.getInstance();
         int screenHeight = mc.getWindow().getScreenHeight();
@@ -95,10 +101,10 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
 
         RenderSystem.disableScissor();
 
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.amputation_instruction"),this.width/2,10,0xFFFFFF);
-        pGuiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.minigame_exit"),this.width/2,clipY+30,0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.amputation_instruction"),this.width/2,10,0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.minigame_exit"),this.width/2,clipY+30,0xFFFFFF);
 
-        handObject.render(pGuiGraphics,pPartialTick);
+        handObject.render(guiGraphics,partialTick);
     }
 
 
