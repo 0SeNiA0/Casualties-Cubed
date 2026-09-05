@@ -168,7 +168,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "Blood thinner. Strongly reduces blood viscosity and breaks down clots.");
         addMedicalFluidFromIdWDesc(ModFluids.SALINE, "Mixture of salt and water, often used in treating hypovolemia and thirst.");
         addMedicalFluidFromIdWDesc(ModFluids.YELLOW_BLOOD, "Used in treating hypovolemia.");
-        addMedicalFluidFromIdWDesc(ModFluids.BLOOD, "Used in treating hypovolemia.");
+        addMedicalFluidFromIdWDesc(ModFluids.RED_BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.ALIEN_BLOOD, "Yellow blood from an alien. Shouldn't be too bad to use as replacement blood, though.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISEPTIC, "Basic antiseptic fluid. Counteracts infections and stings a little.");
         addMedicalFluidFromIdWDesc(ModFluids.GROUNDWATER, "Slightly dirty groundwater. Mostly safe to drink, though slightly sickening.");

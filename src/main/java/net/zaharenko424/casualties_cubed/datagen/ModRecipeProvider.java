@@ -3,6 +3,7 @@ package net.zaharenko424.casualties_cubed.datagen;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.datagen.recipes.crop.BasicCropRecipeProvider;
@@ -57,6 +59,42 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy(getHasName(Blocks.GLASS), has(Tags.Items.GLASS))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.CANTEEN.get())
+                .pattern(" N ")
+                .pattern("I I")
+                .pattern(" I ")
+                .define('N', Ingredient.of(Tags.Items.NUGGETS_IRON))
+                .define('I', Ingredient.of(Tags.Items.INGOTS_IRON))
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Tags.Items.INGOTS_IRON))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.ALCOHOL_BOTTLE.get())
+                .pattern("N")
+                .pattern("G")
+                .pattern("G")
+                .define('N', Ingredient.of(Tags.Items.NUGGETS_IRON))
+                .define('G', Ingredient.of(Tags.Items.GLASS))
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Tags.Items.INGOTS_IRON))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WATER_BOTTLE.get())
+                .pattern("S")
+                .pattern("P")
+                .pattern("P")
+                .define('S', Ingredient.of(Tags.Items.SLIMEBALLS))
+                .define('P', Ingredient.of(Items.PHANTOM_MEMBRANE))
+                .unlockedBy(getHasName(Items.PHANTOM_MEMBRANE), has(Items.PHANTOM_MEMBRANE))
+                .save(consumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.WATER_JUG.get())
+                .pattern(" P ")
+                .pattern("PSP")
+                .pattern("PPP")
+                .define('S', Ingredient.of(Tags.Items.SLIMEBALLS))
+                .define('P', Ingredient.of(Items.PHANTOM_MEMBRANE))
+                .unlockedBy(getHasName(Items.PHANTOM_MEMBRANE), has(Items.PHANTOM_MEMBRANE))
+                .save(consumer);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModItems.EXPIE_PLUSHY.get())
                 .pattern("OYO")
                 .pattern("WWW")
@@ -65,6 +103,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('Y', Ingredient.of(Tags.Items.DYES_YELLOW))
                 .define('W', Ingredient.of(Items.BLACK_WOOL))
                 .unlockedBy("has_wool", has(ItemTags.WOOL))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.OLD_RAG.get())
+                .requires(Tags.Items.STRING)
+                .requires(Tags.Items.STRING)
+                .unlockedBy(getHasName(Items.STRING), has(Tags.Items.STRING))
                 .save(consumer);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.RIPPED_DRESSING.get())
@@ -239,6 +283,17 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy(getHasName(Items.DIAMOND), has(Tags.Items.GEMS_DIAMOND))
                 .save(consumer, CasualtiesCubed.resourceLoc("lrd"));
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.AUTO_PUMP.get())
+                .pattern("IGI")
+                .pattern("GRG")
+                .pattern("IDI")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('G', Tags.Items.INGOTS_GOLD)
+                .define('R', Tags.Items.DUSTS_REDSTONE)
+                .define('D', Tags.Items.GEMS_DIAMOND)
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Tags.Items.INGOTS_IRON))
+                .save(consumer, ModItems.AUTO_PUMP.getId());
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.CHEST_DRAIN.get())
                 .pattern(" DD")
                 .pattern("RTD")
@@ -372,10 +427,18 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(consumer, CasualtiesCubed.resourceLoc("relief_cream"));
 
         MedicalMixerRecipeBuilder.mixer()
-                .inputFluid(Fluids.WATER, 250)
-                .input(Items.SUGAR, 1)
-                .outputFluid(ModFluids.SALINE.get(), 250)
-                .save(consumer, CasualtiesCubed.resourceLoc("saline"));
+                .inputFluid(ModFluids.CLEAN_WATER, 150)
+                .inputFluid(ModFluids.BIO_CHEM, 10)
+                .inputFluid(ModFluids.RED_BLOOD, 15)
+                .outputFluid(ModFluids.SALINE.get(), 175)
+                .save(consumer, CasualtiesCubed.resourceLoc("saline_red"));
+
+        MedicalMixerRecipeBuilder.mixer()
+                .inputFluid(ModFluids.CLEAN_WATER, 150)
+                .inputFluid(ModFluids.BIO_CHEM, 10)
+                .inputFluid(ModFluids.YELLOW_BLOOD, 15)
+                .outputFluid(ModFluids.SALINE.get(), 175)
+                .save(consumer, CasualtiesCubed.resourceLoc("saline_yellow"));
 
         MedicalMixerRecipeBuilder.mixer()
                 .input(Items.BROWN_MUSHROOM, 1)
@@ -458,11 +521,19 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
         MedicalMixerRecipeBuilder.mixer()
                 .inputFluid(ModFluids.BIO_CHEM, 5)
-                .inputFluid(ModFluids.BLOOD, 25)
+                .inputFluid(ModFluids.RED_BLOOD, 25)
                 .inputFluid(CasualtiesCubedTags.Fluid.DISINFECTING, 10)
                 .input(Items.SPIDER_EYE)
                 .outputFluid(ModFluids.ANTIVENOM, 50)
-                .save(consumer, CasualtiesCubed.resourceLoc("antivenom"));
+                .save(consumer, CasualtiesCubed.resourceLoc("antivenom_red"));
+
+        MedicalMixerRecipeBuilder.mixer()
+                .inputFluid(ModFluids.BIO_CHEM, 5)
+                .inputFluid(ModFluids.YELLOW_BLOOD, 25)
+                .inputFluid(CasualtiesCubedTags.Fluid.DISINFECTING, 10)
+                .input(Items.SPIDER_EYE)
+                .outputFluid(ModFluids.ANTIVENOM, 50)
+                .save(consumer, CasualtiesCubed.resourceLoc("antivenom_yellow"));
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Items.GLASS_BOTTLE)
                 .requires(CasualtiesCubedTags.Item.VIAL_ITEMS)
@@ -482,6 +553,10 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         stonecutterResultFromBase(consumer, RecipeCategory.MISC, ModItems.FENTANYL_VIAL.get(), Items.GLASS_BOTTLE);
         stonecutterResultFromBase(consumer, RecipeCategory.MISC, ModItems.CEFTRIAXONE_VIAL.get(), Items.GLASS_BOTTLE);
 
+        stonecuttingAllToAll(consumer, RecipeCategory.MISC, ModItems.BLOOD_BAG, ModItems.IV_BAG);
+        stonecuttingAllToAll(consumer, RecipeCategory.MISC, ModItems.WATER_BOTTLE, ModItems.ANTISEPTIC_SPRAY, ModItems.WOUND_GLUE_SPRAY, ModItems.RELIEF_CREAM_BOTTLE);
+        stonecuttingAllToAll(consumer, RecipeCategory.MISC, ModItems.WATER_JUG, ModItems.BLEACH_JUG);
+
 
         // Botany Pots Compatibility
         BasicCropRecipeProvider.buildRecipes(consumer);
@@ -495,5 +570,17 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         SingleItemRecipeBuilder var10000 = SingleItemRecipeBuilder.stonecutting(Ingredient.of(pMaterial), pCategory, pResult, pResultCount).unlockedBy(getHasName(pMaterial), has(pMaterial));
         String var10002 = getConversionRecipeName(pResult, pMaterial);
         var10000.save(pFinishedRecipeConsumer, var10002 + "_stonecutting");
+    }
+
+    @SafeVarargs
+    private void stonecuttingAllToAll(Consumer<FinishedRecipe> out, RecipeCategory category, RegistryObject<? extends Item>... items) {
+        for (RegistryObject<? extends Item> material : items) {
+            for (RegistryObject<? extends Item> result : items) {
+                if (material == result) continue;
+                SingleItemRecipeBuilder.stonecutting(Ingredient.of(material.get()), category, result.get())
+                        .unlockedBy(getHasName(material.get()), has(material.get()))
+                        .save(out, result.getId().withSuffix("_stonecutting_from_" + material.getId().getPath()));
+            }
+        }
     }
 }

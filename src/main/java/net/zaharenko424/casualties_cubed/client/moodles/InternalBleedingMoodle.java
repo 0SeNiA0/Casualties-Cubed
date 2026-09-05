@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.List;
 
 public class InternalBleedingMoodle extends AbstractMoodle {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/internal_bleeding.png");
+    private static final ResourceLocation RED = CasualtiesCubed.resourceLoc("textures/gui/moodles/internal_bleeding_red.png");
+    private static final ResourceLocation YELLOW = CasualtiesCubed.resourceLoc("textures/gui/moodles/internal_bleeding_yellow.png");
 
     public InternalBleedingMoodle() {
         super(false, true);
@@ -36,7 +38,7 @@ public class InternalBleedingMoodle extends AbstractMoodle {
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ms.blit(TEX, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit(ServerConfig.EXPIE_MODE.get() ? YELLOW : RED, x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

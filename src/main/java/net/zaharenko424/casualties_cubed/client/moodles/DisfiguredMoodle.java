@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DisfiguredMoodle extends AbstractMoodle {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/mouth_gone_moodle.png");
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/jaw_gone_moodle.png");
 
     public DisfiguredMoodle() {
         super(true, false);

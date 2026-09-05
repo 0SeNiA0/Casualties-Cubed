@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.ArrayList;
@@ -13,10 +14,18 @@ import java.util.List;
 
 public class BleedingMoodle extends AbstractMoodle {
 
-    private static final ResourceLocation TEX_1 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding1.png");
-    private static final ResourceLocation TEX_2 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding2.png");
-    private static final ResourceLocation TEX_3 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding3.png");
-    private static final ResourceLocation TEX_4 = CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding4.png");
+    private static final ResourceLocation[] RED = {
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding1_red.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding2_red.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding3_red.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding4_red.png")
+    };
+    private static final ResourceLocation[] YELLOW = {
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding1_yellow.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding2_yellow.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding3_yellow.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/bleeding4_yellow.png")
+    };
 
     @Override
     public void update(Player player, PlayerHealthData data) {
@@ -35,12 +44,12 @@ public class BleedingMoodle extends AbstractMoodle {
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ms.blit(switch (getMoodleStatus()) {
-            case LIGHT_NEG -> TEX_1;
-            case NORMAL_NEG -> TEX_2;
-            case HEAVY_NEG -> TEX_3;
-            default -> TEX_4;
-        }, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit((ServerConfig.EXPIE_MODE.get() ? YELLOW : RED)[switch (getMoodleStatus()) {
+            case LIGHT_NEG -> 0;
+            case NORMAL_NEG -> 1;
+            case HEAVY_NEG -> 2;
+            default -> 3;
+        }], x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

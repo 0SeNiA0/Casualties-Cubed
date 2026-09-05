@@ -96,6 +96,7 @@ public class CommonEvent {
         for (MissingMappingsEvent.Mapping<FluidType> mapping : fluidsTypes) {
             switch (mapping.getKey().getPath()) {
                 case "reaction_liquid" -> mapping.remap(ModFluids.BIO_CHEM_TYPE.get());
+                case "blood" -> mapping.remap(ModFluids.RED_BLOOD_TYPE.get());
             }
         }
 
@@ -103,6 +104,7 @@ public class CommonEvent {
         for (MissingMappingsEvent.Mapping<Fluid> mapping : fluids) {
             switch (mapping.getKey().getPath()) {
                 case "reaction_liquid" -> mapping.remap(ModFluids.BIO_CHEM.get());
+                case "blood" -> mapping.remap(ModFluids.RED_BLOOD.get());
             }
         }
     }

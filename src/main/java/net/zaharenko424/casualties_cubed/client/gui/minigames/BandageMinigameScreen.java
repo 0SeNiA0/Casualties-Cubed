@@ -251,7 +251,7 @@ public class BandageMinigameScreen extends MinigameScreen {
         if (bleedRate > 0) {
             float bleedscale = 0.5f + 1.4f * (bleedRate / LimbStatistics.MAX_BLEED_RATE);
             float sizePx = 20 * bleedscale;
-            graphics.blit(StatusSprites.BLEED.tex, (int) (width / 2f - sizePx / 2), (int) (height / 2f - sizePx / 2 + 10), 0, 0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
+            graphics.blit(StatusSprites.BLEED.tex(), (int) (width / 2f - sizePx / 2), (int) (height / 2f - sizePx / 2 + 10), 0, 0, (int) sizePx, (int) sizePx, (int) sizePx, (int) sizePx);
         }
         graphics.renderItem(lastStack, this.width / 10 - 10, this.height / 10 + 5);
 

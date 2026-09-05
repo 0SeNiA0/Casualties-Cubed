@@ -179,8 +179,8 @@ public class ModFluids {
     public static final RegistryObject<FluidType> YELLOW_BLOOD_TYPE = FLUID_TYPES.register("yellow_blood", () -> new MedicalFluidType(MedicalEffects.YELLOW_BLOOD, FastColor.ARGB32.color(255, 255, 201, 0)));
     public static final RegistryObject<MedicalFluid> YELLOW_BLOOD = FLUIDS.register("yellow_blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.YELLOW_BLOOD_TYPE, ModFluids.YELLOW_BLOOD, ModFluids.YELLOW_BLOOD)));
 
-    public static final RegistryObject<FluidType> BLOOD_TYPE = FLUID_TYPES.register("blood", () -> new MedicalFluidType(MedicalEffects.BLOOD, FastColor.ARGB32.color(255, 199, 10, 10)));
-    public static final RegistryObject<MedicalFluid> BLOOD = FLUIDS.register("blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BLOOD_TYPE, ModFluids.BLOOD, ModFluids.BLOOD)));
+    public static final RegistryObject<FluidType> RED_BLOOD_TYPE = FLUID_TYPES.register("red_blood", () -> new MedicalFluidType(MedicalEffects.RED_BLOOD, FastColor.ARGB32.color(255, 199, 10, 10)));
+    public static final RegistryObject<MedicalFluid> RED_BLOOD = FLUIDS.register("red_blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.RED_BLOOD_TYPE, ModFluids.RED_BLOOD, ModFluids.RED_BLOOD)));
 
     public static final RegistryObject<FluidType> ALIEN_BLOOD_TYPE = FLUID_TYPES.register("alien_blood", () -> new MedicalFluidType(MedicalEffects.ALIEN_BLOOD, FastColor.ARGB32.color(255, 255, 235, 18)));
     public static final RegistryObject<MedicalFluid> ALIEN_BLOOD = FLUIDS.register("alien_blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ALIEN_BLOOD_TYPE, ModFluids.ALIEN_BLOOD, ModFluids.ALIEN_BLOOD)));

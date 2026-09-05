@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DislocatedJawMoodle extends AbstractMoodle {
 
-    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/mouth_dislocated_moodle.png");
+    private static final ResourceLocation TEX = CasualtiesCubed.resourceLoc("textures/gui/moodles/jaw_dislocated_moodle.png");
 
     public DislocatedJawMoodle() {
         super(false, true);

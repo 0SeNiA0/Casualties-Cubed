@@ -3,10 +3,10 @@ package net.zaharenko424.casualties_cubed.client.gui;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 
 public enum StatusSprites {
-
-    BLEED(CasualtiesCubed.resourceLoc("textures/gui/icons/blood.png")),
+    BLEED(CasualtiesCubed.resourceLoc("textures/gui/icons/blood_red.png")),
     INFECTION(CasualtiesCubed.resourceLoc("textures/gui/icons/infection.png"), 1.3f),
     FRACTURE(CasualtiesCubed.resourceLoc("textures/gui/icons/fracture.png"), 1.5f),
     DISLOCATION(CasualtiesCubed.resourceLoc("textures/gui/icons/dislocation.png"), 1.5f, Component.translatable("casualties_cubed.gui.dislocation_button")),
@@ -16,7 +16,7 @@ public enum StatusSprites {
     TOURNIQUET(CasualtiesCubed.resourceLoc("textures/gui/icons/tourniquet.png"), 2, Component.translatable("casualties_cubed.gui.tourniquet_button")),
     CHILLED(CasualtiesCubed.texLoc("gui/icons/chilled"));
 
-    public final ResourceLocation tex;
+    private final ResourceLocation tex;
     public final float scale;
     public final Component comp;
 
@@ -32,5 +32,11 @@ public enum StatusSprites {
         this.tex = tex;
         this.scale = scale;
         this.comp = comp;
+    }
+
+    public ResourceLocation tex() {
+        if (this == BLEED && ServerConfig.EXPIE_MODE.get()) return CasualtiesCubed.texLoc("gui/icons/blood_yellow");
+
+        return tex;
     }
 }

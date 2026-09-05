@@ -6,14 +6,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 import java.util.List;
 
 public class BloodPressureMoodle extends AbstractMoodle {
 
-    private static final ResourceLocation TEX_HYPO = CasualtiesCubed.resourceLoc("textures/gui/moodles/hypotension.png");
-    private static final ResourceLocation TEX_HYPER = CasualtiesCubed.resourceLoc("textures/gui/moodles/hypertension.png");
+    private static final ResourceLocation[] RED = {
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/hypotension_red.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/hypertension_red.png")
+    };
+    private static final ResourceLocation[] YELLOW = {
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/hypotension_yellow.png"),
+            CasualtiesCubed.resourceLoc("textures/gui/moodles/hypertension_yellow.png")
+    };
 
     private boolean low;
 
@@ -44,7 +51,7 @@ public class BloodPressureMoodle extends AbstractMoodle {
 
     @Override
     protected void renderIcon(GuiGraphics ms, float partialTicks, int x, int y) {
-        ms.blit(low ? TEX_HYPO : TEX_HYPER, x, y, 0, 0, 16, 16, 16, 16);
+        ms.blit((ServerConfig.EXPIE_MODE.get() ? YELLOW : RED)[low ? 0 : 1], x, y, 0, 0, 16, 16, 16, 16);
     }
 
     @Override

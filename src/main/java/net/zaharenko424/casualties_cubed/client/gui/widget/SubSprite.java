@@ -23,7 +23,7 @@ public class SubSprite {
     private int tickCount = 0;
 
     public SubSprite(StatusSprites sprite, float parentX, float parentY) {
-        this.txt = sprite.tex;
+        this.txt = sprite.tex();
         this.txtWidth = 16;
         this.txtHeight = 16;
         this.currentX = this.targetX = parentX;

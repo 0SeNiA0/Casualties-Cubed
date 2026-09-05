@@ -34,7 +34,7 @@ public class BloodBagItem extends AutoInjectorItem implements FluidTint {
             PlayerHealthData data = PlayerHealthData.of(pPlayer).orElse(null);
             canInsert = data.bloodVolume() * 1000 < canInsert ? (int) Math.floor(data.bloodVolume() * 1000) : canInsert;
             data.bloodVolume(data.bloodVolume() - canInsert / 1000f);
-            addFluid(stack, ServerConfig.EXPIE_MODE.get() ? ModFluids.YELLOW_BLOOD : ModFluids.BLOOD, canInsert);
+            addFluid(stack, ServerConfig.EXPIE_MODE.get() ? ModFluids.YELLOW_BLOOD : ModFluids.RED_BLOOD, canInsert);
         }
 
         return InteractionResultHolder.success(stack);
@@ -47,6 +47,6 @@ public class BloodBagItem extends AutoInjectorItem implements FluidTint {
 
     @Override
     public ItemStack withDefFluid() {
-        return withFluid(ServerConfig.EXPIE_MODE.get() ? ModFluids.YELLOW_BLOOD : ModFluids.BLOOD);
+        return withFluid(ServerConfig.EXPIE_MODE.get() ? ModFluids.YELLOW_BLOOD : ModFluids.RED_BLOOD);
     }
 }

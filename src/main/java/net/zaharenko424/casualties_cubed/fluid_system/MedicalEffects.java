@@ -1028,7 +1028,7 @@ public class MedicalEffects {
         }
     };
 
-    public static final MedicalEffect BLOOD = new MedicalEffect() {
+    public static final MedicalEffect RED_BLOOD = new MedicalEffect() {
 
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
