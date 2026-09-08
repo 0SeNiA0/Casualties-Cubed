@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -17,6 +18,7 @@ import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
 import net.zaharenko424.casualties_cubed.client.gui.widget.ImageButton;
 import net.zaharenko424.casualties_cubed.client.gui.widget.RenderableImage;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,9 @@ public class MoodleManager {
     public static final int MOODLE_SIZE = 20;
     public static final int PADDING = 3;
 
-    public static final ImageButton HEALTH_PANEL_BUTTON = new ImageButton(32, 32, new RenderableImage(CasualtiesCubed.texLoc("gui/health_panel"), 32, 32), () -> {
+    private static final ResourceLocation HEALTH_PANEL_NORMAL = CasualtiesCubed.texLoc("gui/health_panel");
+    private static final ResourceLocation HEALTH_PANEL_ALERT = CasualtiesCubed.texLoc("gui/health_panel_alert");
+    public static final ImageButton HEALTH_PANEL_BUTTON = new ImageButton(32, 32, new RenderableImage(HEALTH_PANEL_NORMAL, 32, 32), () -> {
         if (Minecraft.getInstance().screen instanceof HealthScreen screen) screen.onClose();
     });
     private static final RenderableImage TIME_WARP = new RenderableImage(CasualtiesCubed.texLoc("gui/time_warp"), 64, 16);
@@ -156,6 +160,12 @@ public class MoodleManager {
         int hotbarLeft = hotbar ? (width / 2) - 91 : (int) (width * 0.667f);
         int x = 0;
         int y = height - MOODLE_SIZE - 2;
+
+        PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
+        HEALTH_PANEL_BUTTON.image().texture((data != null && hotbar && data.isDying() && data.chip().isActive()
+                && Util.pingPong((System.currentTimeMillis() - Util.INIT_TIME_MS) / 1000f, 0.3f) > 0.15f)
+                ? HEALTH_PANEL_ALERT
+                : HEALTH_PANEL_NORMAL);
 
         HEALTH_PANEL_BUTTON.offset.set(16, height - 20, 0);
         HEALTH_PANEL_BUTTON.render(graphics, mouseX, mouseY, partialTick);

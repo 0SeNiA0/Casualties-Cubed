@@ -2,6 +2,7 @@ package net.zaharenko424.casualties_cubed.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -17,6 +18,8 @@ import java.text.DecimalFormat;
 import java.util.UUID;
 
 public class Util {
+
+    public static final long INIT_TIME_MS = System.currentTimeMillis();
 
     public static final float TICK_TO_SEC = 1 / 20f;
     public static final float TICK_TO_MIN = TICK_TO_SEC / 60;
@@ -58,6 +61,15 @@ public class Util {
 
         float invLength = org.joml.Math.invsqrt(lengthSqr) * length;
         return vec.mul(invLength);
+    }
+
+    public static float repeat(float time, float length) {
+        return Mth.clamp(time - Mth.floor(time / length) * length, 0f, length);
+    }
+
+    public static float pingPong(float time, float length) {
+        time = repeat(time, length * 2f);
+        return length - Math.abs(time - length);
     }
 
     public static Level level() {

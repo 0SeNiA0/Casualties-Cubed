@@ -255,9 +255,11 @@ public class CommonEvent {
 
     @SubscribeEvent
     public static void onAttack(LivingAttackEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+            if (!event.getSource().isIndirect()) data.addStamina(-1);
+
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
             if (head.getBoneHealTimer() > 0) head.addPain(3);

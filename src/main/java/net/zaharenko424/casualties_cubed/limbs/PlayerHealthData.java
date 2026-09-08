@@ -61,32 +61,6 @@ public class PlayerHealthData {
     private static final String ATTACK_SPEED_MODIFIER = "custom_attack_speed";
     private static final UUID ATTACK_SPEED_MODIFIER_UUID = UUID.nameUUIDFromBytes(ATTACK_SPEED_MODIFIER.getBytes());
 
-    private static final AnimationCurve hungerLimbHeal = new AnimationCurve(List.of(
-            new Keyframe(-50, -0.0001931116f, 0, 0.007145616f, WeightedMode.NONE, 0, 0),
-            new Keyframe(20, 0.5f, 0.007145616f, 0.01249994f, WeightedMode.NONE, 0, 0.3333333f),
-            new Keyframe(60, 0.9999974f, 0.01249994f, 6.4075E-08f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(100, 1, 6.4075E-08f, 0.02495816f, WeightedMode.NONE, 0.3333333f, 0),
-            new Keyframe(110, 1.249582f, 0.02495816f, 0.000102973f, WeightedMode.NONE, 0, 0)
-    ));
-    private static final AnimationCurve temperatureMovementCurve = new AnimationCurve(List.of(
-            new Keyframe(20, 0.6000061f, 0, 0.0189991f, WeightedMode.NONE, 0, 0),
-            new Keyframe(30, 0.7899971f, 0.0189991f, 0.07000097f, WeightedMode.NONE, 0.3333333f, 0),
-            new Keyframe(33, 1, 0.07000097f, 0, WeightedMode.NONE, 0, 0),
-            new Keyframe(40.7f, 1, 0, -0.116373f, WeightedMode.NONE, 0, 0),
-            new Keyframe(45, 0.499596f, -0.116373f, -0.03110576f, WeightedMode.NONE, 0, 0),
-            new Keyframe(52.23217f, 0.2746337f, -0.03110576f, 0, WeightedMode.NONE, 0, 0)
-    ));
-    private static final AnimationCurve immunityInfectionSpeed = new AnimationCurve(List.of(
-            new Keyframe(0, 2.5f, -0.01900765f, -0.01999984f, WeightedMode.NONE, 0, 0.3333333f),
-            new Keyframe(50, 1.500008f, -0.01999984f, -0.01333398f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(80, 1.099988f, -0.01333398f, -0.004999423f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(100, 1, -0.004999423f, -0.005000472f, WeightedMode.NONE, 0.3333333f, 0),
-            new Keyframe(120, 0.8999906f, -0.005000472f, -0.01029073f, WeightedMode.NONE, 0, 0),
-            new Keyframe(140, 0.694176f, -0.01029073f, -0.009894184f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(195, 0.1499959f, -0.009894184f, -0.1899985f, WeightedMode.NONE, 0, 0),
-            new Keyframe(200, -0.7999964f, -0.1899985f, 0, WeightedMode.NONE, 0, 0)
-    ));
-
     private final Map<Limb, LimbStatistics> limbStats = new EnumMap<>(Limb.class);
 
     ///C:U -50 - 200? range, 1 = 0.025L, total body blood = 2.5 + blood * 0.025
@@ -148,6 +122,7 @@ public class PlayerHealthData {
     private boolean successfullyRolledLastStand;
     private boolean fibrillationForced;
     private boolean hasPulmonaryEmbolism;
+    private float weightMovementMult;
     private float temperatureMovementMult;
     private float bleedClottingSpeed;
     private float bleedingSpeedMultiplier;
@@ -789,50 +764,6 @@ public class PlayerHealthData {
         }
     }
 
-    private void updateStability(ServerPlayer player) {//TODO move
-        float DefaultChange = 2.5F;
-        if (ragdolled() && PhysicsUtil.getVel(player).length() < 0.5f) {
-            stability = Mth.clamp(stability + DefaultChange, 0, 100);
-            return;
-        }
-
-        if (this.consciousness < 50.0F) {
-            DefaultChange -= this.consciousness / 20.0F;
-        }
-
-        Vec3 velocity = PhysicsUtil.getVel(player);
-        if (velocity.length() > (double)0.0F) {
-            DefaultChange -= (float)(velocity.length() * (double)2.0F);
-        }
-
-        if (Math.abs(lastPos.y - player.getY()) > (double)1.0F && player.fallDistance > 2) {
-            DefaultChange -= 7.5F;
-        }
-
-        if (player.getPose() == Pose.CROUCHING) {
-            ++DefaultChange;
-        }
-
-        if (player.getPose() == Pose.SWIMMING) {
-            DefaultChange += 2.0F;
-        }
-
-        Vec3 flow = player.level().getFluidState(player.blockPosition()).getFlow(player.level(), player.blockPosition());
-        if (flow.length() > (double)0.0F) {
-            DefaultChange -= (float)(flow.length() * (double)3.0F);
-            if (player.hasPose(Pose.CROUCHING)) {
-                DefaultChange -= 0.5F;
-            }
-        }
-
-        if (stability < 10.0F && !ragdolled()) {
-            ragdoll(player);
-            this.stability = 0.0F;
-        }
-
-        this.stability = Mth.clamp(this.stability + DefaultChange, 0.0F, 100.0F);
-    }
-
     private void updateTimedEffects(ServerPlayer player) {
         if (player.tickCount % 20 == 0) {
             effects.forEach(effect -> effect.update(player, this));
@@ -922,7 +853,7 @@ public class PlayerHealthData {
 
         bloodVolume -= internalBleedingCapped() * (1 / 0.0088f * 0.0057f) * Util.TICK_TO_SEC;
 
-        averagePain = 0;
+        averagePain = 0;//TODO fix bleeding -> switch to using L/s in limbs, make sure that visual bleed number makes sense
         totalBleedSpeed = 0;// CU calculates total here but limbs actually subtract blood
         float totalInfection = 0;
         for (Limb limb : Limb.values()) {
@@ -1094,6 +1025,7 @@ public class PlayerHealthData {
                 stamina = Mth.clamp(this.stamina - Util.TICK_TO_SEC * 0.1f * /*overencumbrance*/ ((this.caffeinated > 0f) ? 0.25f : 1f), 0f, Math.max(70f, bloodOxygen));
                 temperature += 0.04f * Util.TICK_TO_SEC;
             }
+            if (player.isSprinting() && stamina < 35) player.setSprinting(false);
 
             if (!(!player.onGround() && player.isFallFlying()) && player.getVehicle() == null && (Math.abs(lastPos.x - player.getX()) > 0.1 || Math.abs(lastPos.z - player.getZ()) > 0.1)) {
                 temperature += 0.04f * Util.TICK_TO_SEC;
@@ -1464,6 +1396,18 @@ public class PlayerHealthData {
         dirtiness = Mth.clamp(dirtiness, 0f, 100f);
     }
 
+    public float totalInsulation() {
+        /*float armorInsulation = ThermalArmorHandler.getArmorInsulation(player);
+
+        float INSULATION_PER_POINT = 0.05f;
+        float MAX_INSULATION_SCALE = 0.85f;
+
+        float rawInsulationEffect = armorInsulation * INSULATION_PER_POINT;
+        float clampedInsulationEffect = Mth.clamp(rawInsulationEffect, 0f, MAX_INSULATION_SCALE);*/
+
+        return Math.max(0.5f, 1 /*+ clothing temp*/ + weightOffset * 0.01f) - (ServerConfig.EXPIE_MODE.get() ? 0 : 0.49999f);
+    }
+
     private void handleBodyTemperature(ServerPlayer player) {
         if (!ServerConfig.DO_TEMP_CHANGE.get()) {
             temperature = 36.6f;
@@ -1471,24 +1415,15 @@ public class PlayerHealthData {
         }
 
         if (player.tickCount % 20 == 0) {
-            float envTemp = getAmbientTemperature(player);
+            //float envTemp = getAmbientTemperature(player);
 
-            float armorInsulation;
-            armorInsulation = ThermalArmorHandler.getArmorInsulation(player);
-
-            float INSULATION_PER_POINT = 0.05f;
-            float MAX_INSULATION_SCALE = 0.85f;
-
-            float rawInsulationEffect = armorInsulation * INSULATION_PER_POINT;
-            float clampedInsulationEffect = Mth.clamp(rawInsulationEffect, 0f, MAX_INSULATION_SCALE);
-
-            temperature = Mth.lerp(0.003f / Math.max(/*0.5f*/0.9f, clampedInsulationEffect), temperature, 24);
+            temperature = Mth.lerp(0.003f / totalInsulation(), temperature, 17);//first biome temp at start (envTemp)
 
             float mul = 1 - Mth.clamp(0.3f - energy * 0.01f, 0, 1);
             if (painkillers.currentOpiateReception() > 0) {
                 mul -= painkillers.currentOpiateReception() * 0.005f;
             }
-            temperature += 0.04f * mul;//TODO test temp, might need to lower ambient
+            temperature += 0.04f * mul;
 
             if (temperature > 37.5f) {
                 float maxWetness = (temperature - 37.5f) * 20;
@@ -1498,7 +1433,7 @@ public class PlayerHealthData {
             temperature -= 0.001f * wetness;
 
             if (temperature < 36.5) {
-                temperature += Math.max(hunger * 0.01f, 0.3f) * 0.03f * mul;//there is also hunger + energy check
+                temperature += Math.max(hunger * 0.01f, 0.3f) * 0.03f * mul;
             }
 
             if (temperature < 32) {
@@ -1573,7 +1508,14 @@ public class PlayerHealthData {
             }
         }
 
-        radiationSickness = Mth.clamp(this.radiationSickness - Util.TICK_TO_SEC * 0.033f, 0f, 100f);
+        radiationSickness = Mth.clamp(radiationSickness - Util.TICK_TO_SEC * 0.033f, 0f, 100f);
+    }
+
+    public boolean isDying() {
+        return totalBleedSpeed * 20 > 0.134f || (totalBleedSpeed * 20 > 0.02f && bloodVolume < 40f) || !breathing || hunger < 10f || thirst < 10f
+                || (thirst > 175f && brainHealth < 50f) || sepsis > 75f || temperature > 41f || temperature < 29f
+                || radiationSickness > 60f || (fibrillationProgress > 1f && fibrillationRising()) || bloodPressure < 80f
+                || bloodPressure > 170f || bloodOxygen < 65f || hasPulmonaryEmbolism || strokeAmount > 50f;
     }
 
     public boolean isCriticallyDying() {
@@ -1583,29 +1525,9 @@ public class PlayerHealthData {
                 || bloodPressure < 70;
     }
 
-    private static final AnimationCurve heartCurveNormal = new AnimationCurve(List.of(
-            new Keyframe(-0.09999999f, 0, 0, 1.23537f, WeightedMode.NONE, 0, 0.3333333f),
-            new Keyframe(-0.00590552f, 0.1162415f, -0.01582689f, -0.3781773f, WeightedMode.NONE, 0.9854773f, 1),
-            new Keyframe(0.1640255f, -0.2316138f, -0.05739408f, 28.8334f, WeightedMode.NONE, 0.7828803f, 0.05674533f),
-            new Keyframe(0.2853596f, 0.9987809f, -0.3684868f, -0.1440666f, WeightedMode.NONE, 0.6909047f, 1),
-            new Keyframe(0.3720251f, -0.6998956f, 0.3191285f, -0.2657984f, WeightedMode.NONE, 1, 1),
-            new Keyframe(0.441258f, -0.2914941f, 7.325673f, 2.528934f, WeightedMode.NONE, 0.3333333f, 0.7717564f),
-            new Keyframe(0.5196843f, -0.2318335f, 0.7150099f, 1.103651f, WeightedMode.NONE, 0.3333333f, 1),
-            new Keyframe(0.5627187f, 0.08824407f, 13.44368f, 7.385239f, WeightedMode.NONE, 0.3333333f, 0.5650983f),
-            new Keyframe(0.6198916f, 0.2699015f, 0.9851937f, 0.3543337f, WeightedMode.NONE, 1, 0.734637f),
-            new Keyframe(0.7045727f, 0.1488903f, -2.369716f, -1.884808f, WeightedMode.NONE, 0.6926749f, 0.7784983f),
-            new Keyframe(0.8602069f, -0.04067692f, -0.1900704f, -1.555309E-05f, WeightedMode.NONE, 1, 0.3333333f),
-            new Keyframe(1, 0, 0.2909794f, 0, WeightedMode.NONE, 0.3333333f, 0)
-    ));
-    private static final AnimationCurve heartCurveArrythmia = new AnimationCurve(List.of(
-            new Keyframe(0, 0, 2.845296f, 2.845296f, WeightedMode.NONE, 0, 0.3333333f),
-            new Keyframe(0.1179802f, 0.3356887f, 4.582402f, 4.582402f, WeightedMode.NONE, 0.3333333f, 0.3746302f),
-            new Keyframe(0.2495227f, 0.6348413f, -0.4898691f, -0.4898691f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(0.3875494f, 0.185712f, -11.07063f, -11.07063f, WeightedMode.NONE, 0.3333333f, 0.1364052f),
-            new Keyframe(0.4904054f, -0.5488325f, -1.067827f, -1.067827f, WeightedMode.NONE, 0.3333333f, 0.3412433f),
-            new Keyframe(0.7050565f, -0.6214908f, 0.5978603f, 0.5978603f, WeightedMode.NONE, 0.3333333f, 0.370597f),
-            new Keyframe(1, 0, 2.107152f, 2.107152f, WeightedMode.NONE, 0.3333333f, 0)
-    ));
+    private boolean isBrainDying() {
+        return bloodPressure < 10 && consciousness < 5;
+    }
 
     public float getECGHeight(float offset) {
         offset *= heartRate / 60;
@@ -1627,10 +1549,6 @@ public class PlayerHealthData {
     private boolean isFibrillationRising() {
         return bloodOxygen < 60 || bloodPressure < 88 || heartRate > 200 || fibrillationForced || bloodViscosity > 80
                 || temperature < 28.5f;
-    }
-
-    private boolean isBrainDying() {
-        return bloodPressure < 10 && consciousness < 5;
     }
 
     private void handlePeriodicChecks(ServerPlayer player) {
@@ -1685,7 +1603,7 @@ public class PlayerHealthData {
         }
 
         if (player.tickCount % 20 == 0) {// 1s
-            //TODO weightMovementMult
+            weightMovementMult = weightMovementCurve.evaluate(weightOffset);
             temperatureMovementMult = temperatureMovementCurve.evaluate(temperature);
             //clothingTemperature = 0
             bleedClottingSpeed = 0.025f * Mth.map(bloodViscosity, -100, 0, 0, 1) * Mth.clamp(1 - venomCurrent / 20, 0, 1);
@@ -1715,7 +1633,7 @@ public class PlayerHealthData {
             if (thirst > 175 && random.nextFloat() < 0.01666f) {
                 tryStartFibrillation(true);
             }
-            //TODO thirstBloodPressureCurve
+            thirstBloodPressure = thirstBloodPressureCurve.evaluate(thirst);
 
             //calc clothing temp
 
@@ -1769,18 +1687,6 @@ public class PlayerHealthData {
         }
     }
 
-    private static final AnimationCurve staminaStrength = new AnimationCurve(List.of(
-            new Keyframe(0, 0, 3.05154f, 3.05154f, WeightedMode.NONE, 0, 0.03960396f),
-            new Keyframe(1, 1, 0, 0, WeightedMode.NONE, 0, 0)
-    ));
-    private static final AnimationCurve foodMovementCurve = new AnimationCurve(List.of(
-            new Keyframe(-50.47741f, 0.5298393f, 0, 0.004859894f, WeightedMode.NONE, 0, 0),
-            new Keyframe(0, 0.7751541f, 0.004859894f, 0.005705852f, WeightedMode.NONE, 0, 0.3333333f),
-            new Keyframe(39.40619f, 1, 0.005705852f, 0, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(100.1222f, 1, 0, -0.005770458f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
-            new Keyframe(125.1107f, 0.8558044f, -0.005770458f, 0, WeightedMode.NONE, 0.3333333f, 0)
-    ));
-
     private float legSpeedMult() {
         float legForce = 0;
         for (Limb limb : Limb.LEG_LIMBS) {
@@ -1792,7 +1698,7 @@ public class PlayerHealthData {
                 staminaStrength.evaluate(consciousness * 0.01f),
                 staminaStrength.evaluate(stamina * 0.01f),
                 1 - temporarySlowdown,
-                //currentWeightMovementMult
+                weightMovementMult,
                 temperatureMovementMult,
                 foodMovementCurve.evaluate(hunger)
         ) * /*overencumbrance*/ ((thirst > 125f) ? 0.9f : 1f) * (1 + stimulantMultiplier);
@@ -1844,6 +1750,50 @@ public class PlayerHealthData {
                 }
             }
         }
+    }
+
+    private void updateStability(ServerPlayer player) {
+        float DefaultChange = 2.5F;
+        if (ragdolled() && PhysicsUtil.getVel(player).length() < 0.5f) {
+            stability = Mth.clamp(stability + DefaultChange, 0, 100);
+            return;
+        }
+
+        if (this.consciousness < 50.0F) {
+            DefaultChange -= this.consciousness / 20.0F;
+        }
+
+        Vec3 velocity = PhysicsUtil.getVel(player);
+        if (velocity.length() > (double)0.0F) {
+            DefaultChange -= (float)(velocity.length() * (double)2.0F);
+        }
+
+        if (Math.abs(lastPos.y - player.getY()) > (double)1.0F && player.fallDistance > 2) {
+            DefaultChange -= 7.5F;
+        }
+
+        if (player.getPose() == Pose.CROUCHING) {
+            ++DefaultChange;
+        }
+
+        if (player.getPose() == Pose.SWIMMING) {
+            DefaultChange += 2.0F;
+        }
+
+        Vec3 flow = player.level().getFluidState(player.blockPosition()).getFlow(player.level(), player.blockPosition());
+        if (flow.length() > (double)0.0F) {
+            DefaultChange -= (float)(flow.length() * (double)3.0F);
+            if (player.hasPose(Pose.CROUCHING)) {
+                DefaultChange -= 0.5F;
+            }
+        }
+
+        if (stability < 10.0F && !ragdolled()) {
+            ragdoll(player);
+            this.stability = 0.0F;
+        }
+
+        this.stability = Mth.clamp(this.stability + DefaultChange, 0.0F, 100.0F);
     }
 
     //------------------------------------------------- /Update Logic --------------------------------------------------
@@ -2398,4 +2348,80 @@ public class PlayerHealthData {
                 ", currentAdrenaline=" + currentAdrenaline +
                 '}';
     }
+
+    private static final AnimationCurve hungerLimbHeal = new AnimationCurve(List.of(
+            new Keyframe(-50, -0.0001931116f, 0, 0.007145616f, WeightedMode.NONE, 0, 0),
+            new Keyframe(20, 0.5f, 0.007145616f, 0.01249994f, WeightedMode.NONE, 0, 0.3333333f),
+            new Keyframe(60, 0.9999974f, 0.01249994f, 6.4075E-08f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(100, 1, 6.4075E-08f, 0.02495816f, WeightedMode.NONE, 0.3333333f, 0),
+            new Keyframe(110, 1.249582f, 0.02495816f, 0.000102973f, WeightedMode.NONE, 0, 0)
+    ));
+    private static final AnimationCurve temperatureMovementCurve = new AnimationCurve(List.of(
+            new Keyframe(20, 0.6000061f, 0, 0.0189991f, WeightedMode.NONE, 0, 0),
+            new Keyframe(30, 0.7899971f, 0.0189991f, 0.07000097f, WeightedMode.NONE, 0.3333333f, 0),
+            new Keyframe(33, 1, 0.07000097f, 0, WeightedMode.NONE, 0, 0),
+            new Keyframe(40.7f, 1, 0, -0.116373f, WeightedMode.NONE, 0, 0),
+            new Keyframe(45, 0.499596f, -0.116373f, -0.03110576f, WeightedMode.NONE, 0, 0),
+            new Keyframe(52.23217f, 0.2746337f, -0.03110576f, 0, WeightedMode.NONE, 0, 0)
+    ));
+    private static final AnimationCurve immunityInfectionSpeed = new AnimationCurve(List.of(
+            new Keyframe(0, 2.5f, -0.01900765f, -0.01999984f, WeightedMode.NONE, 0, 0.3333333f),
+            new Keyframe(50, 1.500008f, -0.01999984f, -0.01333398f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(80, 1.099988f, -0.01333398f, -0.004999423f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(100, 1, -0.004999423f, -0.005000472f, WeightedMode.NONE, 0.3333333f, 0),
+            new Keyframe(120, 0.8999906f, -0.005000472f, -0.01029073f, WeightedMode.NONE, 0, 0),
+            new Keyframe(140, 0.694176f, -0.01029073f, -0.009894184f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(195, 0.1499959f, -0.009894184f, -0.1899985f, WeightedMode.NONE, 0, 0),
+            new Keyframe(200, -0.7999964f, -0.1899985f, 0, WeightedMode.NONE, 0, 0)
+    ));
+    private static final AnimationCurve heartCurveNormal = new AnimationCurve(List.of(
+            new Keyframe(-0.09999999f, 0, 0, 1.23537f, WeightedMode.NONE, 0, 0.3333333f),
+            new Keyframe(-0.00590552f, 0.1162415f, -0.01582689f, -0.3781773f, WeightedMode.NONE, 0.9854773f, 1),
+            new Keyframe(0.1640255f, -0.2316138f, -0.05739408f, 28.8334f, WeightedMode.NONE, 0.7828803f, 0.05674533f),
+            new Keyframe(0.2853596f, 0.9987809f, -0.3684868f, -0.1440666f, WeightedMode.NONE, 0.6909047f, 1),
+            new Keyframe(0.3720251f, -0.6998956f, 0.3191285f, -0.2657984f, WeightedMode.NONE, 1, 1),
+            new Keyframe(0.441258f, -0.2914941f, 7.325673f, 2.528934f, WeightedMode.NONE, 0.3333333f, 0.7717564f),
+            new Keyframe(0.5196843f, -0.2318335f, 0.7150099f, 1.103651f, WeightedMode.NONE, 0.3333333f, 1),
+            new Keyframe(0.5627187f, 0.08824407f, 13.44368f, 7.385239f, WeightedMode.NONE, 0.3333333f, 0.5650983f),
+            new Keyframe(0.6198916f, 0.2699015f, 0.9851937f, 0.3543337f, WeightedMode.NONE, 1, 0.734637f),
+            new Keyframe(0.7045727f, 0.1488903f, -2.369716f, -1.884808f, WeightedMode.NONE, 0.6926749f, 0.7784983f),
+            new Keyframe(0.8602069f, -0.04067692f, -0.1900704f, -1.555309E-05f, WeightedMode.NONE, 1, 0.3333333f),
+            new Keyframe(1, 0, 0.2909794f, 0, WeightedMode.NONE, 0.3333333f, 0)
+    ));
+    private static final AnimationCurve heartCurveArrythmia = new AnimationCurve(List.of(
+            new Keyframe(0, 0, 2.845296f, 2.845296f, WeightedMode.NONE, 0, 0.3333333f),
+            new Keyframe(0.1179802f, 0.3356887f, 4.582402f, 4.582402f, WeightedMode.NONE, 0.3333333f, 0.3746302f),
+            new Keyframe(0.2495227f, 0.6348413f, -0.4898691f, -0.4898691f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(0.3875494f, 0.185712f, -11.07063f, -11.07063f, WeightedMode.NONE, 0.3333333f, 0.1364052f),
+            new Keyframe(0.4904054f, -0.5488325f, -1.067827f, -1.067827f, WeightedMode.NONE, 0.3333333f, 0.3412433f),
+            new Keyframe(0.7050565f, -0.6214908f, 0.5978603f, 0.5978603f, WeightedMode.NONE, 0.3333333f, 0.370597f),
+            new Keyframe(1, 0, 2.107152f, 2.107152f, WeightedMode.NONE, 0.3333333f, 0)
+    ));
+    private static final AnimationCurve weightMovementCurve = new AnimationCurve(List.of(
+            new Keyframe(-60, 0.7499987f, 0.0125571f, 0.01005695f, WeightedMode.NONE, 0, 0.3333333f),
+            new Keyframe(-40, 0.9511376f, 0.01005695f, 0.00122156f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(0, 1, 0.00122156f, -0.003333316f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(30, 0.9000005f, -0.003333316f, -0.006666569f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(60, 0.7000034f, -0.006666569f, -0.01404786f, WeightedMode.NONE, 0.3333333f, 0)
+    ));
+    private static final AnimationCurve thirstBloodPressureCurve = new AnimationCurve(List.of(
+            new Keyframe(-50, 0.3999992f, 0, 0, WeightedMode.NONE, 0, 0),
+            new Keyframe(-20, 0.4999612f, 0.006153807f, 0.006153807f, WeightedMode.NONE, 0.3996847f, 0.1048314f),
+            new Keyframe(0, 0.8502595f, 0.005021715f, 0.005021715f, WeightedMode.NONE, 0.3333333f, 0.06136518f),
+            new Keyframe(60, 1.000044f, -6.312488E-05f, -1.108646E-06f, WeightedMode.NONE, 0.3333333f, 0.1173447f),
+            new Keyframe(100, 1, -1.108646E-06f, 1.648972E-05f, WeightedMode.NONE, 0.05626678f, 0.3727432f),
+            new Keyframe(150, 1.333157f, 0.01236806f, 0.008675739f, WeightedMode.NONE, 0.09552521f, 0.0904538f),
+            new Keyframe(250, 1.901399f, 0.003217235f, 0, WeightedMode.NONE, 0.1301498f, 0)
+    ));
+    private static final AnimationCurve staminaStrength = new AnimationCurve(List.of(
+            new Keyframe(0, 0, 3.05154f, 3.05154f, WeightedMode.NONE, 0, 0.03960396f),
+            new Keyframe(1, 1, 0, 0, WeightedMode.NONE, 0, 0)
+    ));
+    private static final AnimationCurve foodMovementCurve = new AnimationCurve(List.of(
+            new Keyframe(-50.47741f, 0.5298393f, 0, 0.004859894f, WeightedMode.NONE, 0, 0),
+            new Keyframe(0, 0.7751541f, 0.004859894f, 0.005705852f, WeightedMode.NONE, 0, 0.3333333f),
+            new Keyframe(39.40619f, 1, 0.005705852f, 0, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(100.1222f, 1, 0, -0.005770458f, WeightedMode.NONE, 0.3333333f, 0.3333333f),
+            new Keyframe(125.1107f, 0.8558044f, -0.005770458f, 0, WeightedMode.NONE, 0.3333333f, 0)
+    ));
 }
