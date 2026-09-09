@@ -25,13 +25,13 @@ public class InternalBleedingMoodle extends AbstractMoodle {
     public void update(Player player, PlayerHealthData data) {
         float bleed = data.internalBleeding();
 
-        if (bleed > 0.6498) {
+        if (bleed >= 1.9f) {//76 CU int bleed points * 0.025
             setStatus(MoodleStatus.CRITICAL_NEG, true);
-        } else if (bleed > 0.43605) {
+        } else if (bleed >= 1.275f) {//51
             setStatus(MoodleStatus.HEAVY_NEG, true);
-        } else if (bleed > 0.2223) {
+        } else if (bleed >= 0.65f) {//26
             setStatus(MoodleStatus.NORMAL_NEG, bleed > 0.4275);
-        } else if (bleed > 0.04275) {
+        } else if (bleed > 0.125f) {//5
             setStatus(MoodleStatus.LIGHT_NEG);
         } else clearStatus();
     }

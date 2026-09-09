@@ -33,7 +33,7 @@ public class CasualtiesCubedTags {
 
     public static class DamageType {
 
-        public static final TagKey<net.minecraft.world.damagesource.DamageType> SHRAPNELL = tag("shrapnel");
+        public static final TagKey<net.minecraft.world.damagesource.DamageType> SHRAPNEL = tag("shrapnel");
         public static final TagKey<net.minecraft.world.damagesource.DamageType> MAGIC = tag("magic");
         public static final TagKey<net.minecraft.world.damagesource.DamageType> IGNORE = tag("ignore");
         public static final TagKey<net.minecraft.world.damagesource.DamageType> ABSTRACT_PROJECTILE = tag("abstract_projectile");

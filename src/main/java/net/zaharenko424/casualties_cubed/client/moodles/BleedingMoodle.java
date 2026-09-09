@@ -31,13 +31,13 @@ public class BleedingMoodle extends AbstractMoodle {
     public void update(Player player, PlayerHealthData data) {
         float bleed = data.totalBleedSpeed();
 
-        if (bleed > 0.6f / 20 / 60) {
+        if (bleed > 0.0075) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);
-        } else if (bleed > 0.3f / 20 / 60) {
+        } else if (bleed > 0.00375) {
             setStatus(MoodleStatus.HEAVY_NEG, true);
-        } else if (bleed > 0.15f / 20 / 60) {
+        } else if (bleed > 0.0015) {
             setStatus(MoodleStatus.NORMAL_NEG);
-        } else if (bleed > 0.05f / 20 / 60) {
+        } else if (bleed > 0) {
             setStatus(MoodleStatus.LIGHT_NEG);
         } else clearStatus();
     }

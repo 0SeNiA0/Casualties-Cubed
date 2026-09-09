@@ -307,7 +307,7 @@ public class LimbWidget extends AbstractWidget {
         float bleed = stats.getBleedRate();
         boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !data.isUnderTourniquet(limb);
         if (isBleeding) {
-            float scale = Math.max(0.9f, (bleed / data.getMAX_BLEED_RATE()) * 2.5f);
+            float scale = Math.max(0.9f, (bleed / LimbStatistics.MAX_BLEED_RATE / 60) * 2.5f);
             setScaleOf(StatusSprites.BLEED, scale);
         }
 

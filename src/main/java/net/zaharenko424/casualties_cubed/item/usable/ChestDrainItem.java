@@ -55,7 +55,7 @@ public class ChestDrainItem extends Item implements ISimpleMedicalUsable, IAllow
         if (limb != Limb.THORAX || !isReady(source.level(), stack)) return;
 
         PlayerHealthData.of(target).ifPresent(data -> {
-            data.getLimb(Limb.THORAX).addBleedRate(0.036f);
+            data.getLimb(Limb.THORAX).addBleedRate(0.036f / 60);
             data.hemothorax(data.hemothorax() - 35);
         });
 

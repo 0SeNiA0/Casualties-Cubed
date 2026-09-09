@@ -80,6 +80,9 @@ public class ModFluids {
     public static final RegistryObject<FluidType> LEMONADE_TYPE = FLUID_TYPES.register("lemonade", () -> new MedicalFluidType(MedicalEffects.LEMONADE, FastColor.ARGB32.color(255, 247, 97, 255)));
     public static final RegistryObject<MedicalFluid> LEMONADE = FLUIDS.register("lemonade", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.LEMONADE_TYPE, ModFluids.LEMONADE, ModFluids.LEMONADE)));
 
+    public static final RegistryObject<FluidType> URINE_TYPE = FLUID_TYPES.register("urine", () -> new MedicalFluidType(MedicalEffects.URINE, FastColor.ARGB32.color(255, 218, 84, 255)));
+    public static final RegistryObject<MedicalFluid> URINE = FLUIDS.register("urine", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.URINE_TYPE, ModFluids.URINE, ModFluids.URINE)));
+
     public static final RegistryObject<FluidType> ICE_TEA_TYPE = FLUID_TYPES.register("ice_tea", () -> new MedicalFluidType(MedicalEffects.ICE_TEA, FastColor.ARGB32.color(255, 250, 135, 52)));
     public static final RegistryObject<MedicalFluid> ICE_TEA = FLUIDS.register("ice_tea", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ICE_TEA_TYPE, ModFluids.ICE_TEA, ModFluids.ICE_TEA)));
 

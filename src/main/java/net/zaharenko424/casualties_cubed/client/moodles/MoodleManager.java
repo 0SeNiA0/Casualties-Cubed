@@ -78,6 +78,7 @@ public class MoodleManager {
         tmp.add(new HypoventilationMoodle());
         tmp.add(new LungFailureMoodle());
         tmp.add(new HemothoraxMoodle());
+        tmp.add(new PulmonaryEmbolismMoodle());
         tmp.add(new OxygenMoodle());
         tmp.add(new IrradiatedMoodle());
         tmp.add(new PainMoodle());

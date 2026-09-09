@@ -135,6 +135,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.APPLE_JUICE, "Fruit juice made by the maceration and pressing of an apple. Tasty!");
         addMedicalFluidFromIdWDesc(ModFluids.ORANGE_JUICE, "Liquid extract of the orange tree fruit. While it is healthy, you're really not a fan of the taste.");
         addMedicalFluidFromIdWDesc(ModFluids.LEMONADE, "Sweetened lemon-flavored drink. Tasty!");
+        addMedicalFluidFromIdWDesc(ModFluids.URINE, "Sweetened lemon-flavored drink. Tasty, although it does smell like piss for some reason.");
         addMedicalFluidFromIdWDesc(ModFluids.ICE_TEA, "Cold, sweetened decaffeinated tea. Tasty!");
         addMedicalFluidFromIdWDesc(ModFluids.SOUP, "Unidentifiable soup, though still tasty and filling.");
         addMedicalFluidFromIdWDesc(ModFluids.CHOCOLATE_MILK, "A type of flavoured milk made by mixing it with cocoa solids. Very sweet and tasty, but toxic for certain species. Increases happiness, consume with caution.");
@@ -410,6 +411,9 @@ public class ENLanguageProvider extends LanguageProvider {
 
         addMoodleO("hemothorax.title3", "Hemothorax");
         addMoodleO("hemothorax.description3", "Blood is accumulating in the pleural cavity due to internal bleeding. Your chest hurts... Treatment needed.");
+
+        addMoodleO("pulmonary_embolism.title4", "Pulmonary embolism");
+        addMoodleO("pulmonary_embolism.description4", "A large blood clot has broken off and lodged itself in the lungs, blocking an artery. Rapid lung damage and suffocation incoming. Lower your blood viscosity urgently.");
 
         addMoodleO("infection.title1", "Infection");
         addMoodleO("infection.description1", "The infection site is swollen and warm. Treatment needed. Find something that can kill off foreign bodies.");

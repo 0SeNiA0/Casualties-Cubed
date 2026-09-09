@@ -150,7 +150,8 @@ public class MedicalEffects {
                 if (player.getRandom().nextFloat() < 0.0075 * ml) {
                     data.vomiter.vomit(player);
                 }
-                //-happiness
+
+                data.addHappiness(-0.1f * ml);
                 data.painkillers.addAntagonist(0.75f * ml);
                 data.painkillers.addTolerance(-0.75f * ml);
             });
@@ -253,7 +254,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                //-happiness
+                data.addHappiness(-0.02f);
                 data.addSickness(0.1f * ml);
             });
         }
@@ -272,7 +273,7 @@ public class MedicalEffects {
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addTimedEffect(TimedEffectRegistry.HIGH_GRADE_STIMULANT, ml, null, 2.5f * ml);
-                //-happiness
+                data.addHappiness(-0.015f * ml);
             });
         }
 
@@ -332,13 +333,31 @@ public class MedicalEffects {
                 data.drink(0.09f * ml);
                 data.addWeightOffset(0.002f * ml);
                 data.temperature(data.temperature() - 0.003f * ml);
-                data.addHappiness(-0.012f * ml);
+                data.addHappiness(0.012f * ml);
             });
         }
 
         @Override
         public float injectionSickness() {
             return 0.4f;
+        }
+    };
+
+    public static final MedicalEffect URINE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.drink(0.07f * ml);
+                data.temperature(data.temperature() - 0.003f * ml);
+                data.addHappiness(-0.025f * ml);
+                data.addSickness(0.075f * ml);
+            });
+        }
+
+        @Override
+        public float injectionSickness() {
+            return 2;
         }
     };
 
@@ -795,12 +814,13 @@ public class MedicalEffects {
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addTimedEffect(TimedEffectRegistry.BRAINGROW, ml, null, 100);
-                //-happiness
+                data.addHappiness(-0.25f * ml);
                 data.addSickness(1 * ml);
 
                 if (data.brainGrowSickness() > 0 || ml > 40) {
                     data.shock(0.5f * ml);
-                    //ragdoll, mindwipe
+                    data.ragdoll(player);
+                    //mindwipe
                 }
                 data.brainGrowSickness(60 * ml);
 
@@ -816,6 +836,7 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addHappiness(-0.05f * ml);
                 data.antibioticTimer(data.antibioticTimer() + 25 * ml);
                 data.sepsis(data.sepsis() - 0.25f * ml);
             });
@@ -881,7 +902,7 @@ public class MedicalEffects {
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 data.addTimedEffect(TimedEffectRegistry.PROCOAGULANT, ml, null, 12 / 33.34f * ml);
-                //-happiness
+                data.addHappiness(-2 * ml / 33.34f);
             });
         }
 
@@ -1002,15 +1023,20 @@ public class MedicalEffects {
         @Override
         public void applyIngested(ServerPlayer player, float ml) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                float mlScaled = ml / 750;
+                data.drink(70 * mlScaled);
                 data.addSickness(32 / 750f * ml);
+                data.addHappiness(-4 * mlScaled);
             });
         }
 
         @Override
         public void applyInjected(ServerPlayer player, float ml, Limb limb) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-                data.bloodViscosity(data.bloodViscosity() - 50 / 750f * ml);
+                float mlScaled = ml / 750;
                 data.bloodVolume(data.bloodVolume() + ml * 0.001f);
+                data.bloodViscosity(data.bloodViscosity() - 50 * mlScaled);
+                data.drink(70 * mlScaled);
             });
         }
     };

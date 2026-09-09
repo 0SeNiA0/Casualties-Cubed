@@ -32,6 +32,7 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.ModDamageTypes;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.ServerPlayerDeltaAccess;
 import net.zaharenko424.casualties_cubed.compat.TempCompat;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.compat.serene_seasons.SereneSeasonsUtil;
@@ -67,7 +68,8 @@ public class PlayerHealthData {
     private float bloodVolume = 5f;
     private float averagePain = 0;
     private float consciousness = 100f;
-    private float totalBleedSpeed = 0;//per second
+    ///L/s
+    private float totalBleedSpeed = 0;
     private float hemothorax = 0f;
     ///per minute -> per tick = / 1200 //! C:U uses 0 - 100 range with 1 = 0.0088/m (Body.HandleBody())
     private float internalBleeding = 0f;
@@ -121,7 +123,7 @@ public class PlayerHealthData {
     private int lastStandTime = -1;
     private boolean successfullyRolledLastStand;
     private boolean fibrillationForced;
-    private boolean hasPulmonaryEmbolism;
+    private boolean pulmonaryEmbolism;
     private float weightMovementMult;
     private float temperatureMovementMult;
     private float bleedClottingSpeed;
@@ -134,7 +136,7 @@ public class PlayerHealthData {
     private float energy = 100;
     private float stamina = 100;
     private float happiness = 0;
-    private float opiateHappiness = 0;
+    float opiateHappiness = 0;
     private float trauma = 0;
     private float radiationSickness = 0;
     private float weightOffset = 0;
@@ -148,8 +150,6 @@ public class PlayerHealthData {
     public final Skills skills = new Skills();
 
     private final List<TimedEffect> effects = new ArrayList<>();
-
-    private Vec3 lastPos = Vec3.ZERO;//last pos used to calculate deltaMovement on server
 
     /*
     TODO: - Make:
@@ -375,6 +375,10 @@ public class PlayerHealthData {
         return bloodViscosity;
     }
 
+    public boolean pulmonaryEmbolism() {
+        return pulmonaryEmbolism;
+    }
+
     public float averagePain() {
         return averagePain;
     }
@@ -481,10 +485,6 @@ public class PlayerHealthData {
         return bloodVolume / 5;
     }
 
-    public float getMAX_BLEED_RATE() {
-        return 0.03f * Util.TICK_TO_SEC;
-    }
-
     public LimbStatistics getLimb(Limb limb) {
         return limbStats.computeIfAbsent(limb, l -> new LimbStatistics(this));
     }
@@ -493,6 +493,7 @@ public class PlayerHealthData {
         return getLimb(limb).isAmputated();
     }
 
+    ///L/s
     public float totalBleedSpeed() {
         return totalBleedSpeed;
     }
@@ -752,12 +753,11 @@ public class PlayerHealthData {
 
         updateStability(player);
         if (ragdolled()) ragdollTime += Util.TICK_TO_SEC;
-        if (!isSleeping(player) && (ragdollTime > 60
-                || (shock < 10f && PhysicsUtil.getVel(player).length() < 0.5f && stability > 50))) {
+        if (!forcedRagdoll && !isSleeping(player) && (ragdollTime > 60
+                || (shock < 10f && PhysicsUtil.getVel(player).length() < 0.1f && stability > 50))) {
             standUp(player);
             ragdollTime = 0;
         }
-        lastPos = player.position();
         
         if (brainHealth <= 0 || getLimb(Limb.THORAX).isAmputated() || getLimb(Limb.ABDOMEN).isAmputated()) {
             kill(player, false);
@@ -788,12 +788,13 @@ public class PlayerHealthData {
     }
 
     public void ragdoll(ServerPlayer player) {
-        if (isSleeping(player) && player.getSleepingPos().map(pos -> player.level().getBlockState(pos).is(BlockTags.BEDS)).orElse(false)) return;
+        if (isSleeping(player) && player.getSleepingPos().map(pos -> player.level().getBlockState(pos).isBed(player.level(), pos, player)).orElse(false)) return;
         if (shock < 20) {
             shock = 20;
         }
         isRagdolled = true;
-        PhysicsUtil.setPhysics(true, player, 0, 0);
+        stability = 0;
+        PhysicsUtil.enablePhysics(player, 0, ServerPlayerDeltaAccess.deltaMovement(player));
     }
 
     private boolean forcedRagdoll = false;
@@ -801,8 +802,6 @@ public class PlayerHealthData {
         forcedRagdoll = ragdoll;
         if (!ragdolled() && ragdoll) {
             ragdoll(player);
-        } else if (ragdolled() && !ragdoll) {
-            standUp(player);
         }
     }
 
@@ -811,7 +810,7 @@ public class PlayerHealthData {
 
         isRagdolled = false;
         stability = 100;
-        PhysicsUtil.setPhysics(false, player, 0, 0);
+        PhysicsUtil.disablePhysics(player);
     }
 
     private void handleBody(ServerPlayer player) {
@@ -840,8 +839,8 @@ public class PlayerHealthData {
         }
 
         // Hemothorax
-        if (internalBleeding > 5 * 0.0088f) {// int bleed to cu points = 1/0.0088 * int bleed; cu points to int bleed = 1 * 0.0088
-            hemothorax += internalBleedingCapped() * Util.TICK_TO_SEC;
+        if (internalBleeding > Util.CUBloodPointsToL(5)) {
+            hemothorax += internalBleedingCapped() * 0.0088f / Util.CU_BLOOD_POINT_AS_L * Util.TICK_TO_SEC;
         } else if (hemothorax > 0) {
             hemothorax = Math.max(hemothorax - 0.036f * Util.TICK_TO_SEC, 0);
         }
@@ -851,9 +850,9 @@ public class PlayerHealthData {
             stats.addPain(3.5f * Util.TICK_TO_SEC);
         }
 
-        bloodVolume -= internalBleedingCapped() * (1 / 0.0088f * 0.0057f) * Util.TICK_TO_SEC;
+        bloodVolume -= internalBleedingCapped() * 0.0057f * Util.TICK_TO_SEC;
 
-        averagePain = 0;//TODO fix bleeding -> switch to using L/s in limbs, make sure that visual bleed number makes sense
+        averagePain = 0;
         totalBleedSpeed = 0;// CU calculates total here but limbs actually subtract blood
         float totalInfection = 0;
         for (Limb limb : Limb.values()) {
@@ -862,7 +861,7 @@ public class PlayerHealthData {
 
             stats.update(player, limb);
 
-            if (!stats.isTourniquet() && !isUnderTourniquet(limb)) totalBleedSpeed += stats.getBleedRate();//bleed rate is per tick but totalBleedSpeed is calculated per second
+            if (!stats.isTourniquet() && !isUnderTourniquet(limb)) totalBleedSpeed += stats.getBleedRate();
             averagePain = Math.max(stats.getPain() - currentAdrenaline * 0.5f, averagePain);
             totalInfection += stats.getInfection();
 
@@ -872,8 +871,8 @@ public class PlayerHealthData {
         }
 
         averagePain *= 1 - skills.skillAbove10(Stat.RES) * 0.025f;
-        totalBleedSpeed += internalBleedingCapped() * (1 / 0.0088f * 0.0057f) * Util.TICK_TO_SEC;
-        totalBleedSpeed -= bloodRegenSpeed() * Util.TICK_TO_SEC;
+        totalBleedSpeed += internalBleedingCapped() * 0.0057f;
+        totalBleedSpeed -= bloodRegenSpeed();
         if (totalBleedSpeed < 0) totalBleedSpeed = 0;
 
         //trauma
@@ -1018,7 +1017,8 @@ public class PlayerHealthData {
 
             weightOffset -= Util.TICK_TO_SEC * ((1 - hunger * 0.01f) * 0.015f + 0.003f) * ServerConfig.METABOLISM_RATE.get().floatValue();
 
-            if ((!ragdolled() && Math.abs(lastPos.x - player.getX()) < 0.1 && Math.abs(lastPos.z - player.getZ()) < 0.1 && !player.isFallFlying()) || ragdolled() || player.getVehicle() != null) {
+            Vec3 delta = ServerPlayerDeltaAccess.deltaMovement(player);
+            if ((!ragdolled() && Math.abs(delta.x) < 0.1 && Math.abs(delta.z) < 0.1 && !player.isFallFlying()) || ragdolled() || player.getVehicle() != null) {
                 stamina = Mth.clamp(stamina + Util.TICK_TO_SEC * staminaStrength.evaluate(energy * 0.01f) * /*overencumbrance*/
                     1.4f * (caffeinated > 0 ? 2 : 1) * (((!player.isInWater() || hasScoobaGear() || stamina < 25f) && breathing) ? 1f : 0f) * (1f + skills.skillAbove10(Stat.RES) * 0.02f) * ServerConfig.STAMINA_REGEN.get().floatValue(), 0f, Math.max(70f, bloodOxygen));
             } else {
@@ -1027,7 +1027,7 @@ public class PlayerHealthData {
             }
             if (player.isSprinting() && stamina < 35) player.setSprinting(false);
 
-            if (!(!player.onGround() && player.isFallFlying()) && player.getVehicle() == null && (Math.abs(lastPos.x - player.getX()) > 0.1 || Math.abs(lastPos.z - player.getZ()) > 0.1)) {
+            if (!(!player.onGround() && player.isFallFlying()) && player.getVehicle() == null && (Math.abs(delta.x) > 0.1 || Math.abs(delta.z) > 0.1)) {
                 temperature += 0.04f * Util.TICK_TO_SEC;
             }
 
@@ -1515,7 +1515,7 @@ public class PlayerHealthData {
         return totalBleedSpeed * 20 > 0.134f || (totalBleedSpeed * 20 > 0.02f && bloodVolume < 40f) || !breathing || hunger < 10f || thirst < 10f
                 || (thirst > 175f && brainHealth < 50f) || sepsis > 75f || temperature > 41f || temperature < 29f
                 || radiationSickness > 60f || (fibrillationProgress > 1f && fibrillationRising()) || bloodPressure < 80f
-                || bloodPressure > 170f || bloodOxygen < 65f || hasPulmonaryEmbolism || strokeAmount > 50f;
+                || bloodPressure > 170f || bloodOxygen < 65f || pulmonaryEmbolism || strokeAmount > 50f;
     }
 
     public boolean isCriticallyDying() {
@@ -1611,14 +1611,14 @@ public class PlayerHealthData {
             if (lastStandTime > 0) lastStandTime--;
 
             if (bloodViscosity > 90 && random.nextFloat() < 0.0166) {
-                hasPulmonaryEmbolism = true;
+                pulmonaryEmbolism = true;
             }
 
-            if (bloodViscosity < 50 && hasPulmonaryEmbolism) {
-                hasPulmonaryEmbolism = false;
+            if (bloodViscosity < 50 && pulmonaryEmbolism) {
+                pulmonaryEmbolism = false;
             }
 
-            if (hasPulmonaryEmbolism) {
+            if (pulmonaryEmbolism) {
                 getLimb(Limb.THORAX).addMuscleHealth(-0.6f);
             }
 
@@ -1768,7 +1768,7 @@ public class PlayerHealthData {
             DefaultChange -= (float)(velocity.length() * (double)2.0F);
         }
 
-        if (Math.abs(lastPos.y - player.getY()) > (double)1.0F && player.fallDistance > 2) {
+        if (Math.abs(ServerPlayerDeltaAccess.deltaMovement(player).y) > (double)1.0F && player.fallDistance > 2) {
             DefaultChange -= 7.5F;
         }
 
@@ -1833,7 +1833,7 @@ public class PlayerHealthData {
 
         }
         if (limb == Limb.THORAX && Math.random() > 0.5) {
-            internalBleeding += (damage / 15) * (getMAX_BLEED_RATE() / 3);
+            internalBleeding += (damage / 15) * (LimbStatistics.MAX_BLEED_RATE / 60 / 20 / 3);
         }
         stats.addMuscleHealth(-damage * ServerConfig.DAMAGE_SCALE.get().floatValue());
         if (Math.random() > 0.9 && limb == Limb.HEAD) {
@@ -1847,7 +1847,7 @@ public class PlayerHealthData {
     }
 
     private void applyBleedDamage(LimbStatistics limb, float damage, Player player) {
-        limb.addBleedRate((damage / 15) * getMAX_BLEED_RATE());
+        limb.addBleedRate((damage / 15) * LimbStatistics.MAX_BLEED_RATE / 60);
     }
 
     public void heal(ServerPlayer player) {
@@ -1868,7 +1868,7 @@ public class PlayerHealthData {
         bloodViscosity = 0;
         respiratoryRate = 100;
         strokeAmount = 0;
-        hasPulmonaryEmbolism = false;
+        pulmonaryEmbolism = false;
         fibrillationProgress = 0;
         thirst = 100;
         hunger = 100;
@@ -1967,7 +1967,7 @@ public class PlayerHealthData {
         boolean bleedout = bloodVolume < 3.5f;
         boolean internalBleed = hemothorax > 50;
         boolean overdose = painkillers.currentOpiateReception() > 80;
-        boolean bleedoutHeavy = totalBleedSpeed() > 2f / 20f / 60f;
+        boolean bleedoutHeavy = totalBleedSpeed() > 2f / 60f;
 
         DamageSource src = ModDamageTypes.oxygen(player.serverLevel());
         if (gaveUp) {
@@ -2134,7 +2134,7 @@ public class PlayerHealthData {
         nbt.putBoolean("triedRollingLastStand", triedRollingLastStand);
         nbt.putInt("lastStandTime", lastStandTime);
         nbt.putBoolean("successfullyRolledLastStand", successfullyRolledLastStand);
-        nbt.putBoolean("hasPulmonaryEmbolism", hasPulmonaryEmbolism);
+        nbt.putBoolean("pulmonaryEmbolism", pulmonaryEmbolism);
         nbt.putFloat("temperatureMovementMult", temperatureMovementMult);
         nbt.putFloat("bleedClottingSpeed", bleedClottingSpeed);
         nbt.putFloat("bleedingSpeedMultiplier", bleedingSpeedMultiplier);
@@ -2267,7 +2267,7 @@ public class PlayerHealthData {
         triedRollingLastStand = nbt.getBoolean("triedRollingLastStand");
         lastStandTime = nbt.getInt("lastStandTime");
         successfullyRolledLastStand = nbt.getBoolean("successfullyRolledLastStand");
-        hasPulmonaryEmbolism = nbt.getBoolean("hasPulmonaryEmbolism");
+        pulmonaryEmbolism = nbt.getBoolean("pulmonaryEmbolism");
         temperatureMovementMult = nbt.getFloat("temperatureMovementMult");
         bleedClottingSpeed = nbt.getFloat("bleedClottingSpeed");
         bleedingSpeedMultiplier = nbt.getFloat("bleedingSpeedMultiplier");

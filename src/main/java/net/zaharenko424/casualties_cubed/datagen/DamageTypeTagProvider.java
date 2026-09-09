@@ -46,7 +46,7 @@ public class DamageTypeTagProvider extends DamageTypeTagsProvider {
         tag(CasualtiesCubedTags.DamageType.MAGIC)
                 .add(DamageTypes.INDIRECT_MAGIC, DamageTypes.MAGIC);
 
-        tag(CasualtiesCubedTags.DamageType.SHRAPNELL)
+        tag(CasualtiesCubedTags.DamageType.SHRAPNEL)
                 .addOptional(createBigCannons("shrapnel"))
                 .addOptional(createBigCannons("flak"))
                 .addOptional(createBigCannons("grapeshot"))

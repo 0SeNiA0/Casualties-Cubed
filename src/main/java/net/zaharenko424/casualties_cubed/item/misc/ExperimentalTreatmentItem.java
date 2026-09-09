@@ -143,7 +143,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
         } else if (roll <= .84) {
             data.shock(1);
         } else if (roll <= .94) {
-            data.internalBleeding(0.2f / 20f / 60f);
+            data.internalBleeding(0.2f / 60f);
         } else if (roll <= .99) {
             data.bloodVolume(3f);
         } else {

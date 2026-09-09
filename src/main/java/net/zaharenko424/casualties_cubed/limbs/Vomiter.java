@@ -35,7 +35,7 @@ public class Vomiter {
             vomitTime -= Mth.clamp(painkillers.currentOpiateReception(), -25, 0) * Util.TICK_TO_SEC * 0.02f;
         }
 
-        bloodVomitTime += Util.TICK_TO_SEC * data.internalBleedingCapped() * 1.25f;
+        bloodVomitTime += Util.TICK_TO_SEC * data.internalBleeding() / Util.CU_BLOOD_POINT_AS_L * 0.01f;
 
         if (bloodVomitTime > 15) {
             bloodVomitTime = 0;

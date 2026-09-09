@@ -86,21 +86,34 @@ public class Painkillers {
 
                 stats.addPain(-currentOpiateReception * 0.3f * Util.TICK_TO_SEC);
             }
-            //opiateHappiness
-        }// else reduce happiness
+            data.opiateHappiness = currentOpiateReception;
+        } else {
+            data.opiateHappiness = currentOpiateReception * 1.66f;
+            if (data.opiateHappiness < -80f) {
+                data.opiateHappiness = -80f;
+            }
+        }
 
-        //energy, opiateHappiness
+        if (currentOpiateReception > 30f) {
+            data.addEnergy(-currentOpiateReception * 0.0025f * Util.TICK_TO_SEC);
+        }
+        if (currentOpiateReception > 5f && data.happiness() > -60f) {
+            data.addHappiness(currentOpiateReception * 3E-05f * Util.TICK_TO_SEC);
+        }
 
         if (currentOpiateReception < -16) {
             data.addSickness(0.09f * Util.TICK_TO_SEC);
         }
-        if (currentOpiateReception < -15 && player.isSleeping()) {//enough energy && no sleeping pills
-            player.stopSleeping();
+        if (currentOpiateReception < -15 && data.isSleeping(player) && data.energy() > 45) {// && no sleeping pills
+            data.wakeUp(player);
         }
         if (currentOpiateReception < -34) {
             data.tryStartFibrillation(true);
         }
-        //if all 0, reset happiness modifier
+
+        if (opiateAmount == 0 && opiateTolerance == 0) {
+            data.opiateHappiness = 0;
+        }
     }
 
     public void reset() {

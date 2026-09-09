@@ -1,9 +1,12 @@
 package net.zaharenko424.casualties_cubed.mixin.entity;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
@@ -62,5 +65,15 @@ public abstract class PlayerMixin {
         data.addStamina(-1f /* (1f + this.overEncumberance)*/ * (wasUnderwater ? 0.35f : 1f));
         data.addTemperature(0.045f);
         data.skills.addExp(player, Stat.RES, 0.1f);
+    }
+
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/food/FoodData;setFoodLevel(I)V"), method = "aiStep")
+    private void redirectRestoreFood(FoodData instance, int pFoodLevel, Operation<Void> original) {
+        if (!((Player)(Object)this instanceof ServerPlayer player)) return;
+        PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
+        if (data != null) {
+            if (data.hunger() < 100) data.addHunger(100 - data.hunger());
+            if (data.thirst() < 100) data.drink(100 - data.thirst());
+        }
     }
 }

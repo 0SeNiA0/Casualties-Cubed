@@ -80,7 +80,6 @@ public class HealthInfoBoxWidget extends AbstractWidget {
 
     private Limb selectedLimb = Limb.HEAD;
 
-
     public HealthInfoBoxWidget(int pX, int pY, int pWidth, int pHeight, Player target, PlayerHealthData data) {
         super(pX, pY, pWidth, pHeight, Component.empty());
         this.target = target;
@@ -170,8 +169,8 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         bloodText.component(Component.translatable("casualties_cubed.gui.health.blood_volume", String.format("%.2f", data.bloodVolume())));
         renderFlashingText(bloodText, guiGraphics, glowColor, data.bloodVolume() < Util.CUBloodPointsToL(25));
 
-        //blood loss bleed * 20 * 60
-        float totalBleed = data.totalBleedSpeed() * 20;
+        //blood loss bleed * 60
+        float totalBleed = data.totalBleedSpeed();
         if (totalBleed > Util.CUBloodPointsToL(0.0001f)) {
             bleedText.component(Component.translatable("casualties_cubed.gui.health.bleed_rate", String.format("%.2f", data.totalBleedSpeed() * 60)));
             renderFlashingText(bleedText, guiGraphics, glowColor, totalBleed > Util.CUBloodPointsToL(0.06f));
@@ -282,13 +281,13 @@ public class HealthInfoBoxWidget extends AbstractWidget {
 
         renderSkill(guiGraphics, partialTick, glowColor);
 
-        float bleedAmount = stats.getBleedRate() / stats.bleedSpeedMult() * 20;
+        float bleedAmount = stats.getBleedRate() / stats.bleedSpeedMult();
         if (bleedAmount <= Util.CUBloodPointsToL(0.1f)) return;
 
         limbBleedOuterImg.tint = glowColor;
         limbBleedOuterImg.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTintedFilledImage(limbBleedInnerImg, guiGraphics, partialTick, glowColor, bleedAmount / Util.CUBloodPointsToL(50));
-        limbBleed.component(Component.literal(String.format("%.2f", stats.getBleedRate() * 20 * 60) + "\nl/m"));
+        limbBleed.component(Component.literal(String.format("%.2f", stats.getBleedRate() * 60) + "\nl/m"));
         renderFlashingText(limbBleed, guiGraphics, glowColor, bleedAmount > Util.CUBloodPointsToL(8));
     }
 

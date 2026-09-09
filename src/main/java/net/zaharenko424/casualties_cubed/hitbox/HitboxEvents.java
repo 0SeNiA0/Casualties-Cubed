@@ -48,8 +48,6 @@ public class HitboxEvents {
         public DamageSource source;
         public Entity directEntity; // projectile, attacker, etc.
         public float preArmorAmount = -1f;
-        public Vec3 projectileHitPos = null;
-        // add whatever else you need (e.g. flags for special sources)
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -64,15 +62,6 @@ public class HitboxEvents {
         ctx.source = src;
         ctx.directEntity = src.getDirectEntity();
         contextMap.put(id, ctx);
-
-        // If projectile, compute accurate intersection now and store position
-        Entity direct = ctx.directEntity;
-        if (direct instanceof Projectile proj) {
-            // Use your sweep logic to compute hit position against this player
-            ctx.projectileHitPos = sweepProjectileStep(proj, player);
-        }
-
-        // You can do other detection here if needed (e.g. store attacker pos)
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -184,7 +173,7 @@ public class HitboxEvents {
         }
 
         if (src.is(DamageTypeTags.IS_EXPLOSION)) {
-            handleExplosionDamage(data, damageamount, event.getSource().is(CasualtiesCubedTags.DamageType.SHRAPNELL), player);
+            handleExplosionDamage(data, damageamount, event.getSource().is(CasualtiesCubedTags.DamageType.SHRAPNEL), player);
             event.setAmount(0);
             return;
         }
@@ -218,10 +207,11 @@ public class HitboxEvents {
         }
         //fuck you warium
 
-        //TODO replace with specific non projectile damage
-        //if (src.getSourcePosition() != null) {
-        //    data.handleProjectileDamage(detectHit(player, src.getSourcePosition()), damageamount, player);
-        //}
+        if (src.getSourcePosition() != null) {
+            handleMeleeDamage(data, detectHit(player, src.getSourcePosition()), damageamount, player);
+            event.setAmount(0);
+            return;
+        }
 
         handleRandomDamage(data, damageamount, player);
         event.setAmount(0);
@@ -261,7 +251,7 @@ public class HitboxEvents {
                 stats = data.getLimb(limb1);
 
                 stats.setSkinHealth(0);
-                stats.setBleedRate(1);
+                stats.setBleedRate(1);//will set to max
                 stats.setPain(200);
                 data.adrenaline(Math.max(data.adrenaline(), 125));
             }
@@ -277,21 +267,23 @@ public class HitboxEvents {
     }
 
     public static void handleSonicDamage(PlayerHealthData data, float damage, Player player) {
-        data.adrenaline(Math.max(10 * damage, data.adrenaline()));
-
         RandomSource random = player.getRandom();
         LimbStatistics stats;
         for (Limb limb : Limb.values()) {
             stats = data.getLimb(limb);
 
-            stats.addPain((limb == Limb.HEAD ? 10 : 4) * damage);
+            stats.addPain((limb == Limb.HEAD ? 12 : 4) * damage);
             stats.addMuscleHealth(-(2 + 1 * random.nextFloat()) * damage);
         }
 
-        data.brainHealth(data.brainHealth() - .5f * damage);//200 sonic boom damage will insta kill
         data.hearingLoss(Math.max(.06f * damage, data.hearingLoss()));
+        data.internalBleeding(data.internalBleeding() + (0.05f + 0.025f * random.nextFloat()) * damage);
+        data.addHappiness(-0.2f * damage);
+        data.shock(data.shock() + 6.5f * damage);
+        data.brainHealth(data.brainHealth() - .5f * damage);//200 sonic boom damage will insta kill
         data.consciousness(data.consciousness() - 6.9f * damage);
-        data.internalBleeding(data.internalBleeding() + (0.0171f + 0.00855f * random.nextFloat()) * damage);
+        data.adrenaline(data.adrenaline() + 10 * damage);
+        data.respiratoryRate(0);
     }
 
     private static final float[][] FALL_DAMAGE_STAGES = {
@@ -309,6 +301,11 @@ public class HitboxEvents {
         RandomSource random = player.getRandom();
         data.adrenaline(Math.max(data.adrenaline(), damageValue * 2));
         float remainingDamage = damageValue * 1;
+
+        if (player instanceof ServerPlayer sPlayer && damageValue > 10) data.ragdoll(sPlayer);
+        if (damageValue > 6 || random.nextFloat() < damageValue / 6) {
+            data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * Math.max(damageValue - 6, 1));
+        }
 
         remainingDamage = applyLocationalArmor(Limb.LEFT_FOOT, remainingDamage, player, false, false, false, true);
 
@@ -355,6 +352,11 @@ public class HitboxEvents {
         data.adrenaline(Math.max(data.adrenaline(), damageValue * 0.5f));
         float remainingDamage = damageValue * 1;
         LimbStatistics stats = data.getLimb(limb);
+
+        if (player instanceof ServerPlayer sPlayer && damageValue > 10) data.ragdoll(sPlayer);
+        if (damageValue > 6 || random.nextFloat() < damageValue / 6) {
+            data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * Math.max(damageValue - 6, 1));
+        }
 
         if (limb == Limb.HEAD)
             remainingDamage *= 0.7f;
@@ -528,7 +530,13 @@ public class HitboxEvents {
         }
     }
 
-    public static void handleExplosionDamage(PlayerHealthData data, float damage, boolean shrapnell, Player player) {
+    public static void handleExplosionDamage(PlayerHealthData data, float damage, boolean shrapnel, Player player) {
+        RandomSource random = player.getRandom();
+        if (player instanceof ServerPlayer sPlayer && damage > 10) data.ragdoll(sPlayer);
+        if (damage > 4 || random.nextFloat() < damage / 4) {
+            data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * Math.max(damage - 4, 1));
+        }
+
         data.adrenaline(Math.max(data.adrenaline(), damage * 1));
         float passDamage;
         Limb limb;
@@ -546,7 +554,7 @@ public class HitboxEvents {
             data.applyBleedDamage(limb, passDamage * 0.7f, player);
 
             float chance = passDamage / 6 + 0.2f;
-            if (Math.random() < chance && shrapnell) {
+            if (Math.random() < chance && shrapnel) {
                 stats.addShrapnel((int) (Math.random() * 5));
             }
 
@@ -586,11 +594,35 @@ public class HitboxEvents {
         if (random.nextFloat() < chance) {
             stats.addShrapnel(1);
         }
-        hurtArmor(randomLimb, player, damage);
-        boolean amputated = handleAmputation(data, randomLimb, stats, damage, 15 + 5 + 10, player);
-        if (amputated) {
-            damage /= 4;//?
+
+        if (damage > 4 || random.nextFloat() < damage / 4) {
+            data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * damage);
         }
+
+        hurtArmor(randomLimb, player, damage);
+        handleAmputation(data, randomLimb, stats, damage, 15 + 5 + 10, player);
+    }
+
+    public static void handleMeleeDamage(PlayerHealthData data, HitSector hitSector, float damage, Player player) {
+        data.adrenaline(Math.max(data.adrenaline(), damage * 2));
+        RandomSource random = player.getRandom();
+        List<Limb> limbList = hitSector.limbs;
+        Limb randomLimb = limbList.get(random.nextInt(limbList.size()));
+        LimbStatistics stats = data.getLimb(randomLimb);
+        damage = applyLocationalArmor(randomLimb, damage, player, false, true, false, false);
+
+        applyConcussion(data, randomLimb, damage);
+        data.applyMuscleDamage(randomLimb, (float) (damage * (Math.random() / 2f + 0.5f)), player);
+        stats.addPain(data.painFromDamage(damage));
+        data.applySkinDamage(randomLimb, (float) (damage * (Math.random() / 2f + 0.5f)));
+        data.applyBleedDamage(randomLimb, damage * 0.9f, player);
+
+        if (damage > 6 || random.nextFloat() < damage / 6) {
+            data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * Math.max(damage - 6, 1));
+        }
+
+        hurtArmor(randomLimb, player, damage);
+        handleAmputation(data, randomLimb, stats, damage, 15 + 5 + 10, player);
     }
 
     public static void handleRandomDamage(PlayerHealthData data, float damage, Player player) {
@@ -676,36 +708,10 @@ public class HitboxEvents {
             stats = data.getLimb(limb);
             if (stats.isAmputated()) continue;
             if (stats.getBleedRate() > 0) {
-                stats.setBleedRate(Math.max(0, stats.getBleedRate() - 0.00005f * healAmount));
+                stats.setBleedRate(Math.max(0, stats.getBleedRate() - 0.001f * healAmount));
             } else stats.addSkinHealth(healAmount);
         }
     }
-
-    public static Vec3 sweepProjectileStep(Projectile proj, Player target) {
-        Vec3 prev = new Vec3(proj.xo, proj.yo, proj.zo); // last tick position
-        Vec3 motion = proj.getDeltaMovement();
-        Vec3 step = motion.scale(0.25); // break into 4 sub-steps per tick
-
-        AABB box = target.getBoundingBox().inflate(0.05);
-
-        Vec3 pos = prev;
-        int steps = (int) Math.ceil(1.0 / 0.25); // 4 steps → adjust if needed
-
-        for (int i = 0; i < steps; i++) {
-            Vec3 next = pos.add(step);
-
-            Optional<Vec3> hit = box.clip(pos, next);
-            if (hit.isPresent()) {
-                return hit.get(); // return exact intersection
-            }
-
-            pos = next;
-        }
-
-        // No hit → fallback to *final sub-step* (closer to true position)
-        return pos;
-    }
-
 
     public static HitSector detectHit(Player player, Vec3 hitpos) {
         AABB box = player.getBoundingBox();
@@ -786,7 +792,6 @@ public class HitboxEvents {
             }
         });
     }
-
 
     public static boolean isAnyProjectile(DamageSource source) {
         // 1. Vanilla tag check

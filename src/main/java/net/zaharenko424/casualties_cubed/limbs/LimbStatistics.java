@@ -7,7 +7,7 @@ import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.util.Util;
 
 public class LimbStatistics {
-
+/// per second
     public static final float MAX_BLEED_RATE = 1.8f;//  L/min
     public static final float MAX_CHILLED_TIME = 150;//seconds
 
@@ -240,7 +240,7 @@ public class LimbStatistics {
     public void setBleedRate(float bleedRate) {
         if (amputated) return;
 
-        bleedRate = Mth.clamp(bleedRate, 0, data.getMAX_BLEED_RATE() *  (1 - getSkinHealth() / 100));
+        bleedRate = Mth.clamp(bleedRate, 0, MAX_BLEED_RATE / 60 * (1 - getSkinHealth() / 100));
         if (this.bleedRate == bleedRate) return;
 
         this.bleedRate = bleedRate;
@@ -403,7 +403,7 @@ public class LimbStatistics {
 
         if (burn > 0) burn -= Math.min(burn, 0.1f * Util.TICK_TO_SEC);// 0.1/s -> 100 to 0 in ~16min
 
-        data.bloodVolume(data.bloodVolume() - bleedRate);
+        data.bloodVolume(data.bloodVolume() - bleedRate * Util.TICK_TO_SEC);
 
         float newPain = 15 - skinHealth * 0.15f + infection * 0.1f;
         setPain(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain));
@@ -417,9 +417,8 @@ public class LimbStatistics {
         //CU uses dislocated/broken booleans which is effectively respective healTimer > 0
 
         if (shrapnel == 0 && bleedRate > 0 && data.venomCurrent() < 20) {
-            /*mul twice as bleed is per tick TODO make per second or smth*/
-            addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(data.bleedClottingSpeed() * ServerConfig.HEALING_RATE.get().floatValue() * bleedSpeedMult()));
-            if (bandageSlowAmount > 0) addBleedRate(-Util.TICK_TO_SEC * Util.TICK_TO_SEC * Util.CUBloodPointsToL(1.25f * bleedSpeedMult()));
+            addBleedRate(-Util.TICK_TO_SEC * Util.CUBloodPointsToL(data.bleedClottingSpeed() * ServerConfig.HEALING_RATE.get().floatValue() * bleedSpeedMult()));
+            if (bandageSlowAmount > 0) addBleedRate(-Util.TICK_TO_SEC * Util.CUBloodPointsToL(1.25f * bleedSpeedMult()));
         }
 
         addBandageSlowAmount(-1.25f * Util.TICK_TO_SEC);
@@ -430,7 +429,7 @@ public class LimbStatistics {
             infectionCheck--;
             if (infectionCheck <= 0) {//40 seconds
                 infectionCheck = 40 * 20;
-                float f = Mth.lerp(0.77f, skinHealth * 0.01f / 0.8f, 1) - (bleedRate * 20 / bleedSpeedMult()) * 0.007f;//convert L/t to CU points
+                float f = Mth.lerp(0.77f, skinHealth * 0.01f / 0.8f, 1) - (bleedRate / bleedSpeedMult()) * 0.007f;//convert L/s to CU points
                 if (player.getRandom().nextFloat() * ServerConfig.INFECTION_CHANCE.get().floatValue() < 1 - f) infection = 0.1f;
             }
         }
@@ -470,7 +469,7 @@ public class LimbStatistics {
         if (muscleHealth <= muscleDeathThreshold) {
             if (limb == Limb.THORAX) {
                 data.respiratoryRate(0);
-                data.internalBleeding(data.internalBleeding() + 0.2f * Util.TICK_TO_SEC);
+                data.internalBleeding(data.internalBleeding() + Util.CUBloodPointsToL(0.2f) * Util.TICK_TO_SEC);
             }
         }
 
@@ -546,7 +545,7 @@ public class LimbStatistics {
 
         if (shrapnel > 0) return 0;
         return Util.TICK_TO_SEC * 0.055f * (player.isSleeping() ? 1.4f : 1) * (skinHealth > 10 ? 1 : 0.25f)
-                * (bleedRate * 20 > Util.CUBloodPointsToL(bleedSpeedMult()) ? 0.2f : 1) * data.hungerLimbHealCurrent() * ServerConfig.HEALING_RATE.get().floatValue();
+                * (bleedRate > Util.CUBloodPointsToL(bleedSpeedMult()) ? 0.2f : 1) * data.hungerLimbHealCurrent() * ServerConfig.HEALING_RATE.get().floatValue();
     }
 
     void save(CompoundTag tag) {

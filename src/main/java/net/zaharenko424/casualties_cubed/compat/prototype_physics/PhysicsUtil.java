@@ -9,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
 
+import javax.vecmath.Vector3f;
+
 public class PhysicsUtil {
 
     public static boolean isPhysicsLoaded() {
@@ -21,6 +23,26 @@ public class PhysicsUtil {
         }
 
         return false;
+    }
+
+    public static void enablePhysics(ServerPlayer player, float randomRot, Vec3 velocity) {
+        if (!isPhysicsLoaded() || !isPhysicsActivated(player)) return;
+
+        JbulletWorld world = JbulletWorld.get(player.serverLevel());
+        PlayerPhysics physics = world.getPlayerPhys(player);
+        if (physics.getMode() != PlayerPhysics.Mode.PRECISE) {
+            physics.setMode(PlayerPhysics.Mode.PRECISE);
+            physics.applyRandomTorque(randomRot, randomRot, randomRot);
+            physics.applyVelocityToWhole(new Vector3f((float) -velocity.x * 10, (float) -velocity.y * 10, (float) -velocity.z * 10));
+        }
+    }
+
+    public static void disablePhysics(ServerPlayer player) {
+        if (!isPhysicsLoaded() || !isPhysicsActivated(player)) return;
+
+        JbulletWorld world = JbulletWorld.get(player.serverLevel());
+        PlayerPhysics physics = world.getPlayerPhys(player);
+        physics.setMode(PlayerPhysics.Mode.SILENT);
     }
 
     public static void setPhysics(boolean state, ServerPlayer player, float randomRot, float randomVel) {
