@@ -139,8 +139,6 @@
   "medical_fluid.casualties_cubed.antiseptic.description": "基础消毒剂，可以抵抗感染，但会造成轻微刺痛。",
   "medical_fluid.casualties_cubed.saline": "生理盐水",
   "medical_fluid.casualties_cubed.saline.description": "盐水混合物，通常用于治疗低血容和口渴。",
-  "medical_fluid.casualties_cubed.blood": "血液",
-  "medical_fluid.casualties_cubed.blood.description": "用于治疗低血容量。",
   "medical_fluid.casualties_cubed.antibiotics": "抗生素",
   "medical_fluid.casualties_cubed.antibiotics.description": "可以在一段时间内增加免疫能力的药物，可以抵抗所有感染，口感令人不快。",
   "medical_fluid.casualties_cubed.antiserum": "抗血清",
@@ -649,5 +647,15 @@
   "tooltip.casualties_cubed.switch_main_hand_button.title": "切换主手",
   "tooltip.casualties_cubed.switch_main_hand_button.description": "将主手切换为左手或右手\n如果主手受伤时可以用另一只手挖掘。\n你的左手比右手弱一点",
   "tooltip.casualties_cubed.workout_button.title": "进行锻炼",
-  "tooltip.casualties_cubed.workout_button.description": "牺牲一些时间和体力，获得力量和韧性经验。非常适合打发时间，但如果你已经严重受伤，则会相当痛苦。"
+  "tooltip.casualties_cubed.workout_button.description": "牺牲一些时间和体力，获得力量和韧性经验。非常适合打发时间，但如果你已经严重受伤，则会相当痛苦。",
+  "medical_fluid.casualties_cubed.alien_blood": "外星血液",
+  "medical_fluid.casualties_cubed.alien_blood.description": "外星的黄色血液。虽然看起来和你的血类似，但明显有些不同。不过作为替代血液问题不大。",
+  "medical_fluid.casualties_cubed.red_blood": "红色血液",
+  "medical_fluid.casualties_cubed.red_blood.description": "用于治疗低血容。",
+  "medical_fluid.casualties_cubed.yellow_blood": "黄色血液",
+  "medical_fluid.casualties_cubed.yellow_blood.description": "用于治疗低血容。",
+  "casualties_cubed.gui.moodle.pulmonary_embolism.title4": "肺栓塞",
+  "casualties_cubed.gui.moodle.pulmonary_embolism.description4": "大块血栓脱落并滞留于肺部，阻塞肺动脉。将迅速导致肺损伤与窒息。尽快降低血液黏稠度。",
+  "medical_fluid.casualties_cubed.urine": "柠檬水",
+  "medical_fluid.casualties_cubed.urine.description": "酸甜柠檬味饮料。味道还行，不知怎的，闻着一股子尿味。"
 }
