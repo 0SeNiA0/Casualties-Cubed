@@ -57,7 +57,7 @@ public abstract class PlayerMixin {
 
     @Inject(at = @At("RETURN"), method = "jumpFromGround")
     private void onJump(CallbackInfo ci) {
-        if (!((Player)(Object)this instanceof ServerPlayer player)) return;
+        if (!((Player)(Object)this instanceof ServerPlayer player) || player.getAbilities().invulnerable) return;
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
         if (data == null) return;
 

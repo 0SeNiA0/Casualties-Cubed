@@ -988,6 +988,7 @@ public class PlayerHealthData {
         }
 
         if (energy > 100) energy = 100;
+        if (ServerConfig.INSOMNIA.get()) energy = 100;
 
         if (energy < 0) {
             energy = 0;
@@ -1055,7 +1056,7 @@ public class PlayerHealthData {
             tryStartFibrillation(true);
         }
 
-        weightOffset = Mth.clamp(weightOffset, -80, 100);
+        weightOffset = ServerConfig.NO_WEIGHT.get() ? 0 : Mth.clamp(weightOffset, -80, 100);
         happiness = Mth.clamp(happiness, -100, 100);
         addWetness(-(wetness > 75 ? 0.35f : 0.2f) * Util.TICK_TO_SEC);
         brainHealth(brainHealth);

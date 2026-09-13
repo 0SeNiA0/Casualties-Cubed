@@ -48,6 +48,9 @@ public class ServerConfig {
     public static final ForgeConfigSpec.BooleanValue INFINITE_LAST_STAND;
     public static final ForgeConfigSpec.BooleanValue TOTEM_OF_UNDYING_LAST_STAND;
 
+    public static final ForgeConfigSpec.BooleanValue INSOMNIA;
+    public static final ForgeConfigSpec.BooleanValue NO_WEIGHT;
+
     public static final ForgeConfigSpec.BooleanValue PHYS_INTEGRATION;
 
     static {
@@ -181,6 +184,14 @@ public class ServerConfig {
                 .comment("Use totem of undying to guarantee last stand (doing so will prevent natural last stand roll unless infiniteLastStand is true)")
                 .define("totemLastStand", true);
 
+
+        INSOMNIA = BUILDER
+                .comment("Disables the ability to sleep by setting energy to 100.")
+                .define("insomnia", false);
+
+        NO_WEIGHT = BUILDER
+                .comment("Disables weight offset by setting it to 0.")
+                .define("noWeight", false);
 
 
         BUILDER.push("Integrations");

@@ -258,7 +258,7 @@ public class CommonEvent {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (!event.getSource().isIndirect()) data.addStamina(-1);
+            if (!player.getAbilities().invulnerable && !event.getSource().isIndirect()) data.addStamina(-1);
 
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
