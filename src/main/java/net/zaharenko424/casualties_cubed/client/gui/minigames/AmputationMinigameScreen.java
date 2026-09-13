@@ -19,7 +19,7 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
     private final Screen parent;
     private final Player target;
     private final Limb limb;
-    private double lastpMouseX=this.width/2,lastpMouseY=this.height/2;
+    private double lastpMouseX = this.width / 2, lastpMouseY = this.height / 2;
     private final boolean ignorevel;
 
     private SawHandObject handObject;
@@ -32,18 +32,18 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
         this.ignorevel = ignorevel;
     }
 
-    public boolean isAmputated(){
+    public boolean isAmputated() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player==null) return false;
-        if (target!=mc.player){
-            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-                if (h.isAmputated(Limb.LEFT_HAND)&&h.isAmputated(Limb.RIGHT_HAND))return true;
+        if (mc.player == null) return false;
+        if (target != mc.player) {
+            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
+                if (h.isAmputated(Limb.LEFT_HAND) && h.isAmputated(Limb.RIGHT_HAND)) return true;
                 return false;
             }).orElse(false);
-        }else{
-            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h->{
-                for (Limb l:limb.availableHandsForAction()){
-                    if (!h.isAmputated(l)){
+        } else {
+            return mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(h -> {
+                for (Limb l : limb.availableHandsForAction()) {
+                    if (!h.isAmputated(l)) {
                         return false;
                     }
                 }
@@ -56,15 +56,15 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
     protected void init() {
         super.init();
         HandObject.SpriteType spriteType;
-        if (ignorevel){
-            spriteType= HandObject.SpriteType.TWEEZERS;
+        if (ignorevel) {
+            spriteType = HandObject.SpriteType.TWEEZERS;
         } else if (isAmputated()) {
-            spriteType= HandObject.SpriteType.GONE;
-        }else {
-            spriteType= HandObject.SpriteType.NORMAL;
+            spriteType = HandObject.SpriteType.GONE;
+        } else {
+            spriteType = HandObject.SpriteType.NORMAL;
         }
-        handObject = new SawHandObject(spriteType,this.width/2,this.height/2,this.width,this.height/3*2);
-        if (parent instanceof HealthScreen hp){
+        handObject = new SawHandObject(spriteType, this.width / 2, this.height / 2, this.width, this.height / 3 * 2);
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = true;
         }
     }
@@ -78,8 +78,8 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
         stack.popPose();
 
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        guiGraphics.fill(0,0,width,height,0x88000000);
-        guiGraphics.fill(0,height/6+158,width,height/6+162,0xFFFFFFFF);
+        guiGraphics.fill(0, 0, width, height, 0x88000000);
+        guiGraphics.fill(0, height / 6 + 158, width, height / 6 + 162, 0xFFFFFFFF);
 
         Minecraft mc = Minecraft.getInstance();
         int screenHeight = mc.getWindow().getScreenHeight();
@@ -88,7 +88,7 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
         double guiScaleX = (double) screenWidth / (double) this.width;
         double guiScaleY = (double) screenHeight / (double) this.height;
 
-        int clipY = this.height / 6+161;
+        int clipY = this.height / 6 + 161;
 
         int scissorX = 0;
         int scissorY = (int) (screenHeight - (clipY * guiScaleY));
@@ -101,29 +101,30 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
 
         RenderSystem.disableScissor();
 
-        guiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.amputation_instruction"),this.width/2,10,0xFFFFFF);
-        guiGraphics.drawCenteredString(mc.font,Component.translatable("casualties_cubed.gui.minigame_exit"),this.width/2,clipY+30,0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.amputation_instruction"), this.width / 2, 10, 0xFFFFFF);
+        guiGraphics.drawCenteredString(mc.font, Component.translatable("casualties_cubed.gui.minigame_exit"), this.width / 2, clipY + 30, 0xFFFFFF);
 
-        handObject.render(guiGraphics,partialTick);
+        handObject.render(guiGraphics, partialTick);
     }
 
 
-    private boolean IgnoreResult= false;
+    private boolean IgnoreResult = false;
+
     @Override
     public void tick() {
         parent.tick();
-        handObject.update(lastpMouseX,lastpMouseY);
+        handObject.update(lastpMouseX, lastpMouseY);
 
         Player player = Minecraft.getInstance().player;
-        if (player!=null){
-            Optional<Float> cons=  player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::consciousness);
+        if (player != null) {
+            Optional<Float> cons = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::consciousness);
             Optional<Float> pain = player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::averagePain);
-            float consscale = (cons.orElse(100f)/100)*0.15f;
-            float painscale = (pain.orElse(0f)/100) *0.55f;
+            float consscale = (cons.orElse(100f) / 100) * 0.15f;
+            float painscale = (pain.orElse(0f) / 100) * 0.55f;
             handObject.setShakeScale(painscale);
             handObject.setStiffness(consscale);
         }
-        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data->{
+        Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             if (!data.isConscious())
                 onClose();
         });
@@ -133,7 +134,7 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (handObject.spriteType!=HandObject.SpriteType.GONE){
+        if (handObject.spriteType != HandObject.SpriteType.GONE) {
 
             handObject.mouseClicked();
         }
@@ -158,7 +159,7 @@ public class AmputationMinigameScreen extends Screen implements Minigame {
     @Override
     public void onClose() {
         super.onClose();
-        if (parent instanceof HealthScreen hp){
+        if (parent instanceof HealthScreen hp) {
             hp.BGmode = false;
         }
         Minecraft.getInstance().setScreen(parent);

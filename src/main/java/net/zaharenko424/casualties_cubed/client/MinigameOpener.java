@@ -15,9 +15,6 @@ import org.jetbrains.annotations.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class MinigameOpener {
 
-    public static void OpenBandageMinigame(Player target, ItemStack stack, @Nullable Limb limb, InteractionHand hand){
-        Minecraft.getInstance().setScreen(new BandageMinigameScreen(Minecraft.getInstance().screen, target,stack,limb,hand));
-    }
     public static void OpenBandageMinigame(Player target, ItemStack stack, int slot, @Nullable Limb limb, InteractionHand hand){
         Minecraft.getInstance().setScreen(new BandageMinigameScreen(Minecraft.getInstance().screen, target,stack, slot,limb,hand));
     }

@@ -28,9 +28,15 @@ public interface IBag {
     default List<ItemStack> getItems(ItemStack bag) {
         List<ItemStack> items = new ArrayList<>();
 
-        if (!bag.hasTag()) return items;
+        if (!bag.hasTag()) {
+            for (int i = 0; i < size(); i++) items.add(ItemStack.EMPTY);
+            return items;
+        }
         CompoundTag rootTag = bag.getTag();
-        if (rootTag == null || !rootTag.contains("StoredItems", Tag.TAG_COMPOUND)) return items;
+        if (rootTag == null || !rootTag.contains("StoredItems", Tag.TAG_COMPOUND)) {
+            for (int i = 0; i < size(); i++) items.add(ItemStack.EMPTY);
+            return items;
+        }
 
         CompoundTag configTag = rootTag.getCompound("StoredItems");
 

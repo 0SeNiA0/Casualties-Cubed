@@ -137,19 +137,19 @@ public class ModCommands {
                                                                             case "skinhealth" ->
                                                                                     stats.setSkinHealth(value);
                                                                             case "musclehealth" ->
-                                                                                    stats.setMuscleHealth(value);
+                                                                                    stats.muscleHealth(value);
                                                                             case "pain" ->
-                                                                                    stats.setPain(value);
+                                                                                    stats.pain(value);
                                                                             case "infection" ->
-                                                                                    stats.setInfection(value);
+                                                                                    stats.infection(value);
                                                                             case "fracturetimer" ->
-                                                                                    stats.setBoneHealTimer(value);
+                                                                                    stats.boneHealTimer(value);
                                                                             case "dislocatedtimer" ->
-                                                                                    stats.setDislocationTimer(value);
+                                                                                    stats.dislocationTimer(value);
                                                                             case "desinfectiontimer" ->
-                                                                                    stats.setDisinfectionTime(value);
+                                                                                    stats.disinfectionTime(value);
                                                                             case "bleedrate" ->
-                                                                                    stats.setBleedRate(value);
+                                                                                    stats.bleedRate(value);
                                                                             default ->
                                                                                     ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", raw));
                                                                         }
@@ -171,23 +171,25 @@ public class ModCommands {
                                                 .suggests((ctx, builder) -> {
                                                     // suggest all available fields
                                                     builder.suggest("blood");
-                                                    builder.suggest("contiousness");
+                                                    builder.suggest("consciousness");
                                                     builder.suggest("hemothorax");
                                                     builder.suggest("internalBleeding");
                                                     builder.suggest("oxygen");
+                                                    builder.suggest("weightOffset");
+                                                    builder.suggest("energy");
                                                     builder.suggest("bloodViscosity");
-                                                    builder.suggest("brainhealth");
-                                                    builder.suggest("dirtyness");
-                                                    builder.suggest("painshock");
+                                                    builder.suggest("brainHealth");
+                                                    builder.suggest("dirtiness");
+                                                    builder.suggest("painShock");
                                                     builder.suggest("temperature");
-                                                    builder.suggest("lefteyeblind");
-                                                    builder.suggest("righteyeblind");
-                                                    builder.suggest("mouthremoved");
+                                                    builder.suggest("leftEyeBlind");
+                                                    builder.suggest("rightEyeBlind");
+                                                    builder.suggest("disfigured");
                                                     return builder.buildFuture();
                                                 })
                                                 .then(Commands.argument("value", FloatArgumentType.floatArg())
                                                         .executes(ctx -> {
-                                                            String field = StringArgumentType.getString(ctx, "field").toLowerCase();
+                                                            String field = StringArgumentType.getString(ctx, "field");
                                                             float value = FloatArgumentType.getFloat(ctx, "value");
                                                             ServerPlayer target = EntityArgument.getPlayer(ctx, "target");
 
@@ -195,20 +197,22 @@ public class ModCommands {
                                                             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
                                                                 switch (field) {
                                                                     case "blood" -> h.bloodVolume(value);
-                                                                    case "contiousness" -> h.consciousness(value);
+                                                                    case "consciousness" -> h.consciousness(value);
                                                                     case "hemothorax" -> h.hemothorax(value);
-                                                                    case "internalbleeding" ->
+                                                                    case "internalBleeding" ->
                                                                             h.internalBleeding(value);
                                                                     case "oxygen" -> h.bloodOxygen(value);
-                                                                    case "bloodviscosity" -> h.bloodViscosity(value);
-                                                                    case "brainhealth" -> h.brainHealth(value);
-                                                                    case "dirtyness" -> h.dirtiness(value);
-                                                                    case "painshock" -> h.shock(value);
+                                                                    case "weightOffset" -> h.weightOffset(value);
+                                                                    case "energy" -> h.energy(value);
+                                                                    case "bloodViscosity" -> h.bloodViscosity(value);
+                                                                    case "brainHealth" -> h.brainHealth(value);
+                                                                    case "dirtiness" -> h.dirtiness(value);
+                                                                    case "painShock" -> h.shock(value);
                                                                     case "temperature" -> h.temperature(value);
-                                                                    case "lefteyeblind" -> h.setLeftEyeBlind(value > 0);
-                                                                    case "righteyeblind" ->
+                                                                    case "leftEyeBlind" -> h.setLeftEyeBlind(value > 0);
+                                                                    case "rightEyeBlind" ->
                                                                             h.setRightEyeBlind(value > 0);
-                                                                    case "mouthremoved" -> h.disfigured(value > 0);
+                                                                    case "disfigured" -> h.disfigured(value > 0);
                                                                     default ->
                                                                             ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", field));
                                                                 }
@@ -293,7 +297,7 @@ public class ModCommands {
         for (ServerPlayer player : targets) {
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 for (Limb limb : Limb.values()) {
-                    data.getLimb(limb).setBleedRate(0);
+                    data.getLimb(limb).bleedRate(0);
                 }
                 data.internalBleeding(0);
             });

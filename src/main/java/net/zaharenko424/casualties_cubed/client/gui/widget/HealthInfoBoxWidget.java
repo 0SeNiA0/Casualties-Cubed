@@ -246,9 +246,9 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         limbText.render(guiGraphics);
         LimbStatistics stats = data.getLimb(selectedLimb);
 
-        renderTintedFilledImage(muscleBar, guiGraphics, partialTick, glowColor, stats.getMuscleHealth() * 0.01f);
-        muscleText.component(Component.literal(Math.round(stats.getMuscleHealth()) + ""));
-        renderFlashingText(muscleText, guiGraphics, glowColor, stats.getMuscleHealth() < 10);
+        renderTintedFilledImage(muscleBar, guiGraphics, partialTick, glowColor, stats.muscleHealth() * 0.01f);
+        muscleText.component(Component.literal(Math.round(stats.muscleHealth()) + ""));
+        renderFlashingText(muscleText, guiGraphics, glowColor, stats.muscleHealth() < 10);
 
         renderTintedFilledImage(skinBar, guiGraphics, partialTick, glowColor, stats.getSkinHealth() * 0.01f);
         skinText.component(Component.literal(Math.round(stats.getSkinHealth()) + ""));
@@ -258,16 +258,16 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         forceText.component(Component.literal(Math.round(stats.totalForce() * 100) + ""));
         renderFlashingText(forceText, guiGraphics, glowColor, stats.totalForce() < 0.25f);
 
-        infectionText.component(Component.literal(stats.getInfection() >= 25 || stats.showInfection() ? Math.round(stats.getInfection()) + "" : "-"));
-        renderFlashingText(infectionText, guiGraphics, glowColor, stats.getInfection() >= 25);
+        infectionText.component(Component.literal(stats.infection() >= 25 || stats.showInfection() ? Math.round(stats.infection()) + "" : "-"));
+        renderFlashingText(infectionText, guiGraphics, glowColor, stats.infection() >= 25);
 
-        painText.component(Component.literal(stats.getPain() <= 0 ? "-" : Math.round(stats.getPain()) + ""));
-        renderFlashingText(painText, guiGraphics, glowColor, stats.getPain() >= 50);
+        painText.component(Component.literal(stats.pain() <= 0 ? "-" : Math.round(stats.pain()) + ""));
+        renderFlashingText(painText, guiGraphics, glowColor, stats.pain() >= 50);
 
         RenderableImage injury = null;
-        if (stats.getBoneHealTimer() > 0) {
+        if (stats.boneHealTimer() > 0) {
             injury = fracturedBoneImg;
-        } else if (stats.getDislocationTimer() > 0) {
+        } else if (stats.dislocationTimer() > 0) {
             injury = dislocatedBoneImg;
         }
 
@@ -281,13 +281,13 @@ public class HealthInfoBoxWidget extends AbstractWidget {
 
         renderSkill(guiGraphics, partialTick, glowColor);
 
-        float bleedAmount = stats.getBleedRate() / stats.bleedSpeedMult();
+        float bleedAmount = stats.bleedRate() / stats.bleedSpeedMult();
         if (bleedAmount <= Util.CUBloodPointsToL(0.1f)) return;
 
         limbBleedOuterImg.tint = glowColor;
         limbBleedOuterImg.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTintedFilledImage(limbBleedInnerImg, guiGraphics, partialTick, glowColor, bleedAmount / Util.CUBloodPointsToL(50));
-        limbBleed.component(Component.literal(String.format("%.2f", stats.getBleedRate() * 60) + "\nl/m"));
+        limbBleed.component(Component.literal(String.format("%.2f", stats.bleedRate() * 60) + "\nl/m"));
         renderFlashingText(limbBleed, guiGraphics, glowColor, bleedAmount > Util.CUBloodPointsToL(8));
     }
 

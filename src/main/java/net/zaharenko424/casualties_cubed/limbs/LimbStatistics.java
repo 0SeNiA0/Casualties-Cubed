@@ -82,15 +82,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getMuscleHealth() {
+    public float muscleHealth() {
         return muscleHealth;
     }
 
     public void addMuscleHealth(float muscleHealth) {
-        setMuscleHealth(this.muscleHealth + muscleHealth);
+        muscleHealth(this.muscleHealth + muscleHealth);
     }
 
-    public void setMuscleHealth(float muscleHealth) {
+    public void muscleHealth(float muscleHealth) {
         if (amputated) return;
 
         muscleHealth = Mth.clamp(muscleHealth, 0, 100);
@@ -100,15 +100,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getBurn() {
+    public float burn() {
         return burn;
     }
 
     public void addBurn(float burn) {
-        setBurn(this.burn + burn);
+        burn(this.burn + burn);
     }
 
-    public void setBurn(float burn) {
+    public void burn(float burn) {
         if (amputated) return;
 
         burn = Mth.clamp(burn, 0, 100);
@@ -118,15 +118,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getPain() {
+    public float pain() {
         return pain;
     }
 
     public void addPain(float pain) {
-        setPain(this.pain + pain);
+        pain(this.pain + pain);
     }
 
-    public void setPain(float pain) {
+    public void pain(float pain) {
         if (amputated) return;
 
         pain = Mth.clamp(pain, 0, 100);
@@ -147,15 +147,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getInfection() {
+    public float infection() {
         return infection;
     }
 
     public void addInfection(float infection) {
-        setInfection(this.infection + infection);
+        infection(this.infection + infection);
     }
 
-    public void setInfection(float infection) {
+    public void infection(float infection) {
         if (amputated) return;
 
         infection = Mth.clamp(infection, 0, 100);
@@ -165,15 +165,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getBoneHealTimer() {
+    public float boneHealTimer() {
         return boneHealTimer;
     }
 
     public void addBoneHealTimer(float fracture) {
-        setBoneHealTimer(this.boneHealTimer + fracture);
+        boneHealTimer(this.boneHealTimer + fracture);
     }
 
-    public void setBoneHealTimer(float boneHealTimer) {
+    public void boneHealTimer(float boneHealTimer) {
         if (amputated) return;
 
         boneHealTimer = Mth.clamp(boneHealTimer, 0, 100);
@@ -183,15 +183,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getDislocationTimer() {
+    public float dislocationTimer() {
         return dislocationTimer;
     }
 
     public void addDislocationTimer(float dislocation) {
-        setDislocationTimer(this.dislocationTimer + dislocation);
+        dislocationTimer(this.dislocationTimer + dislocation);
     }
 
-    public void setDislocationTimer(float dislocationTimer) {
+    public void dislocationTimer(float dislocationTimer) {
         if (amputated) return;
 
         dislocationTimer = Mth.clamp(dislocationTimer, 0, 100);
@@ -211,15 +211,15 @@ public class LimbStatistics {
         return dislocationTimer / (dislocationHealSpeed * healingRate * (hasSplint ? 2 : 1));
     }
 
-    public int getShrapnel() {
+    public int shrapnel() {
         return shrapnel;
     }
 
     public void addShrapnel(int shrapnel) {
-        setShrapnel(this.shrapnel + shrapnel);
+        shrapnel(this.shrapnel + shrapnel);
     }
 
-    public void setShrapnel(int shrapnel) {
+    public void shrapnel(int shrapnel) {
         if (amputated) return;
 
         shrapnel = Mth.clamp(shrapnel, 0, 5);
@@ -229,15 +229,15 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getBleedRate() {
+    public float bleedRate() {
         return bleedRate;
     }
 
     public void addBleedRate(float bleedRate) {
-        setBleedRate(this.bleedRate + bleedRate);
+        bleedRate(this.bleedRate + bleedRate);
     }
 
-    public void setBleedRate(float bleedRate) {
+    public void bleedRate(float bleedRate) {
         if (amputated) return;
 
         bleedRate = Mth.clamp(bleedRate, 0, MAX_BLEED_RATE / 60 * (1 - getSkinHealth() / 100));
@@ -272,19 +272,19 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
-    public float getDisinfectionTime() {
+    public float disinfectionTime() {
         return disinfectionTime;
     }
 
     public void addDisinfectionTimer(float disinfectionTimer) {
-        setDisinfectionTime(this.disinfectionTime + disinfectionTimer);
+        disinfectionTime(this.disinfectionTime + disinfectionTimer);
     }
 
-    public void setDisinfectionTimerAtLeast(float disinfectionTimer) {
-        setDisinfectionTime(Math.max(this.disinfectionTime, disinfectionTimer));
+    public void disinfectionTimerAtLeast(float disinfectionTimer) {
+        disinfectionTime(Math.max(this.disinfectionTime, disinfectionTimer));
     }
 
-    public void setDisinfectionTime(float disinfectionTime) {
+    public void disinfectionTime(float disinfectionTime) {
         if (amputated) return;
 
         disinfectionTime = Math.max(disinfectionTime, 0);
@@ -359,7 +359,7 @@ public class LimbStatistics {
         chilledTimer = 0;
     }
 
-    public float getRegrowthProgress() {
+    public float regrowthProgress() {
         return regrowthProgress;
     }
 
@@ -371,6 +371,7 @@ public class LimbStatistics {
             setAmputated(false);
             regrowthProgress = 0;
         }
+        syncNeeded = true;
     }
 
     public float totalForce() {
@@ -406,7 +407,7 @@ public class LimbStatistics {
         data.bloodVolume(data.bloodVolume() - bleedRate * Util.TICK_TO_SEC);
 
         float newPain = 15 - skinHealth * 0.15f + infection * 0.1f;
-        setPain(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain));
+        pain(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain));
         if (data.temperature() < 32) {
             addPain(-Util.TICK_TO_SEC * 5);
         }
@@ -450,9 +451,9 @@ public class LimbStatistics {
             LimbStatistics stats;
             for (Limb connected : limb.getConnectedLimbs()) {
                 stats = data.getLimb(connected);
-                if (stats.getInfection() > 0) continue;
+                if (stats.infection() > 0) continue;
 
-                stats.setInfection(0.1f);
+                stats.infection(0.1f);
             }
         }
 
@@ -474,7 +475,7 @@ public class LimbStatistics {
         }
 
         if ((dislocationTimer > 0 || boneHealTimer > 0) && muscleHealth > 50) {
-            setMuscleHealth(50);
+            muscleHealth(50);
         }
 
         if (skinHealAmount > 0) {
@@ -509,8 +510,8 @@ public class LimbStatistics {
                 stats = data.getLimb(l);
 
                 stats.addMuscleHealth(-2 * Util.TICK_TO_SEC);
-                if (stats.getMuscleHealth() < 5 && stats.getInfection() < 10) {
-                    stats.setInfection(10);
+                if (stats.muscleHealth() < 5 && stats.infection() < 10) {
+                    stats.infection(10);
                 }
             }
         }

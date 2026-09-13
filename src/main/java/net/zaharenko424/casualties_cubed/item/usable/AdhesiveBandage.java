@@ -33,7 +33,7 @@ public class AdhesiveBandage extends Item implements ISimpleMedicalUsable, IAllo
 
             stas.addSkinHealAmount(3);
             stas.addBandageSlowAmount(6);
-            stas.setPain(stas.getPain() * .90f);
+            stas.pain(stas.pain() * .90f);
 
             if (!source.isCreative()) subNbtDurability(stack, 16);
             source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);

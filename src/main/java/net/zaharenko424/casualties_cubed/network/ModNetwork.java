@@ -99,6 +99,9 @@ public class ModNetwork {
 
         registerServerbound(ServerboundUseSyringePacket.class, ServerboundUseSyringePacket::encode,
                 ServerboundUseSyringePacket::new, ServerPacketHandler::handleUseSyringe);
+
+        registerServerbound(ServerboundSwapItemsPacket.class, ServerboundSwapItemsPacket::encode,
+                ServerboundSwapItemsPacket::new, ServerPacketHandler::handleSwapItems);
     }
 
     private static <MSG> void registerClientbound(Class<MSG> clazz, BiConsumer<MSG, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, MSG> decoder, BiConsumer<MSG, Supplier<NetworkEvent.Context>> handler) {

@@ -79,7 +79,7 @@ public class TimedEffectRegistry {
 
                 LimbStatistics stats = data.getLimb(Limb.THORAX);
                 stats.addMuscleHealth(-0.225f);
-                if (stats.getPain() < 50) {
+                if (stats.pain() < 50) {
                     stats.addPain(1.5f);
                 }
 
@@ -90,7 +90,7 @@ public class TimedEffectRegistry {
     public static final RegistryObject<TimedEffectFunction> RELIEF_CREAM = TIMED_EFFECTS.register("relief_cream", () ->
             (player, data, effect) -> {
                 LimbStatistics stats = data.getLimb(effect.limb());
-                stats.setPain(Mth.lerp(0.15f, stats.getPain(), stats.getPain() * 0.1f));
+                stats.pain(Mth.lerp(0.15f, stats.pain(), stats.pain() * 0.1f));
             }
     );
 
@@ -110,7 +110,7 @@ public class TimedEffectRegistry {
                 LimbStatistics stats;
                 for (Limb l : Limb.values()) {
                     stats = data.getLimb(l);
-                    if (!stats.isAmputated()) stats.setBleedRate(stats.getBleedRate() * 0.96f);
+                    if (!stats.isAmputated()) stats.bleedRate(stats.bleedRate() * 0.96f);
                 }
             }
     );
@@ -230,7 +230,7 @@ public class TimedEffectRegistry {
                     data.brainHealth(data.brainHealth() - 0.05f);
 
                     LimbStatistics stats = data.getLimb(Limb.THORAX);
-                    if (stats.getPain() < 60) {
+                    if (stats.pain() < 60) {
                         stats.addPain(4);
                     }
                     data.overdoseIndex(3);
@@ -294,12 +294,12 @@ public class TimedEffectRegistry {
                     data.brainHealth(data.brainHealth() - 0.08f);
 
                     LimbStatistics stats = data.getLimb(Limb.THORAX);
-                    if (stats.getPain() < 60) {
+                    if (stats.pain() < 60) {
                         stats.addPain(4);
                     }
 
                     stats = data.getLimb(Limb.HEAD);
-                    if (stats.getPain() < 60) {
+                    if (stats.pain() < 60) {
                         stats.addPain(4);
                     }
                     data.overdoseIndex(3);

@@ -12,9 +12,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.util.Util;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 
 public abstract class MinigameScreen extends Screen implements Minigame {
 
@@ -34,7 +36,8 @@ public abstract class MinigameScreen extends Screen implements Minigame {
         this.parent = parent;
         this.target = target;
 
-        //GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
     }
 
     @Override
@@ -102,7 +105,8 @@ public abstract class MinigameScreen extends Screen implements Minigame {
         }
 
         Minecraft.getInstance().setScreen(parent);
-        //GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+        if (ClientConfig.NO_MINIGAME_CURSOR.get()) 
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
     }
 
     protected void renderHand(GuiGraphics graphics, float partialTick) {

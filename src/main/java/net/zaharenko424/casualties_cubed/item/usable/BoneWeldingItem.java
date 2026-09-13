@@ -34,7 +34,7 @@ public class BoneWeldingItem extends Item implements ISimpleMedicalUsable, IAllo
 
             stats.addSkinHealth(-25);
             stats.addMuscleHealth(-26);
-            stats.setBoneHealTimer(stats.getBoneHealTimer() * 0.15f);
+            stats.boneHealTimer(stats.boneHealTimer() * 0.15f);
             stats.addBleedRate(0.09f / 60f);
             stats.addPain(30);
         });

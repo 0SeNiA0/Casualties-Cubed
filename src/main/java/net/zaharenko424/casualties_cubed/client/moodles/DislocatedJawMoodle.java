@@ -22,7 +22,7 @@ public class DislocatedJawMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        float timer = data.getLimb(Limb.HEAD).getDislocationTimer();
+        float timer = data.getLimb(Limb.HEAD).dislocationTimer();
 
         if (timer > 19 * 60 + 50) {
             setStatus(MoodleStatus.CRITICAL_NEG);

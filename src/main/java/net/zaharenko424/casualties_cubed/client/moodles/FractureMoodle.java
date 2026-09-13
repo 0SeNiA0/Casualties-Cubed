@@ -27,7 +27,7 @@ public class FractureMoodle extends AbstractMoodle {
         LimbStatistics stats;
         for (Limb limb : Limb.values()) {
             stats = data.getLimb(limb);
-            if (stats.getBoneHealTimer() > timer) timer = stats.getBoneHealTimer();
+            if (stats.boneHealTimer() > timer) timer = stats.boneHealTimer();
         }
 
         if (timer > 32 * 60 + 18) {

@@ -18,7 +18,6 @@ import net.zaharenko424.casualties_cubed.client.gui.widget.*;
 import net.zaharenko424.casualties_cubed.client.moodles.MoodleManager;
 import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
-import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.IMedicalMinigameUsable;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
@@ -28,13 +27,12 @@ import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.ServerPacketHandler;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundGuiSyncTogglePacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundSleepPacket;
+import net.zaharenko424.casualties_cubed.network.packet.ServerboundSwapItemsPacket;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundUseMedItemPacket;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
 import net.zaharenko424.casualties_cubed.util.ColorUtil;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 
 import static net.minecraft.util.FastColor.ARGB32.alpha;
 
@@ -42,10 +40,8 @@ public class HealthScreen extends Screen {
 
     private final EnumMap<Limb, LimbWidget> limbWidgets = new EnumMap<>(Limb.class);
 
-    private ItemWidget RightItem;
-    private final List<ItemWidget> RightItemsubWidgets = new ArrayList<>();
-    private ItemWidget LeftItem;
-    private final List<ItemWidget> LeftItemsubWidgets = new ArrayList<>();
+    private final MaybeBagItemWidget right, left;
+
     private final HealthInfoBoxWidget healthBox;
     private final SpecialUseButton specialUseButton;
     private CPRButton cprButton;
@@ -82,7 +78,7 @@ public class HealthScreen extends Screen {
         switchMode.holdingTint = -1;
 
         switchMainHandButton = new ImageButton(24, 24, new RenderableImage(SWITCH_MAIN_HAND, 32, 32), () -> {
-            localPlayer.setMainArm(localPlayer.getMainArm().getOpposite());
+            Minecraft.getInstance().options.mainHand().set(localPlayer.getMainArm().getOpposite());
             localPlayer.playSound(ModSounds.CLICK.get());
         });
         switchMainHandButton.tooltip(Component.translatable("tooltip.casualties_cubed.switch_main_hand_button.title"), Component.translatable("tooltip.casualties_cubed.switch_main_hand_button.description"));
@@ -98,6 +94,9 @@ public class HealthScreen extends Screen {
         });
         sleepButton.tooltip(Component.translatable("tooltip.casualties_cubed.sleep_button.title", SleepQuality.currentSleepQuality(localPlayer).comp), Component.translatable("tooltip.casualties_cubed.sleep_button.description"));
         sleepButton.active(data.canTakeNap());
+
+        right = new MaybeBagItemWidget(this, HumanoidArm.RIGHT);
+        left = new MaybeBagItemWidget(this, HumanoidArm.LEFT);
     }
 
     @Override
@@ -128,25 +127,13 @@ public class HealthScreen extends Screen {
 
         cprButton = new CPRButton(this.width - 36, this.height - 36, this, target);
 
-        Player player = Minecraft.getInstance().player;
-        if (player != null) {
-            for (InteractionHand hand : InteractionHand.values()) {
-                ItemStack stack = player.getItemInHand(hand);
-                HumanoidArm arm = Limb.getArmFromHand(hand, player);
+        right.offset.set(start_x - 48 - 16 - 8, start_y + 8);
+        right.init();
+        addRenderableWidget(right);
+        left.offset.set(start_x + 32 + 48 + 8, start_y + 8);
+        left.init();
+        addRenderableWidget(left);
 
-                if (arm == HumanoidArm.RIGHT) {
-                    // Draw right-hand item on the right side of HUD
-                    RightItem = new ItemWidget(start_x - 48 - 16 - 8, start_y + 8, stack);
-                } else {
-                    // Draw left-hand item on the left side of HUD
-                    LeftItem = new ItemWidget(start_x + 32 + 48 + 8, start_y + 8, stack);
-                }
-
-                maybeSetupBagItems(start_x, start_y, arm == HumanoidArm.RIGHT);
-            }
-        }
-        addRenderableWidget(LeftItem);
-        addRenderableWidget(RightItem);
         addRenderableWidget(healthBox);
         addRenderableWidget(specialUseButton);
         addRenderableWidget(cprButton);
@@ -154,7 +141,7 @@ public class HealthScreen extends Screen {
 
         ModNetwork.CHANNEL.sendToServer(new ServerboundGuiSyncTogglePacket(target.getId(), true));
 
-        updateScreen();
+        updateLimbs();
 
         int y = this.height - MoodleManager.MOODLE_SIZE - 1;
         addWidget(MoodleManager.HEALTH_PANEL_BUTTON);
@@ -174,40 +161,6 @@ public class HealthScreen extends Screen {
         healthBox.init(this);
     }
 
-    private void maybeSetupBagItems(int start_x, int start_y, boolean right) {
-        ItemStack stack = (right ? RightItem : LeftItem).getStack();
-        if (!(stack.getItem() instanceof IBag iBag)) return;
-
-        List<ItemStack> itemStacks = iBag.getItems(stack);
-        List<ItemWidget> widgets = right ? RightItemsubWidgets : LeftItemsubWidgets;
-        widgets.clear();
-
-        int slotWidth = 16;
-        int rows = 2;
-        int total = itemStacks.size();
-        int columns = (int) Math.ceil(total / (double) rows);
-
-        // Centered above the main slot
-        int centerX = start_x + (right ? -72 : 88);// +9 to roughly center by half slot
-        int centerY = start_y + 8;
-
-        int totalWidth = (columns - 1) * slotWidth;
-        int startX = centerX - totalWidth / 2;
-        int startY = centerY - (slotWidth * rows) - 4; // small vertical gap (4px)
-
-        for (int i = 0; i < total; i++) {
-            int col = i % columns;  // horizontal index
-            int row = i / columns;  // vertical index (0 = top, 1 = bottom)
-
-            int x = startX + col * slotWidth;
-            int y = startY + row * slotWidth;
-
-            ItemWidget widget = new ItemWidget(x, y, itemStacks.get(i));
-            widgets.add(widget);
-            addRenderableWidget(widget);
-        }
-    }
-
     @Override
     public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick) {
         renderBackground(graphics);
@@ -217,16 +170,6 @@ public class HealthScreen extends Screen {
         super.render(graphics, pMouseX, pMouseY, pPartialTick);
 
         limbWidgets.values().forEach(widget -> widget.renderSprites(graphics));
-        LeftItem.setBGMode(BGmode);
-        RightItem.setBGMode(BGmode);
-
-        for (ItemWidget itemWidget : LeftItemsubWidgets) {
-            itemWidget.setBGMode(BGmode);
-        }
-
-        for (ItemWidget itemWidget : RightItemsubWidgets) {
-            itemWidget.setBGMode(BGmode);
-        }
 
         MoodleManager.render(graphics, pPartialTick, width, height, false, pMouseX, pMouseY);
 
@@ -235,7 +178,7 @@ public class HealthScreen extends Screen {
 
             if (h != null) {
                 if (!BGmode) {
-                    healthBox.selectLimb(h.getLimb());
+                    healthBox.selectLimb(h.limb());
                     specialUseButton.selectLimb(h);
                 }
             }
@@ -345,8 +288,10 @@ public class HealthScreen extends Screen {
             Minecraft.getInstance().screen.onClose();
             return;
         }
-        updateScreen();
-        UpdateSubStacks();
+        updateLimbs();
+
+        right.tick();
+        left.tick();
 
         if (!BGmode) {
             Minecraft.getInstance().player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
@@ -370,58 +315,7 @@ public class HealthScreen extends Screen {
         return false;
     }
 
-    public void UpdateSubStacks() {
-        if (RightItem.getStack().getItem() instanceof IBag iBag) {
-            List<ItemStack> itemStacks = iBag.getItems(RightItem.getStack());
-            int total = Math.min(itemStacks.size(), RightItemsubWidgets.size());
-            for (int i = 0; i < total; i++) {
-                RightItemsubWidgets.get(i).setStack(itemStacks.get(i));
-            }
-        }
-        if (LeftItem.getStack().getItem() instanceof IBag iBag) {
-            List<ItemStack> itemStacks = iBag.getItems(LeftItem.getStack());
-            int total = Math.min(itemStacks.size(), LeftItemsubWidgets.size());
-            for (int i = 0; i < total; i++) {
-                LeftItemsubWidgets.get(i).setStack(itemStacks.get(i));
-            }
-        }
-        if (BGmode) {
-            LeftItem.visible = false;
-            RightItem.visible = false;
-            for (ItemWidget widget : LeftItemsubWidgets) {
-                widget.visible = false;
-            }
-            for (ItemWidget widget : RightItemsubWidgets) {
-                widget.visible = false;
-            }
-        } else {
-            LeftItem.visible = true;
-            RightItem.visible = true;
-            for (ItemWidget widget : LeftItemsubWidgets) {
-                widget.visible = true;
-            }
-            for (ItemWidget widget : RightItemsubWidgets) {
-                widget.visible = true;
-            }
-        }
-    }
-
-    public void updateScreen() {
-        Player player = Minecraft.getInstance().player;
-        if (player != null) {
-            for (InteractionHand hand : InteractionHand.values()) {
-                ItemStack stack = player.getItemInHand(hand);
-
-                HumanoidArm arm = Limb.getArmFromHand(hand, player);
-
-                if (arm == HumanoidArm.RIGHT) {
-                    RightItem.setStack(stack);
-                } else {
-                    LeftItem.setStack(stack);
-                }
-            }
-        }
-
+    public void updateLimbs() {
         limbWidgets.values().forEach(LimbWidget::update);
     }
 
@@ -435,79 +329,11 @@ public class HealthScreen extends Screen {
 
     @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-        LimbWidget widget = getHoveringWidget(pMouseX, pMouseY);
-        if (widget != null && !widget.isAmputated()) {
-            if (RightItem.isDragging()) {
-                useMedItem(widget, HumanoidArm.RIGHT);
-            } else if (LeftItem.isDragging()) {
-                useMedItem(widget, HumanoidArm.LEFT);
-            }
-
-            useMedItemFromBag(widget, RightItemsubWidgets, HumanoidArm.RIGHT);
-            useMedItemFromBag(widget, LeftItemsubWidgets, HumanoidArm.LEFT);
-        }
-
-        RightItem.onRelease(pMouseX, pMouseY);
-        LeftItem.onRelease(pMouseX, pMouseY);
-        for (ItemWidget itemWidget : RightItemsubWidgets) {
-            itemWidget.onRelease(pMouseX, pMouseY);
-        }
-        for (ItemWidget itemWidget : LeftItemsubWidgets) {
-            itemWidget.onRelease(pMouseX, pMouseY);
-        }
-
         boolean anyConsumed = false;
         for (GuiEventListener listener : children()) {
             anyConsumed |= listener.mouseReleased(pMouseX, pMouseY, pButton);
         }
         return anyConsumed;
-    }
-
-    private void useMedItem(LimbWidget widget, HumanoidArm arm) {
-        InteractionHand hand = getHand(arm, minecraft.player);
-        Limb limb = widget.getLimb();
-        ItemStack itemstack = minecraft.player.getItemInHand(hand);
-
-        if (itemstack.getItem() instanceof AbstractBandage) {
-            MinigameOpener.OpenBandageMinigame(target, itemstack, limb, hand);
-        } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
-            helper.openMinigameScreen(target, itemstack, limb, hand);
-        }
-
-        if (!itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE) && !(itemstack.getItem() instanceof ISimpleMedicalUsable)) {
-            return;
-        }
-
-        ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, hand));
-    }
-
-    private void useMedItemFromBag(LimbWidget widget, List<ItemWidget> widgets, HumanoidArm arm) {
-        InteractionHand hand = getHand(arm, minecraft.player);
-        Limb limb;
-        ItemStack itemstack, bagstack = minecraft.player.getItemInHand(hand);
-        for (int slot = 0; slot < widgets.size(); slot++) {
-            if (!widgets.get(slot).isDragging()) continue;
-
-            limb = widget.getLimb();
-            itemstack = widgets.get(slot).getStack();
-
-            if (itemstack.getItem() instanceof AbstractBandage) {
-                MinigameOpener.OpenBandageMinigame(target, itemstack, slot, limb, hand);
-                return;
-            } else if (itemstack.getItem() instanceof IMedicalMinigameUsable helper) {
-                helper.openMinigameBagScreen(target, itemstack, bagstack, slot, limb, hand);
-                return;
-            }
-
-            if (itemstack.is(CasualtiesCubedTags.Item.CAUTERIZE) || itemstack.getItem() instanceof ISimpleMedicalUsable) {
-                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, hand, (byte) slot));
-                return;
-            }
-        }
-    }
-
-    private InteractionHand getHand(HumanoidArm arm, Player player) {
-        return arm == player.getMainArm() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
     }
 
     private LimbWidget getHoveringWidget(double pMouseX, double pMouseY) {
@@ -524,6 +350,41 @@ public class HealthScreen extends Screen {
         }
 
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    public void addItem(HealthScreenItemWidget widget) {
+        if(children().contains(widget)) removeWidget(widget);
+        addRenderableWidget(widget);
+    }
+
+    public void removeItem(HealthScreenItemWidget widget) {
+        removeWidget(widget);
+    }
+
+    public void useItem(HealthScreenItemWidget widget, double x, double y) {
+        LimbWidget limbWidget = getHoveringWidget(x ,y);
+        if (limbWidget != null && !limbWidget.isAmputated()) {
+            ItemStack stack = widget.stack();
+            Limb limb = limbWidget.limb();
+            InteractionHand hand = localPlayer.getMainArm() == widget.arm() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+            if (stack.getItem() instanceof AbstractBandage) {
+                MinigameOpener.OpenBandageMinigame(target, stack, widget.slot(), limb, hand);
+            } else if (stack.getItem() instanceof IMedicalMinigameUsable helper) {
+                helper.openMinigameBagScreen(target, stack, widget.bagStack(), widget.slot(), limb, hand);
+            }
+
+            if (stack.is(CasualtiesCubedTags.Item.CAUTERIZE) || stack.getItem() instanceof ISimpleMedicalUsable) {
+                ModNetwork.CHANNEL.sendToServer(new ServerboundUseMedItemPacket(target.getId(), limb, hand, (byte) widget.slot()));
+            }
+
+            return;
+        }
+
+        if ((getChildAt(x, y).orElse(null) instanceof HealthScreenItemWidget itemWidget) && widget != itemWidget) {
+            ModNetwork.CHANNEL.sendToServer(
+                    new ServerboundSwapItemsPacket(widget.arm(), (byte) widget.slot(), itemWidget.arm(), (byte) itemWidget.slot())
+            );
+        }
     }
 
     private static final ResourceLocation MODE_WOUND = CasualtiesCubed.texLoc("gui/mode_wound");

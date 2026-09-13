@@ -39,7 +39,7 @@ public abstract class FoodDataMixin {
         if (food == null) return;
 
         ci.cancel();
-        data.eat(player, food.getNutrition() * 2.25f, food.getSaturationModifier());
+        data.eat(player, food.getNutrition() * 2.5f, food.getSaturationModifier() * 1.5f);
     }
 
     @Inject(at = @At("HEAD"), method = "tick", cancellable = true)

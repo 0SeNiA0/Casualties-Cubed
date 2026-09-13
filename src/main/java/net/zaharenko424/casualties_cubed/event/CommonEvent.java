@@ -237,16 +237,16 @@ public class CommonEvent {
             Item item = event.getItem().getItem();
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
-            if (head.getBoneHealTimer() > 0) {
+            if (head.boneHealTimer() > 0) {
                 head.addPain(3);
             }
 
-            if (chest.getDislocationTimer() > 0 || chest.getBoneHealTimer() > 0) {
+            if (chest.dislocationTimer() > 0 || chest.boneHealTimer() > 0) {
                 chest.addPain(4);
             }
 
             if (item.isEdible()) {
-                if (head.getDislocationTimer() > 0) {
+                if (head.dislocationTimer() > 0) {
                     head.addDislocationTimer(5);
                 }
             }
@@ -262,9 +262,9 @@ public class CommonEvent {
 
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
-            if (head.getBoneHealTimer() > 0) head.addPain(3);
+            if (head.boneHealTimer() > 0) head.addPain(3);
 
-            if (chest.getBoneHealTimer() > 0 || chest.getDislocationTimer() > 0) {
+            if (chest.boneHealTimer() > 0 || chest.dislocationTimer() > 0) {
                 chest.addPain(4);
             }//TODO also add pain to used arm if direct attack?
         });
@@ -277,16 +277,16 @@ public class CommonEvent {
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
-            if (head.getBoneHealTimer() > 0) head.addPain(10);
+            if (head.boneHealTimer() > 0) head.addPain(10);
 
-            if (chest.getDislocationTimer() > 0) {
+            if (chest.dislocationTimer() > 0) {
                 chest.addPain(10);
             }
 
             LimbStatistics stats;
             for (Limb limb : Limb.LEG_LIMBS) {
                 stats = data.getLimb(limb);
-                if (stats.getDislocationTimer() > 0 || stats.getBoneHealTimer() > 0) stats.addPain(10);
+                if (stats.dislocationTimer() > 0 || stats.boneHealTimer() > 0) stats.addPain(10);
             }
         });
     }

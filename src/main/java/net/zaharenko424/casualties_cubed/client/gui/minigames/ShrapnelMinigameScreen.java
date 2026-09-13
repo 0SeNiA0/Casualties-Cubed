@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,9 @@ public class ShrapnelMinigameScreen extends Screen implements Minigame {
         this.target = target;
         this.limb = limb;
         this.ignorevel = ignorevel;
+
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
     }
 
     public boolean isAmputated() {
@@ -75,7 +80,7 @@ public class ShrapnelMinigameScreen extends Screen implements Minigame {
         if (parent instanceof HealthScreen hp) {
             hp.BGmode = true;
         }
-        int ShrapnelAmount = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(limb).getShrapnel()).orElse(0);
+        int ShrapnelAmount = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(limb).shrapnel()).orElse(0);
         RememberShrapnel = ShrapnelAmount;
         int x = this.width / 2 - 16;
         shrapnelObjects.clear();
@@ -166,7 +171,7 @@ public class ShrapnelMinigameScreen extends Screen implements Minigame {
         });
 
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (data.getLimb(limb).getShrapnel() != RememberShrapnel) {
+            if (data.getLimb(limb).shrapnel() != RememberShrapnel) {
                 IgnoreResult = true;
                 onClose();
             }
@@ -214,7 +219,10 @@ public class ShrapnelMinigameScreen extends Screen implements Minigame {
             int shrapnellLeft = (int) shrapnelObjects.stream().filter(ShrapnelObject::isSticked).count();
             ModNetwork.CHANNEL.sendToServer(new ServerboundAdjustShrapnelPacket(target.getId(), limb, shrapnellLeft));
         }
+
         Minecraft.getInstance().setScreen(parent);
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
     }
 
     @Override

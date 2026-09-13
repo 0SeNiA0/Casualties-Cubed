@@ -20,7 +20,7 @@ public class ConcussionMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
-        if (data.getLimb(Limb.HEAD).getMuscleHealth() < 14.4f) {
+        if (data.getLimb(Limb.HEAD).muscleHealth() < 14.4f) {
             setStatus(MoodleStatus.CRITICAL_NEG, true);
         } else clearStatus();
     }

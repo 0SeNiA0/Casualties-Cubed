@@ -228,7 +228,7 @@ public class HitboxEvents {
         } else if (limb == Limb.HEAD && (!data.isLeftEyeBlind() || !data.isRightEyeBlind())) {
             damage_treshold -= 10;
         }
-        float musclepenalty = (100 - stats.getMuscleHealth()) / 100 * -10;
+        float musclepenalty = (100 - stats.muscleHealth()) / 100 * -10;
         float skinpenalty = (100 - stats.getSkinHealth()) / 100 * -5;
         damage_treshold += musclepenalty + skinpenalty;
         if (damage >= damage_treshold / 2) {
@@ -251,8 +251,8 @@ public class HitboxEvents {
                 stats = data.getLimb(limb1);
 
                 stats.setSkinHealth(0);
-                stats.setBleedRate(1);//will set to max
-                stats.setPain(200);
+                stats.bleedRate(1);//will set to max
+                stats.pain(200);
                 data.adrenaline(Math.max(data.adrenaline(), 125));
             }
             data.dismember(limb);
@@ -354,7 +354,7 @@ public class HitboxEvents {
         LimbStatistics stats = data.getLimb(limb);
 
         if (player instanceof ServerPlayer sPlayer && damageValue > 10) data.ragdoll(sPlayer);
-        if (damageValue > 6 || random.nextFloat() < damageValue / 6) {
+        if ((limb == Limb.THORAX || limb == Limb.ABDOMEN || limb == Limb.HEAD) && (damageValue > 6 || random.nextFloat() < damageValue / 6)) {
             data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * Math.max(damageValue - 6, 1));
         }
 
@@ -515,7 +515,7 @@ public class HitboxEvents {
                 damage -= 1;
             }
 
-            stats.setBleedRate(stats.getBleedRate() * 0.4f);
+            stats.bleedRate(stats.bleedRate() * 0.4f);
             damage -= damage_pass;
             hurtArmor(randLimb, player, damage_pass);
         }
@@ -595,7 +595,7 @@ public class HitboxEvents {
             stats.addShrapnel(1);
         }
 
-        if (damage > 4 || random.nextFloat() < damage / 4) {
+        if ((randomLimb == Limb.THORAX || randomLimb == Limb.ABDOMEN) && (damage > 4 || random.nextFloat() < damage / 4)) {
             data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * damage);
         }
 
@@ -617,7 +617,7 @@ public class HitboxEvents {
         data.applySkinDamage(randomLimb, (float) (damage * (Math.random() / 2f + 0.5f)));
         data.applyBleedDamage(randomLimb, damage * 0.9f, player);
 
-        if (damage > 6 || random.nextFloat() < damage / 6) {
+        if ((randomLimb == Limb.THORAX || randomLimb == Limb.ABDOMEN) && (damage > 6 || random.nextFloat() < damage / 6)) {
             data.internalBleeding(data.internalBleeding() + net.zaharenko424.casualties_cubed.util.Util.CUBloodPointsToL(.5f + random.nextFloat()) * Math.max(damage - 6, 1));
         }
 
@@ -707,8 +707,8 @@ public class HitboxEvents {
         for (Limb limb : Limb.values()) {
             stats = data.getLimb(limb);
             if (stats.isAmputated()) continue;
-            if (stats.getBleedRate() > 0) {
-                stats.setBleedRate(Math.max(0, stats.getBleedRate() - 0.001f * healAmount));
+            if (stats.bleedRate() > 0) {
+                stats.bleedRate(Math.max(0, stats.bleedRate() - 0.001f * healAmount));
             } else stats.addSkinHealth(healAmount);
         }
     }

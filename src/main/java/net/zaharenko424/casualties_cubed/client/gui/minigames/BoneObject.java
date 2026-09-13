@@ -1,13 +1,12 @@
 package net.zaharenko424.casualties_cubed.client.gui.minigames;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.player.Player;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundDislocationTryPacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2d;
 
 public class BoneObject extends GrabObject{
@@ -119,20 +118,4 @@ public class BoneObject extends GrabObject{
         // Snap to correct position when close enough
         Vector2d toCorrect = new Vector2d(correctPos).sub(x, y);
     }
-
-
-
-    public void applyImpulse(Vector2d vector2f){
-        velocity.add(vector2f);
-    }
-
-    public void updateCorrectPos(float x, float y){
-        this.correctPos = new Vector2d(x,y);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics) {
-        super.render(guiGraphics);
-    }
-
 }

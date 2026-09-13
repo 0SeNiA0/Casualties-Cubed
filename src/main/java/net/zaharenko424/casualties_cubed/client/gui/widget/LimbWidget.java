@@ -1,24 +1,29 @@
 package net.zaharenko424.casualties_cubed.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.util.FastColor;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ItemStack;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.client.gui.StatusSprites;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.util.ColorUtil;
+import org.joml.Vector3f;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.function.BooleanSupplier;
 
 public class LimbWidget extends AbstractWidget {
@@ -149,7 +154,7 @@ public class LimbWidget extends AbstractWidget {
         }
     }
 
-    public Limb getLimb() {
+    public Limb limb() {
         return limb;
     }
 
@@ -172,8 +177,32 @@ public class LimbWidget extends AbstractWidget {
     }
 
     @Override
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        if (!visible) renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+    }
+
+    @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        if (amputated) return;
+        if (amputated) {
+            float regrowthProgress = data.getLimb(limb).regrowthProgress();
+            if (regrowthProgress <= 0) return;
+
+            regrowthProgress = regrowthProgress / ServerConfig.LIMB_REGROWTH_DURATION.get();
+
+            Vector3f colorFrom = new Vector3f(68 / 255f, 79 / 255f, 65 / 255f);
+            Vector3f colorTo = new Vector3f(39 / 255f, 87 / 255f, 27 / 255f);
+            colorFrom.lerp(colorTo, regrowthProgress);
+            RenderSystem.setShaderColor(colorFrom.x, colorFrom.y, colorFrom.z, 1.0f);
+            guiGraphics.blit(baseTxt, getX(), getY(), 0, 0, this.width, this.height, this.txt_width, this.txt_height);
+
+            colorFrom.set(98 / 255f, 122 / 255f, 92 / 255f).lerp(colorTo.set(48 / 255f, 140 / 255f, 37 / 255f), regrowthProgress);
+            RenderSystem.setShaderColor(colorFrom.x, colorFrom.y, colorFrom.z, 1.0f);
+            guiGraphics.blit(borderTxt, getX(), getY(), 0, 0, this.width, this.height, txt_width, txt_height);
+
+            RenderSystem.setShaderColor(1, 1, 1, 1);
+            return;
+        }
         Minecraft mc = Minecraft.getInstance();
 
         if (!woundMode.getAsBoolean()) {
@@ -197,30 +226,15 @@ public class LimbWidget extends AbstractWidget {
             return;
         }
 
-        mc.getTextureManager().bindForSetup(baseTxt);
-
         float shakex = getX() + ((random.nextFloat() * 2 - 1) * 2);
         float shakey = getY() + ((random.nextFloat() * 2 - 1) * 2);
         if (random.nextFloat() > Math.pow(shake, 3)) shakex = getX();
         if (random.nextFloat() > Math.pow(shake, 3)) shakey = getY();
 
-        RenderSystem.setShaderColor(
-                base_red,
-                0,
-                0,
-                1.0f
-        );
+        RenderSystem.setShaderColor(base_red, 0, 0, 1.0f);
         guiGraphics.blit(baseTxt, (int) shakex, (int) shakey, 0, 0, this.width, this.height, this.txt_width, this.txt_height);
 
-
-        mc.getTextureManager().bindForSetup(borderTxt);
-
-        RenderSystem.setShaderColor(
-                1.0f,
-                1 - border_red,
-                1 - border_red,
-                1.0f
-        );
+        RenderSystem.setShaderColor(1.0f, 1 - border_red, 1 - border_red, 1.0f);
         guiGraphics.blit(borderTxt, (int) shakex, (int) shakey, 0, 0, this.width, this.height, txt_width, txt_height);
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -300,11 +314,11 @@ public class LimbWidget extends AbstractWidget {
             setRightEyeGone(data.isRightEyeBlind());
         }
 
-        setShake(stats.getPain() / 100f);
+        setShake(stats.pain() / 100f);
         setBorder_red(1 - (stats.getSkinHealth() / 100f));
-        setBase_red(1 - (stats.getMuscleHealth() / 100f));
+        setBase_red(1 - (stats.muscleHealth() / 100f));
 
-        float bleed = stats.getBleedRate();
+        float bleed = stats.bleedRate();
         boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !data.isUnderTourniquet(limb);
         if (isBleeding) {
             float scale = Math.max(0.9f, (bleed / LimbStatistics.MAX_BLEED_RATE / 60) * 2.5f);
@@ -312,12 +326,12 @@ public class LimbWidget extends AbstractWidget {
         }
 
         setSubSpriteVisible(StatusSprites.BLEED, isBleeding);
-        setSubSpriteVisible(StatusSprites.DISINFECTION, stats.getDisinfectionTime() > 0);
-        setSubSpriteVisible(StatusSprites.FRACTURE, stats.getBoneHealTimer() > 0);
-        setSubSpriteVisible(StatusSprites.INFECTION, stats.getInfection() > 25);
-        setSubSpriteVisible(StatusSprites.SHRAPNEL, stats.getShrapnel() > 0);
+        setSubSpriteVisible(StatusSprites.DISINFECTION, stats.disinfectionTime() > 0);
+        setSubSpriteVisible(StatusSprites.FRACTURE, stats.boneHealTimer() > 0);
+        setSubSpriteVisible(StatusSprites.INFECTION, stats.infection() > 25);
+        setSubSpriteVisible(StatusSprites.SHRAPNEL, stats.shrapnel() > 0);
         setSubSpriteVisible(StatusSprites.SPLINT, stats.hasSplint());
-        setSubSpriteVisible(StatusSprites.DISLOCATION, stats.getDislocationTimer() > 0);
+        setSubSpriteVisible(StatusSprites.DISLOCATION, stats.dislocationTimer() > 0);
         setSubSpriteVisible(StatusSprites.TOURNIQUET, stats.isTourniquet());
         setSubSpriteVisible(StatusSprites.CHILLED, stats.isChilled());
     }

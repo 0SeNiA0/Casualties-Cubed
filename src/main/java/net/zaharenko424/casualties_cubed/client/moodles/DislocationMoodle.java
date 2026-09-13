@@ -27,7 +27,7 @@ public class DislocationMoodle extends AbstractMoodle {
         LimbStatistics stats;
         for (Limb limb : Limb.values()) {
             stats = data.getLimb(limb);
-            if (stats.getDislocationTimer() > timer) timer = stats.getDislocationTimer();
+            if (stats.dislocationTimer() > timer) timer = stats.dislocationTimer();
         }
 
         if (timer > 19 * 60 + 50) {

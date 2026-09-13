@@ -10,19 +10,24 @@ public class ClientConfig {
     public static final ForgeConfigSpec.BooleanValue EXPERIMENTAL_VISUALS;
     public static final ForgeConfigSpec.BooleanValue EXPERIMENTAL_SOUNDS;
 
+    public static final ForgeConfigSpec.BooleanValue NO_MINIGAME_CURSOR;
     public static final ForgeConfigSpec.IntValue UI_GLOW_COLOR;
 
     static {
         ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-        BUILDER.push("Prototype Pain Client Config");
+        BUILDER.push("Casualties Cubed Client Config");
 
         EXPERIMENTAL_VISUALS = BUILDER
                 .comment("Experimental { ;) } Options")
-                .define("additionalVisuals",false);
+                .define("additionalVisuals", false);
 
-        EXPERIMENTAL_SOUNDS =BUILDER
-                .define("additionalSounds",false);
+        EXPERIMENTAL_SOUNDS = BUILDER
+                .define("additionalSounds", false);
+
+        NO_MINIGAME_CURSOR = BUILDER
+                .comment("Hides cursor in minigames.")
+                .define("noMinigameCursor", false);
 
         UI_GLOW_COLOR = BUILDER
                 .comment("Glow color for health screen.")

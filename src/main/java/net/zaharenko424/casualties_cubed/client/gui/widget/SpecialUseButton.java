@@ -30,15 +30,15 @@ public class SpecialUseButton extends ImageButton {
 
     public SpecialUseButton(Player localPlayer, Player target, PlayerHealthData data) {
         super(80, 30, new RenderableImage(TEX, 80, 30), button -> {
-            Limb limb = ((SpecialUseButton)button).limbWidget.getLimb();
+            Limb limb = ((SpecialUseButton)button).limbWidget.limb();
             LimbStatistics stats = data.getLimb(limb);
             if (stats.isTourniquet()) {
                 ModNetwork.CHANNEL.sendToServer(new ServerboundMedicalActionPacket(target.getId(), limb, MedicalAction.REMOVE_TOURNIQUET));
-            } else if (stats.getShrapnel() > 0) {
+            } else if (stats.shrapnel() > 0) {
                 Minecraft.getInstance().setScreen(new ShrapnelMinigameScreen(Minecraft.getInstance().screen, target, limb, false));
             } else if (stats.hasSplint()) {
                 ModNetwork.CHANNEL.sendToServer(new ServerboundMedicalActionPacket(target.getId(), limb, MedicalAction.REMOVE_SPLINT));
-            } else if (stats.getDislocationTimer() > 0) {
+            } else if (stats.dislocationTimer() > 0) {
                 Minecraft.getInstance().setScreen(new DislocationMinigameScreen(Minecraft.getInstance().screen, target, limb));
             } else return;
             localPlayer.playSound(ModSounds.SMALL_CLICK.get());
@@ -55,8 +55,8 @@ public class SpecialUseButton extends ImageButton {
     public boolean visible() {
         if (limbWidget == null) return false;
 
-        LimbStatistics stats = data.getLimb(limbWidget.getLimb());
-        return stats.isTourniquet() || stats.getShrapnel() > 0 || stats.hasSplint() || stats.getDislocationTimer() > 0;
+        LimbStatistics stats = data.getLimb(limbWidget.limb());
+        return stats.isTourniquet() || stats.shrapnel() > 0 || stats.hasSplint() || stats.dislocationTimer() > 0;
     }
 
     @Override
@@ -90,10 +90,10 @@ public class SpecialUseButton extends ImageButton {
         image.tint = tint;
 
         Component comp;
-        LimbStatistics stats = data.getLimb(limbWidget.getLimb());
+        LimbStatistics stats = data.getLimb(limbWidget.limb());
         if (stats.isTourniquet()) {
             comp = StatusSprites.TOURNIQUET.comp;
-        } else if (stats.getShrapnel() > 0) {
+        } else if (stats.shrapnel() > 0) {
             comp = StatusSprites.SHRAPNEL.comp;
         } else if (stats.hasSplint()) {
             comp = StatusSprites.SPLINT.comp;

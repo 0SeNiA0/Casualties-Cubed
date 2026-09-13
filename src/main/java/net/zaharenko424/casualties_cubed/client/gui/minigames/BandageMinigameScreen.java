@@ -52,10 +52,6 @@ public class BandageMinigameScreen extends MinigameScreen {
 
     private final RenderableImage bandageRoll = new RenderableImage(BANDAGE_TEX, 64, 64);
 
-    public BandageMinigameScreen(Screen parent, Player target, ItemStack stack, Limb limb, InteractionHand hand) {
-        this(parent, target, stack, -1, limb, hand);
-    }
-
     public BandageMinigameScreen(Screen parent, Player target, ItemStack stack, int slot, Limb limb, InteractionHand hand) {
         super(Component.translatable("casualties_cubed.gui.minigame.bandage"), parent, target);
 
@@ -148,7 +144,7 @@ public class BandageMinigameScreen extends MinigameScreen {
         handVelocity.lerp(new Vector2f(), 34 * 1/*bandage speed mult*/ * Util.TICK_TO_SEC);
 
         bleedRate = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data ->
-                data.getLimb(limb).getBleedRate()).orElse(0f);
+                data.getLimb(limb).bleedRate()).orElse(0f);
 
         dragBandage();
         update();

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.packet.ServerboundExchangeItemInBagPacket;
@@ -18,6 +19,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
 
@@ -45,6 +47,8 @@ public class InjectMingameScreen extends Screen implements Minigame {
         this.hand = hand;
         this.bagstack = null;
         slot = -1;
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
     }
 
     public InjectMingameScreen(Screen parent, Player target, ItemStack syringeStack, ItemStack bagstack, int slot, Limb limb, InteractionHand hand) {
@@ -56,6 +60,8 @@ public class InjectMingameScreen extends Screen implements Minigame {
         this.hand = hand;
         this.bagstack = bagstack;
         this.slot = slot;
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
     }
 
     public boolean isAmputated() {
@@ -216,7 +222,10 @@ public class InjectMingameScreen extends Screen implements Minigame {
         if (parent instanceof HealthScreen hp) {
             hp.BGmode = false;
         }
+
         Minecraft.getInstance().setScreen(parent);
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class MakeshiftLRDItem extends LRDItem {
                 stats.addMuscleHealth(50);
                 data.addCaffeinated(60);
                 stats.addInfection(-10 * stats.infectionSpeedMult);
-                stats.setDisinfectionTimerAtLeast(400);
+                stats.disinfectionTimerAtLeast(400);
                 data.adrenaline(data.adrenaline() + 60);
                 data.venomTotal(Util.moveTowards(12, data.venomTotal(), 0));
 
@@ -42,7 +42,7 @@ public class MakeshiftLRDItem extends LRDItem {
 
                     stats.addMuscleHealth(40);
                     stats.addInfection(-5 * stats.infectionSpeedMult);
-                    stats.setDisinfectionTimerAtLeast(300);
+                    stats.disinfectionTimerAtLeast(300);
                 }
 
                 if (limb == Limb.THORAX) data.internalBleeding(data.internalBleeding() * 0.75f);

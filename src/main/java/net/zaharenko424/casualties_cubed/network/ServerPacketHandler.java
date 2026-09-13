@@ -13,10 +13,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
 import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiFluidTankHandler;
 import net.zaharenko424.casualties_cubed.fluid_system.MultiTankHelper;
 import net.zaharenko424.casualties_cubed.item.api.AbstractBandage;
+import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.IBag;
 import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
 import net.zaharenko424.casualties_cubed.item.multi_tank.MultiTankFluidItem;
@@ -64,7 +66,7 @@ public class ServerPacketHandler {
             if (!(entity instanceof Player target) || sender.distanceToSqr(entity) > TOO_FAR) return;
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData ->
-                    targetData.getLimb(packet.limb()).setShrapnel(packet.amount()));
+                    targetData.getLimb(packet.limb()).shrapnel(packet.amount()));
         });
         ctx.get().setPacketHandled(true);
     }
@@ -104,9 +106,9 @@ public class ServerPacketHandler {
 
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(targetData -> {
                 LimbStatistics stats = targetData.getLimb(packet.limb());
-                if (stats.getDislocationTimer() == 0) return;
+                if (stats.dislocationTimer() == 0) return;
 
-                stats.setDislocationTimer(packet.dislocationValue());
+                stats.dislocationTimer(packet.dislocationValue());
                 stats.addPain((sender.getRandom().nextFloat() * 20) + 20);
             });
         });
@@ -131,6 +133,8 @@ public class ServerPacketHandler {
             ItemStack stack = sender.getItemInHand(packet.usedHand());
             Item item = stack.getItem();
             if (item instanceof IBag bag) {
+                if (!ServerConfig.ALLOW_BAG_IN_HEALTH_SCREEN.get()) return;
+
                 int bagSlot = packet.bagSlot();
                 if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
 
@@ -194,6 +198,8 @@ public class ServerPacketHandler {
             ItemStack stack = sender.getItemInHand(packet.usedHand());
             Item item = stack.getItem();
             if (item instanceof IBag bag) {
+                if (!ServerConfig.ALLOW_BAG_IN_HEALTH_SCREEN.get()) return;
+
                 int bagSlot = packet.bagSlot();
                 if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
 
@@ -232,6 +238,8 @@ public class ServerPacketHandler {
             ItemStack stack = sender.getItemInHand(packet.usedHand());
             Item item = stack.getItem();
             if (item instanceof IBag bag) {
+                if (!ServerConfig.ALLOW_BAG_IN_HEALTH_SCREEN.get()) return;
+
                 int bagSlot = packet.bagSlot();
                 if (bagSlot == -1 || bag.size() <= bagSlot) return;// Bag was not expected / not usable OR too small
 
@@ -268,7 +276,7 @@ public class ServerPacketHandler {
             RandomSource random = sender.getRandom();
 
             stats.addPain((random.nextFloat() + 1) * 80);
-            stats.setBleedRate(stats.getBleedRate() * 0.4f);
+            stats.bleedRate(stats.bleedRate() * 0.4f);
             stats.addMuscleHealth(- (random.nextFloat() + 1) * 15);
             stats.addSkinHealth(- (random.nextFloat() + 1) * 25);
             stats.addBurn(5 + random.nextFloat() * 5);
@@ -309,7 +317,7 @@ public class ServerPacketHandler {
 
                 switch (packet.success()) {
                     case LOW -> {
-                        if (chest.getMuscleHealth() <= 5)
+                        if (chest.muscleHealth() <= 5)
                             targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 3));
                         else
                             targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
@@ -323,7 +331,7 @@ public class ServerPacketHandler {
                         }
                     }
                     case MEDIUM -> {
-                        if (chest.getMuscleHealth() <= 5)
+                        if (chest.muscleHealth() <= 5)
                             targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 4));
                         else
                             targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 8));
@@ -337,7 +345,7 @@ public class ServerPacketHandler {
                         }
                     }
                     case HIGH -> {
-                        if (chest.getMuscleHealth() <= 5)
+                        if (chest.muscleHealth() <= 5)
                             targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 6));
                         else
                             targetData.bloodOxygen(Math.max(targetData.bloodOxygen(), ((random.nextFloat()) / 2 + 0.5f) * 12));
@@ -394,7 +402,7 @@ public class ServerPacketHandler {
 
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(Limb.HEAD);
-                if (stats.getDislocationTimer() > 0) stats.addPain(0.3f);
+                if (stats.dislocationTimer() > 0) stats.addPain(0.3f);
             });
         });
         ctx.get().setPacketHandled(true);
@@ -444,6 +452,7 @@ public class ServerPacketHandler {
         ctx.get().enqueueWork(() -> {
             ServerPlayer sender = ctx.get().getSender();
             if (sender == null) return;
+            if (!ServerConfig.ALLOW_BAG_IN_HEALTH_SCREEN.get()) return;
 
             ItemStack trg = packet.target();
             if (packet.bag().getItem() instanceof IBag iBag) {
@@ -478,4 +487,48 @@ public class ServerPacketHandler {
         });
         ctx.get().setPacketHandled(true);
     }
+
+    public static void handleSwapItems(ServerboundSwapItemsPacket packet, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ServerPlayer sender = ctx.get().getSender();
+            if (sender == null) return;
+
+            if (!ServerConfig.ALLOW_BAG_IN_HEALTH_SCREEN.get() && (packet.bagSlotFrom() != -1 || packet.bagSlotTo() != -1)) return;
+
+            if (packet.armFrom() == packet.armTo() && (packet.bagSlotFrom() == -1 || packet.bagSlotTo() == -1)) return;
+
+            InteractionHand from = sender.getMainArm() == packet.armFrom() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+            ItemStack stack = sender.getItemInHand(from);
+            ItemStack itemToSwap;
+            if (packet.bagSlotFrom() != -1) {
+                if (!(stack.getItem() instanceof IBag bag)) return;
+
+                itemToSwap = bag.getItem(stack, packet.bagSlotFrom());
+            } else itemToSwap = stack;
+
+            InteractionHand to = sender.getMainArm() == packet.armTo() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+            ItemStack stack2 = sender.getItemInHand(to);
+            ItemStack itemToSwap2;
+            if (packet.bagSlotTo() != -1) {
+                if (!(stack2.getItem() instanceof IBag bag) || (!itemToSwap.isEmpty() && !(itemToSwap.getItem() instanceof IAllowInMedicBags))) return;
+
+                itemToSwap2 = bag.getItem(stack2, packet.bagSlotTo());
+                if (packet.bagSlotFrom() != -1 && stack.getItem() instanceof IBag && !itemToSwap2.isEmpty() && !(itemToSwap2.getItem() instanceof IAllowInMedicBags)) return;
+
+                bag.setItem(stack2, packet.bagSlotTo(), itemToSwap);
+            } else {
+                itemToSwap2 = stack2;
+                if (packet.bagSlotFrom() != -1 && stack.getItem() instanceof IBag && !itemToSwap2.isEmpty() && !(itemToSwap2.getItem() instanceof IAllowInMedicBags)) return;
+
+                sender.setItemInHand(to, itemToSwap);
+            }
+
+            if (packet.bagSlotFrom() != -1) {
+                ((IBag)stack.getItem()).setItem(stack, packet.bagSlotFrom(), itemToSwap2);
+            } else sender.setItemInHand(from, itemToSwap2);
+        });
+        ctx.get().setPacketHandled(true);
+    }
+
+
 }

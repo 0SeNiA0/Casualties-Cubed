@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.client.gui.screen.HealthScreen;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.network.ModNetwork;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2d;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
 
@@ -62,6 +64,9 @@ public class DislocationMinigameScreen extends Screen implements Minigame {
         boneObject.render(guiGraphics);
 
         handObject.render(guiGraphics, partialTicks);
+
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
     }
 
     private double lastpMouseX = 100, lastpMouseY = 100;
@@ -108,7 +113,10 @@ public class DislocationMinigameScreen extends Screen implements Minigame {
         if (parent instanceof HealthScreen hp) {
             hp.BGmode = false;
         }
+
         Minecraft.getInstance().setScreen(parent);
+        if (ClientConfig.NO_MINIGAME_CURSOR.get())
+            GLFW.glfwSetInputMode(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
     }
 
     @Override
@@ -174,7 +182,7 @@ public class DislocationMinigameScreen extends Screen implements Minigame {
             hp.BGmode = true;
         }
 
-        float dislocation = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(limb).getDislocationTimer()).orElse(0f);
+        float dislocation = target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(data -> data.getLimb(limb).dislocationTimer()).orElse(0f);
         boneObject = new BoneObject(this.width / 2, this.height / 2 - 40, dislocation);
     }
 

@@ -7,6 +7,7 @@ public class ServerConfig {
     public static final ForgeConfigSpec SPEC;
 
     public static final ForgeConfigSpec.BooleanValue EXPIE_MODE;
+    public static final ForgeConfigSpec.BooleanValue ALLOW_BAG_IN_HEALTH_SCREEN;
 
     // Damage scaling
     public static final ForgeConfigSpec.DoubleValue DAMAGE_SCALE;
@@ -52,11 +53,15 @@ public class ServerConfig {
     static {
         ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-        BUILDER.push("Prototype Pain Server Config");
+        BUILDER.push("Casualties Cubed Server Config");
 
         EXPIE_MODE = BUILDER
                 .comment("Defines whether some aspects of the mod should assume that player is an expie (coffee being toxic, etc).")
                 .define("expieMode", true);
+
+        ALLOW_BAG_IN_HEALTH_SCREEN = BUILDER
+                .comment("Defines whether to allow using the contents of held medical bags in health screen.")
+                .define("allowBagInHealthScreen", true);
 
 
         DAMAGE_SCALE = BUILDER

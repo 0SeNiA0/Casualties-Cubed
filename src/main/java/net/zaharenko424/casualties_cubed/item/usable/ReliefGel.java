@@ -31,7 +31,7 @@ public class ReliefGel extends Item implements ISimpleMedicalUsable, IAllowInMed
             LimbStatistics stats = data.getLimb(limb);
 
             stats.addPain(-5);
-            stats.setDisinfectionTimerAtLeast(300);
+            stats.disinfectionTimerAtLeast(300);
             stats.addMuscleHealth(10);
         });
 

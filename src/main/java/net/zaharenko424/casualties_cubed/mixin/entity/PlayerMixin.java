@@ -10,7 +10,6 @@ import net.minecraft.world.food.FoodData;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsUtil;
 import net.zaharenko424.casualties_cubed.config.ServerConfig;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.limbs.Stat;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +34,7 @@ public abstract class PlayerMixin {
                     ci.cancel(); // prevent vanilla from picking another pose
                 }
             }
-            if (data.isAmputated(Limb.UPPER_RIGHT_LEG) && data.isAmputated(Limb.UPPER_LEFT_LEG) && !self.isPassenger()) {
+            if (data.legSpeedMult() <= 0 && !self.isPassenger()) {
                 self.setPose(Pose.SWIMMING);
                 ci.cancel();
             }
