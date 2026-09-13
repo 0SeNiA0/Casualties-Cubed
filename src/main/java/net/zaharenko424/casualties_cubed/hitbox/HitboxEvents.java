@@ -23,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -61,20 +60,8 @@ public class HitboxEvents {
         DamageContext ctx = new DamageContext();
         ctx.source = src;
         ctx.directEntity = src.getDirectEntity();
-        contextMap.put(id, ctx);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onLivingHurt(LivingHurtEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-        if (event.isCanceled()) return;
-
-        UUID id = player.getUUID();
-        DamageContext ctx = contextMap.computeIfAbsent(id, k -> new DamageContext());
         ctx.preArmorAmount = event.getAmount();
-
-        // Do small pre-armor reductions like absorption/resistance if you want here.
-        // But prefer to do the full authoritative calculation in LivingDamageEvent.
+        contextMap.put(id, ctx);
     }
 
     private static final List<HitSector> CBC_CHANCES = List.of(
