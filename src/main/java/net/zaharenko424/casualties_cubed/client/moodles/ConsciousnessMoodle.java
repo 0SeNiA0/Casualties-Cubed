@@ -20,6 +20,11 @@ public class ConsciousnessMoodle extends AbstractMoodle {
 
     @Override
     public void update(Player player, PlayerHealthData data) {
+        if (data.isSleeping(player)) {
+            clearStatus();
+            return;
+        }
+
         float consciousness = data.consciousness();
 
         if (consciousness < 20) {

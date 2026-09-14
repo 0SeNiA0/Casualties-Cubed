@@ -28,7 +28,7 @@ public abstract class PlayerMixin {
     private void forceLaydownPose(CallbackInfo ci) {
         Player self = (Player) (Object) this;
         self.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (!data.isConscious()) {
+            if (data.ragdolled()) {
                 if (!(PhysicsUtil.isPhysicsLoaded() && ServerConfig.PHYS_INTEGRATION.get())) {
                     self.setPose(Pose.SWIMMING);
                     ci.cancel(); // prevent vanilla from picking another pose
@@ -47,7 +47,7 @@ public abstract class PlayerMixin {
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
         if (data == null) return original;
 
-        return player.isSleeping() && !player.level().isDay() && data.consciousness() <= 10;
+        return player.isSleeping() && !player.level().isDay() && data.consciousness() <= 10 && original;
     }
 
     @ModifyReturnValue(at = @At("RETURN"), method = "canEat")

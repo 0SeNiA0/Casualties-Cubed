@@ -72,11 +72,10 @@ public class PlayerHealthData {
     ///L/s
     private float totalBleedSpeed = 0;
     private float hemothorax = 0f;
-    ///per minute -> per tick = / 1200 //! C:U uses 0 - 100 range with 1 = 0.0088/m (Body.HandleBody())
+    ///per second (not multiplied with 0.0057)
     private float internalBleeding = 0f;
     private float bloodOxygen = 100f;
     private float heartRate = 70;
-    private boolean isBreathing = true;
     private float bloodViscosity = 0;
     private float adrenaline = 0, currentAdrenaline = 0;
     private int lifeSupportTimer = 0;
@@ -304,7 +303,7 @@ public class PlayerHealthData {
     }
 
     public float internalBleedingCapped() {
-        return Mth.clamp(internalBleeding, 0, 25 * 0.0088f);
+        return Mth.clamp(internalBleeding, 0, Util.CUBloodPointsToL(25));
     }
 
     public float internalBleeding() {
@@ -757,7 +756,7 @@ public class PlayerHealthData {
         maybeRegrowLimbs(player);
         applyPenalties(player);
 
-        player.setAirSupply(player.getMaxAirSupply());//reset vanilla air
+        lastAir = player.getAirSupply();
         if (overdoseIndex > 0) overdoseIndex--;
 
         updateStability(player);
@@ -828,7 +827,7 @@ public class PlayerHealthData {
         brainGrowSickness = Math.max(brainGrowSickness - Util.TICK_TO_SEC, 0f);
         updateDirtiness(player);
         badSleepAmount -= Util.TICK_TO_SEC;
-        breathing = player.isAlive() && !player.isInWall() && respiratoryRate > 10 && !player.getEyeInFluidType().canDrownIn(player);//TODO add other breathing factors, somehow factor in stuff from other mods //ForgeHooks.onLivingBreathe();
+        breathing = player.isAlive() && respiratoryRate > 10;
         caffeinated = Math.max(caffeinated - Util.TICK_TO_SEC, 0f);
 
         if (!ragdolled() && (!isConscious() || shock > 10)) {
@@ -844,7 +843,7 @@ public class PlayerHealthData {
 
         // Bleeding — internal
         if (internalBleeding > 0) {
-            internalBleeding = Mth.clamp(internalBleeding - Util.TICK_TO_MIN * Util.CUBloodPointsToL(0.045f), 0, Util.CUBloodPointsToL(100));
+            internalBleeding = Mth.clamp(internalBleeding - Util.TICK_TO_SEC * Util.CUBloodPointsToL(0.045f), 0, Util.CUBloodPointsToL(100));
         }
 
         // Hemothorax
@@ -1030,7 +1029,7 @@ public class PlayerHealthData {
             Vec3 delta = ServerPlayerDeltaAccess.deltaMovement(player);
             if ((!ragdolled() && Math.abs(delta.x) < 0.1 && Math.abs(delta.z) < 0.1 && !player.isFallFlying()) || ragdolled() || player.getVehicle() != null) {
                 stamina = Mth.clamp(stamina + Util.TICK_TO_SEC * staminaStrength.evaluate(energy * 0.01f) * /*overencumbrance*/
-                    1.4f * (caffeinated > 0 ? 2 : 1) * (((!player.isInWater() || hasScoobaGear() || stamina < 25f) && breathing) ? 1f : 0f) * (1f + skills.skillAbove10(Stat.RES) * 0.02f) * ServerConfig.STAMINA_REGEN.get().floatValue(), 0f, Math.max(70f, bloodOxygen));
+                    1.4f * (caffeinated > 0 ? 2 : 1) * (((checkCanBreathe(player) || stamina < 25f) && breathing) ? 1f : 0f) * (1f + skills.skillAbove10(Stat.RES) * 0.02f) * ServerConfig.STAMINA_REGEN.get().floatValue(), 0f, Math.max(70f, bloodOxygen));
             } else {
                 stamina = Mth.clamp(this.stamina - Util.TICK_TO_SEC * 0.1f * /*overencumbrance*/ ((this.caffeinated > 0f) ? 0.25f : 1f), 0f, Math.max(70f, bloodOxygen));
                 temperature += 0.04f * Util.TICK_TO_SEC;
@@ -1038,7 +1037,7 @@ public class PlayerHealthData {
             if (player.isSprinting() && stamina < 35) player.setSprinting(false);
 
             if (!(!player.onGround() && player.isFallFlying()) && player.getVehicle() == null && (Math.abs(delta.x) > 0.1 || Math.abs(delta.z) > 0.1)) {
-                temperature += 0.04f * Util.TICK_TO_SEC;
+                temperature += 0.04f * Util.TICK_TO_SEC * (player.isSprinting() ? 1 : 0.5f) * (temperature > 37.5f ? 0.5f : 1);
             }
 
             if (strokeAmount > 0) {
@@ -1079,8 +1078,9 @@ public class PlayerHealthData {
         }
     }
 
-    private boolean hasScoobaGear() {
-        return false;
+    int lastAir;
+    private boolean checkCanBreathe(ServerPlayer player) {
+        return !player.isInWall() && (player.getAirSupply() - lastAir >= 0 && player.getAirSupply() > 0);
     }
 
     public float baseHungerRate() {
@@ -1164,7 +1164,7 @@ public class PlayerHealthData {
     private void handleCirculation(ServerPlayer player) {
         float tempDiffFromNormal = temperature - 36.6f;
 
-        bloodOxygen += (respiratoryRate * 0.01f * (breathing ? 1 : 0) - 0.5f) * Util.TICK_TO_SEC;
+        bloodOxygen += (respiratoryRate * 0.01f * (breathing && (checkCanBreathe(player)) ? 1 : 0) - 0.5f) * Util.TICK_TO_SEC;
 
         float bloodPercentage = bloodPercentage();
         if (bloodPercentage < 0.6f && bloodOxygen > bloodPercentage / 0.6f * 100) {
@@ -1697,11 +1697,6 @@ public class PlayerHealthData {
         }
     }
 
-    private boolean canHoldItem(Limb limb) {
-        LimbStatistics stats = getLimb(limb);
-        return isConscious() && stats.totalForce() >= 0.1f && (limb != Limb.HEAD || (stats.dislocationTimer() <= 0 && !disfigured));
-    }
-
     public float legSpeedMult() {
         float legForce = 0;
         for (Limb limb : Limb.LEG_LIMBS) {
@@ -1753,7 +1748,11 @@ public class PlayerHealthData {
                 case OFFHAND -> List.of(Limb.getArmFromHand(InteractionHand.OFF_HAND, player) == HumanoidArm.RIGHT ? Limb.RIGHT_HAND : Limb.LEFT_HAND);
             };
 
-            if (limbs.stream().anyMatch(this::canHoldItem)) continue;
+            if (slot.getType() == EquipmentSlot.Type.HAND) {
+                if (limbs.stream().anyMatch(this::canHoldItem)) continue;
+            } else {
+                if (limbs.stream().anyMatch(l -> !getLimb(l).isAmputated())) continue;
+            }
 
             player.setItemSlot(slot, ItemStack.EMPTY);
             if (player.getInventory().getItem(handSlot).isEmpty()) {
@@ -1765,6 +1764,11 @@ public class PlayerHealthData {
                 if (!leftover.isEmpty()) player.drop(leftover, false);
             }
         }
+    }
+
+    private boolean canHoldItem(Limb limb) {
+        LimbStatistics stats = getLimb(limb);
+        return isConscious() && stats.totalForce() >= 0.1f;
     }
 
     private void updateStability(ServerPlayer player) {
@@ -1796,7 +1800,7 @@ public class PlayerHealthData {
         }
 
         Vec3 flow = player.level().getFluidState(player.blockPosition()).getFlow(player.level(), player.blockPosition());
-        if (flow.length() > (double)0.0F) {
+        if (flow.multiply(1, 0, 1).length() > (double)0.0F) {
             DefaultChange -= (float)(flow.length() * (double)3.0F);
             if (player.hasPose(Pose.CROUCHING)) {
                 DefaultChange -= 0.5F;
@@ -1891,14 +1895,22 @@ public class PlayerHealthData {
         temperature = 36.6f;
         sickness = 0;
         consciousness = 100;
+        stamina = 100;
+        energy = 100;
+        happiness = 0;
+        weightOffset = 0;
+        radiationSickness = 0;
         disfigured = false;
         rightEyeBlind = false;
         leftEyeBlind = false;
         internalBleeding = 0;
         hemothorax = 0;
+        trauma = 0;
         dirtiness = 0;
         wetness = 0;
+        badSleepAmount = 0;
         hearingLoss = 0;
+        opiateHappiness = 0;
         antibioticTimer = 0;
         brainGrowSickness = 0;
         triedRollingLastStand = false;
@@ -2105,7 +2117,6 @@ public class PlayerHealthData {
         nbt.putFloat("InternalBleeding", internalBleeding);
         nbt.putFloat("Oxygen", bloodOxygen);
         nbt.putFloat("BPM", heartRate);
-        nbt.putBoolean("IsBreathing", isBreathing);
         nbt.putFloat("BloodViscosity", bloodViscosity);
         nbt.putFloat("BrainHealth", brainHealth);
         nbt.putFloat("Immunity", immunity);
@@ -2237,7 +2248,6 @@ public class PlayerHealthData {
         internalBleeding = nbt.getFloat("InternalBleeding");
         bloodOxygen = nbt.getFloat("Oxygen");
         heartRate = nbt.getFloat("BPM");
-        isBreathing = nbt.getBoolean("IsBreathing");
         bloodViscosity = nbt.getFloat("BloodViscosity");
         brainHealth = nbt.getFloat("BrainHealth");
 
@@ -2264,12 +2274,12 @@ public class PlayerHealthData {
 
         stimulantMultiplier = nbt.getFloat("stimulantMultiplier");
         hungerLimbHealCurrent = nbt.getFloat("hungerLimbHealCurrent");
-        breathing = nbt.getBoolean("breathing");
-        respiratoryRate = nbt.getFloat("respiratoryRate");
+        if (nbt.contains("breathing")) breathing = nbt.getBoolean("breathing");
+        if (nbt.contains("respiratoryRate")) respiratoryRate = nbt.getFloat("respiratoryRate");
         brainGrowSickness = nbt.getFloat("brainGrowSickness");
         caffeinated = nbt.getFloat("caffeinated");
         painShock = nbt.getFloat("painShock");
-        bloodPressure = nbt.getFloat("bloodPressure");
+        if (nbt.contains("bloodPressure")) bloodPressure = nbt.getFloat("bloodPressure");
         bloodPressureChangeFromMedicine = nbt.getFloat("bloodPressureChangeFromMedicine");
         heartRatePressureOffset = nbt.getFloat("heartRatePressureOffset");
         bloodVesselSize = nbt.getFloat("bloodVesselSize");
@@ -2283,7 +2293,7 @@ public class PlayerHealthData {
         lastStandTime = nbt.getInt("lastStandTime");
         successfullyRolledLastStand = nbt.getBoolean("successfullyRolledLastStand");
         pulmonaryEmbolism = nbt.getBoolean("pulmonaryEmbolism");
-        temperatureMovementMult = nbt.getFloat("temperatureMovementMult");
+        if (nbt.contains("temperatureMovementMult")) temperatureMovementMult = nbt.getFloat("temperatureMovementMult");
         bleedClottingSpeed = nbt.getFloat("bleedClottingSpeed");
         bleedingSpeedMultiplier = nbt.getFloat("bleedingSpeedMultiplier");
         currentImmunityMult = nbt.getFloat("currentImmunityMult");
@@ -2294,10 +2304,10 @@ public class PlayerHealthData {
 
         overdoseIndex = nbt.getInt("overdoseIndex");
         onHardStimulants = nbt.getBoolean("onHardStimulants");
-        thirst = nbt.getFloat("thirst");
-        hunger = nbt.getFloat("hunger");
-        energy = nbt.getFloat("energy");
-        stamina = nbt.getFloat("stamina");
+        if (nbt.contains("thirst")) thirst = nbt.getFloat("thirst");
+        if (nbt.contains("hunger")) hunger = nbt.getFloat("hunger");
+        if (nbt.contains("energy")) energy = nbt.getFloat("energy");
+        if (nbt.contains("stamina")) stamina = nbt.getFloat("stamina");
         happiness = nbt.getFloat("happiness");
         opiateHappiness = nbt.getFloat("opiateHappiness");
         trauma = nbt.getFloat("trauma");
@@ -2351,7 +2361,7 @@ public class PlayerHealthData {
                 ", internalBleeding=" + internalBleeding +
                 ", oxygen=" + bloodOxygen +
                 ", bpm=" + heartRate +
-                ", isBreathing=" + isBreathing +
+                ", breathing=" + breathing +
                 ", bloodViscosity=" + bloodViscosity +
                 ", immunity=" + immunity +
                 ", brainHealth=" + brainHealth +
