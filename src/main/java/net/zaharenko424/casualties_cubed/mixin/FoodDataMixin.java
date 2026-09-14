@@ -32,6 +32,11 @@ public abstract class FoodDataMixin {
         if (!item.isEdible()) return;
         if (!(entity instanceof ServerPlayer player)) return;
 
+        if (player.getAbilities().invulnerable) {
+            ci.cancel();
+            return;
+        }
+
         PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
         if (data == null) return;
 

@@ -23,8 +23,6 @@ public class ServerConfig {
     public static final ForgeConfigSpec.DoubleValue LEG_ARMOR_SCALE;
     public static final ForgeConfigSpec.DoubleValue BOOTS_ARMOR_SCALE;
 
-    public static final ForgeConfigSpec.BooleanValue DO_TEMP_CHANGE;
-
     public static final ForgeConfigSpec.BooleanValue PERMANENT_DAMAGE;
     public static final ForgeConfigSpec.BooleanValue LIMB_REGROWTH;
     public static final ForgeConfigSpec.IntValue LIMB_REGROWTH_MIN_REGEN;
@@ -50,6 +48,8 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec.BooleanValue INSOMNIA;
     public static final ForgeConfigSpec.BooleanValue NO_WEIGHT;
+    public static final ForgeConfigSpec.BooleanValue DO_TEMP_CHANGE;
+    public static final ForgeConfigSpec.DoubleValue MAX_DAMAGE;
 
     public static final ForgeConfigSpec.BooleanValue PHYS_INTEGRATION;
 
@@ -112,11 +112,6 @@ public class ServerConfig {
                 .comment("Duration in ticks for a limb to regrow")
                 .defineInRange("duration", 60 * 20, 0, Integer.MAX_VALUE);
         BUILDER.pop();
-
-
-        DO_TEMP_CHANGE = BUILDER
-                .comment("on/off temperature")
-                        .define("doTempChange",true);
 
 
         METABOLISM_RATE = BUILDER
@@ -192,6 +187,14 @@ public class ServerConfig {
         NO_WEIGHT = BUILDER
                 .comment("Disables weight offset by setting it to 0.")
                 .define("noWeight", false);
+
+        DO_TEMP_CHANGE = BUILDER
+                .comment("on/off temperature")
+                .define("doTempChange",true);
+
+        MAX_DAMAGE = BUILDER
+                .comment("If the damage is >= the specified value, it will not be handled by the mod.")
+                .defineInRange("maxDamage", 10000, 0, Float.MAX_VALUE);
 
 
         BUILDER.push("Integrations");

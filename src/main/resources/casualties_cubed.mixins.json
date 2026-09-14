@@ -4,7 +4,7 @@
   "package": "net.zaharenko424.casualties_cubed.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "casualties_cubed.refmap.json",
-  "plugin": "net.zaharenko424.casualties_cubed.mixin.MixingConfig",
+  "plugin": "net.zaharenko424.casualties_cubed.mixin.MixinConfig",
   "mixins": [
     "FoodDataMixin",
     "GameRulesMixin",

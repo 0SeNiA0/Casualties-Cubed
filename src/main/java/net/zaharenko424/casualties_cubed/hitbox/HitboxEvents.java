@@ -87,7 +87,7 @@ public class HitboxEvents {
         DamageSource src = (ctx != null && ctx.source != null) ? ctx.source : event.getSource();
 
         if (src.is(CasualtiesCubedTags.DamageType.IGNORE)) return;
-        if (damageamount == Float.MAX_VALUE || Float.isNaN(damageamount)
+        if (damageamount == ServerConfig.MAX_DAMAGE.get() || Float.isNaN(damageamount)
                 || (ctx != null && ctx.preArmorAmount == Float.MAX_VALUE)) return;
 
         if (src.is(DamageTypeTags.IS_DROWNING) || src.is(DamageTypes.IN_WALL)
