@@ -87,7 +87,6 @@ public class PlayerHealthData {
     private float dirtiness = 0;
     private float temperature = 36.6f;
     private float hearingLoss = 0;
-    private float flashHearingLoss = 0;
     private float sepsis = 0;
     private float sickness = 0;
     float temporarySlowdown;
@@ -220,14 +219,6 @@ public class PlayerHealthData {
 
     public void disfigured(boolean disfigured) {
         this.disfigured = disfigured;
-    }
-
-    public float flashHearingLoss() {
-        return flashHearingLoss;
-    }
-
-    public void flashHearingLoss(float flashHearingLoss) {
-        this.flashHearingLoss = flashHearingLoss;
     }
 
     public boolean isLastStand() {
@@ -1543,7 +1534,7 @@ public class PlayerHealthData {
         offset *= heartRate / 60;
         float height = Mth.lerp(fibrillationProgress / 90f,
                 heartCurveNormal.evaluate(heartProg - offset),
-                heartCurveArrythmia.evaluate(heartProg - offset)) * randomFibrillationVariation;
+                heartCurveArrhythmia.evaluate(heartProg - offset)) * randomFibrillationVariation;
 
         if (fibrillationProgress > 75) {
             height *= 1 - (fibrillationProgress - 75) / 25;
@@ -1927,7 +1918,6 @@ public class PlayerHealthData {
 
 
         lifeSupportTimer = 0;
-        flashHearingLoss = 0;
         isRagdolled = false;
         stability = 100;
 
@@ -2131,7 +2121,6 @@ public class PlayerHealthData {
         nbt.putBoolean("RightEyeBlind", rightEyeBlind);
         nbt.putBoolean("MouthMissing", disfigured);
         nbt.putFloat("HearingLoss", hearingLoss);
-        nbt.putFloat("FlashHearing", flashHearingLoss);
         nbt.putFloat("Sepsis", sepsis);
         nbt.putFloat("Sickness", sickness);
         nbt.putFloat("TemporarySlowdown", temporarySlowdown);
@@ -2267,7 +2256,6 @@ public class PlayerHealthData {
         rightEyeBlind = nbt.getBoolean("RightEyeBlind");
         disfigured = nbt.getBoolean("MouthMissing");
         hearingLoss = nbt.getFloat("HearingLoss");
-        flashHearingLoss = nbt.getFloat("FlashHearing");
         sepsis = nbt.getFloat("Sepsis");
         sickness = nbt.getFloat("Sickness");
         temporarySlowdown = nbt.getFloat("TemporarySlowdown");
@@ -2417,7 +2405,7 @@ public class PlayerHealthData {
             new Keyframe(0.8602069f, -0.04067692f, -0.1900704f, -1.555309E-05f, WeightedMode.NONE, 1, 0.3333333f),
             new Keyframe(1, 0, 0.2909794f, 0, WeightedMode.NONE, 0.3333333f, 0)
     ));
-    private static final AnimationCurve heartCurveArrythmia = new AnimationCurve(List.of(
+    private static final AnimationCurve heartCurveArrhythmia = new AnimationCurve(List.of(
             new Keyframe(0, 0, 2.845296f, 2.845296f, WeightedMode.NONE, 0, 0.3333333f),
             new Keyframe(0.1179802f, 0.3356887f, 4.582402f, 4.582402f, WeightedMode.NONE, 0.3333333f, 0.3746302f),
             new Keyframe(0.2495227f, 0.6348413f, -0.4898691f, -0.4898691f, WeightedMode.NONE, 0.3333333f, 0.3333333f),

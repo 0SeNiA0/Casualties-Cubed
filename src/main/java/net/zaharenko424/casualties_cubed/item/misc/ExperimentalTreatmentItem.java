@@ -134,7 +134,6 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
             data.temperature(25);
         } else if (roll <= .64) {
             data.hearingLoss(1);
-            data.flashHearingLoss(1);
         } else if (roll <= .79) {
             LimbStatistics stats = data.getLimb(Limb.weigtedRandomLimb());
             stats.pain(150);

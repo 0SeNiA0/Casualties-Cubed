@@ -68,7 +68,7 @@ public class ModCommands {
 
                         .then(Commands.literal("addExp")
                                 .then(Commands.argument("stat", EnumArgument.enumArgument(Stat.class))
-                                        .then(Commands.argument("exp", FloatArgumentType.floatArg(0))
+                                        .then(Commands.argument("exp", FloatArgumentType.floatArg(0, 1000000))
                                                 .executes(ctx -> ctx.getSource().isPlayer() ? addExp(ctx, List.of(ctx.getSource().getPlayerOrException())) : 0)
                                                 .then(Commands.argument("targets", EntityArgument.players())
                                                         .executes(ctx -> addExp(ctx, EntityArgument.getPlayers(ctx, "targets")))

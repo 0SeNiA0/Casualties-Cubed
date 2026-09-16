@@ -25,9 +25,9 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
@@ -254,11 +254,11 @@ public class CommonEvent {
     }
 
     @SubscribeEvent
-    public static void onAttack(LivingAttackEvent event) {
+    public static void onAttack(AttackEntityEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
-            if (!player.getAbilities().invulnerable && !event.getSource().isIndirect()) data.addStamina(-1);
+            if (!player.getAbilities().invulnerable) data.addStamina(-1);
 
             LimbStatistics head = data.getLimb(Limb.HEAD), chest = data.getLimb(Limb.THORAX);
 
@@ -366,7 +366,6 @@ public class CommonEvent {
                 player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                     data.consciousness(data.consciousness() - (100 * finalDistanceScale));
                     data.hearingLoss((float) (data.hearingLoss() + Math.max(0.05, finalDistanceScale / 2f)));
-                    data.flashHearingLoss(data.flashHearingLoss() + Math.min(0.25f, finalDistanceScale * 4));
                 });
             }
         }

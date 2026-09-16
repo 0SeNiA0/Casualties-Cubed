@@ -28,7 +28,7 @@ public class SoundManager {
         }
 
         shouldPlay = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
-                .map(h -> h.flashHearingLoss() > 0)
+                .map(h -> h.hearingLoss() > 0 || h.brainHealth() < 100)
                 .orElse(false);
         if (shouldPlay && (tinnitusSound == null || tinnitusSound.isStopped())) {
             tinnitusSound = new TinnitusSound(ModSounds.RINGING.get());
