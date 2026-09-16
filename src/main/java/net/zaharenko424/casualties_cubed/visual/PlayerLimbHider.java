@@ -1,14 +1,16 @@
 package net.zaharenko424.casualties_cubed.visual;
 
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.limbs.Limb;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,7 @@ public class PlayerLimbHider {
 
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
-        Player player = event.getEntity();
+        AbstractClientPlayer player = (AbstractClientPlayer) event.getEntity();
         PlayerRenderer renderer = event.getRenderer();
         var model = renderer.getModel();
 
@@ -43,27 +45,27 @@ public class PlayerLimbHider {
                     case UPPER_RIGHT_LEG -> {
                         prev.put(limb, model.rightLeg.visible);
                         model.rightLeg.visible = isVisible;
-                        model.rightPants.visible = isVisible;
+                        model.rightPants.visible = isVisible && player.isModelPartShown(PlayerModelPart.RIGHT_PANTS_LEG);
                     }
                     case UPPER_RIGHT_ARM -> {
                         prev.put(limb, model.rightArm.visible);
                         model.rightArm.visible = isVisible;
-                        model.rightSleeve.visible = isVisible;
+                        model.rightSleeve.visible = isVisible && player.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE);
                     }
                     case UPPER_LEFT_ARM -> {
                         prev.put(limb, model.leftArm.visible);
                         model.leftArm.visible = isVisible;
-                        model.leftSleeve.visible = isVisible;
+                        model.leftSleeve.visible = isVisible && player.isModelPartShown(PlayerModelPart.LEFT_SLEEVE);
                     }
                     case UPPER_LEFT_LEG -> {
                         prev.put(limb, model.leftLeg.visible);
                         model.leftLeg.visible = isVisible;
-                        model.leftPants.visible = isVisible;
+                        model.leftPants.visible = isVisible && player.isModelPartShown(PlayerModelPart.LEFT_PANTS_LEG);
                     }
                     case HEAD -> {
                         prev.put(limb, model.head.visible);
                         model.head.visible = isVisible;
-                        model.hat.visible = isVisible;
+                        model.hat.visible = isVisible  && player.isModelPartShown(PlayerModelPart.HAT);
                     }
                 }
             }
@@ -83,23 +85,23 @@ public class PlayerLimbHider {
                 switch (entry.getKey()) {
                     case UPPER_RIGHT_LEG -> {
                         model.rightLeg.visible = entry.getValue();
-                        model.rightPants.visible = entry.getValue();
+                        model.rightPants.visible = player.isModelPartShown(PlayerModelPart.RIGHT_PANTS_LEG);
                     }
                     case UPPER_RIGHT_ARM -> {
                         model.rightArm.visible = entry.getValue();
-                        model.rightSleeve.visible = entry.getValue();
+                        model.rightSleeve.visible = player.isModelPartShown(PlayerModelPart.RIGHT_SLEEVE);
                     }
                     case UPPER_LEFT_ARM -> {
                         model.leftArm.visible = entry.getValue();
-                        model.leftSleeve.visible = entry.getValue();
+                        model.leftSleeve.visible = player.isModelPartShown(PlayerModelPart.LEFT_SLEEVE);
                     }
                     case UPPER_LEFT_LEG -> {
                         model.leftLeg.visible = entry.getValue();
-                        model.leftPants.visible = entry.getValue();
+                        model.leftPants.visible = player.isModelPartShown(PlayerModelPart.LEFT_PANTS_LEG);
                     }
                     case HEAD -> {
                         model.head.visible = entry.getValue();
-                        model.hat.visible = entry.getValue();
+                        model.hat.visible = player.isModelPartShown(PlayerModelPart.HAT);
                     }
                 }
             }

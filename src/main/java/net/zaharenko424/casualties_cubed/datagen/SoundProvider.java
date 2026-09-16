@@ -82,6 +82,6 @@ public class SoundProvider extends SoundDefinitionsProvider {
     }
 
     private String subtitle(String str){
-        return "sounds." + CasualtiesCubed.MOD_ID + "." + str;
+        return "subtitles." + CasualtiesCubed.MOD_ID + "." + str;
     }
 }

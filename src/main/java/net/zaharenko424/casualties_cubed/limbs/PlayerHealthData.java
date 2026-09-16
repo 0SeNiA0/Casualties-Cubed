@@ -2105,6 +2105,7 @@ public class PlayerHealthData {
         }
 
         serializeNBT(tag, true);
+        tag.remove("ragdolled");
         return tag;
     }
 
@@ -2185,6 +2186,7 @@ public class PlayerHealthData {
         nbt.putInt("goodSleepTime", goodSleepTime);
         nbt.putBoolean("sleeping", sleeping);
         nbt.putString("curSleep", curSleep.name());
+        nbt.putBoolean("ragdolled", isRagdolled);
 
         // Serialize limb data as a list
         ListTag limbList = new ListTag();
@@ -2219,6 +2221,7 @@ public class PlayerHealthData {
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("Reduced", true);
         tag.put("LimbStats", limbList);
+        tag.putBoolean("ragdolled", isRagdolled);
         return tag;
     }
 
@@ -2236,6 +2239,7 @@ public class PlayerHealthData {
     }
 
     public void deserializeNBT(CompoundTag nbt) {
+        if (nbt.contains("ragdolled")) isRagdolled = nbt.getBoolean("ragdolled");
         if (nbt.contains("Reduced")) {//Short-circuit reduced data
             deserializeReducedNBT(nbt);
             return;
