@@ -335,13 +335,13 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("bleeding.description4", "§oAs your life gushes out behind you, you remember that you are mortal.");
 
         addMoodle("stamina.title1", "Slightly exerted");
-        addMoodle("stamina.description1", "Mildly physically strained. (%1$s%)");
+        addMoodle("stamina.description1", "Mildly physically strained. (%1$s%%)");
         addMoodle("stamina.title2", "Exerted");
-        addMoodle("stamina.description2", "Uncomfortably exerted, struggling to move and work. (%1$s%)");
+        addMoodle("stamina.description2", "Uncomfortably exerted, struggling to move and work. (%1$s%%)");
         addMoodle("stamina.title3", "Highly exerted");
-        addMoodle("stamina.description3", "Barely able to move, highly physically exerted. (%1$s%)");
+        addMoodle("stamina.description3", "Barely able to move, highly physically exerted. (%1$s%%)");
         addMoodle("stamina.title4", "Totally exhausted");
-        addMoodle("stamina.description4", "Barely able to breathe. (%1$s%)");
+        addMoodle("stamina.description4", "Barely able to breathe. (%1$s%%)");
 
         addMoodleO("brain_health.title1", "Cognitive impairment");
         addMoodleO("brain_health.description1", "Mentally impaired from damage to the brain. You feel weirdly confused...");

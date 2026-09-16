@@ -35,7 +35,7 @@ public class StaminaMoodle extends AbstractMoodle {
 
     @Override
     public List<Component> getTooltip(Player player) {
-        float stamina = PlayerHealthData.of(player).map(PlayerHealthData::stamina).orElse(0f);
+        int stamina = Math.round(PlayerHealthData.of(player).map(PlayerHealthData::stamina).orElse(0f));
         return switch (getMoodleStatus()) {
             case LIGHT_NEG ->
                     List.of(Component.translatable("gui.casualties_cubed.moodle.stamina.title1"),
