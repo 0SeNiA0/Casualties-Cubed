@@ -168,7 +168,7 @@ public class HitboxEvents {
         if (isAnyProjectile(src)) {
             Entity directEntity = event.getSource().getDirectEntity();
             if ((directEntity instanceof Projectile)) {
-                Vec3 hitPos = event.getSource().getSourcePosition();
+                Vec3 hitPos = player.getBoundingBox().clip(directEntity.position(), directEntity.getDeltaMovement().normalize().scale(100).add(directEntity.position())).orElse(src.getSourcePosition());
 
                 // Your custom hit sector logic
                 HitSector hit = detectHit(player, hitPos);
