@@ -42,7 +42,7 @@ public class Painkillers {
         opiateReception = opiateAmount - opiateTolerance;
         currentOpiateReception = Util.moveTowards(5 * Util.TICK_TO_SEC, currentOpiateReception, opiateReception);
 
-        opiateTolerance = Util.moveTowards(opiateTolerance < opiateAmount ? 0.08f : 0.04f * Util.TICK_TO_SEC, opiateTolerance, opiateAmount);
+        opiateTolerance = Util.moveTowards((opiateTolerance < opiateAmount ? 0.08f : 0.04f) * Util.TICK_TO_SEC, opiateTolerance, opiateAmount);
         if (opiateReception > 45) {
             opiateTolerance = Util.moveTowards(0.022f * Util.TICK_TO_SEC, opiateTolerance, opiateAmount);
         }
