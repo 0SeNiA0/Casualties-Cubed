@@ -194,7 +194,7 @@ public class HitboxEvents {
         }
         //fuck you warium
 
-        if (!src.isIndirect()) {
+        if (!src.isIndirect() && src.getDirectEntity() != null) {
             Vec3 hit = src.sourcePositionRaw();
             if (hit == null) {
                 Entity attacker = src.getDirectEntity();
