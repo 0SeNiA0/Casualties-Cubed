@@ -27,6 +27,7 @@ import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.PacketDistributor;
@@ -1406,7 +1407,7 @@ public class PlayerHealthData {
         float rawInsulationEffect = armorInsulation * INSULATION_PER_POINT;
         float clampedInsulationEffect = Mth.clamp(rawInsulationEffect, 0f, MAX_INSULATION_SCALE);*/
 
-        return Math.max(0.5f, 1 /*+ clothing temp*/ + weightOffset * 0.01f) - (ServerConfig.EXPIE_MODE.get() ? 0 : 0.49999f);
+        return Math.max(0.5f, 1 /*+ clothing temp*/ + weightOffset * 0.01f) - (ServerConfig.EXPIE_MODE.get() ? 0 : 0.25f);
     }
 
     private void handleBodyTemperature(ServerPlayer player) {
@@ -1416,9 +1417,7 @@ public class PlayerHealthData {
         }
 
         if (player.tickCount % 20 == 0) {
-            //float envTemp = getAmbientTemperature(player);
-
-            temperature = Mth.lerp(0.003f / totalInsulation(), temperature, 17);//first biome temp at start (envTemp)
+            temperature = Mth.lerp(0.003f / totalInsulation(), temperature, getAmbientTemperature(player));//gravel lands biome temp at start 17 (envTemp)
 
             float mul = 1 - Mth.clamp(0.3f - energy * 0.01f, 0, 1);
             if (painkillers.currentOpiateReception() > 0) {
@@ -1441,6 +1440,8 @@ public class PlayerHealthData {
                 hunger -= 0.035f;
                 temperature += 0.01f;
             }
+
+            temperature = Mth.clamp(temperature, -273.15f, 1000000);
         }
 
         if (temperature > 42) {
@@ -1464,7 +1465,7 @@ public class PlayerHealthData {
             wetShakeTime++;
             if (wetShakeTime > 12 * 20) {
                 wetShakeTime = 0;
-                addWetness(-2.5f);//its actually supposed to be done over 1 second but whatever
+                addWetness(-2.5f);
                 wetShakeProgress = 1;
             }
         } else wetShakeTime = 0;
@@ -2026,33 +2027,27 @@ public class PlayerHealthData {
         float heightModifier = (float) Mth.clamp(-heightDiff * 0.025f, -4f, 4f);
         outData += heightModifier;
 
-        BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos();
         float tblockheatBonus = 0;
-        for (int dx = -3; dx <= 3; dx++) {
-            for (int dy = -2; dy <= 2; dy++) {
-                for (int dz = -3; dz <= 3; dz++) {
-                    checkPos.set(player.blockPosition().offset(dx, dy, dz));
-                    BlockState state = player.level().getBlockState(checkPos);
 
-                    float base;
+        AABB aabb = player.getBoundingBox().inflate(3, 2, 3);
+        Iterable<BlockPos> it = BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ));
+        Vec3 playerCenter = player.position().add(0, player.getBbHeight() / 2, 0);
+        BlockState state;
+        float blockTemp;
+        for (BlockPos pos : it) {
+            state = player.level().getBlockState(pos);
+            blockTemp = TempCompat.get(state.getBlock()) != null ? TempCompat.get(state.getBlock()) : 0;
+            if (state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) {
+                blockTemp += 10f;
+            }
 
-                    base = TempCompat.get(state.getBlock()) != null ? TempCompat.get(state.getBlock()) : 0;
-                    if (state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) {
-                        base += 10f;
-                    }
-
-                    if (base != 0f) {
-                        double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-                        float falloff = (float) Math.max(0.0, 1.0 - dist / 4.0); // full at 0m, none beyond 4m
-                        tblockheatBonus += base * falloff;
-                    }
-                }
+            if (blockTemp != 0f) {
+                tblockheatBonus += blockTemp * (1 / (float) playerCenter.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
             }
         }
-        tblockheatBonus = Mth.clamp(tblockheatBonus, -30, 30);
 
-        outData += (tblockheatBonus);
-        return outData;
+        outData += tblockheatBonus;
+        return Mth.clamp(outData, -273.15f, 1000000);
     }
 
     public float getBiomeTemperature(Player player) {
@@ -2077,7 +2072,7 @@ public class PlayerHealthData {
         }
 
         if (outData == null) {
-            outData = 25f + ((biome.getBaseTemperature() + 0.5f) / 2.5f) * 16f;
+            outData = 12.5f + ((biome.getBaseTemperature() + 0.5f) / 2.5f) * 8f;
         }
         return outData;
     }

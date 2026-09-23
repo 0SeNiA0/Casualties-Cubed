@@ -28,22 +28,20 @@ public class ThermometerItem extends Item {
         super(new Properties().stacksTo(1));
     }
 
-    int ticker = 0;
-
     @Override
     public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
         super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
 
         if (slotIndex != selectedIndex) return;
-        if (ticker++ > 10) {
+        if (player.tickCount % 10 == 0) {
             if (level.isClientSide()) return;
             player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(h -> {
-                float temperatureScale = Mth.clamp((h.getAmbientTemperature(player) - 27) / 15, 0, 1);
+                float ambientTemp = h.getAmbientTemperature(player);
+                float temperatureScale = Mth.clamp((ambientTemp - 27) / 15, 0, 1);
                 int color = ColorUtil.gradient(temperatureScale, 0x242bff, 0xff3624);
-                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(Component.translatable("casualties_cubed.gui.temperature_celsius", Math.floor(h.getAmbientTemperature(player) * 10) / 10).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(Component.translatable("casualties_cubed.gui.temperature_celsius", String.format("%.1f", ambientTemp)).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
                 player.displayClientMessage(colorText, true);
             });
-            ticker = 0;
         }
     }
 
