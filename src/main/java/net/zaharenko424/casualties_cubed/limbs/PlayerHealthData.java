@@ -2034,6 +2034,7 @@ public class PlayerHealthData {
         Vec3 playerCenter = player.position().add(0, player.getBbHeight() / 2, 0);
         BlockState state;
         float blockTemp;
+        float dist;
         for (BlockPos pos : it) {
             state = player.level().getBlockState(pos);
             blockTemp = TempCompat.get(state.getBlock()) != null ? TempCompat.get(state.getBlock()) : 0;
@@ -2042,7 +2043,8 @@ public class PlayerHealthData {
             }
 
             if (blockTemp != 0f) {
-                tblockheatBonus += blockTemp * (1 / (float) playerCenter.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+                dist = Mth.sqrt((float) playerCenter.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) + 1;
+                tblockheatBonus += blockTemp * (1 / (dist * dist));
             }
         }
 
