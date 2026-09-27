@@ -5,6 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
@@ -17,8 +18,8 @@ import static net.zaharenko424.casualties_cubed.registry.ModFluids.*;
 
 public class FluidTagProvider extends TagsProvider<Fluid> {
 
-    public FluidTagProvider(PackOutput p_256596_, CompletableFuture<HolderLookup.Provider> p_256513_, @Nullable ExistingFileHelper existingFileHelper) {
-        super(p_256596_, Registries.FLUID, p_256513_, CasualtiesCubed.MOD_ID, existingFileHelper);
+    public FluidTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, @Nullable ExistingFileHelper existingFileHelper) {
+        super(output, Registries.FLUID, lookup, CasualtiesCubed.MOD_ID, existingFileHelper);
     }
 
     @Override
@@ -29,5 +30,7 @@ public class FluidTagProvider extends TagsProvider<Fluid> {
 
         tag(CasualtiesCubedTags.Fluid.DISINFECTING)
                 .add(new ResourceKey[]{ALCOHOL.getKey(), ANTISEPTIC.getKey(), BLEACH.getKey()});
+
+        tag(FluidTags.WATER).add(new ResourceKey[]{GROUNDWATER.getKey(), DIRTY_WATER.getKey(), CLEAN_WATER.getKey()});
     }
 }
