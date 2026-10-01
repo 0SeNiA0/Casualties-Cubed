@@ -1,39 +1,43 @@
 package net.zaharenko424.casualties_cubed.item.usable;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.item.api.IAllowInMedicBags;
 import net.zaharenko424.casualties_cubed.item.api.INbtDrivenDurability;
-import net.zaharenko424.casualties_cubed.item.api.ISimpleMedicalUsable;
-import net.zaharenko424.casualties_cubed.limbs.Limb;
+import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.registry.ModSounds;
-import org.jetbrains.annotations.Nullable;
+import net.zaharenko424.casualties_cubed.util.Util;
 
-import java.util.List;
-
-public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowInMedicBags, INbtDrivenDurability {
+public class AutoPumpItem extends ItemWithDescription implements IAllowInMedicBags, INbtDrivenDurability, Equipable {
 
     public AutoPumpItem() {
         super(new Properties().stacksTo(1));
     }
 
     @Override
-    public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
-        if (limb != Limb.THORAX) return;
+    public boolean destroyOnZeroDurability() {
+        return false;
+    }
 
-        target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data ->
-                data.lifeSupportTimer(5 * 60 * 20));
+    @Override
+    public void onArmorTick(ItemStack stack, Level level, Player player) {
+        if (level.isClientSide || getNbtDurability(stack) <= 0) return;
 
-        if (!source.isCreative()) stack.shrink(1);
-        source.level().playSound(null, source.getOnPos(), getUseSound(), SoundSource.PLAYERS);
+        float damage = Util.TICK_TO_SEC / 1200;
+        PlayerHealthData data = PlayerHealthData.of(player).orElse(null);
+        if (data != null && data.bloodPressure() < 85) {
+            damage += 0.002f;
+            data.addBloodPressure(44);
+            player.level().playSound(null, player.getOnPos(), ModSounds.AUTO_PUMP.get(), SoundSource.PLAYERS);
+        }
+
+        subNbtDurability(stack, damage);
     }
 
     @Override
@@ -42,13 +46,7 @@ public class AutoPumpItem extends Item implements ISimpleMedicalUsable, IAllowIn
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.auto_pump.description").withStyle(ChatFormatting.GRAY));
-    }
-
-    @Override
-    public SoundEvent getUseSound() {
-        return ModSounds.AUTO_PUMP.get();
+    public EquipmentSlot getEquipmentSlot() {
+        return EquipmentSlot.CHEST;
     }
 }

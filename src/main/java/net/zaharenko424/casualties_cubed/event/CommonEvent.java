@@ -25,10 +25,12 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDrownEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
 import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -119,6 +121,17 @@ public class CommonEvent {
     }
 
     @SubscribeEvent
+    public static void cancelInteractionsWhenUnc(PlayerInteractEvent event) {
+        PlayerHealthData data = PlayerHealthData.of(event.getEntity()).orElse(null);
+        if (data != null && !data.isConscious()) event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void cancelDrowning(LivingDrownEvent event) {
+        if (event.getEntity() instanceof Player) event.setCanceled(true);
+    }
+
+    @SubscribeEvent
     public static void onPlayerCloned(PlayerEvent.Clone event) {
         if (event.isWasDeath()) return;
 
@@ -169,8 +182,7 @@ public class CommonEvent {
         Player player = event.getEntity();
         if (player.level().isClientSide || event.getNewGameMode() != GameType.SPECTATOR) return;
 
-        PlayerHealthData data = PlayerHealthData.of(event.getEntity()).orElse(null);
-        if (data != null) data.clearAttributePenalties(player);
+        PlayerHealthData.of(event.getEntity()).ifPresent(data -> data.clearAttributePenalties(player));
     }
 
     @SubscribeEvent

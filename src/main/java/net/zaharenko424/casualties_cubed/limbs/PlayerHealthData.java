@@ -79,7 +79,6 @@ public class PlayerHealthData {
     private float heartRate = 70;
     private float bloodViscosity = 0;
     private float adrenaline = 0, currentAdrenaline = 0;
-    private int lifeSupportTimer = 0;
 
     private float immunity = 100;
     private float antibioticTimer = 0;//seconds
@@ -144,6 +143,9 @@ public class PlayerHealthData {
     private int goodSleepTime = 0;
     private boolean sleeping;
     private SleepQuality curSleep = SleepQuality.OKAY;
+
+    private float terrifiedLevel;
+    private float focusedLevel;
 
     public final Painkillers painkillers = new Painkillers(this);
     public final Vomiter vomiter = new Vomiter(this);
@@ -264,14 +266,6 @@ public class PlayerHealthData {
 
     public void immunity(float immunity) {
         this.immunity = immunity;
-    }
-
-    public int lifeSupportTimer() {
-        return lifeSupportTimer;
-    }
-
-    public void lifeSupportTimer(int lifeSupportTimer) {
-        this.lifeSupportTimer = lifeSupportTimer;
     }
 
     public float painShock() {
@@ -502,6 +496,10 @@ public class PlayerHealthData {
         return bloodPressure;
     }
 
+    public void addBloodPressure(float amount) {
+        bloodPressure = Math.max(0, bloodPressure + amount);
+    }
+
     public void addBloodPressureChangeFromMedicine(float amount) {
         bloodPressureChangeFromMedicine += amount;
     }
@@ -636,6 +634,22 @@ public class PlayerHealthData {
 
     public float badSleepAmount() {
         return badSleepAmount;
+    }
+
+    public float terrifiedLevel() {
+        return terrifiedLevel;
+    }
+
+    public void terrifiedLevel(float terrifiedLevel) {
+        this.terrifiedLevel = Mth.clamp(terrifiedLevel, 0, 100);
+    }
+
+    public float focusedLevel() {
+        return focusedLevel;
+    }
+
+    public void focusedLevel(float focusedLevel) {
+        this.focusedLevel = Mth.clamp(focusedLevel, 0, 100);
     }
 
     public void tryStartFibrillation(boolean forced) {
@@ -1918,7 +1932,6 @@ public class PlayerHealthData {
         vomiter.reset();
 
 
-        lifeSupportTimer = 0;
         isRagdolled = false;
         stability = 100;
 
@@ -2113,7 +2126,6 @@ public class PlayerHealthData {
         nbt.putFloat("Temp", temperature);
         nbt.putFloat("Adrenaline", adrenaline);
         nbt.putFloat("CurrentAdrenaline", currentAdrenaline);
-        nbt.putInt("LifeSupport", lifeSupportTimer);
         nbt.putBoolean("LeftEyeBlind", leftEyeBlind);
         nbt.putBoolean("RightEyeBlind", rightEyeBlind);
         nbt.putBoolean("MouthMissing", disfigured);
@@ -2172,6 +2184,8 @@ public class PlayerHealthData {
         nbt.putInt("goodSleepTime", goodSleepTime);
         nbt.putBoolean("sleeping", sleeping);
         nbt.putString("curSleep", curSleep.name());
+        nbt.putFloat("terrifiedLevel", terrifiedLevel);
+        nbt.putFloat("focusedLevel", focusedLevel);
         nbt.putBoolean("ragdolled", isRagdolled);
 
         // Serialize limb data as a list
@@ -2248,7 +2262,6 @@ public class PlayerHealthData {
         temperature = nbt.getFloat("Temp");
         adrenaline = nbt.getFloat("Adrenaline");
         currentAdrenaline = nbt.getFloat("CurrentAdrenaline");
-        lifeSupportTimer = nbt.getInt("LifeSupport");
         leftEyeBlind = nbt.getBoolean("LeftEyeBlind");
         rightEyeBlind = nbt.getBoolean("RightEyeBlind");
         disfigured = nbt.getBoolean("MouthMissing");
@@ -2306,6 +2319,8 @@ public class PlayerHealthData {
         goodSleepTime = nbt.getInt("goodSleepTime");
         sleeping = nbt.getBoolean("sleeping");
         curSleep = nbt.contains("curSleep", Tag.TAG_STRING) ? SleepQuality.valueOf(nbt.getString("curSleep")) : SleepQuality.OKAY;
+        terrifiedLevel = nbt.getFloat("terrifiedLevel");
+        focusedLevel = nbt.getFloat("focusedLevel");
 
         ListTag limbList = nbt.getList("LimbStats", Tag.TAG_COMPOUND);
         CompoundTag limbTag;

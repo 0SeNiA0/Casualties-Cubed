@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
+import net.zaharenko424.casualties_cubed.CasualtiesCubedTags;
 
 public enum SleepQuality {
     BAD(Component.translatable("gui.casualties_cubed.sleep_quality.bad").withStyle(ChatFormatting.RED), 0.7f),
@@ -28,12 +29,10 @@ public enum SleepQuality {
 
         state = player.getBlockStateOn();
         if (state.getCollisionShape(player.level(), player.getOnPos()).isEmpty()) state = player.level().getBlockState(player.getOnPos().below());
-        if (state.is(BlockTags.BEDS) || state.is(BlockTags.WOOL)) {
-            return SleepQuality.GOOD;
-        } else if (state.is(BlockTags.WOOL_CARPETS)) {
-            return SleepQuality.OKAY;
-        }
 
-        return SleepQuality.BAD;
+        if (state.is(CasualtiesCubedTags.Block.SLEEP_GOOD)) return GOOD;
+        if (state.is(CasualtiesCubedTags.Block.SLEEP_OKAY)) return OKAY;
+
+        return state.is(CasualtiesCubedTags.Block.SLEEP_MEDIOCRE) ? MEDIOCRE : BAD;
     }
 }

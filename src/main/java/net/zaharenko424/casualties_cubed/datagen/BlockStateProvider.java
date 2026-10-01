@@ -1,19 +1,19 @@
 package net.zaharenko424.casualties_cubed.datagen;
 
-import net.minecraft.world.level.block.state.properties.Property;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.blocks.GlowFruitBushBlock;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
-import net.zaharenko424.casualties_cubed.blocks.ScavBlock;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.blocks.GlowFruitBushBlock;
+import net.zaharenko424.casualties_cubed.blocks.ExpiePlushyBlock;
 
 import static net.zaharenko424.casualties_cubed.registry.ModBlocks.*;
 
@@ -27,12 +27,32 @@ public class BlockStateProvider extends net.minecraftforge.client.model.generato
     protected void registerStatesAndModels() {
         simpleBlockWithItem(BROWN_CAP.get(), models().cross(BROWN_CAP.getId().toString(), blockTexture(BROWN_CAP.get())).renderType("cutout"));
         simpleBlockWithItem(MEDICAL_MIXER.get(), models().getExistingFile(MEDICAL_MIXER.getId()));
-        horizontalBlockWithItem(EXPIE_PLUSHY, ScavBlock.WATERLOGGED);
+        horizontalBlockWithItem(EXPIE_PLUSHY, ExpiePlushyBlock.WATERLOGGED);
         glowFruit();
+
+        simpleBlockWithItem(SCRAP_PILE);
+        simpleBlockWithItem(TRASH_PILE);
+        simpleBlockWithItem(STEEL_TILE);
+        simpleBlockWithItem(RUBBER);
+        simpleBlockWithItem(PLASTIC);
+        simpleBlockWithItem(HEAT_RESISTANT_ALLOY);
+        simpleBlockWithItem(MARBLE);
+        simpleBlockWithItem(LIMESTONE);
+        simpleBlockWithItem(TOXIROCK);
+        simpleBlockWithItem(COPPER);
+        simpleBlockWithItem(ILMENITE);
     }
 
     private static ResourceLocation blockLoc(ResourceLocation loc) {
         return ResourceLocation.fromNamespaceAndPath(loc.getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + loc.getPath());
+    }
+
+    private void simpleBlockWithItem(RegistryObject<? extends Block> block) {
+        simpleBlockWithItem(block.get(), cubeAll(block.get()));
+    }
+
+    private void simpleBlockWithItem(RegistryObject<? extends Block> block, String texture) {
+        simpleBlockWithItem(block.get(), models().cubeAll(block.getId().getPath(), blockLoc(ResourceLocation.fromNamespaceAndPath(CasualtiesCubed.MOD_ID, texture))));
     }
 
     private void glowFruit() {
@@ -40,7 +60,6 @@ public class BlockStateProvider extends net.minecraftforge.client.model.generato
             int age = state.getValue(GlowFruitBushBlock.AGE);
             return ConfiguredModel.builder().modelFile(models()
                     .cross(GLOW_FRUIT_BUSH.getId().toString() + age, CasualtiesCubed.resourceLoc(ModelProvider.BLOCK_FOLDER + "/glow_plant/glow_plant" + age)).renderType("cutout")).build();
-
         });
     }
 

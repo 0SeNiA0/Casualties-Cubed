@@ -15,6 +15,10 @@ public interface INbtDrivenDurability {
         return 100f;
     }
 
+    default boolean destroyOnZeroDurability() {
+        return true;
+    }
+
     default float getNbtDurability(ItemStack stack) {//Assume no tag == full durability
         if (!stack.hasTag()) return getMaxNbtDurability(stack);
 
@@ -32,9 +36,11 @@ public interface INbtDrivenDurability {
         float new_ = prev - value;
 
         if (new_ <= 0) {
-            stack.shrink(1);
-            tag.remove("Durability");
-            return;
+            if (destroyOnZeroDurability()) {
+                stack.shrink(1);
+                tag.remove("Durability");
+                return;
+            } else new_ = 0;
         }
 
         tag.putFloat("Durability", new_);

@@ -31,6 +31,19 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> BLOOD_VOMIT_WARNING = register("blood_vomit_warning");
     public static final RegistryObject<SoundEvent> VOMIT = register("vomit");
 
+    public static final RegistryObject<SoundEvent> SCRAP_PILE_HIT = register("scrap_pile_hit");
+    public static final RegistryObject<SoundEvent> SCRAP_PILE_STEP = register("scrap_pile_step");
+    public static final RegistryObject<SoundEvent> TRASH_PILE_HIT = register("trash_pile_hit");
+    public static final RegistryObject<SoundEvent> STEEL_HIT = register("steel_hit");
+    public static final RegistryObject<SoundEvent> STEEL_STEP = register("steel_step");
+    public static final RegistryObject<SoundEvent> RUBBER_HIT = register("rubber_hit");
+    public static final RegistryObject<SoundEvent> RUBBER_STEP = register("rubber_step");
+    public static final RegistryObject<SoundEvent> PLASTIC_STEP = register("plastic_step");
+    public static final RegistryObject<SoundEvent> ROCK_HIT = register("rock_hit");
+    public static final RegistryObject<SoundEvent> ROCK_STEP = register("rock_step");
+    public static final RegistryObject<SoundEvent> CRYSTAL_HIT = register("crystal_hit");
+    public static final RegistryObject<SoundEvent> CONCRETE_STEP = register("concrete_step");
+
     public static final RegistryObject<SoundEvent> BANDAGE_USE = register("bandage");
     public static final RegistryObject<SoundEvent> SYRINGE_USE = register("syringe");
     public static final RegistryObject<SoundEvent> SYRINGE_LOOP = register("syringe_loop");

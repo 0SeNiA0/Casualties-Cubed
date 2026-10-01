@@ -164,16 +164,17 @@ public class ClientEvent {
                 event.getInput().jumping = false;
                 event.getInput().up = false;
                 event.getInput().left = false;
-                event.getInput().leftImpulse= 0;
-                event.getInput().right =false;
+                event.getInput().leftImpulse = 0;
+                event.getInput().right = false;
                 event.getInput().shiftKeyDown = false;
             }
 
-            if (event.getInput().leftImpulse != 0 || event.getInput().forwardImpulse != 0 || event.getInput().jumping){
+            if (event.getInput().leftImpulse != 0 || event.getInput().forwardImpulse != 0 || event.getInput().jumping) {
                 ModNetwork.CHANNEL.sendToServer(new ServerboundLegUsePacket());
             }
         });
     }
+
     private static final ResourceLocation pain_tex = CasualtiesCubed.resourceLoc("textures/gui/icons/pain.png");
 
     @SubscribeEvent

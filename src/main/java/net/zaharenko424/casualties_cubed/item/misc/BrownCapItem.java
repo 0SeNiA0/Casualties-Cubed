@@ -3,8 +3,6 @@ package net.zaharenko424.casualties_cubed.item.misc;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
@@ -27,11 +25,6 @@ public class BrownCapItem extends BlockItem {
                         .saturationMod(1)
                         .alwaysEat()
                         .build()));
-    }
-
-    @Override
-    public SoundEvent getEatingSound() {
-        return SoundEvents.GENERIC_EAT;
     }
 
     @Override

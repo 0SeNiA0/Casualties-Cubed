@@ -66,9 +66,7 @@ public class MoodleManager {
         HEALTH_PANEL_BUTTON.tooltip(Component.translatable("tooltip.casualties_cubed.health_panel_button", Component.keybind(Keybinds.OPEN_PAIN_GUI.getName())));
         List<AbstractMoodle> tmp = new ArrayList<>();
 
-        tmp.add(new LifeSupportMoodle());//not in CU
-
-
+        tmp.add(new FocusedMoodle());
         tmp.add(new LastStandMoodle());
         tmp.add(new BrainHealthMoodle());
         tmp.add(new StrokeMoodle());

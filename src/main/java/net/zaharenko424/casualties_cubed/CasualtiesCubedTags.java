@@ -1,10 +1,22 @@
 package net.zaharenko424.casualties_cubed;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 
 public class CasualtiesCubedTags {
+
+    public static class Block {
+
+        public static final TagKey<net.minecraft.world.level.block.Block> SLEEP_MEDIOCRE = tag("sleep_mediocre");
+        public static final TagKey<net.minecraft.world.level.block.Block> SLEEP_OKAY = tag("sleep_okay");
+        public static final TagKey<net.minecraft.world.level.block.Block> SLEEP_GOOD = tag("sleep_good");
+
+        private static TagKey<net.minecraft.world.level.block.Block> tag(String name) {
+            return BlockTags.create(CasualtiesCubed.resourceLoc(name));
+        }
+    }
 
     public static class Item {
 

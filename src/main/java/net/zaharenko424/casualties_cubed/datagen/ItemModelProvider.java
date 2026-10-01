@@ -79,6 +79,10 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         basicItem(THERMOMETER);
         basicItem(TOURNIQUET);
         basicItem(TWEEZERS);
+
+        basicItem(SCRAP_METAL);
+        basicItem(CHUNK_OF_PLASTIC);
+        basicItem(ILMENITE_CHUNK);
     }
 
     protected void basicItem(RegistryObject<? extends Item> item) {
