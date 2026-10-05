@@ -4,9 +4,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +21,9 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
@@ -44,6 +49,7 @@ import net.minecraftforge.registries.MissingMappingsEvent;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.FoodAndDrinkCompat;
+import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
@@ -219,6 +225,24 @@ public class CommonEvent {
                 data.addSickness(foodEntry.sickness);
                 data.drink(foodEntry.thirst);
             });
+    }
+
+    @SubscribeEvent
+    public static void drinkFluid(PlayerInteractEvent.RightClickBlock event) {
+        Player player = event.getEntity();
+        if (!player.isCrouching() || !(player instanceof ServerPlayer sPlayer) || event.getHand() != InteractionHand.MAIN_HAND || !event.getItemStack().isEmpty()) return;
+
+        Level level = event.getLevel();
+        BlockHitResult result = level.clip(new ClipContext(player.getEyePosition(), event.getHitVec().getLocation(), ClipContext.Block.COLLIDER, ClipContext.Fluid.ANY, player));
+        if (result.getType() != HitResult.Type.BLOCK) return;
+
+        FluidState fluid = level.getFluidState(result.getBlockPos());
+        if (fluid.isEmpty()) return;
+
+        MedicalFluidType.ingest(sPlayer, 200, fluid.getType());
+        level.playSound(null, player, SoundEvents.GENERIC_DRINK, SoundSource.PLAYERS, 1, 1);
+        event.setCancellationResult(InteractionResult.SUCCESS);
+        event.setCanceled(true);
     }
 
     private static int blindnessRangePrev = 48;

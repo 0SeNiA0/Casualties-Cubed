@@ -27,7 +27,7 @@ public class MixinConfig implements IMixinConfigPlugin {
             return ModList.get().isLoaded("createbigcannons");
         }
 
-        if (s1.contains(".thirst.")){
+        if (s1.contains(".mixin.mod.thirst.")){
             return FMLLoader.getLoadingModList().getModFileById("thirst") != null;
         }
 
