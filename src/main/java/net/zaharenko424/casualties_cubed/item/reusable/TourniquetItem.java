@@ -19,7 +19,7 @@ public class TourniquetItem extends ItemWithDescription implements ISimpleMedica
 
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
-        if (limb == Limb.THORAX) return;
+        if (limb == Limb.THORAX || limb == Limb.ABDOMEN) return;
         target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
             LimbStatistics stats = data.getLimb(limb);
             if (stats.isTourniquet()) return;
