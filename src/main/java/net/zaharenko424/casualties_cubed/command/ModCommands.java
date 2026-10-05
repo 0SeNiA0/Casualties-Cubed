@@ -178,6 +178,8 @@ public class ModCommands {
                                                     builder.suggest("leftEyeBlind");
                                                     builder.suggest("rightEyeBlind");
                                                     builder.suggest("disfigured");
+                                                    builder.suggest("thirst");
+                                                    builder.suggest("hunger");
                                                     return builder.buildFuture();
                                                 })
                                                 .then(Commands.argument("value", FloatArgumentType.floatArg())
@@ -206,6 +208,8 @@ public class ModCommands {
                                                                     case "rightEyeBlind" ->
                                                                             h.setRightEyeBlind(value > 0);
                                                                     case "disfigured" -> h.disfigured(value > 0);
+                                                                    case "thirst" -> h.thirst(value);
+                                                                    case "hunger" -> h.hunger(value);
                                                                     default ->
                                                                             ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", field));
                                                                 }

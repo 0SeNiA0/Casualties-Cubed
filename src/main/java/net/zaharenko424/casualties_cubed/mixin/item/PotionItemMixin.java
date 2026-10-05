@@ -7,6 +7,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.ModList;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,6 +20,8 @@ public abstract class PotionItemMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/critereon/ConsumeItemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;)V"),
             method = "finishUsingItem")
     private void drink(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, CallbackInfoReturnable<ItemStack> cir) {
+        if (ModList.get().isLoaded("thirst")) return;
+
         if (!(pEntityLiving instanceof ServerPlayer player) || player.getAbilities().invulnerable) return;
 
         PlayerHealthData.of(player).ifPresent(data -> {

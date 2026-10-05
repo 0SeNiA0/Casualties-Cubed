@@ -373,16 +373,24 @@ public class PlayerHealthData {
         return thirst;
     }
 
+    public void thirst(float thirst) {
+        this.thirst = Mth.clamp(thirst, -50, 250);
+    }
+
     public void drink(float thirst) {
-        this.thirst = Mth.clamp(this.thirst + thirst, -50, 250);
+        thirst(this.thirst + thirst);
     }
 
     public float hunger() {
         return hunger;
     }
 
+    public void hunger(float hunger) {
+        this.hunger = Mth.clamp(hunger, -50, 125);
+    }
+
     public void addHunger(float hunger) {
-        this.hunger = Mth.clamp(this.hunger + hunger, -50, 125);
+        hunger(this.hunger + hunger);
     }
 
     public void eat(ServerPlayer player, float hungerAmount, float weightGain) {
