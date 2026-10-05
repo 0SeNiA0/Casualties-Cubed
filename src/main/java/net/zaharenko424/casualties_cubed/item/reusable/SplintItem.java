@@ -20,7 +20,7 @@ public class SplintItem extends ItemWithDescription implements ISimpleMedicalUsa
 
     @Override
     public void onMedicalUse(ServerPlayer source, ServerPlayer target, Limb limb, ItemStack stack) {
-        if (limb != Limb.THORAX) {
+        if (limb != Limb.THORAX && limb != Limb.ABDOMEN) {
             target.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
                 LimbStatistics stats = data.getLimb(limb);
                 if (!stats.hasSplint()) {

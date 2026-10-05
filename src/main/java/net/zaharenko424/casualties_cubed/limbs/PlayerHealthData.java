@@ -681,11 +681,11 @@ public class PlayerHealthData {
 
     ///Checks whether the limb is below a limb with tourniquet
     public boolean isUnderTourniquet(Limb limb) {
-        if (limb == Limb.THORAX) return false;
+        if (limb == Limb.THORAX || limb == Limb.ABDOMEN) return false;
 
         limb = limb.getConnectedTo();
 
-        while (limb != Limb.THORAX) {
+        while (limb != Limb.THORAX && limb != Limb.ABDOMEN) {
             if (getLimb(limb).isTourniquet()) return true;
             limb = limb.getConnectedTo();
         }
