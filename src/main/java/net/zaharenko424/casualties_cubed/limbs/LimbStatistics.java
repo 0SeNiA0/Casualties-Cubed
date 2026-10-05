@@ -16,6 +16,7 @@ public class LimbStatistics {
     private static final float muscleDeathThreshold = 5;
 
     private final PlayerHealthData data;
+    private final Limb limb;
 
     private float skinHealth = 100f;
     private float skinHealAmount;
@@ -46,8 +47,9 @@ public class LimbStatistics {
 
     public final float infectionSpeedMult = 1;
 
-    LimbStatistics(PlayerHealthData data){
+    LimbStatistics(PlayerHealthData data, Limb limb){
         this.data = data;
+        this.limb = limb;
     }
 
     public float getSkinHealth() {
@@ -247,6 +249,10 @@ public class LimbStatistics {
         syncNeeded = true;
     }
 
+    public float totalBleedRate() {
+        return isTourniquet() || data.isUnderTourniquet(limb) ? 0 : bleedRate;
+    }
+
     public float bandageSlowAmount() {
         return bandageSlowAmount;
     }
@@ -394,7 +400,7 @@ public class LimbStatistics {
         return true;
     }
 
-    void update(ServerPlayer player, Limb limb) {
+    void update(ServerPlayer player) {
         if (isAmputated()) return;
 
         if (burn >= 100 && ServerConfig.PERMANENT_DAMAGE.get()) {
@@ -404,7 +410,7 @@ public class LimbStatistics {
 
         if (burn > 0) burn -= Math.min(burn, 0.1f * Util.TICK_TO_SEC);// 0.1/s -> 100 to 0 in ~16min
 
-        data.bloodVolume(data.bloodVolume() - bleedRate * Util.TICK_TO_SEC);
+        data.bloodVolume(data.bloodVolume() - totalBleedRate() * Util.TICK_TO_SEC);
 
         float newPain = 15 - skinHealth * 0.15f + infection * 0.1f;
         pain(Util.moveTowards(pain > newPain ? Util.TICK_TO_SEC : Util.TICK_TO_SEC * 0.6f, pain, newPain));
@@ -470,6 +476,8 @@ public class LimbStatistics {
         if (muscleHealth <= muscleDeathThreshold) {
             if (limb == Limb.THORAX) {
                 data.respiratoryRate(0);
+            }
+            if (limb == Limb.ABDOMEN) {
                 data.internalBleeding(data.internalBleeding() + Util.CUBloodPointsToL(0.2f) * Util.TICK_TO_SEC);
             }
         }

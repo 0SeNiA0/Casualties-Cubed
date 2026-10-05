@@ -172,7 +172,7 @@ public class PlayerHealthData {
 
     public PlayerHealthData() {
         for (Limb limb : Limb.values()) {
-            limbStats.put(limb, new LimbStatistics(this));
+            limbStats.put(limb, new LimbStatistics(this, limb));
         }
     }
 
@@ -480,7 +480,7 @@ public class PlayerHealthData {
     }
 
     public LimbStatistics getLimb(Limb limb) {
-        return limbStats.computeIfAbsent(limb, l -> new LimbStatistics(this));
+        return limbStats.computeIfAbsent(limb, l -> new LimbStatistics(this, limb));
     }
 
     public boolean isAmputated(Limb limb) {
@@ -881,7 +881,7 @@ public class PlayerHealthData {
             stats = getLimb(limb);
             if (stats.isAmputated()) continue;
 
-            stats.update(player, limb);
+            stats.update(player);
 
             if (!stats.isTourniquet() && !isUnderTourniquet(limb)) totalBleedSpeed += stats.bleedRate();
             averagePain = Math.max(stats.pain() - currentAdrenaline * 0.5f, averagePain);
@@ -1887,7 +1887,7 @@ public class PlayerHealthData {
         // clear & repopulate limb stats with fresh defaults
         limbStats.clear();
         for (Limb limb : Limb.values()) {
-            limbStats.put(limb, new LimbStatistics(this));
+            limbStats.put(limb, new LimbStatistics(this, limb));
         }
 
         effects.clear();
@@ -2337,7 +2337,7 @@ public class PlayerHealthData {
 
             // ✅ Get existing stats or create if missing
             limbStats.computeIfAbsent(Limb.valueOf(maybeFixLimb(limbTag.getString("LimbName"))),
-                    k -> new LimbStatistics(this)).load(limbTag);
+                    k -> new LimbStatistics(this, k)).load(limbTag);
         }
     }
 
@@ -2358,7 +2358,7 @@ public class PlayerHealthData {
         for (Tag tag : list) {
             limbTag = (CompoundTag) tag;
             limbStats.computeIfAbsent(Limb.valueOf(limbTag.getString("LimbName")),
-                    k -> new LimbStatistics(this)).setAmputated(limbTag.getBoolean("Amputated"));
+                    k -> new LimbStatistics(this, k)).setAmputated(limbTag.getBoolean("Amputated"));
         }
     }
 
