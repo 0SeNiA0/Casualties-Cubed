@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
 import net.zaharenko424.casualties_cubed.util.ColorUtil;
@@ -35,7 +36,7 @@ public class ThermometerItem extends ItemWithDescription {
                 float ambientTemp = h.getAmbientTemperature(player);
                 float temperatureScale = Mth.clamp((ambientTemp - 27) / 15, 0, 1);
                 int color = ColorUtil.gradient(temperatureScale, 0x242bff, 0xff3624);
-                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(Component.translatable("casualties_cubed.gui.temperature_celsius", String.format("%.1f", ambientTemp)).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(ClientConfig.TEMPERATURE_UNIT.get().compFunc.get(ambientTemp).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
                 player.displayClientMessage(colorText, true);
             });
         }

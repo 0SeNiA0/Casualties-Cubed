@@ -12,6 +12,7 @@ public class ClientConfig {
 
     public static final ForgeConfigSpec.BooleanValue NO_MINIGAME_CURSOR;
     public static final ForgeConfigSpec.IntValue UI_GLOW_COLOR;
+    public static final ForgeConfigSpec.EnumValue<TempUnit> TEMPERATURE_UNIT;
 
     static {
         ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -32,6 +33,10 @@ public class ClientConfig {
         UI_GLOW_COLOR = BUILDER
                 .comment("Glow color for health screen.")
                 .defineInRange("uiGlowColor", FastColor.ARGB32.color(255, 47, 224, 129), Integer.MIN_VALUE, Integer.MAX_VALUE);
+
+        TEMPERATURE_UNIT = BUILDER
+                .comment("Unit of temperature.")
+                .defineEnum("temperatureUnit", TempUnit.C);
 
         BUILDER.pop();
         SPEC = BUILDER.build();

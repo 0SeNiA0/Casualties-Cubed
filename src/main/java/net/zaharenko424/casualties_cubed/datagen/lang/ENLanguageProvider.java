@@ -229,15 +229,11 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("fluid_amount", "%1$sml");
         addGuiO("hud.oxygen", "O₂ %1$s%%");
         addGuiO("hud.pain", "%1$s%%");
-        addGuiO("health.conscious", "CONSCIOUS");
-        addGuiO("health.pain_percent", "%1$s%% PAIN");
-        addGuiO("health.skin", "SKIN");
-        addGuiO("health.muscle", "MUSCLE");
-        addGuiO("health.fracture_short", "FRACT");
-        addGuiO("health.dislocation_short", "DISL");
         addGuiO("health.blood_volume", "%1$sL");
         addGuiO("health.bleed_rate", "%1$sL/m");
-        addGuiO("temperature_celsius", "%1$sC");
+        addGui("temp_unit.c", "%1$s°c");
+        addGui("temp_unit.f", "%1$s°f");
+        addGui("temp_unit.k", "%1$sk");
 
         addContainer("looting", "Looting %1$s");
 
