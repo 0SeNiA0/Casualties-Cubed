@@ -1300,6 +1300,7 @@ public class PlayerHealthData {
             if (bloodPressure > newPressure + 5) {
                 heartRatePressureOffset -= Util.TICK_TO_SEC * 1.5f;
             }
+            heartRatePressureOffset = Mth.clamp(heartRatePressureOffset, -30, 80);
 
             newHeartRate += heartRatePressureOffset;
             newHeartRate += fibrillationProgress;
