@@ -73,6 +73,8 @@ public class ClientEvent {
         event.setCanceled(true);
     }
 
+    private static boolean lastHeartBeating = true;
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.ClientTickEvent event){
         Minecraft mc = Minecraft.getInstance();
@@ -91,6 +93,11 @@ public class ClientEvent {
             profiler.pop();
             return;
         }
+
+        if (lastHeartBeating && data.chip().isActive() && data.isCardiacArrest()) {
+            player.playSound(ModSounds.FLATLINE.get(), 0.8f, 1);
+        }
+        lastHeartBeating = !data.isCardiacArrest();
 
         if (Keybinds.OPEN_PAIN_GUI.isDown() && data.isConscious()) {
             Keybinds.OPEN_PAIN_GUI.consumeClick();

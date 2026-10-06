@@ -646,6 +646,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addSound(ModSounds.VOMIT_WARNING, "Vomit incoming");
         addSound(ModSounds.BLOOD_VOMIT_WARNING, "Blood vomit incoming");
         addSound(ModSounds.VOMIT, "Vomiting");
+        addSound(ModSounds.FLATLINE, "Cardiac arrest");
         addSound(ModSounds.SCRAP_PILE_HIT, "Scrap pile hit");
         addSound(ModSounds.SCRAP_PILE_STEP, "Scrap pile stepped on");
         addSound(ModSounds.TRASH_PILE_HIT, "Trash pile hit");

@@ -30,6 +30,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> VOMIT_WARNING = register("vomit_warning");
     public static final RegistryObject<SoundEvent> BLOOD_VOMIT_WARNING = register("blood_vomit_warning");
     public static final RegistryObject<SoundEvent> VOMIT = register("vomit");
+    public static final RegistryObject<SoundEvent> FLATLINE = register("flatline");
 
     public static final RegistryObject<SoundEvent> SCRAP_PILE_HIT = register("scrap_pile_hit");
     public static final RegistryObject<SoundEvent> SCRAP_PILE_STEP = register("scrap_pile_step");

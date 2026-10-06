@@ -43,6 +43,7 @@ public class SoundProvider extends SoundDefinitionsProvider {
         addSimpleSound(VOMIT_WARNING);
         addSimpleSound(BLOOD_VOMIT_WARNING);
         addSound(VOMIT, "vomit_1", "vomit_2");
+        addSimpleSound(FLATLINE);
 
         addSimpleSound(SCRAP_PILE_HIT);
         addSound(SCRAP_PILE_STEP, "scrap_pile/step_1", "scrap_pile/step_2", "scrap_pile/step_3", "scrap_pile/step_4",

@@ -67,6 +67,7 @@ public class MoodleManager {
         List<AbstractMoodle> tmp = new ArrayList<>();
 
         tmp.add(new FocusedMoodle());
+        //heart rate non-chipped only
         tmp.add(new LastStandMoodle());
         tmp.add(new BrainHealthMoodle());
         tmp.add(new StrokeMoodle());
