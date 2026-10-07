@@ -83,7 +83,7 @@ public class Vomiter {
         data.temporarySlowdown = Math.max(data.temporarySlowdown, 0.95f);
 
         player.serverLevel().playSound(null, player,ModSounds.VOMIT.get(), SoundSource.PLAYERS, 1, 1);
-        if (player.isSleeping()) {//if sleeping without pills wake up
+        if (player.isSleeping() && !data.sleepingPills.isActive()) {
             player.stopSleeping();
         }
 
@@ -112,7 +112,7 @@ public class Vomiter {
         data.bloodVolume(data.bloodVolume() - Util.CU_BLOOD_POINT_AS_L);
 
         player.serverLevel().playSound(null, player,ModSounds.VOMIT.get(), SoundSource.PLAYERS, 1, 1);
-        if (player.isSleeping()) {//if sleeping without pills wake up
+        if (player.isSleeping() && !data.sleepingPills.isActive()) {
             player.stopSleeping();
         }
 

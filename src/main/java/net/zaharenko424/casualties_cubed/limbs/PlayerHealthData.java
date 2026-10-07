@@ -136,6 +136,7 @@ public class PlayerHealthData {
     private float stamina = 100;
     private float happiness = 0;
     float opiateHappiness = 0;
+    float antidepressantHappiness = 0;
     private float trauma = 0;
     private float radiationSickness = 0;
     private float weightOffset = 0;
@@ -147,8 +148,11 @@ public class PlayerHealthData {
     private float terrifiedLevel;
     private float focusedLevel;
 
+    public final Antidepressants antidepressants = new Antidepressants(this);
     public final Painkillers painkillers = new Painkillers(this);
     public final Vomiter vomiter = new Vomiter(this);
+    public final Mindwipe mindwipe = new Mindwipe(this);
+    public final SleepingPills sleepingPills = new SleepingPills(this);
     public final Skills skills = new Skills();
 
     private final List<TimedEffect> effects = new ArrayList<>();
@@ -516,8 +520,12 @@ public class PlayerHealthData {
         return strokeAmount;
     }
 
+    public void strokeAmount(float strokeAmount) {
+        this.strokeAmount = Mth.clamp(strokeAmount, 0, 100);
+    }
+
     public void addStrokeAmount(float amount) {
-        strokeAmount = Mth.clamp(strokeAmount + amount, 0, 100);
+        strokeAmount(this.strokeAmount + amount);
     }
 
     public boolean isCardiacArrest() {
@@ -608,16 +616,29 @@ public class PlayerHealthData {
         return happiness;
     }
 
+    public void happiness(float happiness) {
+        this.happiness = Mth.clamp(happiness, -100, 100);
+    }
+
     public void addHappiness(float happiness) {
-        this.happiness = Mth.clamp(this.happiness + happiness, -100, 100);
+        happiness(this.happiness + happiness);
     }
 
     public float totalHappiness() {
+        if (mindwipe.isActive()) return 0;
         return Mth.clamp(happiness - ((happiness < -50f) ? (totalBleedSpeed * 15f) : 0f) - averagePain * 0.1f
                 - sickness * 0.1f - (1f - Mth.clamp(hunger * 0.01f + 0.6f, 0, 1)) * 18f - (1f
                 - Mth.clamp(Math.min(thirst, 100f) * 0.01f + 0.6f, 0, 1)) * 18f - radiationSickness * 0.1f
                 - hearingLoss * 0.2f - (100f - Math.min((bloodVolume - 2.5f) / Util.CU_BLOOD_POINT_AS_L, 100f)) * 0.2f - trauma * 0.525f
-                - wetness * 0.05f + opiateHappiness, -100f, 100f);
+                - wetness * 0.05f + opiateHappiness + antidepressantHappiness, -100f, 100f);
+    }//TODO potentially move opiate/antidepressant happiness into Painkillers/Antidepressans
+
+    public float trauma() {
+        return trauma;
+    }
+
+    public void trauma(float trauma) {
+        this.trauma = trauma;
     }
 
     public float radiationSickness() {
@@ -709,7 +730,7 @@ public class PlayerHealthData {
     }
 
     public boolean canTakeNap() {
-        return (this.energy < 35f && averagePain < 31f && sickness < 80f)/* || sleeping pills*/
+        return (this.energy < 35f && averagePain < 31f && sickness < 80f) || sleepingPills.isActive()
                 || ServerConfig.NO_SLEEP_RESTRICTIONS.get();
     }
 
@@ -751,6 +772,7 @@ public class PlayerHealthData {
             return;
         }
 
+        antidepressants.update();
         painkillers.update(player);
         updateTimedEffects(player);
         updateSleepQuality(player);
@@ -767,6 +789,8 @@ public class PlayerHealthData {
         //--
 
         vomiter.update(player);
+        mindwipe.update(player);
+        sleepingPills.update(player);
         maybeRegrowLimbs(player);
         applyPenalties(player);
 
@@ -1014,8 +1038,8 @@ public class PlayerHealthData {
         if (isSleeping(player) && (energy >= 99 || (curSleep == SleepQuality.MEDIOCRE && energy >= 85)
                 || (curSleep == SleepQuality.BAD && energy > 70) || (energy > 1 && averagePain > 31) || (sickness > 55 && energy > 40)
                 || (energy > 50 && (totalHappiness() < -50 || hunger < 35 || thirst < 35 || sepsis > 35 || temperature < 30 || temperature > 40.5f))
-                || (energy > 4 && player.isInFluidType()) || temperature < 30) && (energy > 99 || !ServerConfig.NO_SLEEP_RESTRICTIONS.get())) {
-            //TODO sleeping pills
+                || (energy > 4 && player.isInFluidType()) || temperature < 30)
+                && (energy > 99 || (!sleepingPills.isActive() && !ServerConfig.NO_SLEEP_RESTRICTIONS.get()))) {
             wakeUp(player);
         }
 
@@ -1163,7 +1187,9 @@ public class PlayerHealthData {
             stats.bleedRate(stats.bleedRate() * 0.05f);
         }
 
+        antidepressants.reset();
         painkillers.reset();
+        sleepingPills.reset();
         effects.clear();
 
         ModNetwork.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new ClientboundTriggerLastStandPacket());
@@ -1926,6 +1952,7 @@ public class PlayerHealthData {
         badSleepAmount = 0;
         hearingLoss = 0;
         opiateHappiness = 0;
+        antidepressantHappiness = 0;
         antibioticTimer = 0;
         brainGrowSickness = 0;
         triedRollingLastStand = false;
@@ -1937,9 +1964,11 @@ public class PlayerHealthData {
         bloodPressureChangeFromMedicine = 0;
         caffeinated = 0;
 
+        antidepressants.reset();
         painkillers.reset();
         vomiter.reset();
-
+        mindwipe.reset();
+        sleepingPills.reset();
 
         isRagdolled = false;
         stability = 100;
@@ -2174,8 +2203,11 @@ public class PlayerHealthData {
         nbt.putFloat("bleedingSpeedMultiplier", bleedingSpeedMultiplier);
         nbt.putFloat("currentImmunityMult", currentImmunityMult);
 
+        nbt.put("antidepressants", antidepressants.save());
         nbt.put("painkillers", painkillers.save());
         nbt.put("vomiter", vomiter.save());
+        nbt.put("mindwipe", mindwipe.save());
+        nbt.put("sleepingPills", sleepingPills.save());
         nbt.put("skills", skills.save());
 
         nbt.putInt("overdoseIndex", overdoseIndex);
@@ -2186,6 +2218,7 @@ public class PlayerHealthData {
         nbt.putFloat("stamina", stamina);
         nbt.putFloat("happiness", happiness);
         nbt.putFloat("opiateHappiness", opiateHappiness);
+        nbt.putFloat("antidepressantHappiness", antidepressantHappiness);
         nbt.putFloat("trauma", trauma);
         nbt.putFloat("radiationSickness", radiationSickness);
         nbt.putFloat("weightOffset", weightOffset);
@@ -2309,8 +2342,11 @@ public class PlayerHealthData {
         bleedingSpeedMultiplier = nbt.getFloat("bleedingSpeedMultiplier");
         currentImmunityMult = nbt.getFloat("currentImmunityMult");
 
+        antidepressants.load(nbt.getCompound("antidepressants"));
         painkillers.load(nbt.getCompound("painkillers"));
         vomiter.load(nbt.getCompound("vomiter"));
+        mindwipe.load(nbt.getCompound("mindwipe"));
+        sleepingPills.load(nbt.getCompound("sleepingPills"));
         skills.load(nbt.getCompound("skills"));
 
         overdoseIndex = nbt.getInt("overdoseIndex");
@@ -2321,6 +2357,7 @@ public class PlayerHealthData {
         if (nbt.contains("stamina")) stamina = nbt.getFloat("stamina");
         happiness = nbt.getFloat("happiness");
         opiateHappiness = nbt.getFloat("opiateHappiness");
+        antidepressantHappiness = nbt.getFloat("antidepressantHappiness");
         trauma = nbt.getFloat("trauma");
         radiationSickness = nbt.getFloat("radiationSickness");
         weightOffset = nbt.getFloat("weightOffset");

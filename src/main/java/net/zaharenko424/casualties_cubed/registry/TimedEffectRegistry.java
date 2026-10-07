@@ -101,6 +101,18 @@ public class TimedEffectRegistry {
             }
     );
 
+    public static final RegistryObject<TimedEffectFunction> ANTIRAD = TIMED_EFFECTS.register("antirad", () ->
+            (player, data, effect) -> {
+                data.addRadiationSickness(-0.2f);
+
+                if (effect.duration() > 180) {
+                    data.addSickness(0.6f);
+                    data.getLimb(Limb.THORAX).addPain(1.5f);
+                    data.overdoseIndex(3);
+                }
+            }
+    );
+
     public static final RegistryObject<TimedEffectFunction> PROCOAGULANT = TIMED_EFFECTS.register("procoagulant", () ->
             (player, data, effect) -> {
                 data.internalBleeding(data.internalBleeding() * 0.95f);

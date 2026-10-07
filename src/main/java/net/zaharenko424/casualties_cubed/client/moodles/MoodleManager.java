@@ -124,7 +124,7 @@ public class MoodleManager {
         tmp.add(new AmputatedMoodle());
         tmp.add(new BlindMoodle());
         tmp.add(new AdrenalineMoodle());
-        //hollow
+        tmp.add(new HollowMoodle());
 
         MinecraftForge.EVENT_BUS.post(new RegisterMoodlesEvent(tmp));
 

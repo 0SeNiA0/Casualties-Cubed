@@ -171,9 +171,14 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "Mix of chemicals and drugs that instantly relieves pain and disinfects wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.WOUND_GLUE, "A hemostatic, antibiotic glue-like substance. Fights infection, promotes healing and is very effective at sealing bleeding wounds. Might cause circulation problems - use with care.");
         addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special orally-taken medicine that stimulates brain regrowth. Increases brain integrity, but often has serious side effects.");
+        addMedicalFluidFromIdWDesc(ModFluids.MINDWIPE, "Specially synthetised drug which completely wipes the brain of most of its memories and past traumas, leaving only a blank emotionless vessel with basic knowledge and survival instincts. Commonly used as a last resort on subjects which are too far gone to function or are at risk of suicide. May also cure cases of moderate-to-severe brain damage. The effect is permanent without extensive rehabilitation. Use as a last resort.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTIDEPRESSANTS, "Potent antidepressant pills. Makes you feel everything less for some time, and slowly increases happiness. Might have side effects.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIBIOTICS, "Pills which increase your immunity for some time, counteracting all infections. Upsetting taste.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies to fight off most common infections. Increases immunity and helps reduce sepsis. Slightly increases blood volume.");
+        addMedicalFluidFromIdWDesc(ModFluids.KERATIN_BOOSTER, "A modified growth hormone that specifically targets keratin in order to encourage its growth. Makes your claws regrow faster for a while.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTIRAD, "Experimental medicine that directly reduces the effects of radiation sickness when taken. Will require higher dosage for severe illness.");
+        addMedicalFluidFromIdWDesc(ModFluids.SLEEPING_PILLS, "Potent sleeping pills. Lets you sleep in bad physical condition. Don't combine with opioids.");
         addMedicalFluidFromIdWDesc(ModFluids.PROCOAGULANT, "Chemical which promotes blood clotting. Globally slows down blood loss, including internal bleeding. Will cause complications if overused.");
         addMedicalFluidFromIdWDesc(ModFluids.EPINEPHRINE, "Pure adrenaline. Reduces pain for a while and has a low chance to restart the heart if it stops. Going over 40ml will cause fibrillation.");
         addMedicalFluidFromIdWDesc(ModFluids.OXYLINE, "Synthesized reagent that quickly reoxygenates the bloodstream when injected, also stabilizing fibrillation and promoting hemoglobin production. Has explosive tendencies when mixed with stomach acid.");
@@ -182,6 +187,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.AMIODARONE, "An antiarrhythmic medication used to treat and prevent fibrillation from occurring. Will cause most arrhythmias to slowly regress, but causes mild internal damage. Only works intravenously. 20ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "Blood thinner. Strongly reduces blood viscosity and breaks down clots.");
         addMedicalFluidFromIdWDesc(ModFluids.SALINE, "Mixture of salt and water, often used in treating hypovolemia and thirst.");
+        addMedicalFluidWDesc(ModFluids.RINGER_SOLUTION, "Ringer's Solution", "Solution of several salts dissolved in water for the purpose of creating an isotonic solution relative to the body fluids of an animal. Good for thirst and blood loss.");
         addMedicalFluidFromIdWDesc(ModFluids.YELLOW_BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.RED_BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.ALIEN_BLOOD, "Yellow blood from an alien. Shouldn't be too bad to use as replacement blood, though.");
@@ -600,6 +606,8 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("sound_loss.description2", "Everything sounds very muffled and echo-y. You feel irritated. This may take a bit.");
         addMoodleO("sound_loss.title3", "Severe hearing loss");
         addMoodleO("sound_loss.description3", "You can barely hear anything. You feel very irritated. Your ears will take a good while to improve.");
+
+        addMoodle("hollow.title", "Hollow");
 
         add(modid + ".multi_tank.hint", "Press SHIFT for fluid description");
 

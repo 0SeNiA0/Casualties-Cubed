@@ -820,13 +820,34 @@ public class MedicalEffects {
                 if (data.brainGrowSickness() > 0 || ml > 40) {
                     data.shock(0.5f * ml);
                     data.ragdoll(player);
-                    //mindwipe
+                    data.mindwipe.start();
                 }
                 data.brainGrowSickness(60 * ml);
 
                 if (player.getRandom().nextFloat() < ml / 20) {
                     data.vomiter.vomit(player);
                 }
+            });
+        }
+    };
+
+    public static final MedicalEffect MINDWIPE = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.mindwipe.start();
+            });
+        }
+    };
+
+    public static final MedicalEffect ANTIDEPRESSANTS = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.antidepressants.add(player, 5 * ml);
+                data.addHappiness(0.05f * ml);
             });
         }
     };
@@ -892,6 +913,55 @@ public class MedicalEffects {
 
                     stats.disinfectionTimerAtLeast(150 * disinfect);
                 }
+            });
+        }
+    };
+
+    public static final MedicalEffect KERATIN_BOOSTER = new MedicalEffect() {//TODO finish keratin booster
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                /*float num61 = ml * 0.02f;
+                if (data.clawRegrowTime > 3600f) {
+                    data.addSickness(num61 * 10f);
+                    data.clawRegrowTime += 1200f * num61 * 0.1f;
+                    return;
+                }
+                data.clawRegrowTime += 1200f * num61;*/
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                /*float mlScaled = ml * 0.02f;
+                if (data.clawRegrowTime > 3600f) {
+                    data.addSickness(mlScaled * 10f);
+                    data.clawRegrowTime += 1400f * mlScaled * 0.1f;
+                    return;
+                }
+                data.clawRegrowTime += 1400f * mlScaled;*/
+            });
+        }
+    };
+
+    public static final MedicalEffect ANTIRAD = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.addTimedEffect(TimedEffectRegistry.ANTIRAD, ml, null, 90 / 20f * ml);
+            });
+        }
+    };
+
+    public static final MedicalEffect SLEEPING_PILLS = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                data.sleepingPills.add(60 * ml);
             });
         }
     };
@@ -1037,6 +1107,29 @@ public class MedicalEffects {
                 data.bloodVolume(data.bloodVolume() + ml * 0.001f);
                 data.bloodViscosity(data.bloodViscosity() - 50 * mlScaled);
                 data.drink(70 * mlScaled);
+            });
+        }
+    };
+
+    public static final MedicalEffect RINGER_SOLUTION = new MedicalEffect() {
+
+        @Override
+        public void applyIngested(ServerPlayer player, float ml) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                float mlScaled = ml / 700;
+                data.drink(60 * mlScaled);
+                data.addSickness(24 * mlScaled);
+                data.addHappiness(-4 * mlScaled);
+            });
+        }
+
+        @Override
+        public void applyInjected(ServerPlayer player, float ml, Limb limb) {
+            player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).ifPresent(data -> {
+                float mlScaled = ml / 700;
+                data.bloodVolume(data.bloodVolume() + ml * 0.001f);
+                data.bloodViscosity(data.bloodViscosity() - 40 * mlScaled);
+                data.drink(60 * mlScaled);
             });
         }
     };
