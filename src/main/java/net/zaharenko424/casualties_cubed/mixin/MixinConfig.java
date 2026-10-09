@@ -1,6 +1,7 @@
 package net.zaharenko424.casualties_cubed.mixin;
 
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -25,6 +26,11 @@ public class MixinConfig implements IMixinConfigPlugin {
         if (s1.contains("CBC")){
             return ModList.get().isLoaded("createbigcannons");
         }
+
+        if (s1.contains(".mixin.mod.thirst.")){
+            return FMLLoader.getLoadingModList().getModFileById("thirst") != null;
+        }
+
         return true;
     }
 

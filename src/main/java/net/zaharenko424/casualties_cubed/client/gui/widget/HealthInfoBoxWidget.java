@@ -180,7 +180,7 @@ public class HealthInfoBoxWidget extends AbstractWidget {
         renderFlashingText(immunityText, guiGraphics, glowColor, data.immunity() < 50);
 
         renderTintedFilledImage(thermometerBarImg, guiGraphics, partialTick, glowColor, (data.temperature() - 28) * 0.08f);
-        temperatureText.component(Component.literal(String.format("%.1f", data.temperature()) + "°c"));
+        temperatureText.component(ClientConfig.TEMPERATURE_UNIT.get().compFunc.get(data.temperature()));
         renderFlashingText(temperatureText, guiGraphics, glowColor, data.temperature() < 30 || data.temperature() > 41);
 
         renderTintedFilledImage(waterBarImg, guiGraphics, partialTick, glowColor, data.thirst() * 0.01f);

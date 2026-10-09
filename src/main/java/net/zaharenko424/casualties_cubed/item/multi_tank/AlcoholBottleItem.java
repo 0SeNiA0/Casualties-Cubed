@@ -6,11 +6,6 @@ import net.zaharenko424.casualties_cubed.registry.ModFluids;
 public class AlcoholBottleItem extends BottleItem {
 
     @Override
-    public int getCapacity() {
-        return 500;
-    }
-
-    @Override
     public ItemStack withDefFluid() {
         return withFluid(ModFluids.ALCOHOL);
     }

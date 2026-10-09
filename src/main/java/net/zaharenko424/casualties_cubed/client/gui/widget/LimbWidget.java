@@ -318,14 +318,13 @@ public class LimbWidget extends AbstractWidget {
         setBorder_red(1 - (stats.getSkinHealth() / 100f));
         setBase_red(1 - (stats.muscleHealth() / 100f));
 
-        float bleed = stats.bleedRate();
-        boolean isBleeding = bleed > 0 && !stats.isTourniquet() && !data.isUnderTourniquet(limb);
-        if (isBleeding) {
+        float bleed = stats.totalBleedRate();
+        if (bleed > 0) {
             float scale = Math.max(0.9f, (bleed / LimbStatistics.MAX_BLEED_RATE / 60) * 2.5f);
             setScaleOf(StatusSprites.BLEED, scale);
         }
 
-        setSubSpriteVisible(StatusSprites.BLEED, isBleeding);
+        setSubSpriteVisible(StatusSprites.BLEED, bleed > 0);
         setSubSpriteVisible(StatusSprites.DISINFECTION, stats.disinfectionTime() > 0);
         setSubSpriteVisible(StatusSprites.FRACTURE, stats.boneHealTimer() > 0);
         setSubSpriteVisible(StatusSprites.INFECTION, stats.infection() > 25);

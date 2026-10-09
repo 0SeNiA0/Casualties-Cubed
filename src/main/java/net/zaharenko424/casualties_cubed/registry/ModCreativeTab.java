@@ -15,11 +15,23 @@ public class ModCreativeTab {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CasualtiesCubed.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> YOUR_TAB = CREATIVE_TABS.register("main",
+    public static final RegistryObject<CreativeModeTab> MAIN_TAB = CREATIVE_TABS.register("main",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.casualties_cubed_tab")) // lang key
                     .icon(() -> new ItemStack(DRESSING.get())) // icon for the tab
                     .displayItems((parameters, output) -> {
+
+                        output.accept(SCRAP_PILE.get());
+                        output.accept(TRASH_PILE.get());
+                        output.accept(STEEL_TILE.get());
+                        output.accept(RUBBER.get());
+                        output.accept(PLASTIC.get());
+                        output.accept(HEAT_RESISTANT_ALLOY.get());
+                        output.accept(MARBLE.get());
+                        output.accept(LIMESTONE.get());
+                        output.accept(TOXIROCK.get());
+                        output.accept(COPPER.get());
+                        output.accept(ILMENITE.get());
 
                         output.accept(GLOW_FRUIT.get());
                         output.accept(BROWN_CAP.get());

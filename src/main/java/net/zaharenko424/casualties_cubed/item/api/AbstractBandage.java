@@ -1,18 +1,12 @@
 package net.zaharenko424.casualties_cubed.item.api;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public abstract class AbstractBandage extends Item implements INbtDrivenDurability, IAllowInMedicBags {
+public abstract class AbstractBandage extends ItemWithDescription implements INbtDrivenDurability, IAllowInMedicBags {
 
     public static final float ANGLE_PER_PACKET = 0.055555556f;
 
@@ -40,12 +34,6 @@ public abstract class AbstractBandage extends Item implements INbtDrivenDurabili
     }
 
     protected abstract void useBandageAction(float amount, Player target, @Nullable Limb limb);
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable(getDescriptionId() +".description").withStyle(ChatFormatting.GRAY));
-    }
 
     @Override
     public Component getName(ItemStack pStack) {

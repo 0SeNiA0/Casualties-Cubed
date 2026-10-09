@@ -9,6 +9,7 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,6 +34,7 @@ import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.zaharenko424.casualties_cubed.limbs.Stat;
 import net.zaharenko424.casualties_cubed.registry.ModFluids;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -41,23 +43,14 @@ import java.util.function.Function;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModCommands {
 
-    private static final SuggestionProvider<CommandSourceStack> LIMBS = (context, builder) -> {
-        for (Limb e : Limb.values()) {
-            builder.suggest(e.name().toLowerCase()); // lowercase is more user-friendly
-        }
-
-        return builder.buildFuture();
-    };
+    private static final SuggestionProvider<CommandSourceStack> LIMBS = (context, builder) ->
+            SharedSuggestionProvider.suggest(Arrays.stream(Limb.values()).map(limb -> limb.name().toLowerCase()), builder);
 
     private static final Function<CommandContext<CommandSourceStack>, Limb> LIMB_ARG = ctx ->
             Limb.valueOf(StringArgumentType.getString(ctx, "limb").toUpperCase());
 
-    private static final SuggestionProvider<CommandSourceStack> MED_FLUIDS = (context, builder) -> {
-        for (RegistryObject<Fluid> medicalFluid : ModFluids.FLUIDS.getEntries()) {
-            builder.suggest(medicalFluid.getId().toString());
-        }
-        return builder.buildFuture();
-    };
+    private static final SuggestionProvider<CommandSourceStack> MED_FLUIDS = (context, builder) ->
+            SharedSuggestionProvider.suggestResource(ModFluids.FLUIDS.getEntries().stream().map(RegistryObject::getId), builder);
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {
@@ -185,6 +178,8 @@ public class ModCommands {
                                                     builder.suggest("leftEyeBlind");
                                                     builder.suggest("rightEyeBlind");
                                                     builder.suggest("disfigured");
+                                                    builder.suggest("thirst");
+                                                    builder.suggest("hunger");
                                                     return builder.buildFuture();
                                                 })
                                                 .then(Commands.argument("value", FloatArgumentType.floatArg())
@@ -213,6 +208,8 @@ public class ModCommands {
                                                                     case "rightEyeBlind" ->
                                                                             h.setRightEyeBlind(value > 0);
                                                                     case "disfigured" -> h.disfigured(value > 0);
+                                                                    case "thirst" -> h.thirst(value);
+                                                                    case "hunger" -> h.hunger(value);
                                                                     default ->
                                                                             ctx.getSource().sendFailure(Component.translatable("commands.casualties_cubed.error.unknown_field", field));
                                                                 }

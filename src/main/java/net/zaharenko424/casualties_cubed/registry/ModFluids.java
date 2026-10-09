@@ -146,6 +146,12 @@ public class ModFluids {
     public static final RegistryObject<FluidType> BRAINGROW_TYPE = FLUID_TYPES.register("braingrow", () -> new MedicalFluidType(MedicalEffects.BRAINGROW, 0x915946));
     public static final RegistryObject<MedicalFluid> BRAINGROW = FLUIDS.register("braingrow", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.BRAINGROW_TYPE, ModFluids.BRAINGROW, ModFluids.BRAINGROW)));
 
+    public static final RegistryObject<FluidType> MINDWIPE_TYPE = FLUID_TYPES.register("mindwipe", () -> new MedicalFluidType(MedicalEffects.MINDWIPE, FastColor.ARGB32.color(255, 33, 72, 94)));
+    public static final RegistryObject<MedicalFluid> MINDWIPE = FLUIDS.register("mindwipe", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.MINDWIPE_TYPE, ModFluids.MINDWIPE, ModFluids.MINDWIPE)));
+
+    public static final RegistryObject<FluidType> ANTIDEPRESSANTS_TYPE = FLUID_TYPES.register("antidepressants", () -> new MedicalFluidType(MedicalEffects.ANTIDEPRESSANTS, FastColor.ARGB32.color(146, 100, 161, 133)));
+    public static final RegistryObject<MedicalFluid> ANTIDEPRESSANTS = FLUIDS.register("antidepressants", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTIDEPRESSANTS_TYPE, ModFluids.ANTIDEPRESSANTS, ModFluids.ANTIDEPRESSANTS)));
+
     public static final RegistryObject<FluidType> ANTIBIOTICS_TYPE = FLUID_TYPES.register("antibiotics", () -> new MedicalFluidType(MedicalEffects.ANTIBIOTICS, 0x593f8a));
     public static final RegistryObject<MedicalFluid> ANTIBIOTICS = FLUIDS.register("antibiotics", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTIBIOTICS_TYPE, ModFluids.ANTIBIOTICS, ModFluids.ANTIBIOTICS)));
 
@@ -154,6 +160,15 @@ public class ModFluids {
 
     public static final RegistryObject<FluidType> ANTISERUM_TYPE = FLUID_TYPES.register("antiserum", () -> new MedicalFluidType(MedicalEffects.ANTISERUM, 0x6f3582));
     public static final RegistryObject<MedicalFluid> ANTISERUM = FLUIDS.register("antiserum", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTISERUM_TYPE, ModFluids.ANTISERUM, ModFluids.ANTISERUM)));
+
+    public static final RegistryObject<FluidType> KERATIN_BOOSTER_TYPE = FLUID_TYPES.register("keratin_booster", () -> new MedicalFluidType(MedicalEffects.KERATIN_BOOSTER, FastColor.ARGB32.color(255, 209, 84, 201)));
+    public static final RegistryObject<MedicalFluid> KERATIN_BOOSTER = FLUIDS.register("keratin_booster", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.KERATIN_BOOSTER_TYPE, ModFluids.KERATIN_BOOSTER, ModFluids.KERATIN_BOOSTER)));
+
+    public static final RegistryObject<FluidType> ANTIRAD_TYPE = FLUID_TYPES.register("antirad", () -> new MedicalFluidType(MedicalEffects.ANTIRAD, FastColor.ARGB32.color(255, 251, 193, 6)));
+    public static final RegistryObject<MedicalFluid> ANTIRAD = FLUIDS.register("antirad", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.ANTIRAD_TYPE, ModFluids.ANTIRAD, ModFluids.ANTIRAD)));
+
+    public static final RegistryObject<FluidType> SLEEPING_PILLS_TYPE = FLUID_TYPES.register("sleeping_pills", () -> new MedicalFluidType(MedicalEffects.SLEEPING_PILLS, FastColor.ARGB32.color(255, 140, 168, 147)));
+    public static final RegistryObject<MedicalFluid> SLEEPING_PILLS = FLUIDS.register("sleeping_pills", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SLEEPING_PILLS_TYPE, ModFluids.SLEEPING_PILLS, ModFluids.SLEEPING_PILLS)));
 
     public static final RegistryObject<FluidType> PROCOAGULANT_TYPE = FLUID_TYPES.register("procoagulant", () -> new MedicalFluidType(MedicalEffects.PROCOAGULANT, 0x57172b));
     public static final RegistryObject<MedicalFluid> PROCOAGULANT = FLUIDS.register("procoagulant", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.PROCOAGULANT_TYPE, ModFluids.PROCOAGULANT, ModFluids.PROCOAGULANT)));
@@ -178,6 +193,9 @@ public class ModFluids {
 
     public static final RegistryObject<FluidType> SALINE_TYPE = FLUID_TYPES.register("saline", () -> new MedicalFluidType(MedicalEffects.SALINE, 0xc9c8c5));
     public static final RegistryObject<MedicalFluid> SALINE = FLUIDS.register("saline", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.SALINE_TYPE, ModFluids.SALINE, ModFluids.SALINE)));
+
+    public static final RegistryObject<FluidType> RINGER_SOLUTION_TYPE = FLUID_TYPES.register("ringer_solution", () -> new MedicalFluidType(MedicalEffects.RINGER_SOLUTION, FastColor.ARGB32.color(255, 237, 237, 237)));
+    public static final RegistryObject<MedicalFluid> RINGER_SOLUTION = FLUIDS.register("ringer_solution", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.RINGER_SOLUTION_TYPE, ModFluids.RINGER_SOLUTION, ModFluids.RINGER_SOLUTION)));
 
     public static final RegistryObject<FluidType> YELLOW_BLOOD_TYPE = FLUID_TYPES.register("yellow_blood", () -> new MedicalFluidType(MedicalEffects.YELLOW_BLOOD, FastColor.ARGB32.color(255, 255, 201, 0)));
     public static final RegistryObject<MedicalFluid> YELLOW_BLOOD = FLUIDS.register("yellow_blood", () -> new MedicalFluid(new ForgeFlowingFluid.Properties(ModFluids.YELLOW_BLOOD_TYPE, ModFluids.YELLOW_BLOOD, ModFluids.YELLOW_BLOOD)));

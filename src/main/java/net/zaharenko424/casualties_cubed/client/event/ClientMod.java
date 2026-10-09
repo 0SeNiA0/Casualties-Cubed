@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.IItemDecorator;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -57,13 +59,18 @@ public class ClientMod {
 
     @SubscribeEvent
     public static void registerItemDecorations(RegisterItemDecorationsEvent event) {
-        event.register(ModItems.CHEST_DRAIN.get(), (guiGraphics, font, stack, xOffset, yOffset) -> {
+        event.register(ModItems.CHEST_DRAIN.get(), chargeBar(stack -> ModItems.CHEST_DRAIN.get().rechargePercentage(Minecraft.getInstance().level, stack)));
+        event.register(ModItems.ICE_PACK.get(), chargeBar(stack -> ModItems.ICE_PACK.get().rechargePercentage(Minecraft.getInstance().level, stack)));
+    }
+
+    private static IItemDecorator chargeBar(Function<ItemStack, Float> charge) {
+        return (guiGraphics, font, stack, xOffset, yOffset) -> {
             int j = xOffset + 2, k = yOffset + 13;
-            float rechargePercentage = ModItems.CHEST_DRAIN.get().rechargePercentage(Minecraft.getInstance().level, stack);
+            float rechargePercentage = charge.apply(stack);
             int color = Mth.hsvToRgb(rechargePercentage / 3.0F, 1.0F, 1.0F);
             guiGraphics.fill(RenderType.guiOverlay(), j, k, j + 13, k + 2, -16777216);
             guiGraphics.fill(RenderType.guiOverlay(), j, k, j + Math.round(rechargePercentage * 13), k + 1, color | -16777216);
             return false;
-        });
+        };
     }
 }

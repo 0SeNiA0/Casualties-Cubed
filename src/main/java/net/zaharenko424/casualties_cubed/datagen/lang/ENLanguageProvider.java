@@ -45,6 +45,17 @@ public class ENLanguageProvider extends LanguageProvider {
         addBlockFromId(ModBlocks.GLOW_FRUIT_BUSH);
         addBlockFromId(ModBlocks.EXPIE_PLUSHY);
         addBlockFromId(ModBlocks.MEDICAL_MIXER);
+        addBlockFromId(ModBlocks.SCRAP_PILE);
+        addBlockFromId(ModBlocks.TRASH_PILE);
+        addBlockFromId(ModBlocks.STEEL_TILE);
+        addBlockFromId(ModBlocks.RUBBER);
+        addBlockFromId(ModBlocks.PLASTIC);
+        addBlockFromId(ModBlocks.HEAT_RESISTANT_ALLOY);
+        addBlockFromId(ModBlocks.MARBLE);
+        addBlockFromId(ModBlocks.LIMESTONE);
+        addBlockFromId(ModBlocks.TOXIROCK);
+        addBlockFromId(ModBlocks.COPPER);
+        addBlockFromId(ModBlocks.ILMENITE);
 
         add("itemGroup.casualties_cubed_tab", "Casualties: Cubed");
 
@@ -52,6 +63,9 @@ public class ENLanguageProvider extends LanguageProvider {
         add("item.casualties_cubed.aid_gel", "Relief Gel");
         add("item.casualties_cubed.aid_gel.description", "A crudely made gel for aiding sore limbs.");
 
+        addItemFromIdWDesc(SCRAP_METAL, "Bits and pieces of steel from destroyed machinery. Commonly used as currency between survivors, and for crafting.");
+        addItemFromIdWDesc(CHUNK_OF_PLASTIC, "A chunk of flexible plastic which has been visibly forcibly displaced. Usable in crafting, mainly in electronics.");
+        addItemFromIdWDesc(ILMENITE_CHUNK, "A titanium-iron oxide mineral. Though costly, it can be processed into a strong titanium alloy.");
         addItemWDesc(DRESSING, "Bandage", "Basic bandage for covering and protecting wounds.");
         addItemFromIdWDesc(PLASTIC_DRESSING, "Stronger bandage that protects wounds more effectively.");
         addItemFromIdWDesc(STERILIZED_DRESSING, "Cleans and covers wounds, preventing infection.");
@@ -59,7 +73,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(WATER_BOTTLE, "A plastic bottle that can hold 0.5L of liquid.");
         addItemFromIdWDesc(WATER_JUG, "Big, heavy plastic bottle. Stores 3L of liquid.");
         addItemFromIdWDesc(ALCOHOL_BOTTLE, "A glass bottle that can hold 0.5L of liquid.");
-        addItemFromIdWDesc(ICE_PACK, "Reduces swelling and eases sore muscles.");
+        addItemFromIdWDesc(ICE_PACK, "A cold bag filled with self-cooling refrigerant gel. Speeds up muscle healing, reduces pain and cools you down slightly. Automatically cools itself over time.");
         addItemWDesc(IV_BAG, "IV Bag", "A 0.75L fluid bag with a needle at the end.");
         addItemFromIdWDesc(BLOOD_BAG, "A 0.75L plastic bag with an autoinjector at the end. Injects 375mL on use. Use to draw blood from yourself.");
         addItemWDesc(OPIUM_VIAL, "Poppy Extract Vial", "A 100ml bottle. The overdose label says 200ml.");
@@ -72,13 +86,13 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(PROCOAGULANT_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
         addItemFromIdWDesc(WOUND_GLUE_SPRAY, "A 80ml spray bottle. Sprays 20ml of liquid at a time.");
         addItemFromIdWDesc(STREPTOKINASE_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
-        addItemFromIdWDesc(SPLINT, "Stabilizes broken bones and aids healing.");
-        addItemFromIdWDesc(TWEEZERS, "Removes shrapnel, glass, or debris from wounds.");
-        addItemFromIdWDesc(TOURNIQUET, "Stops heavy bleeding but limits blood flow.");
+        addItemFromIdWDesc(SPLINT, "A sturdy board, made to aid fractures. Helps with healing fractures and dislocations. Putting it on a functional limb will still immobilize it, reducing your capabilities.");
+        addItemFromIdWDesc(TWEEZERS, "A simple pair of metal tweezers. Can cleanly and painlessly remove shrapnel from limbs.");
+        addItemFromIdWDesc(TOURNIQUET, "When applied, it cuts off circulation to the limb, stopping all bleeding in the affected area (though it does not heal the wound). It must be removed after some time, as it causes pain and deprives the limb of oxygen. Reusable.");
         addItemWDesc(SMALL_MEDIBAG, "Small Medical Bag", "A compact pouch for four medical items.");
         addItemWDesc(MEDIUM_MEDIBAG, "Medium Medical Bag", "A balanced pack with room for eight items.");
         addItemWDesc(LARGE_MEDIBAG, "Large Medical Bag", "A spacious medical kit that can hold up to twelve items.");
-        addItemFromIdWDesc(ADHESIVE_BANDAGE, "Simple adhesive bandages usually used on small cuts and bruises.");
+        addItemFromIdWDesc(ADHESIVE_BANDAGE, "A pack of small medical dressings, made to treat small injuries. Lowers bleeding.");
         addItemFromIdWDesc(CEFTRIAXONE_VIAL, "A 100ml bottle. The safe dose label says \"may vary.\"");
         addItemFromIdWDesc(BLEACH_JUG, "A 1.5L jug for storing bleach. Applies 100ml of liquid at a time.");
         addItemFromIdWDesc(MEDICINE_VIAL, "A 100ml bottle meant for medicine.");
@@ -93,19 +107,19 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(BRUISE_KIT, "A combination of various medicines, made to aid sore muscles. Cannot stop the bleeding.");
         addItemFromIdWDesc(ALGINATE_DRESSING, "A specially treated piece of a dressing. Slows down bleeding and highly improves skin healing.");
         addItemFromIdWDesc(MEDICAL_GAUZE, "Woven gauze containing painkilling drugs. Decent at slowing bleeding and reducing pain from injuries.");
-        addItemWDesc(BONE_WELDER, "Bone Welding Tool", "An experimental piece of technology. Welds the bone structure back together. Causes some damage on the way in.");
+        addItemWDesc(BONE_WELDER, "Bone Welding Tool", "A very experimental bit of technology that welds a fracture back together, vastly speeding up healing. Causes some damage to the limb due to the process - better have some dressing ready.");
         addItemWDesc(LRD, "L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. Many thank their lives to this piece of machinery. Holds 75ml of fluid. Needs at least 25ml of LRD serum to function");
         addItemWDesc(MAKESHIFT_LRD, "Makeshift L.R.D", "A Localized Resuscitation Device, made to easily provide effective general trauma care. This one seems to be crudely made. Holds 50ml of fluid. Needs at least 25ml of LRD serum to function");
-        addItemFromIdWDesc(MEDICAL_SUTURE, "Used to stitch wounds back together. Instantly stops most of the bleeding.");
+        addItemFromIdWDesc(MEDICAL_SUTURE, "Used to stitch wounds back together. Instantly stops most bleeding and increases skin health.");
         addItemFromIdWDesc(HEAT_PACK, "A slightly larger chemical hand warmer. Aids in healing of muscles slightly.");
-        addItemFromIdWDesc(AUTO_PUMP, "A very advanced Life support device with internal batteries. Keeps oxygen at stable levels,provides adrenaline and energy. Batteries last about 5min. Only usable on the chest");
+        addItemFromIdWDesc(AUTO_PUMP, "While worn, pumps blood in place of your heart using a simple mechanism and an internal battery, keeping your blood pressure at livable levels. Might buy you more time to fix whatever catastrophe has befallen you.");
         addItemFromIdWDesc(CHEST_DRAIN, "Used to drain fluid from the thorax. Reduces hemothorax, reusable after some time. Only usable on the chest.");
         addItemFromIdWDesc(THERMOMETER, "A small device that reads the temperature around the user.");
         addItemFromId(SimpleEarProtection);
         addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10ml.");
         addItemFromIdWDesc(AUTO_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
-        addItemFromIdWDesc(GLOW_FRUIT, "A bioluminescent plant often found in caves. Counteracts infections but is highly toxic when ingested.");
-        add(BROWN_CAP.getId().toLanguageKey("item", "description"), "You have no idea what is this fungus. For all you know it can cure cancer or kill you on the spot");
+        addItemFromIdWDesc(GLOW_FRUIT, "Bioluminescent and inedible. Has moderately dangerous toxins inside; counteracts infections. Its juice promotes chemical reactions, making it useful in crafting.");
+        add(BROWN_CAP.getId().toLanguageKey("item", "description"), "You aren't sure what kind of fungus it is exactly. For all you know, it could do anything from curing wounds to killing you on the spot.");
         addItemFromIdWDesc(BROWN_CAP_MUSH, "Probably a bad idea to eat this...");
         addItemFromId(EXPERIMENTAL_TREATMENT);
         add(EXPERIMENTAL_TREATMENT.getId().toLanguageKey("item", "description1"), "The label says:");
@@ -157,9 +171,14 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.RELIEF_CREAM, "Mix of chemicals and drugs that instantly relieves pain and disinfects wounds.");
         addMedicalFluidFromIdWDesc(ModFluids.WOUND_GLUE, "A hemostatic, antibiotic glue-like substance. Fights infection, promotes healing and is very effective at sealing bleeding wounds. Might cause circulation problems - use with care.");
         addMedicalFluidWDesc(ModFluids.BRAINGROW, "BrainGrow", "Special orally-taken medicine that stimulates brain regrowth. Increases brain integrity, but often has serious side effects.");
+        addMedicalFluidFromIdWDesc(ModFluids.MINDWIPE, "Specially synthetised drug which completely wipes the brain of most of its memories and past traumas, leaving only a blank emotionless vessel with basic knowledge and survival instincts. Commonly used as a last resort on subjects which are too far gone to function or are at risk of suicide. May also cure cases of moderate-to-severe brain damage. The effect is permanent without extensive rehabilitation. Use as a last resort.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTIDEPRESSANTS, "Potent antidepressant pills. Makes you feel everything less for some time, and slowly increases happiness. Might have side effects.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIBIOTICS, "Pills which increase your immunity for some time, counteracting all infections. Upsetting taste.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTIVENOM, "A treatment for envenomation, it's composed of antibodies that disable hemotoxins in the bloodstream. Works intravenously.");
         addMedicalFluidFromIdWDesc(ModFluids.ANTISERUM, "Blood serum containing antibodies to fight off most common infections. Increases immunity and helps reduce sepsis. Slightly increases blood volume.");
+        addMedicalFluidFromIdWDesc(ModFluids.KERATIN_BOOSTER, "A modified growth hormone that specifically targets keratin in order to encourage its growth. Makes your claws regrow faster for a while.");
+        addMedicalFluidFromIdWDesc(ModFluids.ANTIRAD, "Experimental medicine that directly reduces the effects of radiation sickness when taken. Will require higher dosage for severe illness.");
+        addMedicalFluidFromIdWDesc(ModFluids.SLEEPING_PILLS, "Potent sleeping pills. Lets you sleep in bad physical condition. Don't combine with opioids.");
         addMedicalFluidFromIdWDesc(ModFluids.PROCOAGULANT, "Chemical which promotes blood clotting. Globally slows down blood loss, including internal bleeding. Will cause complications if overused.");
         addMedicalFluidFromIdWDesc(ModFluids.EPINEPHRINE, "Pure adrenaline. Reduces pain for a while and has a low chance to restart the heart if it stops. Going over 40ml will cause fibrillation.");
         addMedicalFluidFromIdWDesc(ModFluids.OXYLINE, "Synthesized reagent that quickly reoxygenates the bloodstream when injected, also stabilizing fibrillation and promoting hemoglobin production. Has explosive tendencies when mixed with stomach acid.");
@@ -168,6 +187,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addMedicalFluidFromIdWDesc(ModFluids.AMIODARONE, "An antiarrhythmic medication used to treat and prevent fibrillation from occurring. Will cause most arrhythmias to slowly regress, but causes mild internal damage. Only works intravenously. 20ml per minute.");
         addMedicalFluidFromIdWDesc(ModFluids.STREPTOKINASE, "Blood thinner. Strongly reduces blood viscosity and breaks down clots.");
         addMedicalFluidFromIdWDesc(ModFluids.SALINE, "Mixture of salt and water, often used in treating hypovolemia and thirst.");
+        addMedicalFluidWDesc(ModFluids.RINGER_SOLUTION, "Ringer's Solution", "Solution of several salts dissolved in water for the purpose of creating an isotonic solution relative to the body fluids of an animal. Good for thirst and blood loss.");
         addMedicalFluidFromIdWDesc(ModFluids.YELLOW_BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.RED_BLOOD, "Used in treating hypovolemia.");
         addMedicalFluidFromIdWDesc(ModFluids.ALIEN_BLOOD, "Yellow blood from an alien. Shouldn't be too bad to use as replacement blood, though.");
@@ -193,7 +213,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("splint_button", "Remove splint");
         addGuiO("inject", "Inject");
         addGuiO("transfer", "Transfer");
-        addGuiO("give_up", "Press %1$s to Give Up.");
+        addGuiO("give_up", "Hold %1$s to Give Up.");
         addGuiO("fluid_screen", "Press %1$s to transfer fluids");
         addGuiO("fluid_exchange", "Fluid Exchange");
         addGuiO("fluid_transfer", "Fluid Transfer");
@@ -215,15 +235,11 @@ public class ENLanguageProvider extends LanguageProvider {
         addGuiO("fluid_amount", "%1$sml");
         addGuiO("hud.oxygen", "O₂ %1$s%%");
         addGuiO("hud.pain", "%1$s%%");
-        addGuiO("health.conscious", "CONSCIOUS");
-        addGuiO("health.pain_percent", "%1$s%% PAIN");
-        addGuiO("health.skin", "SKIN");
-        addGuiO("health.muscle", "MUSCLE");
-        addGuiO("health.fracture_short", "FRACT");
-        addGuiO("health.dislocation_short", "DISL");
         addGuiO("health.blood_volume", "%1$sL");
         addGuiO("health.bleed_rate", "%1$sL/m");
-        addGuiO("temperature_celsius", "%1$sC");
+        addGui("temp_unit.c", "%1$s°c");
+        addGui("temp_unit.f", "%1$s°f");
+        addGui("temp_unit.k", "%1$sk");
 
         addContainer("looting", "Looting %1$s");
 
@@ -233,6 +249,13 @@ public class ENLanguageProvider extends LanguageProvider {
         addDeathMessage(ModDamageTypes.INTERNAL_BLEED.location().getPath(), "%1$s learned the hard way that blood isn’t meant to be everywhere inside your body.", null, "%1$s discovered misplaced blood, courtesy of %2$s");
         addDeathMessage(ModDamageTypes.OPIOIDS.location().getPath(), "%1$s took too much pain medication", null, "%1$s overdosed with a little help from %2$s");
         addDeathMessage(ModDamageTypes.OXYGEN.location().getPath(), "%1$s forgot to breathe", null, "%1$s forgot to breathe while fighting %2$s");
+
+        addMoodle("focused.title1", "Sense of impending doom");
+        addMoodle("focused.description1", "You can't help but feel sudden, overwhelming fear. Your skin has goosebumps all over. It's as if the nature around you abruptly fell silent...");
+        addMoodle("focused.title2", "HORRIFIED");
+        addMoodle("focused.description2", "CAN'T FOCUS. CAN'T THINK. NOTHING ELSE MATTERS. RUN FOR YOUR LIFE OR FIGHT FOR IT!");
+        addMoodle("focused.title3", "FOCUSED");
+        addMoodle("focused.description3", "&oBoth of us die today. One, just a little later than the other.");
 
         addMoodle("last_stand.title", "Last stand");
         addMoodle("last_stand.description", "You're not going down that easily. Something deep inside you compels you to push through.");
@@ -524,9 +547,6 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("adrenaline.title1", "Adrenaline");
         addMoodleO("adrenaline.description1", "Pain numbed. You're on high alert.");
 
-        addMoodleO("life_support.title1", "Life Support");
-        addMoodleO("life_support.description1", "Oxygen and awareness levels kept at sustainable levels by a life support machine");
-
         addMoodleO("amputated.title1", "Amputated");
         addMoodleO("amputated.description1", "One of your extremities has been dismembered. Traumatizing. Obviously, any use of the lobbed off limb is permanently gone.");
 
@@ -587,6 +607,8 @@ public class ENLanguageProvider extends LanguageProvider {
         addMoodleO("sound_loss.title3", "Severe hearing loss");
         addMoodleO("sound_loss.description3", "You can barely hear anything. You feel very irritated. Your ears will take a good while to improve.");
 
+        addMoodle("hollow.title", "Hollow");
+
         add(modid + ".multi_tank.hint", "Press SHIFT for fluid description");
 
         addTooltipO("contents", "Contents:");
@@ -623,7 +645,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addSound(ModSounds.HEART_THUMP_HEAVY_MONITOR, "Heavy heart thump");
         addSound(ModSounds.SPRAY, "Spray applied");
         addSound(ModSounds.SPLINT, "Splint applied");
-        addSound(ModSounds.AUTO_PUMP, "Auto pump used");
+        addSound(ModSounds.AUTO_PUMP, "Auto pump activated");
         addSound(ModSounds.BONE_WELD, "Bone welder used");
         addSound(ModSounds.DRAIN_USE, "Chest drain used");
         addSound(ModSounds.LEVEL_UP, "Skill leveled up");
@@ -632,5 +654,27 @@ public class ENLanguageProvider extends LanguageProvider {
         addSound(ModSounds.VOMIT_WARNING, "Vomit incoming");
         addSound(ModSounds.BLOOD_VOMIT_WARNING, "Blood vomit incoming");
         addSound(ModSounds.VOMIT, "Vomiting");
+        addSound(ModSounds.FLATLINE, "Cardiac arrest");
+        addSound(ModSounds.SCRAP_PILE_HIT, "Scrap pile hit");
+        addSound(ModSounds.SCRAP_PILE_STEP, "Scrap pile stepped on");
+        addSound(ModSounds.TRASH_PILE_HIT, "Trash pile hit");
+        addSound(ModSounds.STEEL_HIT, "Steel hit");
+        addSound(ModSounds.STEEL_STEP, "Steel stepped on");
+        addSound(ModSounds.RUBBER_HIT, "Rubber hit");
+        addSound(ModSounds.RUBBER_STEP, "Rubber stepped on");
+        addSound(ModSounds.PLASTIC_STEP, "Plastic stepped on");
+        addSound(ModSounds.ROCK_HIT, "Rock hit");
+        addSound(ModSounds.ROCK_STEP, "Rock stepped on");
+        addSound(ModSounds.CRYSTAL_HIT, "Crystal hit");
+        addSound(ModSounds.CONCRETE_STEP, "Concrete stepped on");
+        addSound(ModSounds.BANDAGE_USE, "Bandage used");
+        addSound(ModSounds.SYRINGE_USE, "Syringe injected");
+        addSound(ModSounds.SYRINGE_LOOP, "Syringe injected");
+        addSound(ModSounds.RINGING, "Tinnitus");
+        addSound(ModSounds.PILLS, "Pills taken");
+        addSound(ModSounds.PAINDRONE, "Pain");
+        addSound(ModSounds.BROKEN_BONE, "Bone broken");
+        addSound(ModSounds.AMPUTATION, "Limb dismembered");
+        addSound(ModSounds.LAST_STAND, "Last stand triggered");
     }
 }

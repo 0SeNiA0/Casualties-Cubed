@@ -18,13 +18,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ScavBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+public class ExpiePlushyBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 10, 12);
     // adjust these numbers for your model size
 
-    public ScavBlock(BlockBehaviour.Properties properties) {
+    public ExpiePlushyBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }

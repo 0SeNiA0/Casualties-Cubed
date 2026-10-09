@@ -66,9 +66,8 @@ public class MoodleManager {
         HEALTH_PANEL_BUTTON.tooltip(Component.translatable("tooltip.casualties_cubed.health_panel_button", Component.keybind(Keybinds.OPEN_PAIN_GUI.getName())));
         List<AbstractMoodle> tmp = new ArrayList<>();
 
-        tmp.add(new LifeSupportMoodle());//not in CU
-
-
+        tmp.add(new FocusedMoodle());
+        //heart rate non-chipped only
         tmp.add(new LastStandMoodle());
         tmp.add(new BrainHealthMoodle());
         tmp.add(new StrokeMoodle());
@@ -125,7 +124,7 @@ public class MoodleManager {
         tmp.add(new AmputatedMoodle());
         tmp.add(new BlindMoodle());
         tmp.add(new AdrenalineMoodle());
-        //hollow
+        tmp.add(new HollowMoodle());
 
         MinecraftForge.EVENT_BUS.post(new RegisterMoodlesEvent(tmp));
 

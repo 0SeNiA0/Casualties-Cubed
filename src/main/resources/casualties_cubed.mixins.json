@@ -20,13 +20,19 @@
     "entity.PufferfishMixin",
     "item.MilkBucketMixin",
     "item.PotionItemMixin",
-    "item.SuspiciousStewMixin"
+    "item.SuspiciousStewMixin",
+    "mod.thirst.PlayerThirstMixin",
+    "mod.thirst.WaterPurityMixin",
+    "sound.BlockItemMixin"
   ],
   "client": [
     "client.AbstractContainerScreenMixin",
     "client.MixinItemRenderer",
     "client.MixinSplashManager",
-    "client.MouseHandlerMixin"
+    "client.MouseHandlerMixin",
+    "sound.LevelRendererMixin",
+    "sound.MultiplayerGameModeMixin",
+    "mod.thirst.ThirstBarRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

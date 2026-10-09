@@ -1,29 +1,21 @@
 package net.zaharenko424.casualties_cubed.item.misc;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodData;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class BrownCapMushItem extends Item {
+public class BrownCapMushItem extends ItemWithDescription {
 
     public BrownCapMushItem() {
         super(new Properties()
@@ -32,11 +24,6 @@ public class BrownCapMushItem extends Item {
                         .saturationMod(8)
                         .alwaysEat()
                         .build()));
-    }
-
-    @Override
-    public SoundEvent getEatingSound() {
-        return SoundEvents.GENERIC_EAT;
     }
 
     @Override
@@ -123,11 +110,5 @@ public class BrownCapMushItem extends Item {
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.EAT;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.brown_cap_mush.description").withStyle(ChatFormatting.GRAY));
     }
 }

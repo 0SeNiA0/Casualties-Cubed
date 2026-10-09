@@ -9,20 +9,17 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.util.ColorUtil;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
+import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
 import net.zaharenko424.casualties_cubed.registry.ModItems;
-import org.jetbrains.annotations.Nullable;
+import net.zaharenko424.casualties_cubed.util.ColorUtil;
 
-import java.util.List;
-
-public class ThermometerItem extends Item {
+public class ThermometerItem extends ItemWithDescription {
 
     public ThermometerItem() {
         super(new Properties().stacksTo(1));
@@ -39,18 +36,11 @@ public class ThermometerItem extends Item {
                 float ambientTemp = h.getAmbientTemperature(player);
                 float temperatureScale = Mth.clamp((ambientTemp - 27) / 15, 0, 1);
                 int color = ColorUtil.gradient(temperatureScale, 0x242bff, 0xff3624);
-                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(Component.translatable("casualties_cubed.gui.temperature_celsius", String.format("%.1f", ambientTemp)).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+                Component colorText = Component.literal("(").withStyle(ChatFormatting.GRAY).append(ClientConfig.TEMPERATURE_UNIT.get().compFunc.get(ambientTemp).withStyle(Style.EMPTY.withColor(color))).append(Component.literal(")").withStyle(ChatFormatting.GRAY));
                 player.displayClientMessage(colorText, true);
             });
         }
     }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(Component.translatable("item.casualties_cubed.thermometer.description").withStyle(ChatFormatting.GRAY));
-    }
-
 
     @OnlyIn(Dist.CLIENT)
     public static class ClientThermoTooltip implements ClientTooltipComponent, TooltipComponent {

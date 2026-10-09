@@ -1,10 +1,14 @@
 package net.zaharenko424.casualties_cubed.registry;
 
+import net.minecraft.world.level.block.Block;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
+import net.zaharenko424.casualties_cubed.item.ScrapMetal;
 import net.zaharenko424.casualties_cubed.item.bandages.*;
 import net.zaharenko424.casualties_cubed.item.misc.BrownCapMushItem;
 import net.zaharenko424.casualties_cubed.item.misc.ExperimentalTreatmentItem;
 import net.zaharenko424.casualties_cubed.item.multi_tank.*;
+import net.zaharenko424.casualties_cubed.item.reusable.IcePackItem;
 import net.zaharenko424.casualties_cubed.item.special.bag.LargeMedibagItem;
 import net.zaharenko424.casualties_cubed.item.special.bag.MediumMedibagItem;
 import net.zaharenko424.casualties_cubed.item.special.bag.SmallMedibagItem;
@@ -23,6 +27,23 @@ public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CasualtiesCubed.MOD_ID);
 
+    public static final RegistryObject<BlockItem> SCRAP_PILE = blockItem(ModBlocks.SCRAP_PILE);
+    public static final RegistryObject<BlockItem> TRASH_PILE = blockItem(ModBlocks.TRASH_PILE);
+    public static final RegistryObject<BlockItem> STEEL_TILE = blockItem(ModBlocks.STEEL_TILE);
+    public static final RegistryObject<BlockItem> RUBBER = blockItem(ModBlocks.RUBBER);
+    public static final RegistryObject<BlockItem> PLASTIC = blockItem(ModBlocks.PLASTIC);
+    public static final RegistryObject<BlockItem> HEAT_RESISTANT_ALLOY = blockItem(ModBlocks.HEAT_RESISTANT_ALLOY);
+    public static final RegistryObject<BlockItem> MARBLE = blockItem(ModBlocks.MARBLE);
+    public static final RegistryObject<BlockItem> LIMESTONE = blockItem(ModBlocks.LIMESTONE);
+    //public static final RegistryObject<BlockItem> SCAFFOLDING = blockItem(ModBlocks.SCAFFOLDING);
+    public static final RegistryObject<BlockItem> TOXIROCK = blockItem(ModBlocks.TOXIROCK);
+    public static final RegistryObject<BlockItem> COPPER = blockItem(ModBlocks.COPPER);
+    public static final RegistryObject<BlockItem> ILMENITE = blockItem(ModBlocks.ILMENITE);
+
+    public static final RegistryObject<ScrapMetal> SCRAP_METAL = ITEMS.register("scrap_metal", () -> new ScrapMetal(new Item.Properties()));
+    public static final RegistryObject<Item> CHUNK_OF_PLASTIC = ITEMS.register("chunk_of_plastic", () -> new ItemWithDescription(new Item.Properties()));
+    public static final RegistryObject<Item> ILMENITE_CHUNK = ITEMS.register("ilmenite_chunk", () -> new ItemWithDescription(new Item.Properties()));
+
     public static final RegistryObject<Item> OLD_RAG = ITEMS.register("old_rag", OldRagItem::new);
     public static final RegistryObject<Item> RIPPED_DRESSING = ITEMS.register("ripped_dressing", RippedDressingItem::new);
     public static final RegistryObject<Item> ADHESIVE_BANDAGE = ITEMS.register("adhesive_bandage", AdhesiveBandage::new);
@@ -37,7 +58,7 @@ public class ModItems {
     public static final RegistryObject<LRDItem> LRD = ITEMS.register("lrd", LRDItem::new);
     public static final RegistryObject<MakeshiftLRDItem> MAKESHIFT_LRD = ITEMS.register("makeshift_lrd", MakeshiftLRDItem::new);
     public static final RegistryObject<Item> MEDICAL_SUTURE = ITEMS.register("medical_suture", MedicalSutureItem::new);
-    public static final RegistryObject<Item> ICE_PACK = ITEMS.register("ice_pack", IcePackItem::new);
+    public static final RegistryObject<IcePackItem> ICE_PACK = ITEMS.register("ice_pack", IcePackItem::new);
     public static final RegistryObject<Item> HEAT_PACK = ITEMS.register("heat_pack", HeatPackItem::new);
     public static final RegistryObject<Item> GLOW_FRUIT = ITEMS.register("glow_fruit", () -> new GlowFruitItem(ModBlocks.GLOW_FRUIT_BUSH.get()));
 
@@ -92,4 +113,8 @@ public class ModItems {
 
     public static final RegistryObject<Item> MEDICAL_MIXER = ITEMS.register("medical_mixer", () ->
             new BlockItem(ModBlocks.MEDICAL_MIXER.get(), new Item.Properties()));
+
+    private static RegistryObject<BlockItem> blockItem(RegistryObject<? extends Block> block) {
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
+    }
 }

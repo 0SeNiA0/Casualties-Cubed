@@ -1,13 +1,6 @@
 package net.zaharenko424.casualties_cubed;
 
 import com.mojang.logging.LogUtils;
-import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsEvents;
-import net.zaharenko424.casualties_cubed.config.ClientConfig;
-import net.zaharenko424.casualties_cubed.config.ServerConfig;
-import net.zaharenko424.casualties_cubed.registry.ModFluids;
-import net.zaharenko424.casualties_cubed.registry.ModLootModifier;
-import net.zaharenko424.casualties_cubed.registry.*;
-import net.zaharenko424.casualties_cubed.visual.particles.ModParticles;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,6 +8,11 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.zaharenko424.casualties_cubed.compat.prototype_physics.PhysicsEvents;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
+import net.zaharenko424.casualties_cubed.registry.*;
+import net.zaharenko424.casualties_cubed.visual.particles.ModParticles;
 import org.slf4j.Logger;
 
 @Mod(CasualtiesCubed.MOD_ID)
@@ -44,6 +42,7 @@ public class CasualtiesCubed {
         ModCreativeTab.CREATIVE_TABS.register(modEventBus);
         ModSounds.register(modEventBus);
         ModParticles.register(modEventBus);
+        LootFunctionRegistry.LOOT_FUNCTIONS.register(modEventBus);
         TimedEffectRegistry.TIMED_EFFECTS.register(modEventBus);
 
         context.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
