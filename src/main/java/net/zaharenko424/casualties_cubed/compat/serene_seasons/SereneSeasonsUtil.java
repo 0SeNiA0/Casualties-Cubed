@@ -15,7 +15,7 @@ public class SereneSeasonsUtil {
     }
 
     public static float getSeasonScale(Level level, TempCompat.BiomeTemperatureEntry entry){
-        if (!isLoaded()) return entry.temperature;
+        if (!isLoaded()) return entry.temperature();
 
         ISeasonState seasonState = SeasonHelper.getSeasonState(level);
         Season.SubSeason sub = seasonState.getSubSeason();
@@ -30,17 +30,17 @@ public class SereneSeasonsUtil {
         Season nextSeason = seasons[(seasonIndex+1)%4];
 
         float startTemp = switch (currentSeason){
-            case WINTER -> entry.winter;
-            case SUMMER -> entry.summer;
-            case AUTUMN -> entry.fall;
-            case SPRING -> entry.spring;
+            case WINTER -> entry.winter();
+            case SUMMER -> entry.summer();
+            case AUTUMN -> entry.fall();
+            case SPRING -> entry.spring();
         };
 
         float targetTemp =switch (nextSeason){
-            case WINTER -> entry.winter;
-            case SUMMER -> entry.summer;
-            case AUTUMN -> entry.fall;
-            case SPRING -> entry.spring;
+            case WINTER -> entry.winter();
+            case SUMMER -> entry.summer();
+            case AUTUMN -> entry.fall();
+            case SPRING -> entry.spring();
         };
 
         return Mth.lerp(blend,startTemp,targetTemp);

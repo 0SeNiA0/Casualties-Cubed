@@ -26,7 +26,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -2084,19 +2083,16 @@ public class PlayerHealthData {
         Iterable<BlockPos> it = BlockPos.betweenClosed(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ), Mth.floor(aabb.maxX), Mth.floor(aabb.maxY), Mth.floor(aabb.maxZ));
         Vec3 playerCenter = player.position().add(0, player.getBbHeight() / 2, 0);
         BlockState state;
+
         float blockTemp;
         float dist;
         for (BlockPos pos : it) {
             state = player.level().getBlockState(pos);
-            blockTemp = TempCompat.get(state.getBlock()) != null ? TempCompat.get(state.getBlock()) : 0;
-            if (state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) {
-                blockTemp += 10f;
-            }
+            blockTemp = TempCompat.get(state);
+            if (blockTemp == 0) continue;
 
-            if (blockTemp != 0f) {
-                dist = Mth.sqrt((float) playerCenter.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) + 1;
-                tblockheatBonus += blockTemp * (1 / (dist * dist));
-            }
+            dist = Mth.sqrt((float) playerCenter.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5)) + 1;
+            tblockheatBonus += blockTemp * (1 / (dist * dist));
         }
 
         outData += tblockheatBonus;
@@ -2121,7 +2117,7 @@ public class PlayerHealthData {
         Float outData = null;
         if (temperatureEntry != null) {
             outData = SereneSeasonsUtil.getSeasonScale(world, temperatureEntry);
-            outData += (temperatureEntry.nightChange * sunScale);
+            outData += (temperatureEntry.nightChange() * sunScale);
         }
 
         if (outData == null) {

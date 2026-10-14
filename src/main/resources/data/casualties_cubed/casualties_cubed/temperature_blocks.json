@@ -1,22 +1,29 @@
 {
-  "minecraft:ice": {"temperature": -2},
-  "minecraft:fire": {"temperature": 150},
-  "minecraft:soul_fire": {"temperature": -4.0},
-  "minecraft:lava": {"temperature": 500},
-  "minecraft:magma_block": {"temperature": 100},
-  "minecraft:glowstone": {"temperature": 2},
-  "minecraft:shroomlight": {"temperature": 2},
-  "minecraft:campfire": {"temperature": 150},
-  "minecraft:lava_cauldron": {"temperature": 80},
-  "minecraft:nether_portal": {"temperature": 150},
-  "minecraft:soul_torch": {"temperature": -2},
-  "minecraft:soul_lantern": {"temperature": -2},
-  "minecraft:lantern": {"temperature": 40},
-  "minecraft:torch": {"temperature": 50},
-  "minecraft:packed_ice": {"temperature": -3},
-  "minecraft:blue_ice": {"temperature": -6},
-  "minecraft:frosted_ice": {"temperature": -1},
-  "minecraft:snow": {"temperature": -0.5},
-  "minecraft:snow_block": {"temperature": -1},
-  "minecraft:powder_snow": {"temperature": -3}
+  "minecraft:ice": -2,
+  "minecraft:fire": 150,
+  "minecraft:soul_fire": -4.0,
+  "minecraft:lava": 500,
+  "minecraft:magma_block": 100,
+  "minecraft:glowstone": 2,
+  "minecraft:shroomlight": 2,
+  "minecraft:campfire": [
+    {
+      "temperature": 150,
+      "properties": {
+        "lit": true
+      }
+    }
+  ],
+  "minecraft:lava_cauldron": 80,
+  "minecraft:nether_portal": 150,
+  "minecraft:soul_torch": -2,
+  "minecraft:soul_lantern": -2,
+  "minecraft:lantern": 40,
+  "minecraft:torch": 50,
+  "minecraft:packed_ice": -3,
+  "minecraft:blue_ice": -6,
+  "minecraft:frosted_ice": -1,
+  "minecraft:snow": -0.5,
+  "minecraft:snow_block": -1,
+  "minecraft:powder_snow": -3
 }
