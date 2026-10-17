@@ -49,6 +49,7 @@ import net.minecraftforge.registries.MissingMappingsEvent;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
 import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
 import net.zaharenko424.casualties_cubed.compat.FoodAndDrinkCompat;
+import net.zaharenko424.casualties_cubed.config.ServerConfig;
 import net.zaharenko424.casualties_cubed.fluid_system.MedicalFluidType;
 import net.zaharenko424.casualties_cubed.limbs.Limb;
 import net.zaharenko424.casualties_cubed.limbs.LimbStatistics;
@@ -229,6 +230,8 @@ public class CommonEvent {
 
     @SubscribeEvent
     public static void drinkFluid(PlayerInteractEvent.RightClickBlock event) {
+        if (!ServerConfig.FLUID_BLOCK_DRINKING.get()) return;
+
         Player player = event.getEntity();
         if (!player.isCrouching() || !(player instanceof ServerPlayer sPlayer) || event.getHand() != InteractionHand.MAIN_HAND || !event.getItemStack().isEmpty()) return;
 
@@ -375,7 +378,7 @@ public class CommonEvent {
         double dist;
         float distScale;
         for (Player player : level.getEntitiesOfClass(Player.class, checkBounds)) {
-            if (player.getAbilities().invulnerable) continue;
+            if (player.getAbilities().invulnerable || player.isInvulnerableTo(event.getExplosion().getDamageSource())) continue;
 
             // 4. Check the precise spherical distance
             dist = player.position().distanceTo(explosionPos);

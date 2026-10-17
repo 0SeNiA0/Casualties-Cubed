@@ -8,6 +8,7 @@ public class ServerConfig {
 
     public static final ForgeConfigSpec.BooleanValue EXPIE_MODE;
     public static final ForgeConfigSpec.BooleanValue ALLOW_BAG_IN_HEALTH_SCREEN;
+    public static final ForgeConfigSpec.BooleanValue FLUID_BLOCK_DRINKING;
 
     // Damage scaling
     public static final ForgeConfigSpec.DoubleValue DAMAGE_SCALE;
@@ -65,6 +66,10 @@ public class ServerConfig {
         ALLOW_BAG_IN_HEALTH_SCREEN = BUILDER
                 .comment("Defines whether to allow using the contents of held medical bags in health screen.")
                 .define("allowBagInHealthScreen", true);
+
+        FLUID_BLOCK_DRINKING = BUILDER
+                .comment("Lets players drink from any fluid block by right clicking on a block behind the fluid while crouching.")
+                .define("fluidBlockDrinking", true);
 
 
         DAMAGE_SCALE = BUILDER
