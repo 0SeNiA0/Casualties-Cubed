@@ -766,6 +766,8 @@ public class PlayerHealthData {
         //--{
         //--    this.moveDir = -this.moveDir;
         //--}
+        if (player.isDeadOrDying()) return;
+
         if (player.isCreative()) {
             applyPenalties(player);
             return;
