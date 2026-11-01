@@ -129,6 +129,8 @@ public class CommonEvent {
 
     @SubscribeEvent
     public static void cancelInteractionsWhenUnc(PlayerInteractEvent event) {
+        if (!event.isCancelable()) return;
+
         PlayerHealthData data = PlayerHealthData.of(event.getEntity()).orElse(null);
         if (data != null && !data.isConscious()) event.setCanceled(true);
     }
