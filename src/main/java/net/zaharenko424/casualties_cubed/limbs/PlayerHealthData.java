@@ -841,6 +841,7 @@ public class PlayerHealthData {
         }
         isRagdolled = true;
         stability = 0;
+        player.stopRiding();
         PhysicsUtil.enablePhysics(player, 2, ServerPlayerDeltaAccess.deltaMovement(player));
     }
 
@@ -1830,7 +1831,7 @@ public class PlayerHealthData {
         }
 
         if (Math.abs(ServerPlayerDeltaAccess.deltaMovement(player).y) > (double)1.0F && player.fallDistance > 2) {
-            DefaultChange -= 7.5F;
+            DefaultChange -= player.getVehicle() != null ? 2.5f : 7.5F;
         }
 
         if (player.getPose() == Pose.CROUCHING) {
