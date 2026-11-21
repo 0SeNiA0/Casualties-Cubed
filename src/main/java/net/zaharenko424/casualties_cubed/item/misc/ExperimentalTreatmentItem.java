@@ -61,14 +61,14 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
     }
 
     static void regrowRandom(RandomSource random, PlayerHealthData data) {
-        List<Limb> amputated = new ArrayList<>();
+        List<Limb> canRegrow = new ArrayList<>();
         for (Limb limb : Limb.values()) {
-            if (data.isAmputated(limb))
-                amputated.add(limb);
+            if (data.isAmputated(limb) && !data.isAmputated(limb.getConnectedTo()))
+                canRegrow.add(limb);
         }
 
-        if (!amputated.isEmpty()) {
-            Limb toFix = amputated.get(random.nextInt(amputated.size()));
+        if (!canRegrow.isEmpty()) {
+            Limb toFix = canRegrow.get(random.nextInt(canRegrow.size()));
             LimbStatistics stats;
             for (Limb limb : toFix.getConnectedLimbs()) {
                 stats = data.getLimb(limb);
@@ -140,7 +140,7 @@ public class ExperimentalTreatmentItem extends Item implements IAllowInMedicBags
             stats.setSkinHealth(0);
             stats.muscleHealth(0);
         } else if (roll <= .84) {
-            data.shock(1);
+            data.shock(50);
         } else if (roll <= .94) {
             data.internalBleeding(0.2f / 60f);
         } else if (roll <= .99) {

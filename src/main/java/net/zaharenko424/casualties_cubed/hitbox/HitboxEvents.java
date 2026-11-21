@@ -709,25 +709,6 @@ public class HitboxEvents {
         }
     }
 
-    public static Vec3 sweepProjectileStep(Projectile proj, Player target) {
-        Vec3 prev = new Vec3(proj.xo, proj.yo, proj.zo); // last tick position
-        Vec3 motion = proj.getDeltaMovement();
-        Vec3 step = motion.scale(0.25); // break into 4 sub-steps per tick
-        AABB box = target.getBoundingBox().inflate(0.05);
-        Vec3 pos = prev;
-        int steps = (int) Math.ceil(1.0 / 0.25); // 4 steps → adjust if needed
-        for (int i = 0; i < steps; i++) {
-            Vec3 next = pos.add(step);
-            Optional<Vec3> hit = box.clip(pos, next);
-            if (hit.isPresent()) {
-                return hit.get(); // return exact intersection
-            }
-            pos = next;
-        }
-        // No hit → fallback to *final sub-step* (closer to true position)
-        return pos;
-    }
-
     public static HitSector detectHit(Player player, Vec3 hitpos) {
         AABB box = player.getBoundingBox();
 
