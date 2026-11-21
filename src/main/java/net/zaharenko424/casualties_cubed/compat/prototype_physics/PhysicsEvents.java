@@ -15,8 +15,10 @@ public class PhysicsEvents {
     public void onRagdollHit(PlayerPartHitEvent event){
         if (!PhysicsUtil.isPhysicsActivated(event.getPlayer())) return;
 
-        RagdollPart part = event.getPartName();
         ServerPlayer player = event.getPlayer();
+        if (player.isCreative() || player.isSpectator()) return;
+
+        RagdollPart part = event.getPartName();
         float vel = event.getImpactForce();
 
         if (vel > 2) {

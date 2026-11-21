@@ -762,14 +762,14 @@ public class PlayerHealthData {
 
     public void update(ServerPlayer player) {// order of update from C:U to make sure that values are calculated correctly
         //--Painkillers component = base.GetComponent<Painkillers>();
-        //--if (this.reversedControls)
+        //--if (this.reversedControls)      // reverse the input on client
         //--{
         //--    this.moveDir = -this.moveDir;
         //--}
         if (player.isDeadOrDying()) return;
 
         if (player.isCreative()) {
-            applyPenalties(player);
+            updateCreative(player);
             return;
         }
 
@@ -808,6 +808,21 @@ public class PlayerHealthData {
         
         if (brainHealth <= 0 || getLimb(Limb.THORAX).isAmputated() || getLimb(Limb.ABDOMEN).isAmputated()) {
             kill(player, false);
+        }
+    }
+
+    private void updateCreative(ServerPlayer player) {
+        calculateHeartProg(player);
+
+        applyPenalties(player);
+
+        updateStability(player);
+        if (ragdolled()) ragdollTime += Util.TICK_TO_SEC;
+        if (!forcedRagdoll && !isSleeping(player) && (ragdollTime > 60
+                || (PhysicsUtil.getVel(player).length() < 0.1f && stability > 50))) {
+            shock = 0;
+            standUp(player);
+            ragdollTime = 0;
         }
     }
 
@@ -1397,6 +1412,10 @@ public class PlayerHealthData {
             brainHealth -= Util.TICK_TO_SEC * 1.5f;
         }
 
+        calculateHeartProg(player);
+    }
+
+    private void calculateHeartProg(ServerPlayer player) {
         heartProg += Util.TICK_TO_SEC * heartRate / 60;
         if (heartProg > 1) {
             if (heartProg > 1.2f) {
