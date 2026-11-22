@@ -3,15 +3,13 @@ package net.zaharenko424.casualties_cubed.client.overlays.exp;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
-import net.zaharenko424.casualties_cubed.visual.ClientGamerules;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-
-import javax.annotation.Nullable;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
+import net.zaharenko424.casualties_cubed.client.overlays.IShaderOverlay;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
+import net.zaharenko424.casualties_cubed.visual.ClientGamerules;
 
 public class BlindnessShaderOverlay implements IShaderOverlay {
 
@@ -24,8 +22,7 @@ public class BlindnessShaderOverlay implements IShaderOverlay {
     }
 
     @Override
-    public void render(@Nullable RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
-        //if (!(event.getStage()== RenderLevelStageEvent.Stage.AFTER_LEVEL))return;
+    public void render(RenderTarget input, RenderTarget output, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
         boolean leftEye = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isLeftEyeBlind).orElse(false);
         boolean rightEye = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::isRightEyeBlind).orElse(false);

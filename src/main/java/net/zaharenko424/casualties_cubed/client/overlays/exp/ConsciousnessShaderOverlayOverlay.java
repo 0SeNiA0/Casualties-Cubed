@@ -3,15 +3,13 @@ package net.zaharenko424.casualties_cubed.client.overlays.exp;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-
-import javax.annotation.Nullable;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
+import net.zaharenko424.casualties_cubed.client.overlays.IShaderOverlay;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 public class ConsciousnessShaderOverlayOverlay implements IShaderOverlay {
 
@@ -25,7 +23,7 @@ public class ConsciousnessShaderOverlayOverlay implements IShaderOverlay {
     }
 
     @Override
-    public void render(@Nullable RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
+    public void render(RenderTarget input, RenderTarget output, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
         float consciousness = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::consciousness).orElse(100f);
         ShaderInstance shader = ClientShaderEvents.CONSCIOUSNESS_SHADER;

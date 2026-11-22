@@ -1,4 +1,4 @@
-package net.zaharenko424.casualties_cubed.client.overlays.ovr;
+package net.zaharenko424.casualties_cubed.client.overlays;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;

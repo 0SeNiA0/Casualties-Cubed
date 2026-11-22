@@ -5,19 +5,21 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.zaharenko424.casualties_cubed.client.overlays.exp.*;
-import net.zaharenko424.casualties_cubed.client.overlays.exp.*;
-import net.zaharenko424.casualties_cubed.client.overlays.ovr.ConsciousnessOverlay;
-import net.zaharenko424.casualties_cubed.client.overlays.ovr.IOverlay;
-import net.zaharenko424.casualties_cubed.client.overlays.ovr.PainOverlay;
-import net.zaharenko424.casualties_cubed.client.overlays.ovr.ReducedContiousnessOverlay;
-import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.zaharenko424.casualties_cubed.client.overlays.exp.BlindnessShaderOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.exp.ColdOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.exp.ConsciousnessShaderOverlayOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.exp.HeatOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.ovr.BrainShaderOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.ovr.ConsciousnessOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.ovr.PainShaderOverlay;
+import net.zaharenko424.casualties_cubed.client.overlays.ovr.ReducedContiousnessOverlay;
+import net.zaharenko424.casualties_cubed.config.ClientConfig;
 import org.lwjgl.opengl.GL30;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class OverlayController {
     static {
         //normal Shader
         registerOverlay(new BlindnessShaderOverlay());
+        registerOverlay(new PainShaderOverlay());
         registerOverlay(new BrainShaderOverlay());
 
         //experimental Shader
@@ -64,7 +67,6 @@ public class OverlayController {
 
     static {
         //normal GUI
-        registerOverlay(new PainOverlay());
         registerOverlay(new ConsciousnessOverlay());
 
         //Experimental GUI
@@ -121,7 +123,7 @@ public class OverlayController {
             if (i+1==renderTargets.size()){
                 output = mc.getMainRenderTarget();
             }
-            shaderOverlay.render(event, input, output);
+            shaderOverlay.render(input, output, event.getPartialTick());
 
             i++;
         }

@@ -1,16 +1,16 @@
-package net.zaharenko424.casualties_cubed.client.overlays.exp;
+package net.zaharenko424.casualties_cubed.client.overlays.ovr;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
+import net.zaharenko424.casualties_cubed.client.overlays.IShaderOverlay;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 public class PainShaderOverlay implements IShaderOverlay {
 
@@ -25,14 +25,14 @@ public class PainShaderOverlay implements IShaderOverlay {
         return pain>0.1;
     }
 
-    public void render(RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
+    public void render(RenderTarget input, RenderTarget output, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
         ShaderInstance shader = ClientShaderEvents.PAIN_SHADER;
         if (shader == null) return;
 
         output.bindWrite(true);
 
-        float time = (mc.level.getGameTime() + event.getPartialTick()) * 0.05f;
+        float time = (mc.level.getGameTime() + partialTick) * 0.05f;
 
         // interpolate between last tick and current tick values
         float pain = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA)
@@ -51,7 +51,7 @@ public class PainShaderOverlay implements IShaderOverlay {
 
         // Tell Minecraft to use our shader
         RenderSystem.setShaderTexture(0, input.getColorTextureId());
-        RenderSystem.setShaderTexture(1, CasualtiesCubed.resourceLoc("textures/shaders/pain_vignette.png"));
+        RenderSystem.setShaderTexture(1, CasualtiesCubed.resourceLoc("textures/overlay/painimage.png"));
         RenderSystem.setShader(() -> shader);
         shader.safeGetUniform("Intensity").set(displayedPain);
         shader.safeGetUniform("Time").set(time);

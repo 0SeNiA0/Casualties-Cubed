@@ -3,12 +3,12 @@ package net.zaharenko424.casualties_cubed.client.overlays.exp;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.zaharenko424.casualties_cubed.CasualtiesCubed;
+import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
+import net.zaharenko424.casualties_cubed.client.overlays.IShaderOverlay;
 
 public class SicknessOverlay implements IShaderOverlay {
 
@@ -21,14 +21,14 @@ public class SicknessOverlay implements IShaderOverlay {
         return pain>0.1;
     }
 
-    public void render(RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
+    public void render(RenderTarget input, RenderTarget output, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
         ShaderInstance shader = ClientShaderEvents.SICKNESS;
         if (shader == null) return;
 
         output.bindWrite(true);
 
-        float time = (mc.level.getGameTime() + event.getPartialTick()) * 0.05f;
+        float time = (mc.level.getGameTime() + partialTick) * 0.05f;
 
         // interpolate between last tick and current tick values
         float pain = 0.5f;

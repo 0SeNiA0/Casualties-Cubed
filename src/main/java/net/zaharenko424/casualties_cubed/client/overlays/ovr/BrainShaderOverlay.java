@@ -1,17 +1,15 @@
-package net.zaharenko424.casualties_cubed.client.overlays.exp;
+package net.zaharenko424.casualties_cubed.client.overlays.ovr;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
-import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
-import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-
-import javax.annotation.Nullable;
+import net.zaharenko424.casualties_cubed.PlayerHealthProvider;
+import net.zaharenko424.casualties_cubed.client.event.ClientShaderEvents;
+import net.zaharenko424.casualties_cubed.client.overlays.IShaderOverlay;
+import net.zaharenko424.casualties_cubed.limbs.PlayerHealthData;
 
 public class BrainShaderOverlay implements IShaderOverlay {
 
@@ -25,7 +23,7 @@ public class BrainShaderOverlay implements IShaderOverlay {
     }
 
     @Override
-    public void render(@Nullable RenderLevelStageEvent event, RenderTarget input, RenderTarget output) {
+    public void render(RenderTarget input, RenderTarget output, float partialTick) {
         Minecraft mc = Minecraft.getInstance();
         float brainHealth = mc.player.getCapability(PlayerHealthProvider.PLAYER_HEALTH_DATA).map(PlayerHealthData::brainHealth).orElse(100f);
         ShaderInstance shader = ClientShaderEvents.WARP_CHROMAABB;
@@ -58,8 +56,6 @@ public class BrainShaderOverlay implements IShaderOverlay {
             BufferUploader.drawWithShader(buf.end());
 
             RenderSystem.setShaderTexture(0, 0);
-
-
         }
     }
 }
