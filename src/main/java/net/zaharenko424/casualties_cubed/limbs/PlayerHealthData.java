@@ -2090,7 +2090,7 @@ public class PlayerHealthData {
         player.hurt(src, Float.MAX_VALUE);
     }
 
-    public Float getAmbientTemperature(Player player) {
+    public float getAmbientTemperature(Player player) {
         float outData = getBiomeTemperature(player);
 
         int seaLevel = player.level().getSeaLevel();

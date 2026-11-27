@@ -16,7 +16,7 @@
     "fall": 20.5
   },
   "minecraft:basalt_deltas": {
-    "temperature": 41
+    "temperature": 37
   },
   "minecraft:beach": {
     "temperature": 17,
@@ -51,7 +51,7 @@
     "fall": 11.5
   },
   "minecraft:crimson_forest": {
-    "temperature": 40
+    "temperature": 36
   },
   "minecraft:dark_forest": {
     "temperature": 16.5,
@@ -234,7 +234,7 @@
     "fall": 17.5
   },
   "minecraft:nether_wastes": {
-    "temperature": 40
+    "temperature": 36
   },
   "minecraft:ocean": {
     "temperature": 15,
@@ -390,7 +390,7 @@
     "temperature": 15
   },
   "minecraft:the_void": {
-    "temperature": 36.6
+    "temperature": 0
   },
   "minecraft:warm_ocean": {
     "temperature": 17,
@@ -401,7 +401,7 @@
     "fall": 16.5
   },
   "minecraft:warped_forest": {
-    "temperature": 40
+    "temperature": 36
   },
   "minecraft:windswept_forest": {
     "temperature": 17,
