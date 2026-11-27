@@ -115,7 +115,7 @@ public class ENLanguageProvider extends LanguageProvider {
         addItemFromIdWDesc(AUTO_PUMP, "While worn, pumps blood in place of your heart using a simple mechanism and an internal battery, keeping your blood pressure at livable levels. Might buy you more time to fix whatever catastrophe has befallen you.");
         addItemFromIdWDesc(CHEST_DRAIN, "Used to drain fluid from the thorax. Reduces hemothorax, reusable after some time. Only usable on the chest.");
         addItemFromIdWDesc(THERMOMETER, "A small device that reads the temperature around the user.");
-        addItemFromId(SimpleEarProtection);
+        addItemFromId(SIMPLE_EAR_PROTECTION);
         addItemFromIdWDesc(PILL_BOTTLE, "A small pill container, the dosage is 10ml.");
         addItemFromIdWDesc(AUTO_INJECTOR, "A 100ml bottle with an autoinjector attached. The dosage is 34ml.");
         addItemFromIdWDesc(GLOW_FRUIT, "Bioluminescent and inedible. Has moderately dangerous toxins inside; counteracts infections. Its juice promotes chemical reactions, making it useful in crafting.");

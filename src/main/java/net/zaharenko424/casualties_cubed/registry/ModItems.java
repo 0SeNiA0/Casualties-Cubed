@@ -1,27 +1,28 @@
 package net.zaharenko424.casualties_cubed.registry;
 
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import net.zaharenko424.casualties_cubed.CasualtiesCubed;
-import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
 import net.zaharenko424.casualties_cubed.item.ScrapMetal;
+import net.zaharenko424.casualties_cubed.item.api.ItemWithDescription;
 import net.zaharenko424.casualties_cubed.item.bandages.*;
+import net.zaharenko424.casualties_cubed.item.misc.BrownCapItem;
 import net.zaharenko424.casualties_cubed.item.misc.BrownCapMushItem;
 import net.zaharenko424.casualties_cubed.item.misc.ExperimentalTreatmentItem;
 import net.zaharenko424.casualties_cubed.item.multi_tank.*;
 import net.zaharenko424.casualties_cubed.item.reusable.IcePackItem;
-import net.zaharenko424.casualties_cubed.item.special.bag.LargeMedibagItem;
-import net.zaharenko424.casualties_cubed.item.special.bag.MediumMedibagItem;
-import net.zaharenko424.casualties_cubed.item.special.bag.SmallMedibagItem;
-import net.zaharenko424.casualties_cubed.item.misc.BrownCapItem;
 import net.zaharenko424.casualties_cubed.item.reusable.SplintItem;
 import net.zaharenko424.casualties_cubed.item.reusable.TourniquetItem;
 import net.zaharenko424.casualties_cubed.item.reusable.TweezersItem;
+import net.zaharenko424.casualties_cubed.item.special.SimpleEarProtection;
+import net.zaharenko424.casualties_cubed.item.special.bag.LargeMedibagItem;
+import net.zaharenko424.casualties_cubed.item.special.bag.MediumMedibagItem;
+import net.zaharenko424.casualties_cubed.item.special.bag.SmallMedibagItem;
 import net.zaharenko424.casualties_cubed.item.usable.*;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 
@@ -77,7 +78,7 @@ public class ModItems {
     public static final RegistryObject<ChestDrainItem> CHEST_DRAIN = ITEMS.register("chest_drain", ChestDrainItem::new);
 
     public static final RegistryObject<Item> THERMOMETER = ITEMS.register("thermometer", ThermometerItem::new);
-    public static final RegistryObject<Item> SimpleEarProtection = ITEMS.register("simple_ear_protection", net.zaharenko424.casualties_cubed.item.special.SimpleEarProtection::new);
+    public static final RegistryObject<Item> SIMPLE_EAR_PROTECTION = ITEMS.register("simple_ear_protection", SimpleEarProtection::new);
 
     public static final RegistryObject<MedicineVialItem> MEDICINE_VIAL = ITEMS.register("medicine_vial", MedicineVialItem::new);
     public static final RegistryObject<CanteenItem> CANTEEN = ITEMS.register("canteen", CanteenItem::new);

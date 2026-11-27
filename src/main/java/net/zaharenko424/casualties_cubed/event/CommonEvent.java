@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
@@ -385,18 +386,30 @@ public class CommonEvent {
             // 4. Check the precise spherical distance
             dist = player.position().distanceTo(explosionPos);
             if (dist > HEARING_DISTANCE) {
-                continue; // Player was in the corner of the AABB but > 32 blocks away
+                continue; // Player was in the corner of the AABB but > 20 blocks away
             }
 
+            //check line of sight
             distScale = (float) Math.pow(1 - dist / HEARING_DISTANCE, 2f);
             if (!hasLineOfSight(level, player, explosionPos)) {
                 distScale /= 2;
             } else distScale += .1f;
 
+            //check shield
+            if (!event.getExplosion().getDamageSource().is(DamageTypeTags.BYPASSES_SHIELD) && player.isBlocking()) {
+                Vec3 vec3 = player.getViewVector(1.0F);
+                Vec3 vec31 = explosionPos.vectorTo(player.position()).normalize();
+                vec31 = new Vec3(vec31.x, 0.0F, vec31.z);
+                if (vec31.dot(vec3) < (double)0.0F) {
+                    distScale *= 0.5f;
+                }
+            }
+
+            //check helmet
             ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
             if (!helmet.isEmpty()) {
-                if (helmet.is(ModItems.SimpleEarProtection.get())) {
-                    distScale *= .75f;
+                if (helmet.is(ModItems.SIMPLE_EAR_PROTECTION.get())) {
+                    distScale *= .25f;
                 } else if (helmet.is(Tags.Items.ARMORS_HELMETS) && helmet.getItem() instanceof ArmorItem armor
                         && armor.getDefense() > 1) distScale *= .75f;
             }
